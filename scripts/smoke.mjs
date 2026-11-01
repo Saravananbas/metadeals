@@ -36,7 +36,18 @@ async function withServer(port, overrides, run) {
 await withServer(3105, {}, async (base) => {
   const home = await fetch(base);
   assert.equal(home.status, 200);
-  assert.match(await home.text(), /MetaDeals/);
+  const html = await home.text();
+  assert.match(html, /MetaDeals/);
+  assert.match(html, /DEMO PREVIEW/);
+  assert.match(html, /Today.*Top Deals/);
+  for (const asset of ["hero", "products/phone", "products/laptop", "products/headphones", "products/watch", "products/air-fryer", "products/shoes"]) {
+    const image = await fetch(`${base}/images/${asset}.png`);
+    assert.equal(image.status, 200, `${asset} must be available`);
+    assert.match(image.headers.get("content-type"), /image\/png/);
+  }
+  const optimized = await fetch(`${base}/_next/image?url=%2Fimages%2Fproducts%2Fphone.png&w=256&q=75`, { headers: { Accept: "image/webp" } });
+  assert.equal(optimized.status, 200);
+  assert.match(optimized.headers.get("content-type"), /image\/webp/);
   assert.equal(home.headers.get("x-content-type-options"), "nosniff");
   assert.equal(home.headers.get("x-frame-options"), "DENY");
   const live = await fetch(`${base}/api/health`);
@@ -48,7 +59,7 @@ await withServer(3105, {}, async (base) => {
   assert.deepEqual((await ready.json()).checks, { database: "up", redis: "up" });
   assert.equal((await fetch(`${base}/not-a-real-page`)).status, 404);
   assert.equal((await fetch(`${base}/api/auth/session`)).status, 404, "Auth is not enabled in M0");
-  console.log("PASS production homepage, headers, liveness, live DB/Redis readiness, 404, disabled auth");
+  console.log("PASS production homepage, 7 image assets, image optimization, headers, liveness, live DB/Redis readiness, 404, disabled auth");
 });
 
 await withServer(3106, {

@@ -1,0 +1,11 @@
+import type { Deal } from "./types";
+
+/** Visual fixtures only. These are NOT validated prices, ratings or live promotions. */
+export const demoDeals: Deal[] = [
+  { id: "demo-iphone", name: "Apple iPhone 15 (128 GB)", brand: "Apple", category: "mobiles", image: "/images/products/phone.png", originalPrice: 99900, price: 61999, rating: 4.6, reviewCount: 12430, store: "amazon", retailerUrl: "https://www.amazon.in/s?k=Apple+iPhone+15+128GB", expiry: "unknown", featured: true, publishedAt: "2026-10-25T00:00:00Z" },
+  { id: "demo-laptop", name: "HP 15s Laptop (i5, 16GB, 512GB SSD)", brand: "HP", category: "laptops", image: "/images/products/laptop.png", originalPrice: 86999, price: 49990, rating: 4.4, reviewCount: 5320, store: "flipkart", retailerUrl: "https://www.flipkart.com/search?q=HP+15s+laptop", expiry: "unknown", featured: true, publishedAt: "2026-10-26T00:00:00Z" },
+  { id: "demo-headphones", name: "Sony WH-CH720N Wireless Headphones", brand: "Sony", category: "electronics", image: "/images/products/headphones.png", originalPrice: 14990, price: 6490, rating: 4.5, reviewCount: 8912, store: "amazon", retailerUrl: "https://www.amazon.in/s?k=Sony+WH-CH720N", expiry: "unknown", featured: true, publishedAt: "2026-10-27T00:00:00Z" },
+  { id: "demo-watch", name: "Samsung Galaxy Watch7 (Bluetooth, 44mm)", brand: "Samsung", category: "electronics", image: "/images/products/watch.png", originalPrice: 29999, price: 15499, rating: 4.5, reviewCount: 3210, store: "flipkart", retailerUrl: "https://www.flipkart.com/search?q=Samsung+Galaxy+Watch7", expiry: "unknown", featured: false, publishedAt: "2026-10-28T00:00:00Z" },
+  { id: "demo-air-fryer", name: "Philips Air Fryer (4.1L, 1400W)", brand: "Philips", category: "appliances", image: "/images/products/air-fryer.png", originalPrice: 12595, price: 6299, rating: 4.7, reviewCount: 6483, store: "amazon", retailerUrl: "https://www.amazon.in/s?k=Philips+air+fryer+4.1L", expiry: "unknown", featured: true, publishedAt: "2026-10-29T00:00:00Z" },
+  { id: "demo-shoes", name: "Adidas Men's Running Shoes", brand: "Adidas", category: "men", image: "/images/products/shoes.png", originalPrice: 5999, price: 2399, rating: 4.3, reviewCount: 2984, store: "myntra", retailerUrl: "https://www.myntra.com/adidas-men-sports-shoes", expiry: "unknown", featured: false, publishedAt: "2026-10-30T00:00:00Z" },
+];

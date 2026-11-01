@@ -1,0 +1,297 @@
+/* ==========================================================================
+   MetaDeals4U — Brand Color System
+   Version: 1.0
+   Design direction: Clean, premium, energetic Indian deals marketplace
+   Primary palette: Deep Purple + Orange + White
+   Usage: Import this file into your Next.js global stylesheet.
+   ========================================================================== */
+
+/* 1. Brand primitives
+   These are the source colors. Prefer semantic tokens below in components. */
+:root {
+  /* Purple brand scale */
+  --md-purple-950: #24065F;
+  --md-purple-900: #321078;
+  --md-purple-800: #42129A;
+  --md-purple-700: #5416C5;
+  --md-purple-600: #641BE5;
+  --md-purple-500: #7B2FF2;
+  --md-purple-400: #965AF5;
+  --md-purple-300: #B895FA;
+  --md-purple-200: #D7C4FD;
+  --md-purple-100: #EEE7FF;
+  --md-purple-50:  #F7F3FF;
+
+  /* Orange brand scale */
+  --md-orange-950: #7A2600;
+  --md-orange-900: #9C3500;
+  --md-orange-800: #C24700;
+  --md-orange-700: #E35A00;
+  --md-orange-600: #F36B00;
+  --md-orange-500: #FF7A00;
+  --md-orange-400: #FF9633;
+  --md-orange-300: #FFB866;
+  --md-orange-200: #FFD39C;
+  --md-orange-100: #FFE8CC;
+  --md-orange-50:  #FFF6EC;
+
+  /* Neutral scale */
+  --md-white: #FFFFFF;
+  --md-neutral-25:  #FCFCFE;
+  --md-neutral-50:  #F8F8FC;
+  --md-neutral-100: #F1F1F7;
+  --md-neutral-200: #E4E4EE;
+  --md-neutral-300: #D1D1DF;
+  --md-neutral-400: #A6A6B8;
+  --md-neutral-500: #77778C;
+  --md-neutral-600: #5D5D73;
+  --md-neutral-700: #414158;
+  --md-neutral-800: #292940;
+  --md-neutral-900: #17172F;
+  --md-black: #0D0D1D;
+
+  /* Functional colors */
+  --md-green-700: #15803D;
+  --md-green-600: #16A34A;
+  --md-green-100: #DCFCE7;
+  --md-green-50:  #F0FDF4;
+
+  --md-red-700: #B91C1C;
+  --md-red-600: #DC2626;
+  --md-red-100: #FEE2E2;
+  --md-red-50:  #FEF2F2;
+
+  --md-amber-700: #B45309;
+  --md-amber-600: #D97706;
+  --md-amber-100: #FEF3C7;
+  --md-amber-50:  #FFFBEB;
+
+  --md-blue-700: #1D4ED8;
+  --md-blue-600: #2563EB;
+  --md-blue-100: #DBEAFE;
+  --md-blue-50:  #EFF6FF;
+
+  /* 2. Semantic design tokens — use these in UI components */
+  color-scheme: light;
+
+  --md-color-primary: var(--md-purple-600);
+  --md-color-primary-hover: var(--md-purple-800);
+  --md-color-primary-active: var(--md-purple-900);
+  --md-color-primary-soft: var(--md-purple-100);
+  --md-color-primary-subtle: var(--md-purple-50);
+  --md-color-primary-contrast: var(--md-white);
+
+  --md-color-accent: var(--md-orange-500);
+  --md-color-accent-hover: var(--md-orange-600);
+  --md-color-accent-active: var(--md-orange-700);
+  --md-color-accent-soft: var(--md-orange-100);
+  --md-color-accent-subtle: var(--md-orange-50);
+  --md-color-accent-contrast: var(--md-white);
+
+  --md-color-page: var(--md-purple-50);
+  --md-color-surface: var(--md-white);
+  --md-color-surface-muted: var(--md-neutral-100);
+  --md-color-surface-elevated: var(--md-white);
+  --md-color-surface-inverse: var(--md-purple-950);
+
+  --md-color-text: var(--md-neutral-900);
+  --md-color-text-secondary: var(--md-neutral-600);
+  --md-color-text-muted: var(--md-neutral-500);
+  --md-color-text-inverse: var(--md-white);
+  --md-color-link: var(--md-purple-700);
+  --md-color-link-hover: var(--md-purple-900);
+
+  --md-color-border: rgba(100, 27, 229, 0.1);
+  --md-color-border-strong: rgba(100, 27, 229, 0.18);
+  --md-color-focus: #8B5CF6;
+
+  --md-color-success: var(--md-green-700);
+  --md-color-success-bg: var(--md-green-50);
+  --md-color-success-border: var(--md-green-100);
+
+  --md-color-danger: var(--md-red-700);
+  --md-color-danger-bg: var(--md-red-50);
+  --md-color-danger-border: var(--md-red-100);
+
+  --md-color-warning: var(--md-amber-700);
+  --md-color-warning-bg: var(--md-amber-50);
+  --md-color-warning-border: var(--md-amber-100);
+
+  --md-color-info: var(--md-blue-700);
+  --md-color-info-bg: var(--md-blue-50);
+  --md-color-info-border: var(--md-blue-100);
+
+  /* 3. Deal-specific tokens */
+  --md-deal-discount-bg: #E91D3D;
+  --md-deal-discount-text: var(--md-white);
+  --md-deal-savings-bg: var(--md-green-100);
+  --md-deal-savings-text: var(--md-green-700);
+  --md-deal-price: var(--md-neutral-900);
+  --md-deal-mrp: var(--md-neutral-500);
+  --md-deal-rating: #F5A400;
+  --md-deal-featured-border: var(--md-purple-300);
+
+  /* 4. Header, hero and promotional surfaces */
+  --md-header-bg: rgba(255, 255, 255, 0.78);
+  --md-header-border: rgba(255, 255, 255, 0.82);
+  --md-hero-start: #EEE7FF;
+  --md-hero-middle: #F7F3FF;
+  --md-hero-end: #EFF6FF;
+  --md-hero-text: var(--md-purple-950);
+  --md-hero-highlight: var(--md-orange-600);
+
+  --md-promo-amazon-start: #FFD43B;
+  --md-promo-amazon-end: #FFB900;
+  --md-promo-flipkart-start: #0879F9;
+  --md-promo-flipkart-end: #0647C8;
+  --md-promo-bank-start: #8126D9;
+  --md-promo-bank-end: #4B0D9D;
+
+  /* 5. Gradients */
+  --md-gradient-brand: linear-gradient(105deg, #321078 0%, #5416C5 55%, #7B2FF2 100%);
+  --md-gradient-hero: linear-gradient(110deg, #F0E9FF 0%, #F8F5FF 48%, #EEF5FF 100%);
+  --md-gradient-cta: linear-gradient(100deg, #FF7A00 0%, #F04D00 100%);
+  --md-gradient-purple-glow: radial-gradient(ellipse at 68% 28%, rgba(184, 149, 250, .25), transparent 48%);
+
+  /* 6. Effects */
+  --md-shadow-card: 0 4px 12px rgba(50, 16, 120, 0.07), 0 12px 28px rgba(50, 16, 120, 0.06);
+  --md-shadow-card-hover: 0 10px 28px rgba(50, 16, 120, 0.14);
+  --md-shadow-popover: 0 16px 40px rgba(50, 16, 120, 0.14);
+  --md-shadow-focus: 0 0 0 3px rgba(139, 92, 246, 0.24);
+
+  /* 7. Component aliases */
+  --md-button-primary-bg: var(--md-color-primary);
+  --md-button-primary-hover: var(--md-color-primary-hover);
+  --md-button-primary-text: var(--md-white);
+  --md-button-accent-bg: var(--md-color-accent);
+  --md-button-accent-hover: var(--md-color-accent-hover);
+  --md-button-accent-text: var(--md-white);
+
+  --md-input-bg: var(--md-white);
+  --md-input-text: var(--md-color-text);
+  --md-input-placeholder: var(--md-neutral-500);
+  --md-input-border: var(--md-neutral-300);
+  --md-input-border-focus: var(--md-purple-500);
+
+  /* 8. Optional retailer identity colors — use only for retailer labels/logos */
+  --md-store-amazon: #111827;
+  --md-store-flipkart: #2874F0;
+  --md-store-myntra: #FF3F6C;
+  --md-store-ajio: #2B2B2B;
+}
+
+/* 9. Dark theme tokens (for a future optional dark mode).
+   Do not enable globally until the dark-mode UI has been designed and tested. */
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --md-color-page: #111020;
+  --md-color-surface: #1B1930;
+  --md-color-surface-muted: #24213B;
+  --md-color-surface-elevated: #292541;
+  --md-color-surface-inverse: #F7F3FF;
+
+  --md-color-text: #F8F7FF;
+  --md-color-text-secondary: #C4C0D5;
+  --md-color-text-muted: #9D98B3;
+  --md-color-text-inverse: #17172F;
+  --md-color-link: #C4A7FF;
+  --md-color-link-hover: #E0D2FF;
+
+  --md-color-border: #38334F;
+  --md-color-border-strong: #514A6D;
+  --md-color-focus: #B895FA;
+
+  --md-color-primary: #A984FF;
+  --md-color-primary-hover: #C4A7FF;
+  --md-color-primary-active: #D7C4FD;
+  --md-color-primary-soft: #342653;
+  --md-color-primary-subtle: #241D3A;
+  --md-color-primary-contrast: #17102B;
+
+  --md-color-accent: #FF9633;
+  --md-color-accent-hover: #FFB866;
+  --md-color-accent-active: #FFD39C;
+  --md-color-accent-soft: #4B2A16;
+  --md-color-accent-subtle: #302015;
+  --md-color-accent-contrast: #241000;
+
+  --md-color-success: #86EFAC;
+  --md-color-success-bg: #142B20;
+  --md-color-success-border: #245638;
+  --md-color-danger: #FCA5A5;
+  --md-color-danger-bg: #351B25;
+  --md-color-danger-border: #63303B;
+  --md-color-warning: #FCD34D;
+  --md-color-warning-bg: #332817;
+  --md-color-warning-border: #5D4822;
+  --md-color-info: #93C5FD;
+  --md-color-info-bg: #172943;
+  --md-color-info-border: #294A72;
+
+  --md-deal-price: #F8F7FF;
+  --md-deal-mrp: #9D98B3;
+  --md-deal-savings-bg: #142B20;
+  --md-deal-savings-text: #86EFAC;
+
+  --md-header-bg: rgba(27, 25, 48, 0.96);
+  --md-header-border: #38334F;
+
+  --md-input-bg: #24213B;
+  --md-input-text: #F8F7FF;
+  --md-input-placeholder: #9D98B3;
+  --md-input-border: #514A6D;
+  --md-input-border-focus: #B895FA;
+
+  --md-shadow-card: 0 2px 12px rgba(0, 0, 0, 0.20);
+  --md-shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.30);
+}
+
+/* 10. Optional base styles */
+html {
+  background: var(--md-color-page);
+  color: var(--md-color-text);
+}
+
+body {
+  background: var(--md-color-page);
+  color: var(--md-color-text);
+}
+
+::selection {
+  background: var(--md-purple-200);
+  color: var(--md-purple-950);
+}
+
+:focus-visible {
+  outline: 2px solid var(--md-color-focus);
+  outline-offset: 2px;
+}
+
+/* 11. Example utility classes */
+.md-brand-gradient {
+  background: var(--md-gradient-brand);
+  color: var(--md-white);
+}
+
+.md-hero-gradient {
+  background:
+    var(--md-gradient-purple-glow),
+    var(--md-gradient-hero);
+  color: var(--md-hero-text);
+}
+
+.md-cta-gradient {
+  background: var(--md-gradient-cta);
+  color: var(--md-white);
+}
+
+.md-deal-discount {
+  background: var(--md-deal-discount-bg);
+  color: var(--md-deal-discount-text);
+}
+
+.md-deal-savings {
+  background: var(--md-deal-savings-bg);
+  color: var(--md-deal-savings-text);
+}

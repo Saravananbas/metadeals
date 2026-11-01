@@ -1,0 +1,68 @@
+/* Tailwind v4 / shadcn semantic aliases. Color values live only in the official stylesheet. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+:root { --radius: 0.75rem; }
+
+@theme inline {
+  --color-*: initial;
+  --color-background: var(--md-color-page);
+  --color-foreground: var(--md-color-text);
+  --color-surface: var(--md-color-surface);
+  --color-card: var(--md-color-surface);
+  --color-card-foreground: var(--md-color-text);
+  --color-popover: var(--md-color-surface-elevated);
+  --color-popover-foreground: var(--md-color-text);
+  --color-primary: var(--md-color-primary);
+  --color-primary-hover: var(--md-color-primary-hover);
+  --color-primary-foreground: var(--md-color-primary-contrast);
+  --color-secondary: var(--md-color-primary-soft);
+  --color-secondary-foreground: var(--md-color-primary-active);
+  --color-muted: var(--md-color-surface-muted);
+  --color-muted-foreground: var(--md-color-text-secondary);
+  --color-accent: var(--md-color-accent);
+  --color-accent-hover: var(--md-color-accent-hover);
+  --color-accent-foreground: var(--md-color-accent-contrast);
+  --color-accent-soft: var(--md-color-accent-soft);
+  --color-destructive: var(--md-color-danger);
+  --color-destructive-foreground: var(--md-color-text-inverse);
+  --color-border: var(--md-color-border);
+  --color-input: var(--md-input-border);
+  --color-input-background: var(--md-input-bg);
+  --color-input-foreground: var(--md-input-text);
+  --color-input-placeholder: var(--md-input-placeholder);
+  --color-ring: var(--md-color-focus);
+  --color-success: var(--md-color-success);
+  --color-success-bg: var(--md-color-success-bg);
+  --color-success-border: var(--md-color-success-border);
+  --color-danger: var(--md-color-danger);
+  --color-danger-bg: var(--md-color-danger-bg);
+  --color-warning: var(--md-color-warning);
+  --color-warning-bg: var(--md-color-warning-bg);
+  --color-info: var(--md-color-info);
+  --color-info-bg: var(--md-color-info-bg);
+  --color-discount: var(--md-deal-discount-bg);
+  --color-discount-foreground: var(--md-deal-discount-text);
+  --color-savings: var(--md-deal-savings-bg);
+  --color-savings-foreground: var(--md-deal-savings-text);
+  --color-chart-1: var(--md-color-primary);
+  --color-chart-2: var(--md-color-accent);
+  --color-chart-3: var(--md-color-success);
+  --color-chart-4: var(--md-color-info);
+  --color-chart-5: var(--md-color-warning);
+  --color-sidebar: var(--md-color-surface);
+  --color-sidebar-foreground: var(--md-color-text);
+  --color-sidebar-primary: var(--md-color-primary);
+  --color-sidebar-primary-foreground: var(--md-color-primary-contrast);
+  --color-sidebar-accent: var(--md-color-primary-soft);
+  --color-sidebar-accent-foreground: var(--md-color-primary-active);
+  --color-sidebar-border: var(--md-color-border);
+  --color-sidebar-ring: var(--md-color-focus);
+  --shadow-card: var(--md-shadow-card);
+  --shadow-card-hover: var(--md-shadow-card-hover);
+  --shadow-popover: var(--md-shadow-popover);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --font-sans: var(--font-manrope), sans-serif;
+}

@@ -2,8 +2,9 @@
 
 M0 foundation for a new Indian deals discovery and affiliate marketing application.
 This repository is independent of the existing website. No old source or production
-data has been imported. The root page is an explicitly temporary foundation screen;
-the approved homepage is **M1**, not implemented in this milestone.
+data has been imported. M0 established the foundation; M1 now implements the approved
+homepage layout with a clearly labeled, isolated demo-data source. Live deal management
+and provider integrations are not implemented.
 
 ## Requirements
 
@@ -115,8 +116,30 @@ tests/                   Environment and health service tests
 docs/                    Architecture, M0 validation, approved design reference
 ```
 
-See [architecture](docs/architecture.md), [design reference](docs/design-reference.md)
-and [M0 validation report](docs/m0-report.md).
+See [architecture](docs/architecture.md), [design reference](docs/design-reference.md),
+[M0 validation report](docs/m0-report.md), and [M1 homepage report](docs/m1-report.md).
+
+For the acceptance pass, see [M1 visual assessment and screenshots](docs/m1-visual-acceptance.md),
+[official color integration](docs/brand-color-integration.md), and
+[multi-platform architecture impact](docs/multiplatform-impact.md). The supplied
+Brand Color System v1.0 is the sole UI color source, with matching Tailwind aliases
+and dark tokens retained but not enabled. Native apps and monorepo migration remain
+future, separately approved work.
+
+## M1 homepage
+
+The homepage includes the reference header, purple hero, search, trending chips,
+horizontal categories, six-column desktop deal grid, three promotional banners,
+benefits strip and footer. Search/category/store filters, featured/latest views,
+demo deal previews and browser-local saved deals work without authentication.
+Desktop/tablet/mobile checks are recorded in the M1 report.
+
+`src/features/deals/service.ts` is the server-side source boundary. It currently
+uses `demo-data.ts` and does not read or write business data in PostgreSQL. Sample
+prices, reviews, product imagery and promotions are explicitly unverified. Retailer
+links open searches/listings after disclosure, not guaranteed live offers. Saved
+deals use local storage only; sign-in, live bank offers and alerts remain disabled.
+No new dependency, schema migration, worker or external API was added for M1.
 
 ## Operational notes
 
