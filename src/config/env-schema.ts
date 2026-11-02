@@ -14,6 +14,17 @@ export const redisEnvSchema = z.object({
 export const authEnvSchema = z.object({
   NEXTAUTH_SECRET: z.string().min(32),
   NEXTAUTH_URL: urlWithProtocols(["http:", "https:"]),
+  AUTH_SESSION_SECRET: z.string().min(32),
+  AUTH_TOTP_ENCRYPTION_KEY: z.string().min(40),
+  AUTH_BOOTSTRAP_EMAIL: z.string().email(),
+  AUTH_BOOTSTRAP_ENABLED: z.enum(["true", "false"]).default("false").transform((value) => value === "true"),
+}).refine((value) => new Set([
+  value.NEXTAUTH_SECRET,
+  value.AUTH_SESSION_SECRET,
+  value.AUTH_TOTP_ENCRYPTION_KEY,
+]).size === 3, {
+  message: "Authentication secrets must be independent",
+  path: ["AUTH_SESSION_SECRET"],
 });
 export const storageEnvSchema = z.object({
   S3_ENDPOINT: urlWithProtocols(["http:", "https:"]),

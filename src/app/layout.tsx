@@ -12,6 +12,7 @@ export const metadata: Metadata = {
   title: "MetaDeals4U",
   description: "MetaDeals4U — India's smart shopping hub.",
   robots: { index: false, follow: false },
+  referrer: "no-referrer",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

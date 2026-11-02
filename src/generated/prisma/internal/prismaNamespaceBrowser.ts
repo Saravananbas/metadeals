@@ -54,7 +54,13 @@ export const ModelName = {
   User: 'User',
   Account: 'Account',
   Session: 'Session',
-  VerificationToken: 'VerificationToken'
+  VerificationToken: 'VerificationToken',
+  AuthSession: 'AuthSession',
+  RecoveryCode: 'RecoveryCode',
+  AuthToken: 'AuthToken',
+  AuthRateLimit: 'AuthRateLimit',
+  BootstrapState: 'BootstrapState',
+  AuditEvent: 'AuditEvent'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -79,6 +85,12 @@ export const UserScalarFieldEnum = {
   email: 'email',
   emailVerified: 'emailVerified',
   image: 'image',
+  role: 'role',
+  status: 'status',
+  passwordHash: 'passwordHash',
+  totpSecretEncrypted: 'totpSecretEncrypted',
+  totpEnabledAt: 'totpEnabledAt',
+  lastTotpStep: 'lastTotpStep',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -123,12 +135,102 @@ export const VerificationTokenScalarFieldEnum = {
 export type VerificationTokenScalarFieldEnum = (typeof VerificationTokenScalarFieldEnum)[keyof typeof VerificationTokenScalarFieldEnum]
 
 
+export const AuthSessionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  tokenHash: 'tokenHash',
+  createdAt: 'createdAt',
+  lastActivityAt: 'lastActivityAt',
+  expiresAt: 'expiresAt',
+  absoluteExpiresAt: 'absoluteExpiresAt',
+  ipHash: 'ipHash',
+  userAgent: 'userAgent'
+} as const
+
+export type AuthSessionScalarFieldEnum = (typeof AuthSessionScalarFieldEnum)[keyof typeof AuthSessionScalarFieldEnum]
+
+
+export const RecoveryCodeScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  codeHash: 'codeHash',
+  usedAt: 'usedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type RecoveryCodeScalarFieldEnum = (typeof RecoveryCodeScalarFieldEnum)[keyof typeof RecoveryCodeScalarFieldEnum]
+
+
+export const AuthTokenScalarFieldEnum = {
+  id: 'id',
+  tokenHash: 'tokenHash',
+  purpose: 'purpose',
+  email: 'email',
+  userId: 'userId',
+  role: 'role',
+  createdById: 'createdById',
+  passwordHash: 'passwordHash',
+  totpSecretEncrypted: 'totpSecretEncrypted',
+  emailDeliveryVerified: 'emailDeliveryVerified',
+  createdAt: 'createdAt',
+  expiresAt: 'expiresAt',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  revokedAt: 'revokedAt'
+} as const
+
+export type AuthTokenScalarFieldEnum = (typeof AuthTokenScalarFieldEnum)[keyof typeof AuthTokenScalarFieldEnum]
+
+
+export const AuthRateLimitScalarFieldEnum = {
+  subjectHash: 'subjectHash',
+  failures: 'failures',
+  lockedUntil: 'lockedUntil',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AuthRateLimitScalarFieldEnum = (typeof AuthRateLimitScalarFieldEnum)[keyof typeof AuthRateLimitScalarFieldEnum]
+
+
+export const BootstrapStateScalarFieldEnum = {
+  id: 'id',
+  completedAt: 'completedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type BootstrapStateScalarFieldEnum = (typeof BootstrapStateScalarFieldEnum)[keyof typeof BootstrapStateScalarFieldEnum]
+
+
+export const AuditEventScalarFieldEnum = {
+  id: 'id',
+  actorId: 'actorId',
+  action: 'action',
+  targetId: 'targetId',
+  success: 'success',
+  requestId: 'requestId',
+  ipHash: 'ipHash',
+  userAgent: 'userAgent',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+} as const
+
+export type AuditEventScalarFieldEnum = (typeof AuditEventScalarFieldEnum)[keyof typeof AuditEventScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
 export const QueryMode = {
@@ -145,4 +247,13 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 

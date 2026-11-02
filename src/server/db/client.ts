@@ -18,3 +18,7 @@ export function getDatabase(): PrismaClient {
   }
   return globalForPrisma.prisma;
 }
+
+export async function disconnectDatabase(): Promise<void> {
+  if (globalForPrisma.prisma) await globalForPrisma.prisma.$disconnect();
+}

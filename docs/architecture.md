@@ -1,20 +1,24 @@
-# Architecture — M0
+# Architecture — MetaDeals4U
 
 ## Decision and scope
 
-New application in `D:\Metadeals`, created at the owner's explicit request.
-M0 establishes runtime, infrastructure boundaries, configuration, migrations,
-operability and validation. M1 requires separate approval. The attached homepage
-is the visual source of truth for M1; this milestone does not implement its sections.
+This is the existing application in `D:\Metadeals`; do not recreate or replace it.
+M0 established runtime, infrastructure boundaries, configuration, the identity
+migration, operability and validation. M1/M1.5 implemented the approved responsive
+homepage using disclosed demo data. The current audited state and recovery
+dependencies are recorded in `reports/REPOSITORY-AUDIT-AND-RECOVERY-PLAN.md`.
 
 ## Runtime and version policy
 
 Next.js App Router on the Node.js runtime, React Server Components by default,
 TypeScript strict mode, Tailwind v4 and local shadcn UI source. Dependencies are
 exact-pinned in package.json, and package-lock.json is committed for `npm ci`.
+The standard local development and production start commands use port 4123.
 Use Node 24 LTS. Stable Prisma 7 is pinned rather than the npm latest release
 candidate. NextAuth.js 4.24.15 declares Next 16/React 19 peer compatibility; the
-Auth.js v5 documentation still describes beta, so M0 does not adopt it.
+provider-less NextAuth options scaffold remains unmounted. M2.5 uses a separate
+local credential flow because its database-only session policy is not compatible
+with NextAuth v4 Credentials sessions.
 
 Sources consulted:
 - https://nextjs.org/docs/app/getting-started/installation
@@ -55,10 +59,11 @@ read validated environment groups on first use. The pool is reused per process,
 limited to 10 connections, with bounded connect/query timeouts. Scale pool sizes
 against database capacity before increasing application replicas.
 
-M0 tables: User (unique nullable email), Account (unique provider/providerAccountId),
-Session (unique session token), VerificationToken (unique token and identifier/token).
-Accounts and sessions reference User and cascade on deletion. No registration,
-identity provisioning, login endpoints, role assignment or administration exists yet.
+The initial identity tables remain unchanged. The additive M2.5 migration adds
+credential/role/MFA fields and `AuthSession`, `RecoveryCode`, `AuthToken`,
+`AuthRateLimit`, `BootstrapState` and `AuditEvent`. Auth sessions and recovery
+records cascade with their user; token creator/audit actor references use
+set-null semantics. The local migration is applied; no account was seeded.
 
 ## Infrastructure
 
@@ -70,9 +75,11 @@ identity provisioning, login endpoints, role assignment or administration exists
 - S3: server-side SDK factory, validated credentials, explicit endpoint/region/bucket
   and path-style support. Future uploads require authorization, size/type validation,
   signed URLs and a private bucket policy. No public upload endpoint exists.
-- Auth: stable NextAuth Prisma adapter with database sessions; providers intentionally
-  empty and no route exported. Before activation, establish provider, roles and
-  server-side permission checks. A signed-in user must not implicitly be an admin.
+- Auth: local email/password with Argon2id, mandatory TOTP, one-time recovery
+  codes, hashed opaque database sessions and server-side role checks. The
+  initial SUPER_ADMIN is provisioned only through the disabled-by-default local
+  CLI workflow. No email transport, OAuth, customer sign-in or mobile token API
+  is enabled. The existing NextAuth options remain dormant.
 
 ## Future module boundaries (design only)
 
@@ -107,6 +114,7 @@ validated with production deployment; Compose is not a production hosting recipe
 ## Verification strategy
 
 Lint, strict type-check, production compilation and focused service/configuration
-tests are required for M0. Exercise health routes against real local PostgreSQL and
-Redis, verify migration status, and check failure responses. No homepage visual
-comparison is claimed until M1 implements the approved design.
+tests are required. M2.5 additionally validates the additive migration, exercises
+the auth lifecycle against a local PostgreSQL database using temporary cleaned-up
+records, and checks server-side permission policy. M1/M1.5 visual validation is
+documented in the homepage acceptance report.

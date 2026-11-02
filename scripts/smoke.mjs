@@ -58,8 +58,10 @@ await withServer(3105, {}, async (base) => {
   assert.equal(ready.status, 200);
   assert.deepEqual((await ready.json()).checks, { database: "up", redis: "up" });
   assert.equal((await fetch(`${base}/not-a-real-page`)).status, 404);
-  assert.equal((await fetch(`${base}/api/auth/session`)).status, 404, "Auth is not enabled in M0");
-  console.log("PASS production homepage, 7 image assets, image optimization, headers, liveness, live DB/Redis readiness, 404, disabled auth");
+  const session = await fetch(`${base}/api/auth/session`);
+  assert.equal(session.status, 200);
+  assert.deepEqual(await session.json(), { user: null }, "An unauthenticated session check must not disclose a user");
+  console.log("PASS production homepage, 7 image assets, image optimization, headers, liveness, live DB/Redis readiness, 404 and unauthenticated session");
 });
 
 await withServer(3106, {

@@ -1,16 +1,16 @@
 # MetaDeals4U
 
-M0 foundation for a new Indian deals discovery and affiliate marketing application.
-This repository is independent of the existing website. No old source or production
-data has been imported. M0 established the foundation; M1 now implements the approved
-homepage layout with a clearly labeled, isolated demo-data source. Live deal management
-and provider integrations are not implemented.
+MetaDeals4U is an existing Next.js deals-discovery application. M0 established
+its foundation, M1/M1.5 implemented the approved responsive homepage with clearly
+labeled demo data, and M2.5 adds local administrator authentication and account
+management. Live deal management and external provider integrations are not
+implemented.
 
 ## Requirements
 
 - Node.js 24 LTS (24.14.1 used for validation), npm 11.
 - Docker Desktop running Linux containers, or your own PostgreSQL and Redis services.
-- Available localhost ports 3000 (app), 55432 (PostgreSQL), 6380 (Redis).
+- Available localhost ports 4123 (app), 55432 (PostgreSQL), 6380 (Redis).
 
 ## Run locally (PowerShell)
 
@@ -24,10 +24,14 @@ npm run db:generate
 npm run dev
 ```
 
-Open http://localhost:3000. `env:setup` creates an ignored `.env` with random local
-database/Redis passwords and an auth secret; it never overwrites an existing file.
-These are local development secrets, not external API credentials. S3 fields remain
-empty until actual provider credentials are supplied. Do not commit `.env`.
+Open http://localhost:4123. `env:setup` creates an ignored `.env` with random local
+database/Redis passwords and independent auth secrets. If `.env` already exists,
+it preserves existing secrets and custom settings, appends missing M2.5 auth
+settings, and updates old default localhost app URLs to port 4123. Run it
+again after updating the project if an older `.env` is missing auth settings.
+These are local development secrets, not external API credentials. S3 fields
+remain empty until actual provider credentials are supplied. Do not commit
+`.env`.
 
 If using existing infrastructure, edit `.env` and skip `infra:up`. Keep passwords
 URL-encoded in connection strings. Changing local Docker passwords after initial
@@ -60,15 +64,17 @@ closed. `db:deploy` requires a valid database connection.
 - `GET /api/health/ready`: live PostgreSQL `SELECT 1` and Redis `PING`; 200 only
   when both respond, otherwise 503. Returns generic status, no error details or secrets.
 - Both endpoints disable caching. Readiness returns a correlation ID.
-- S3, auth and future workers are not readiness dependencies in M0 because they
-  are not enabled. Readiness verifies connectivity, not migration state; run
-  `npm run db:status` separately before rollout.
+- S3 and future workers are not readiness dependencies. Auth relies on PostgreSQL;
+  readiness verifies connectivity, not migration state. Run `npm run db:status`
+  separately before rollout.
 
 ## Database and migrations
 
-Prisma uses PostgreSQL via `@prisma/adapter-pg`. The initial migration creates only
-Auth.js identity tables: `User`, `Account`, `Session`, `VerificationToken`.
-There are no seeded users, deals, stores or affiliate records.
+Prisma uses PostgreSQL via `@prisma/adapter-pg`. The initial migration creates the
+identity tables; the additive M2.5 migration adds credential/role/MFA fields and
+session, setup-token, rate-limit, recovery-code, bootstrap and audit tables. The
+local migration is applied. No user account, deal, store or affiliate record is
+seeded.
 
 ```powershell
 # Development only: after an intentional schema change
@@ -81,11 +87,67 @@ Never run `migrate reset` or `db push` against production. Use a separate migrat
 credential with DDL permissions and a restricted runtime role in production.
 The Docker database owner is for local development only.
 
+## M2.5 authentication and administration
+
+The admin portal is at `/admin/login`. It uses Argon2id passwords, mandatory
+TOTP, one-time recovery codes, HMAC-hashed opaque database sessions, server-side
+role checks and transactional audit events. Sessions expire after 60 minutes
+idle or 12 hours absolutely. No admin account was created during development.
+
+The first SUPER_ADMIN is provisioned only when the owner is ready. Ensure the
+local auth settings exist (`npm run env:setup`), ensure the migration is applied,
+then temporarily enable bootstrap in PowerShell and run the CLI:
+
+```powershell
+$env:AUTH_BOOTSTRAP_ENABLED = "true"
+npm run auth:bootstrap
+Remove-Item Env:AUTH_BOOTSTRAP_ENABLED
+```
+
+Type the approved email exactly when prompted. The CLI prints a one-time
+30-minute setup link; deliver it privately, complete MFA enrollment, save the
+recovery codes and leave `AUTH_BOOTSTRAP_ENABLED=false` in `.env`. Bootstrap is
+disabled by default and rejected in production. PowerShell uses `$env:NAME =
+"value"` syntax; `NAME=value` is not valid PowerShell.
+
+Once set up, you can sign in repeatedly with the same account. Each authenticator
+time-step code is single-use for replay protection; use the current code and wait
+for the next 30-second code before another test login. Do not disable or bypass
+authentication for browser testing. The integration test exercises the auth
+lifecycle using temporary local database records without requiring a test bypass
+or creating a permanent account.
+
+No email transport is configured. An authorized local operator can issue a
+reset link for an active account with a verified email:
+
+```powershell
+npm run auth:reset-link -- user@example.com
+```
+
+Confirm the private delivery channel, deliver the one-time link privately, and
+do not place it in logs or shared channels. The password-reset page directs users
+to a Super Admin instead of claiming to send an email. Admin account creation
+requires an explicit verified-email attestation and displays the setup URL for
+secure delivery. Existing `.env` values are preserved by `env:setup`; only
+missing M2.5 settings are appended.
+
+Run the local auth lifecycle integration test only against the project database
+on port 55432; it creates and removes uniquely named test records:
+
+```powershell
+$env:AUTH_INTEGRATION_TESTS = "1"
+npm run test:auth:integration
+Remove-Item Env:AUTH_INTEGRATION_TESTS
+```
+
+The existing NextAuth options file is dormant. Its provider-less scaffolding is
+not mounted as an auth route and is not the active credential/session path.
+
 ## Infrastructure boundaries
 
-- **Auth.js:** stable `next-auth` v4 is configured with the Prisma adapter and
-  database sessions. No provider, sign-in UI or auth route is enabled. A real
-  identity provider, authorization policy and HTTPS URL are prerequisites for activation.
+- **Auth:** M2.5 uses local credentials and custom opaque database sessions to
+  meet the database-only session policy. No automated email delivery, OAuth,
+  mobile token API or customer sign-in is enabled.
 - **Redis/BullMQ:** connection configuration only; no jobs, queues or workers are
   started. Future workers run in a separate process, not in a Next.js request.
 - **S3:** lazy server-only client; no uploads, public bucket or synthetic credentials.
@@ -102,7 +164,7 @@ src/
   features/health/       Dependency-injected health service
   lib/                   Browser-safe shared helpers
   server/
-    auth/                Auth.js options (not yet exposed)
+    auth/                Credential/MFA/session services and dormant NextAuth options
     db/                  Prisma singleton and PostgreSQL adapter
     logging/             Structured, redacted logging
     queue/               BullMQ connection configuration
@@ -138,7 +200,8 @@ Desktop/tablet/mobile checks are recorded in the M1 report.
 uses `demo-data.ts` and does not read or write business data in PostgreSQL. Sample
 prices, reviews, product imagery and promotions are explicitly unverified. Retailer
 links open searches/listings after disclosure, not guaranteed live offers. Saved
-deals use local storage only; sign-in, live bank offers and alerts remain disabled.
+deals use local storage only; customer sign-in, live bank offers and alerts remain
+disabled.
 No new dependency, schema migration, worker or external API was added for M1.
 
 ## Operational notes

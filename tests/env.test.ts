@@ -14,7 +14,27 @@ test("missing database configuration fails closed", () => {
 });
 
 test("auth rejects short secrets", () => {
-  assert.equal(authEnvSchema.safeParse({ NEXTAUTH_SECRET: "short", NEXTAUTH_URL: "https://example.org" }).success, false);
+  assert.equal(authEnvSchema.safeParse({
+    NEXTAUTH_SECRET: "short",
+    NEXTAUTH_URL: "https://example.org",
+    AUTH_SESSION_SECRET: "also-too-short",
+    AUTH_TOTP_ENCRYPTION_KEY: "short",
+    AUTH_BOOTSTRAP_EMAIL: "admin@example.org",
+  }).success, false);
+});
+
+test("auth requires secure independent keys and defaults bootstrap off", () => {
+  const config = {
+    NEXTAUTH_SECRET: "x".repeat(32),
+    NEXTAUTH_URL: "http://localhost:4123",
+    AUTH_SESSION_SECRET: "y".repeat(32),
+    AUTH_TOTP_ENCRYPTION_KEY: Buffer.alloc(32, 1).toString("base64"),
+    AUTH_BOOTSTRAP_EMAIL: "saran.be.2005@gmail.com",
+  };
+  const parsed = authEnvSchema.parse(config);
+  assert.equal(parsed.AUTH_BOOTSTRAP_ENABLED, false);
+  assert.equal(parsed.AUTH_SESSION_SECRET, config.AUTH_SESSION_SECRET);
+  assert.equal(authEnvSchema.safeParse({ ...config, AUTH_SESSION_SECRET: config.NEXTAUTH_SECRET }).success, false);
 });
 
 test("Redis accepts TLS and rejects HTTP", () => {

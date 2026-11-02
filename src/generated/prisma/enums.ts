@@ -9,7 +9,28 @@
 * 🟢 You can import this file directly.
 */
 
+export const UserRole = {
+  SUPER_ADMIN: 'SUPER_ADMIN',
+  ADMIN: 'ADMIN',
+  EDITOR: 'EDITOR'
+} as const
+
+export type UserRole = (typeof UserRole)[keyof typeof UserRole]
 
 
-// This file is empty because there are no enums in the schema.
-export {}
+export const UserStatus = {
+  PENDING_SETUP: 'PENDING_SETUP',
+  ACTIVE: 'ACTIVE',
+  SUSPENDED: 'SUSPENDED'
+} as const
+
+export type UserStatus = (typeof UserStatus)[keyof typeof UserStatus]
+
+
+export const AuthTokenPurpose = {
+  ACCOUNT_SETUP: 'ACCOUNT_SETUP',
+  PASSWORD_RESET: 'PASSWORD_RESET',
+  SUPER_ADMIN_BOOTSTRAP: 'SUPER_ADMIN_BOOTSTRAP'
+} as const
+
+export type AuthTokenPurpose = (typeof AuthTokenPurpose)[keyof typeof AuthTokenPurpose]

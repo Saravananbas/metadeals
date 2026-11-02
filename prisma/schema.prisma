@@ -7,18 +7,48 @@ datasource db {
   provider = "postgresql"
 }
 
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  EDITOR
+}
+
+enum UserStatus {
+  PENDING_SETUP
+  ACTIVE
+  SUSPENDED
+}
+
+enum AuthTokenPurpose {
+  ACCOUNT_SETUP
+  PASSWORD_RESET
+  SUPER_ADMIN_BOOTSTRAP
+}
+
 // Identity foundation for the stable Auth.js / NextAuth Prisma adapter.
-// No business modules or application users are seeded in M0.
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id                  String         @id @default(cuid())
+  name                String?
+  email               String?        @unique
+  emailVerified       DateTime?
+  image               String?
+  role                UserRole       @default(EDITOR)
+  status              UserStatus     @default(PENDING_SETUP)
+  passwordHash        String?        @db.VarChar(255)
+  totpSecretEncrypted String?        @db.Text
+  totpEnabledAt       DateTime?
+  lastTotpStep        BigInt         @default(-1)
+  accounts            Account[]
+  sessions            Session[]
+  authSessions        AuthSession[]
+  recoveryCodes       RecoveryCode[]
+  tokens              AuthToken[]    @relation("TokenTarget")
+  createdTokens       AuthToken[]    @relation("TokenCreator")
+  auditAsActor        AuditEvent[]   @relation("AuditActor")
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+
+  @@index([role, status])
 }
 
 model Account {
@@ -56,4 +86,89 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model AuthSession {
+  id                String   @id @default(cuid())
+  userId            String
+  tokenHash         String   @unique @db.Char(64)
+  createdAt         DateTime @default(now())
+  lastActivityAt    DateTime @default(now())
+  expiresAt         DateTime
+  absoluteExpiresAt DateTime
+  ipHash            String?  @db.Char(64)
+  userAgent         String?  @db.VarChar(512)
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, expiresAt])
+  @@index([expiresAt])
+}
+
+model RecoveryCode {
+  id        String    @id @default(cuid())
+  userId    String
+  codeHash  String    @db.VarChar(255)
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, usedAt])
+}
+
+model AuthToken {
+  id                    String           @id @default(cuid())
+  tokenHash             String           @unique @db.Char(64)
+  purpose               AuthTokenPurpose
+  email                 String
+  userId                String?
+  role                  UserRole?
+  createdById           String?
+  passwordHash          String?          @db.VarChar(255)
+  totpSecretEncrypted   String?          @db.Text
+  emailDeliveryVerified Boolean          @default(false)
+  createdAt             DateTime         @default(now())
+  expiresAt             DateTime
+  startedAt             DateTime?
+  completedAt           DateTime?
+  revokedAt             DateTime?
+  user                  User?            @relation("TokenTarget", fields: [userId], references: [id], onDelete: Cascade)
+  createdBy             User?            @relation("TokenCreator", fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@index([email, purpose, expiresAt])
+  @@index([userId, purpose])
+}
+
+model AuthRateLimit {
+  subjectHash String    @id @db.Char(64)
+  failures    Int       @default(0)
+  lockedUntil DateTime?
+  updatedAt   DateTime  @updatedAt
+
+  @@index([updatedAt])
+  @@index([lockedUntil])
+}
+
+model BootstrapState {
+  id          String    @id
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+}
+
+model AuditEvent {
+  id        String   @id @default(cuid())
+  actorId   String?
+  action    String   @db.VarChar(80)
+  targetId  String?  @db.VarChar(128)
+  success   Boolean
+  requestId String?  @db.VarChar(64)
+  ipHash    String?  @db.Char(64)
+  userAgent String?  @db.VarChar(512)
+  metadata  Json?
+  createdAt DateTime @default(now())
+  actor     User?    @relation("AuditActor", fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
+  @@index([actorId, createdAt])
+  @@index([action, createdAt])
+  @@index([targetId])
 }
