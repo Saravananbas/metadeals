@@ -48,6 +48,10 @@
   --md-neutral-700: #414158;
   --md-neutral-800: #292940;
   --md-neutral-900: #17172F;
+  --md-neutral-blue-600: #53617F;
+  --md-neutral-blue-200: #E9EEFF;
+  --md-neutral-blue-50: #F7F9FF;
+  --md-neutral-blue-25: #F1F5FF;
   --md-black: #0D0D1D;
 
   /* Functional colors */
@@ -77,8 +81,8 @@
   --md-color-primary: var(--md-purple-600);
   --md-color-primary-hover: var(--md-purple-800);
   --md-color-primary-active: var(--md-purple-900);
-  --md-color-primary-soft: var(--md-purple-100);
-  --md-color-primary-subtle: var(--md-purple-50);
+  --md-color-primary-soft: var(--md-neutral-blue-200);
+  --md-color-primary-subtle: var(--md-neutral-blue-50);
   --md-color-primary-contrast: var(--md-white);
 
   --md-color-accent: var(--md-orange-500);
@@ -88,21 +92,21 @@
   --md-color-accent-subtle: var(--md-orange-50);
   --md-color-accent-contrast: var(--md-white);
 
-  --md-color-page: var(--md-purple-50);
+  --md-color-page: var(--md-neutral-blue-25);
   --md-color-surface: var(--md-white);
-  --md-color-surface-muted: var(--md-neutral-100);
+  --md-color-surface-muted: var(--md-neutral-blue-50);
   --md-color-surface-elevated: var(--md-white);
   --md-color-surface-inverse: var(--md-purple-950);
 
   --md-color-text: var(--md-neutral-900);
-  --md-color-text-secondary: var(--md-neutral-600);
+  --md-color-text-secondary: var(--md-neutral-blue-600);
   --md-color-text-muted: var(--md-neutral-500);
   --md-color-text-inverse: var(--md-white);
   --md-color-link: var(--md-purple-700);
   --md-color-link-hover: var(--md-purple-900);
 
-  --md-color-border: rgba(100, 27, 229, 0.1);
-  --md-color-border-strong: rgba(100, 27, 229, 0.18);
+  --md-color-border: color-mix(in srgb, var(--md-neutral-blue-600) 14%, transparent);
+  --md-color-border-strong: color-mix(in srgb, var(--md-neutral-blue-600) 22%, transparent);
   --md-color-focus: #8B5CF6;
 
   --md-color-success: var(--md-green-700);
@@ -134,9 +138,9 @@
   /* 4. Header, hero and promotional surfaces */
   --md-header-bg: rgba(255, 255, 255, 0.78);
   --md-header-border: rgba(255, 255, 255, 0.82);
-  --md-hero-start: #EEE7FF;
-  --md-hero-middle: #F7F3FF;
-  --md-hero-end: #EFF6FF;
+  --md-hero-start: var(--md-neutral-blue-200);
+  --md-hero-middle: var(--md-neutral-blue-50);
+  --md-hero-end: var(--md-neutral-blue-25);
   --md-hero-text: var(--md-purple-950);
   --md-hero-highlight: var(--md-orange-600);
 
@@ -149,14 +153,14 @@
 
   /* 5. Gradients */
   --md-gradient-brand: linear-gradient(105deg, #321078 0%, #5416C5 55%, #7B2FF2 100%);
-  --md-gradient-hero: linear-gradient(110deg, #F0E9FF 0%, #F8F5FF 48%, #EEF5FF 100%);
+  --md-gradient-hero: linear-gradient(110deg, var(--md-hero-start) 0%, var(--md-hero-middle) 48%, var(--md-hero-end) 100%);
   --md-gradient-cta: linear-gradient(100deg, #FF7A00 0%, #F04D00 100%);
-  --md-gradient-purple-glow: radial-gradient(ellipse at 68% 28%, rgba(184, 149, 250, .25), transparent 48%);
+  --md-gradient-blue-glow: radial-gradient(ellipse at 68% 28%, color-mix(in srgb, var(--md-blue-100) 28%, transparent), transparent 48%);
 
   /* 6. Effects */
-  --md-shadow-card: 0 4px 12px rgba(50, 16, 120, 0.07), 0 12px 28px rgba(50, 16, 120, 0.06);
-  --md-shadow-card-hover: 0 10px 28px rgba(50, 16, 120, 0.14);
-  --md-shadow-popover: 0 16px 40px rgba(50, 16, 120, 0.14);
+  --md-shadow-card: 0 4px 12px color-mix(in srgb, var(--md-neutral-blue-600) 9%, transparent), 0 12px 28px color-mix(in srgb, var(--md-neutral-blue-600) 7%, transparent);
+  --md-shadow-card-hover: 0 10px 28px color-mix(in srgb, var(--md-neutral-blue-600) 16%, transparent);
+  --md-shadow-popover: 0 16px 40px color-mix(in srgb, var(--md-neutral-blue-600) 16%, transparent);
   --md-shadow-focus: 0 0 0 3px rgba(139, 92, 246, 0.24);
 
   /* 7. Component aliases */
@@ -276,7 +280,7 @@ body {
 
 .md-hero-gradient {
   background:
-    var(--md-gradient-purple-glow),
+    var(--md-gradient-blue-glow),
     var(--md-gradient-hero);
   color: var(--md-hero-text);
 }

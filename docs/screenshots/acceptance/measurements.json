@@ -1,218 +1,114 @@
 [
   {
-    "name": "desktop-1536",
-    "colorScheme": "light",
-    "colors": {
-      "cta": "linear-gradient(100deg, rgb(255, 122, 0) 0%, rgb(240, 77, 0) 100%)",
-      "discount": "rgb(233, 29, 61)",
-      "nav": "rgb(50, 16, 120)",
-      "savings": "rgb(21, 128, 61)"
-    },
-    "columns": 6,
-    "documentWidth": 1521,
-    "headerHeight": 58,
-    "headline": {
-      "scrollWidth": 571,
-      "width": 571
-    },
-    "heroHeight": 308,
-    "images": [
-      {
-        "alt": "Shopping bag, laptop, headphones, phone and smartwatch on a purple podium",
-        "loaded": true
-      },
-      {
-        "alt": "Apple iPhone 15 (128 GB)",
-        "loaded": true
-      },
-      {
-        "alt": "HP 15s Laptop (i5, 16GB, 512GB SSD)",
-        "loaded": true
-      },
-      {
-        "alt": "Sony WH-CH720N Wireless Headphones",
-        "loaded": true
-      },
-      {
-        "alt": "Samsung Galaxy Watch7 (Bluetooth, 44mm)",
-        "loaded": true
-      },
-      {
-        "alt": "Philips Air Fryer (4.1L, 1400W)",
-        "loaded": true
-      },
-      {
-        "alt": "Adidas Men's Running Shoes",
-        "loaded": true
-      }
-    ],
-    "scrollWidth": 1521,
-    "theme": null,
     "viewport": {
-      "height": 1024,
-      "width": 1536
-    }
-  },
-  {
-    "name": "tablet-768",
-    "colorScheme": "light",
-    "colors": {
-      "cta": "linear-gradient(100deg, rgb(255, 122, 0) 0%, rgb(240, 77, 0) 100%)",
-      "discount": "rgb(233, 29, 61)",
-      "nav": "rgb(50, 16, 120)",
-      "savings": "rgb(21, 128, 61)"
+      "width": 1536,
+      "height": 1024
     },
-    "columns": 3,
-    "documentWidth": 753,
-    "headerHeight": 58,
-    "headline": {
-      "scrollWidth": 400,
-      "width": 400
+    "document": {
+      "clientWidth": 1521,
+      "scrollWidth": 1521
     },
+    "headerHeight": 53,
     "heroHeight": 310,
-    "images": [
-      {
-        "alt": "Shopping bag, laptop, headphones, phone and smartwatch on a purple podium",
-        "loaded": true
-      },
-      {
-        "alt": "Apple iPhone 15 (128 GB)",
-        "loaded": true
-      },
-      {
-        "alt": "HP 15s Laptop (i5, 16GB, 512GB SSD)",
-        "loaded": true
-      },
-      {
-        "alt": "Sony WH-CH720N Wireless Headphones",
-        "loaded": true
-      },
-      {
-        "alt": "Samsung Galaxy Watch7 (Bluetooth, 44mm)",
-        "loaded": true
-      },
-      {
-        "alt": "Philips Air Fryer (4.1L, 1400W)",
-        "loaded": true
-      },
-      {
-        "alt": "Adidas Men's Running Shoes",
-        "loaded": true
-      }
-    ],
-    "scrollWidth": 753,
-    "theme": null,
-    "viewport": {
-      "height": 1024,
-      "width": 768
+    "columns": 6,
+    "headline": {
+      "clientWidth": 470,
+      "scrollWidth": 470
+    },
+    "font": "Manrope, \"Manrope Fallback\", sans-serif",
+    "tokens": {
+      "page": "#f1f5ff",
+      "surfaceMuted": "#f7f9ff",
+      "primarySoft": "#e9eeff",
+      "secondaryText": "#53617f"
+    },
+    "images": {
+      "total": 10,
+      "loaded": 10
     }
   },
   {
-    "name": "mobile-390",
-    "colorScheme": "light",
-    "colors": {
-      "cta": "linear-gradient(100deg, rgb(255, 122, 0) 0%, rgb(240, 77, 0) 100%)",
-      "discount": "rgb(233, 29, 61)",
-      "nav": "rgb(50, 16, 120)",
-      "savings": "rgb(21, 128, 61)"
-    },
-    "columns": 2,
-    "documentWidth": 375,
-    "headerHeight": 66,
-    "headline": {
-      "scrollWidth": 335,
-      "width": 335
-    },
-    "heroHeight": 509.578125,
-    "images": [
-      {
-        "alt": "Shopping bag, laptop, headphones, phone and smartwatch on a purple podium",
-        "loaded": true
-      },
-      {
-        "alt": "Apple iPhone 15 (128 GB)",
-        "loaded": true
-      },
-      {
-        "alt": "HP 15s Laptop (i5, 16GB, 512GB SSD)",
-        "loaded": true
-      },
-      {
-        "alt": "Sony WH-CH720N Wireless Headphones",
-        "loaded": true
-      },
-      {
-        "alt": "Samsung Galaxy Watch7 (Bluetooth, 44mm)",
-        "loaded": true
-      },
-      {
-        "alt": "Philips Air Fryer (4.1L, 1400W)",
-        "loaded": true
-      },
-      {
-        "alt": "Adidas Men's Running Shoes",
-        "loaded": true
-      }
-    ],
-    "scrollWidth": 375,
-    "theme": null,
     "viewport": {
-      "height": 844,
-      "width": 390
+      "width": 768,
+      "height": 1024
+    },
+    "document": {
+      "clientWidth": 753,
+      "scrollWidth": 753
+    },
+    "headerHeight": 52,
+    "heroHeight": 363,
+    "columns": 3,
+    "headline": {
+      "clientWidth": 353,
+      "scrollWidth": 353
+    },
+    "font": "Manrope, \"Manrope Fallback\", sans-serif",
+    "tokens": {
+      "page": "#f1f5ff",
+      "surfaceMuted": "#f7f9ff",
+      "primarySoft": "#e9eeff",
+      "secondaryText": "#53617f"
+    },
+    "images": {
+      "total": 10,
+      "loaded": 10
     }
   },
   {
-    "name": "mobile-320",
-    "colorScheme": "light",
-    "colors": {
-      "cta": "linear-gradient(100deg, rgb(255, 122, 0) 0%, rgb(240, 77, 0) 100%)",
-      "discount": "rgb(233, 29, 61)",
-      "nav": "rgb(50, 16, 120)",
-      "savings": "rgb(21, 128, 61)"
-    },
-    "columns": 2,
-    "documentWidth": 305,
-    "headerHeight": 66,
-    "headline": {
-      "scrollWidth": 273,
-      "width": 273
-    },
-    "heroHeight": 519.984375,
-    "images": [
-      {
-        "alt": "Shopping bag, laptop, headphones, phone and smartwatch on a purple podium",
-        "loaded": true
-      },
-      {
-        "alt": "Apple iPhone 15 (128 GB)",
-        "loaded": true
-      },
-      {
-        "alt": "HP 15s Laptop (i5, 16GB, 512GB SSD)",
-        "loaded": true
-      },
-      {
-        "alt": "Sony WH-CH720N Wireless Headphones",
-        "loaded": true
-      },
-      {
-        "alt": "Samsung Galaxy Watch7 (Bluetooth, 44mm)",
-        "loaded": true
-      },
-      {
-        "alt": "Philips Air Fryer (4.1L, 1400W)",
-        "loaded": true
-      },
-      {
-        "alt": "Adidas Men's Running Shoes",
-        "loaded": true
-      }
-    ],
-    "scrollWidth": 305,
-    "theme": null,
     "viewport": {
-      "height": 800,
-      "width": 320
+      "width": 390,
+      "height": 844
+    },
+    "document": {
+      "clientWidth": 375,
+      "scrollWidth": 375
+    },
+    "headerHeight": 54,
+    "heroHeight": 711,
+    "columns": 2,
+    "headline": {
+      "clientWidth": 317,
+      "scrollWidth": 317
+    },
+    "font": "Manrope, \"Manrope Fallback\", sans-serif",
+    "tokens": {
+      "page": "#f1f5ff",
+      "surfaceMuted": "#f7f9ff",
+      "primarySoft": "#e9eeff",
+      "secondaryText": "#53617f"
+    },
+    "images": {
+      "total": 10,
+      "loaded": 10
+    }
+  },
+  {
+    "viewport": {
+      "width": 320,
+      "height": 800
+    },
+    "document": {
+      "clientWidth": 305,
+      "scrollWidth": 305
+    },
+    "headerHeight": 54,
+    "heroHeight": 750,
+    "columns": 2,
+    "headline": {
+      "clientWidth": 247,
+      "scrollWidth": 247
+    },
+    "font": "Manrope, \"Manrope Fallback\", sans-serif",
+    "tokens": {
+      "page": "#f1f5ff",
+      "surfaceMuted": "#f7f9ff",
+      "primarySoft": "#e9eeff",
+      "secondaryText": "#53617f"
+    },
+    "images": {
+      "total": 10,
+      "loaded": 10
     }
   }
 ]

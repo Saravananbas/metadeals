@@ -1,8 +1,11 @@
 # Official Brand Color System v1.0
 
-`src/styles/metadeals4u-color-system.css` is a byte-identical copy of the supplied
-stylesheet. SHA-256: `33AF295025685959BC38E5DC7973928D3372D6828C67130A3C8B6FD390FE9B74`.
-No primitive or semantic values were independently modified.
+`src/styles/metadeals4u-color-system.css` is the application's v1.0 palette source.
+The existing purple/orange brand and functional colors remain unchanged. Four
+neutral-blue primitives from the approved M1.5 reference (`#F1F5FF`, `#F7F9FF`,
+`#E9EEFF`, and `#53617F`) provide page, panel, accent and secondary-text colors.
+Semantic tokens reference these primitives; component styling does not duplicate
+the palette.
 
 `src/app/globals.css` imports it globally through the App Router root layout.
 `src/styles/tailwind-theme.css` maps Tailwind v4 utilities directly to its semantic
@@ -30,7 +33,8 @@ to that opt-in attribute. Dark UI requires a separate design/accessibility revie
 
 Regression tests reject literal colors outside the official CSS, palette bypasses,
 undefined token references and accidental system-driven dark mode. The official
-file remains the only source of raw application color values.
+file remains the only source of raw application color values. Semantic surfaces,
+borders, hero gradients, and shadows reference the existing palette primitives.
 
 ## Measured contrast limitations
 

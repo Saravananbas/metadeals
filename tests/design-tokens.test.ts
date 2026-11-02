@@ -48,10 +48,16 @@ test("dark palette is opt-in, with no system-preference activation", () => {
   }
 });
 
-test("light homepage tokens use the approved lavender glass direction", () => {
+test("light homepage tokens use the approved blue glass direction", () => {
   assert.match(official, /--md-color-primary:\s*var\(--md-purple-600\)/);
-  assert.match(official, /--md-color-page:\s*var\(--md-purple-50\)/);
+  assert.match(official, /--md-neutral-blue-25:\s*#F1F5FF/);
+  assert.match(official, /--md-neutral-blue-50:\s*#F7F9FF/);
+  assert.match(official, /--md-neutral-blue-200:\s*#E9EEFF/);
+  assert.match(official, /--md-neutral-blue-600:\s*#53617F/);
+  assert.match(official, /--md-color-page:\s*var\(--md-neutral-blue-25\)/);
+  assert.match(official, /--md-color-primary-soft:\s*var\(--md-neutral-blue-200\)/);
   assert.match(official, /--md-hero-text:\s*var\(--md-purple-950\)/);
   assert.match(official, /--md-hero-highlight:\s*var\(--md-orange-600\)/);
+  assert.match(official, /--md-gradient-blue-glow:/);
   assert.match(official, /--md-header-bg:\s*rgba\(255,\s*255,\s*255,\s*0\.78\)/);
 });
