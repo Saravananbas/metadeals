@@ -34,3 +34,14 @@ export const AuthTokenPurpose = {
 } as const
 
 export type AuthTokenPurpose = (typeof AuthTokenPurpose)[keyof typeof AuthTokenPurpose]
+
+
+export const DealStatus = {
+  DRAFT: 'DRAFT',
+  PENDING_REVIEW: 'PENDING_REVIEW',
+  PUBLISHED: 'PUBLISHED',
+  EXPIRED: 'EXPIRED',
+  ARCHIVED: 'ARCHIVED'
+} as const
+
+export type DealStatus = (typeof DealStatus)[keyof typeof DealStatus]

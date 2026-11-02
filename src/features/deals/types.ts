@@ -1,4 +1,4 @@
-export type StoreId = "amazon" | "flipkart" | "myntra";
+export type StoreId = string;
 export type Deal = {
   id: string;
   name: string;
@@ -7,11 +7,17 @@ export type Deal = {
   image: string;
   originalPrice: number;
   price: number;
-  rating: number;
-  reviewCount: number;
+  rating: number | null;
+  reviewCount: number | null;
+  ratingSource?: string | null;
+  storeName?: string;
+  slug?: string;
+  description?: string;
+  expiresAt?: string | null;
+  source?: "database" | "demo";
   store: StoreId;
   retailerUrl: string;
-  expiry: "unknown" | "expired";
+  expiry: "unknown" | "expired" | "active";
   featured: boolean;
   publishedAt: string;
 };

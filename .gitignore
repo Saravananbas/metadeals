@@ -17,3 +17,7 @@ playwright-report/
 test-results/
 
 .vercel/
+
+# Private local database backups and uploaded media
+.local/
+auth-passcode.txt

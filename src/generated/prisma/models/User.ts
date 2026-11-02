@@ -287,6 +287,9 @@ export type UserWhereInput = {
   tokens?: Prisma.AuthTokenListRelationFilter
   createdTokens?: Prisma.AuthTokenListRelationFilter
   auditAsActor?: Prisma.AuditEventListRelationFilter
+  createdDeals?: Prisma.DealListRelationFilter
+  updatedDeals?: Prisma.DealListRelationFilter
+  uploadedMedia?: Prisma.MediaListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -310,6 +313,9 @@ export type UserOrderByWithRelationInput = {
   tokens?: Prisma.AuthTokenOrderByRelationAggregateInput
   createdTokens?: Prisma.AuthTokenOrderByRelationAggregateInput
   auditAsActor?: Prisma.AuditEventOrderByRelationAggregateInput
+  createdDeals?: Prisma.DealOrderByRelationAggregateInput
+  updatedDeals?: Prisma.DealOrderByRelationAggregateInput
+  uploadedMedia?: Prisma.MediaOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -336,6 +342,9 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   tokens?: Prisma.AuthTokenListRelationFilter
   createdTokens?: Prisma.AuthTokenListRelationFilter
   auditAsActor?: Prisma.AuditEventListRelationFilter
+  createdDeals?: Prisma.DealListRelationFilter
+  updatedDeals?: Prisma.DealListRelationFilter
+  uploadedMedia?: Prisma.MediaListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -399,6 +408,9 @@ export type UserCreateInput = {
   tokens?: Prisma.AuthTokenCreateNestedManyWithoutUserInput
   createdTokens?: Prisma.AuthTokenCreateNestedManyWithoutCreatedByInput
   auditAsActor?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  createdDeals?: Prisma.DealCreateNestedManyWithoutCreatedByInput
+  updatedDeals?: Prisma.DealCreateNestedManyWithoutUpdatedByInput
+  uploadedMedia?: Prisma.MediaCreateNestedManyWithoutUploadedByInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -422,6 +434,9 @@ export type UserUncheckedCreateInput = {
   tokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutUserInput
   createdTokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutCreatedByInput
   auditAsActor?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  createdDeals?: Prisma.DealUncheckedCreateNestedManyWithoutCreatedByInput
+  updatedDeals?: Prisma.DealUncheckedCreateNestedManyWithoutUpdatedByInput
+  uploadedMedia?: Prisma.MediaUncheckedCreateNestedManyWithoutUploadedByInput
 }
 
 export type UserUpdateInput = {
@@ -445,6 +460,9 @@ export type UserUpdateInput = {
   tokens?: Prisma.AuthTokenUpdateManyWithoutUserNestedInput
   createdTokens?: Prisma.AuthTokenUpdateManyWithoutCreatedByNestedInput
   auditAsActor?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  createdDeals?: Prisma.DealUpdateManyWithoutCreatedByNestedInput
+  updatedDeals?: Prisma.DealUpdateManyWithoutUpdatedByNestedInput
+  uploadedMedia?: Prisma.MediaUpdateManyWithoutUploadedByNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -468,6 +486,9 @@ export type UserUncheckedUpdateInput = {
   tokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutUserNestedInput
   createdTokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutCreatedByNestedInput
   auditAsActor?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  createdDeals?: Prisma.DealUncheckedUpdateManyWithoutCreatedByNestedInput
+  updatedDeals?: Prisma.DealUncheckedUpdateManyWithoutUpdatedByNestedInput
+  uploadedMedia?: Prisma.MediaUncheckedUpdateManyWithoutUploadedByNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -720,6 +741,48 @@ export type UserUpdateOneWithoutAuditAsActorNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAuditAsActorInput, Prisma.UserUpdateWithoutAuditAsActorInput>, Prisma.UserUncheckedUpdateWithoutAuditAsActorInput>
 }
 
+export type UserCreateNestedOneWithoutUploadedMediaInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutUploadedMediaInput, Prisma.UserUncheckedCreateWithoutUploadedMediaInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutUploadedMediaInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutUploadedMediaNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutUploadedMediaInput, Prisma.UserUncheckedCreateWithoutUploadedMediaInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutUploadedMediaInput
+  upsert?: Prisma.UserUpsertWithoutUploadedMediaInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutUploadedMediaInput, Prisma.UserUpdateWithoutUploadedMediaInput>, Prisma.UserUncheckedUpdateWithoutUploadedMediaInput>
+}
+
+export type UserCreateNestedOneWithoutCreatedDealsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCreatedDealsInput, Prisma.UserUncheckedCreateWithoutCreatedDealsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCreatedDealsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutUpdatedDealsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutUpdatedDealsInput, Prisma.UserUncheckedCreateWithoutUpdatedDealsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutUpdatedDealsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutCreatedDealsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCreatedDealsInput, Prisma.UserUncheckedCreateWithoutCreatedDealsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCreatedDealsInput
+  upsert?: Prisma.UserUpsertWithoutCreatedDealsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCreatedDealsInput, Prisma.UserUpdateWithoutCreatedDealsInput>, Prisma.UserUncheckedUpdateWithoutCreatedDealsInput>
+}
+
+export type UserUpdateOneRequiredWithoutUpdatedDealsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutUpdatedDealsInput, Prisma.UserUncheckedCreateWithoutUpdatedDealsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutUpdatedDealsInput
+  upsert?: Prisma.UserUpsertWithoutUpdatedDealsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutUpdatedDealsInput, Prisma.UserUpdateWithoutUpdatedDealsInput>, Prisma.UserUncheckedUpdateWithoutUpdatedDealsInput>
+}
+
 export type UserCreateWithoutAccountsInput = {
   id?: string
   name?: string | null
@@ -740,6 +803,9 @@ export type UserCreateWithoutAccountsInput = {
   tokens?: Prisma.AuthTokenCreateNestedManyWithoutUserInput
   createdTokens?: Prisma.AuthTokenCreateNestedManyWithoutCreatedByInput
   auditAsActor?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  createdDeals?: Prisma.DealCreateNestedManyWithoutCreatedByInput
+  updatedDeals?: Prisma.DealCreateNestedManyWithoutUpdatedByInput
+  uploadedMedia?: Prisma.MediaCreateNestedManyWithoutUploadedByInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -762,6 +828,9 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   tokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutUserInput
   createdTokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutCreatedByInput
   auditAsActor?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  createdDeals?: Prisma.DealUncheckedCreateNestedManyWithoutCreatedByInput
+  updatedDeals?: Prisma.DealUncheckedCreateNestedManyWithoutUpdatedByInput
+  uploadedMedia?: Prisma.MediaUncheckedCreateNestedManyWithoutUploadedByInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -800,6 +869,9 @@ export type UserUpdateWithoutAccountsInput = {
   tokens?: Prisma.AuthTokenUpdateManyWithoutUserNestedInput
   createdTokens?: Prisma.AuthTokenUpdateManyWithoutCreatedByNestedInput
   auditAsActor?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  createdDeals?: Prisma.DealUpdateManyWithoutCreatedByNestedInput
+  updatedDeals?: Prisma.DealUpdateManyWithoutUpdatedByNestedInput
+  uploadedMedia?: Prisma.MediaUpdateManyWithoutUploadedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -822,6 +894,9 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   tokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutUserNestedInput
   createdTokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutCreatedByNestedInput
   auditAsActor?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  createdDeals?: Prisma.DealUncheckedUpdateManyWithoutCreatedByNestedInput
+  updatedDeals?: Prisma.DealUncheckedUpdateManyWithoutUpdatedByNestedInput
+  uploadedMedia?: Prisma.MediaUncheckedUpdateManyWithoutUploadedByNestedInput
 }
 
 export type UserCreateWithoutSessionsInput = {
@@ -844,6 +919,9 @@ export type UserCreateWithoutSessionsInput = {
   tokens?: Prisma.AuthTokenCreateNestedManyWithoutUserInput
   createdTokens?: Prisma.AuthTokenCreateNestedManyWithoutCreatedByInput
   auditAsActor?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  createdDeals?: Prisma.DealCreateNestedManyWithoutCreatedByInput
+  updatedDeals?: Prisma.DealCreateNestedManyWithoutUpdatedByInput
+  uploadedMedia?: Prisma.MediaCreateNestedManyWithoutUploadedByInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -866,6 +944,9 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   tokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutUserInput
   createdTokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutCreatedByInput
   auditAsActor?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  createdDeals?: Prisma.DealUncheckedCreateNestedManyWithoutCreatedByInput
+  updatedDeals?: Prisma.DealUncheckedCreateNestedManyWithoutUpdatedByInput
+  uploadedMedia?: Prisma.MediaUncheckedCreateNestedManyWithoutUploadedByInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -904,6 +985,9 @@ export type UserUpdateWithoutSessionsInput = {
   tokens?: Prisma.AuthTokenUpdateManyWithoutUserNestedInput
   createdTokens?: Prisma.AuthTokenUpdateManyWithoutCreatedByNestedInput
   auditAsActor?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  createdDeals?: Prisma.DealUpdateManyWithoutCreatedByNestedInput
+  updatedDeals?: Prisma.DealUpdateManyWithoutUpdatedByNestedInput
+  uploadedMedia?: Prisma.MediaUpdateManyWithoutUploadedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -926,6 +1010,9 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   tokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutUserNestedInput
   createdTokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutCreatedByNestedInput
   auditAsActor?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  createdDeals?: Prisma.DealUncheckedUpdateManyWithoutCreatedByNestedInput
+  updatedDeals?: Prisma.DealUncheckedUpdateManyWithoutUpdatedByNestedInput
+  uploadedMedia?: Prisma.MediaUncheckedUpdateManyWithoutUploadedByNestedInput
 }
 
 export type UserCreateWithoutAuthSessionsInput = {
@@ -948,6 +1035,9 @@ export type UserCreateWithoutAuthSessionsInput = {
   tokens?: Prisma.AuthTokenCreateNestedManyWithoutUserInput
   createdTokens?: Prisma.AuthTokenCreateNestedManyWithoutCreatedByInput
   auditAsActor?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  createdDeals?: Prisma.DealCreateNestedManyWithoutCreatedByInput
+  updatedDeals?: Prisma.DealCreateNestedManyWithoutUpdatedByInput
+  uploadedMedia?: Prisma.MediaCreateNestedManyWithoutUploadedByInput
 }
 
 export type UserUncheckedCreateWithoutAuthSessionsInput = {
@@ -970,6 +1060,9 @@ export type UserUncheckedCreateWithoutAuthSessionsInput = {
   tokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutUserInput
   createdTokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutCreatedByInput
   auditAsActor?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  createdDeals?: Prisma.DealUncheckedCreateNestedManyWithoutCreatedByInput
+  updatedDeals?: Prisma.DealUncheckedCreateNestedManyWithoutUpdatedByInput
+  uploadedMedia?: Prisma.MediaUncheckedCreateNestedManyWithoutUploadedByInput
 }
 
 export type UserCreateOrConnectWithoutAuthSessionsInput = {
@@ -1008,6 +1101,9 @@ export type UserUpdateWithoutAuthSessionsInput = {
   tokens?: Prisma.AuthTokenUpdateManyWithoutUserNestedInput
   createdTokens?: Prisma.AuthTokenUpdateManyWithoutCreatedByNestedInput
   auditAsActor?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  createdDeals?: Prisma.DealUpdateManyWithoutCreatedByNestedInput
+  updatedDeals?: Prisma.DealUpdateManyWithoutUpdatedByNestedInput
+  uploadedMedia?: Prisma.MediaUpdateManyWithoutUploadedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAuthSessionsInput = {
@@ -1030,6 +1126,9 @@ export type UserUncheckedUpdateWithoutAuthSessionsInput = {
   tokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutUserNestedInput
   createdTokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutCreatedByNestedInput
   auditAsActor?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  createdDeals?: Prisma.DealUncheckedUpdateManyWithoutCreatedByNestedInput
+  updatedDeals?: Prisma.DealUncheckedUpdateManyWithoutUpdatedByNestedInput
+  uploadedMedia?: Prisma.MediaUncheckedUpdateManyWithoutUploadedByNestedInput
 }
 
 export type UserCreateWithoutRecoveryCodesInput = {
@@ -1052,6 +1151,9 @@ export type UserCreateWithoutRecoveryCodesInput = {
   tokens?: Prisma.AuthTokenCreateNestedManyWithoutUserInput
   createdTokens?: Prisma.AuthTokenCreateNestedManyWithoutCreatedByInput
   auditAsActor?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  createdDeals?: Prisma.DealCreateNestedManyWithoutCreatedByInput
+  updatedDeals?: Prisma.DealCreateNestedManyWithoutUpdatedByInput
+  uploadedMedia?: Prisma.MediaCreateNestedManyWithoutUploadedByInput
 }
 
 export type UserUncheckedCreateWithoutRecoveryCodesInput = {
@@ -1074,6 +1176,9 @@ export type UserUncheckedCreateWithoutRecoveryCodesInput = {
   tokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutUserInput
   createdTokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutCreatedByInput
   auditAsActor?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  createdDeals?: Prisma.DealUncheckedCreateNestedManyWithoutCreatedByInput
+  updatedDeals?: Prisma.DealUncheckedCreateNestedManyWithoutUpdatedByInput
+  uploadedMedia?: Prisma.MediaUncheckedCreateNestedManyWithoutUploadedByInput
 }
 
 export type UserCreateOrConnectWithoutRecoveryCodesInput = {
@@ -1112,6 +1217,9 @@ export type UserUpdateWithoutRecoveryCodesInput = {
   tokens?: Prisma.AuthTokenUpdateManyWithoutUserNestedInput
   createdTokens?: Prisma.AuthTokenUpdateManyWithoutCreatedByNestedInput
   auditAsActor?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  createdDeals?: Prisma.DealUpdateManyWithoutCreatedByNestedInput
+  updatedDeals?: Prisma.DealUpdateManyWithoutUpdatedByNestedInput
+  uploadedMedia?: Prisma.MediaUpdateManyWithoutUploadedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRecoveryCodesInput = {
@@ -1134,6 +1242,9 @@ export type UserUncheckedUpdateWithoutRecoveryCodesInput = {
   tokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutUserNestedInput
   createdTokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutCreatedByNestedInput
   auditAsActor?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  createdDeals?: Prisma.DealUncheckedUpdateManyWithoutCreatedByNestedInput
+  updatedDeals?: Prisma.DealUncheckedUpdateManyWithoutUpdatedByNestedInput
+  uploadedMedia?: Prisma.MediaUncheckedUpdateManyWithoutUploadedByNestedInput
 }
 
 export type UserCreateWithoutTokensInput = {
@@ -1156,6 +1267,9 @@ export type UserCreateWithoutTokensInput = {
   recoveryCodes?: Prisma.RecoveryCodeCreateNestedManyWithoutUserInput
   createdTokens?: Prisma.AuthTokenCreateNestedManyWithoutCreatedByInput
   auditAsActor?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  createdDeals?: Prisma.DealCreateNestedManyWithoutCreatedByInput
+  updatedDeals?: Prisma.DealCreateNestedManyWithoutUpdatedByInput
+  uploadedMedia?: Prisma.MediaCreateNestedManyWithoutUploadedByInput
 }
 
 export type UserUncheckedCreateWithoutTokensInput = {
@@ -1178,6 +1292,9 @@ export type UserUncheckedCreateWithoutTokensInput = {
   recoveryCodes?: Prisma.RecoveryCodeUncheckedCreateNestedManyWithoutUserInput
   createdTokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutCreatedByInput
   auditAsActor?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  createdDeals?: Prisma.DealUncheckedCreateNestedManyWithoutCreatedByInput
+  updatedDeals?: Prisma.DealUncheckedCreateNestedManyWithoutUpdatedByInput
+  uploadedMedia?: Prisma.MediaUncheckedCreateNestedManyWithoutUploadedByInput
 }
 
 export type UserCreateOrConnectWithoutTokensInput = {
@@ -1205,6 +1322,9 @@ export type UserCreateWithoutCreatedTokensInput = {
   recoveryCodes?: Prisma.RecoveryCodeCreateNestedManyWithoutUserInput
   tokens?: Prisma.AuthTokenCreateNestedManyWithoutUserInput
   auditAsActor?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  createdDeals?: Prisma.DealCreateNestedManyWithoutCreatedByInput
+  updatedDeals?: Prisma.DealCreateNestedManyWithoutUpdatedByInput
+  uploadedMedia?: Prisma.MediaCreateNestedManyWithoutUploadedByInput
 }
 
 export type UserUncheckedCreateWithoutCreatedTokensInput = {
@@ -1227,6 +1347,9 @@ export type UserUncheckedCreateWithoutCreatedTokensInput = {
   recoveryCodes?: Prisma.RecoveryCodeUncheckedCreateNestedManyWithoutUserInput
   tokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutUserInput
   auditAsActor?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  createdDeals?: Prisma.DealUncheckedCreateNestedManyWithoutCreatedByInput
+  updatedDeals?: Prisma.DealUncheckedCreateNestedManyWithoutUpdatedByInput
+  uploadedMedia?: Prisma.MediaUncheckedCreateNestedManyWithoutUploadedByInput
 }
 
 export type UserCreateOrConnectWithoutCreatedTokensInput = {
@@ -1265,6 +1388,9 @@ export type UserUpdateWithoutTokensInput = {
   recoveryCodes?: Prisma.RecoveryCodeUpdateManyWithoutUserNestedInput
   createdTokens?: Prisma.AuthTokenUpdateManyWithoutCreatedByNestedInput
   auditAsActor?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  createdDeals?: Prisma.DealUpdateManyWithoutCreatedByNestedInput
+  updatedDeals?: Prisma.DealUpdateManyWithoutUpdatedByNestedInput
+  uploadedMedia?: Prisma.MediaUpdateManyWithoutUploadedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTokensInput = {
@@ -1287,6 +1413,9 @@ export type UserUncheckedUpdateWithoutTokensInput = {
   recoveryCodes?: Prisma.RecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
   createdTokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutCreatedByNestedInput
   auditAsActor?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  createdDeals?: Prisma.DealUncheckedUpdateManyWithoutCreatedByNestedInput
+  updatedDeals?: Prisma.DealUncheckedUpdateManyWithoutUpdatedByNestedInput
+  uploadedMedia?: Prisma.MediaUncheckedUpdateManyWithoutUploadedByNestedInput
 }
 
 export type UserUpsertWithoutCreatedTokensInput = {
@@ -1320,6 +1449,9 @@ export type UserUpdateWithoutCreatedTokensInput = {
   recoveryCodes?: Prisma.RecoveryCodeUpdateManyWithoutUserNestedInput
   tokens?: Prisma.AuthTokenUpdateManyWithoutUserNestedInput
   auditAsActor?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  createdDeals?: Prisma.DealUpdateManyWithoutCreatedByNestedInput
+  updatedDeals?: Prisma.DealUpdateManyWithoutUpdatedByNestedInput
+  uploadedMedia?: Prisma.MediaUpdateManyWithoutUploadedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedTokensInput = {
@@ -1342,6 +1474,9 @@ export type UserUncheckedUpdateWithoutCreatedTokensInput = {
   recoveryCodes?: Prisma.RecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
   tokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutUserNestedInput
   auditAsActor?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  createdDeals?: Prisma.DealUncheckedUpdateManyWithoutCreatedByNestedInput
+  updatedDeals?: Prisma.DealUncheckedUpdateManyWithoutUpdatedByNestedInput
+  uploadedMedia?: Prisma.MediaUncheckedUpdateManyWithoutUploadedByNestedInput
 }
 
 export type UserCreateWithoutAuditAsActorInput = {
@@ -1364,6 +1499,9 @@ export type UserCreateWithoutAuditAsActorInput = {
   recoveryCodes?: Prisma.RecoveryCodeCreateNestedManyWithoutUserInput
   tokens?: Prisma.AuthTokenCreateNestedManyWithoutUserInput
   createdTokens?: Prisma.AuthTokenCreateNestedManyWithoutCreatedByInput
+  createdDeals?: Prisma.DealCreateNestedManyWithoutCreatedByInput
+  updatedDeals?: Prisma.DealCreateNestedManyWithoutUpdatedByInput
+  uploadedMedia?: Prisma.MediaCreateNestedManyWithoutUploadedByInput
 }
 
 export type UserUncheckedCreateWithoutAuditAsActorInput = {
@@ -1386,6 +1524,9 @@ export type UserUncheckedCreateWithoutAuditAsActorInput = {
   recoveryCodes?: Prisma.RecoveryCodeUncheckedCreateNestedManyWithoutUserInput
   tokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutUserInput
   createdTokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutCreatedByInput
+  createdDeals?: Prisma.DealUncheckedCreateNestedManyWithoutCreatedByInput
+  updatedDeals?: Prisma.DealUncheckedCreateNestedManyWithoutUpdatedByInput
+  uploadedMedia?: Prisma.MediaUncheckedCreateNestedManyWithoutUploadedByInput
 }
 
 export type UserCreateOrConnectWithoutAuditAsActorInput = {
@@ -1424,6 +1565,9 @@ export type UserUpdateWithoutAuditAsActorInput = {
   recoveryCodes?: Prisma.RecoveryCodeUpdateManyWithoutUserNestedInput
   tokens?: Prisma.AuthTokenUpdateManyWithoutUserNestedInput
   createdTokens?: Prisma.AuthTokenUpdateManyWithoutCreatedByNestedInput
+  createdDeals?: Prisma.DealUpdateManyWithoutCreatedByNestedInput
+  updatedDeals?: Prisma.DealUpdateManyWithoutUpdatedByNestedInput
+  uploadedMedia?: Prisma.MediaUpdateManyWithoutUploadedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAuditAsActorInput = {
@@ -1446,6 +1590,357 @@ export type UserUncheckedUpdateWithoutAuditAsActorInput = {
   recoveryCodes?: Prisma.RecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
   tokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutUserNestedInput
   createdTokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutCreatedByNestedInput
+  createdDeals?: Prisma.DealUncheckedUpdateManyWithoutCreatedByNestedInput
+  updatedDeals?: Prisma.DealUncheckedUpdateManyWithoutUpdatedByNestedInput
+  uploadedMedia?: Prisma.MediaUncheckedUpdateManyWithoutUploadedByNestedInput
+}
+
+export type UserCreateWithoutUploadedMediaInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  passwordHash?: string | null
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  lastTotpStep?: bigint | number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  authSessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  recoveryCodes?: Prisma.RecoveryCodeCreateNestedManyWithoutUserInput
+  tokens?: Prisma.AuthTokenCreateNestedManyWithoutUserInput
+  createdTokens?: Prisma.AuthTokenCreateNestedManyWithoutCreatedByInput
+  auditAsActor?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  createdDeals?: Prisma.DealCreateNestedManyWithoutCreatedByInput
+  updatedDeals?: Prisma.DealCreateNestedManyWithoutUpdatedByInput
+}
+
+export type UserUncheckedCreateWithoutUploadedMediaInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  passwordHash?: string | null
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  lastTotpStep?: bigint | number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  authSessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  recoveryCodes?: Prisma.RecoveryCodeUncheckedCreateNestedManyWithoutUserInput
+  tokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutUserInput
+  createdTokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutCreatedByInput
+  auditAsActor?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  createdDeals?: Prisma.DealUncheckedCreateNestedManyWithoutCreatedByInput
+  updatedDeals?: Prisma.DealUncheckedCreateNestedManyWithoutUpdatedByInput
+}
+
+export type UserCreateOrConnectWithoutUploadedMediaInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutUploadedMediaInput, Prisma.UserUncheckedCreateWithoutUploadedMediaInput>
+}
+
+export type UserUpsertWithoutUploadedMediaInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutUploadedMediaInput, Prisma.UserUncheckedUpdateWithoutUploadedMediaInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutUploadedMediaInput, Prisma.UserUncheckedCreateWithoutUploadedMediaInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutUploadedMediaInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutUploadedMediaInput, Prisma.UserUncheckedUpdateWithoutUploadedMediaInput>
+}
+
+export type UserUpdateWithoutUploadedMediaInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  authSessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  recoveryCodes?: Prisma.RecoveryCodeUpdateManyWithoutUserNestedInput
+  tokens?: Prisma.AuthTokenUpdateManyWithoutUserNestedInput
+  createdTokens?: Prisma.AuthTokenUpdateManyWithoutCreatedByNestedInput
+  auditAsActor?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  createdDeals?: Prisma.DealUpdateManyWithoutCreatedByNestedInput
+  updatedDeals?: Prisma.DealUpdateManyWithoutUpdatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutUploadedMediaInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  authSessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  recoveryCodes?: Prisma.RecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
+  tokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutUserNestedInput
+  createdTokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutCreatedByNestedInput
+  auditAsActor?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  createdDeals?: Prisma.DealUncheckedUpdateManyWithoutCreatedByNestedInput
+  updatedDeals?: Prisma.DealUncheckedUpdateManyWithoutUpdatedByNestedInput
+}
+
+export type UserCreateWithoutCreatedDealsInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  passwordHash?: string | null
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  lastTotpStep?: bigint | number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  authSessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  recoveryCodes?: Prisma.RecoveryCodeCreateNestedManyWithoutUserInput
+  tokens?: Prisma.AuthTokenCreateNestedManyWithoutUserInput
+  createdTokens?: Prisma.AuthTokenCreateNestedManyWithoutCreatedByInput
+  auditAsActor?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  updatedDeals?: Prisma.DealCreateNestedManyWithoutUpdatedByInput
+  uploadedMedia?: Prisma.MediaCreateNestedManyWithoutUploadedByInput
+}
+
+export type UserUncheckedCreateWithoutCreatedDealsInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  passwordHash?: string | null
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  lastTotpStep?: bigint | number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  authSessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  recoveryCodes?: Prisma.RecoveryCodeUncheckedCreateNestedManyWithoutUserInput
+  tokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutUserInput
+  createdTokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutCreatedByInput
+  auditAsActor?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  updatedDeals?: Prisma.DealUncheckedCreateNestedManyWithoutUpdatedByInput
+  uploadedMedia?: Prisma.MediaUncheckedCreateNestedManyWithoutUploadedByInput
+}
+
+export type UserCreateOrConnectWithoutCreatedDealsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCreatedDealsInput, Prisma.UserUncheckedCreateWithoutCreatedDealsInput>
+}
+
+export type UserCreateWithoutUpdatedDealsInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  passwordHash?: string | null
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  lastTotpStep?: bigint | number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  authSessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  recoveryCodes?: Prisma.RecoveryCodeCreateNestedManyWithoutUserInput
+  tokens?: Prisma.AuthTokenCreateNestedManyWithoutUserInput
+  createdTokens?: Prisma.AuthTokenCreateNestedManyWithoutCreatedByInput
+  auditAsActor?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  createdDeals?: Prisma.DealCreateNestedManyWithoutCreatedByInput
+  uploadedMedia?: Prisma.MediaCreateNestedManyWithoutUploadedByInput
+}
+
+export type UserUncheckedCreateWithoutUpdatedDealsInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  passwordHash?: string | null
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  lastTotpStep?: bigint | number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  authSessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  recoveryCodes?: Prisma.RecoveryCodeUncheckedCreateNestedManyWithoutUserInput
+  tokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutUserInput
+  createdTokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutCreatedByInput
+  auditAsActor?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  createdDeals?: Prisma.DealUncheckedCreateNestedManyWithoutCreatedByInput
+  uploadedMedia?: Prisma.MediaUncheckedCreateNestedManyWithoutUploadedByInput
+}
+
+export type UserCreateOrConnectWithoutUpdatedDealsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutUpdatedDealsInput, Prisma.UserUncheckedCreateWithoutUpdatedDealsInput>
+}
+
+export type UserUpsertWithoutCreatedDealsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCreatedDealsInput, Prisma.UserUncheckedUpdateWithoutCreatedDealsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCreatedDealsInput, Prisma.UserUncheckedCreateWithoutCreatedDealsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCreatedDealsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCreatedDealsInput, Prisma.UserUncheckedUpdateWithoutCreatedDealsInput>
+}
+
+export type UserUpdateWithoutCreatedDealsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  authSessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  recoveryCodes?: Prisma.RecoveryCodeUpdateManyWithoutUserNestedInput
+  tokens?: Prisma.AuthTokenUpdateManyWithoutUserNestedInput
+  createdTokens?: Prisma.AuthTokenUpdateManyWithoutCreatedByNestedInput
+  auditAsActor?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  updatedDeals?: Prisma.DealUpdateManyWithoutUpdatedByNestedInput
+  uploadedMedia?: Prisma.MediaUpdateManyWithoutUploadedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCreatedDealsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  authSessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  recoveryCodes?: Prisma.RecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
+  tokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutUserNestedInput
+  createdTokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutCreatedByNestedInput
+  auditAsActor?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  updatedDeals?: Prisma.DealUncheckedUpdateManyWithoutUpdatedByNestedInput
+  uploadedMedia?: Prisma.MediaUncheckedUpdateManyWithoutUploadedByNestedInput
+}
+
+export type UserUpsertWithoutUpdatedDealsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutUpdatedDealsInput, Prisma.UserUncheckedUpdateWithoutUpdatedDealsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutUpdatedDealsInput, Prisma.UserUncheckedCreateWithoutUpdatedDealsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutUpdatedDealsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutUpdatedDealsInput, Prisma.UserUncheckedUpdateWithoutUpdatedDealsInput>
+}
+
+export type UserUpdateWithoutUpdatedDealsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  authSessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  recoveryCodes?: Prisma.RecoveryCodeUpdateManyWithoutUserNestedInput
+  tokens?: Prisma.AuthTokenUpdateManyWithoutUserNestedInput
+  createdTokens?: Prisma.AuthTokenUpdateManyWithoutCreatedByNestedInput
+  auditAsActor?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  createdDeals?: Prisma.DealUpdateManyWithoutCreatedByNestedInput
+  uploadedMedia?: Prisma.MediaUpdateManyWithoutUploadedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutUpdatedDealsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  authSessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  recoveryCodes?: Prisma.RecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
+  tokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutUserNestedInput
+  createdTokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutCreatedByNestedInput
+  auditAsActor?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  createdDeals?: Prisma.DealUncheckedUpdateManyWithoutCreatedByNestedInput
+  uploadedMedia?: Prisma.MediaUncheckedUpdateManyWithoutUploadedByNestedInput
 }
 
 
@@ -1461,6 +1956,9 @@ export type UserCountOutputType = {
   tokens: number
   createdTokens: number
   auditAsActor: number
+  createdDeals: number
+  updatedDeals: number
+  uploadedMedia: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1471,6 +1969,9 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   tokens?: boolean | UserCountOutputTypeCountTokensArgs
   createdTokens?: boolean | UserCountOutputTypeCountCreatedTokensArgs
   auditAsActor?: boolean | UserCountOutputTypeCountAuditAsActorArgs
+  createdDeals?: boolean | UserCountOutputTypeCountCreatedDealsArgs
+  updatedDeals?: boolean | UserCountOutputTypeCountUpdatedDealsArgs
+  uploadedMedia?: boolean | UserCountOutputTypeCountUploadedMediaArgs
 }
 
 /**
@@ -1532,6 +2033,27 @@ export type UserCountOutputTypeCountAuditAsActorArgs<ExtArgs extends runtime.Typ
   where?: Prisma.AuditEventWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountCreatedDealsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DealWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountUpdatedDealsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DealWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountUploadedMediaArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MediaWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1554,6 +2076,9 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   tokens?: boolean | Prisma.User$tokensArgs<ExtArgs>
   createdTokens?: boolean | Prisma.User$createdTokensArgs<ExtArgs>
   auditAsActor?: boolean | Prisma.User$auditAsActorArgs<ExtArgs>
+  createdDeals?: boolean | Prisma.User$createdDealsArgs<ExtArgs>
+  updatedDeals?: boolean | Prisma.User$updatedDealsArgs<ExtArgs>
+  uploadedMedia?: boolean | Prisma.User$uploadedMediaArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1614,6 +2139,9 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   tokens?: boolean | Prisma.User$tokensArgs<ExtArgs>
   createdTokens?: boolean | Prisma.User$createdTokensArgs<ExtArgs>
   auditAsActor?: boolean | Prisma.User$auditAsActorArgs<ExtArgs>
+  createdDeals?: boolean | Prisma.User$createdDealsArgs<ExtArgs>
+  updatedDeals?: boolean | Prisma.User$updatedDealsArgs<ExtArgs>
+  uploadedMedia?: boolean | Prisma.User$uploadedMediaArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1629,6 +2157,9 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     tokens: Prisma.$AuthTokenPayload<ExtArgs>[]
     createdTokens: Prisma.$AuthTokenPayload<ExtArgs>[]
     auditAsActor: Prisma.$AuditEventPayload<ExtArgs>[]
+    createdDeals: Prisma.$DealPayload<ExtArgs>[]
+    updatedDeals: Prisma.$DealPayload<ExtArgs>[]
+    uploadedMedia: Prisma.$MediaPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2045,6 +2576,9 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   tokens<T extends Prisma.User$tokensArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$tokensArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuthTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   createdTokens<T extends Prisma.User$createdTokensArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$createdTokensArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuthTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   auditAsActor<T extends Prisma.User$auditAsActorArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$auditAsActorArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  createdDeals<T extends Prisma.User$createdDealsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$createdDealsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DealPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  updatedDeals<T extends Prisma.User$updatedDealsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$updatedDealsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DealPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  uploadedMedia<T extends Prisma.User$uploadedMediaArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$uploadedMediaArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MediaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2645,6 +3179,78 @@ export type User$auditAsActorArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.AuditEventScalarFieldEnum | Prisma.AuditEventScalarFieldEnum[]
+}
+
+/**
+ * User.createdDeals
+ */
+export type User$createdDealsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Deal
+   */
+  select?: Prisma.DealSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Deal
+   */
+  omit?: Prisma.DealOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DealInclude<ExtArgs> | null
+  where?: Prisma.DealWhereInput
+  orderBy?: Prisma.DealOrderByWithRelationInput | Prisma.DealOrderByWithRelationInput[]
+  cursor?: Prisma.DealWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DealScalarFieldEnum | Prisma.DealScalarFieldEnum[]
+}
+
+/**
+ * User.updatedDeals
+ */
+export type User$updatedDealsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Deal
+   */
+  select?: Prisma.DealSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Deal
+   */
+  omit?: Prisma.DealOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DealInclude<ExtArgs> | null
+  where?: Prisma.DealWhereInput
+  orderBy?: Prisma.DealOrderByWithRelationInput | Prisma.DealOrderByWithRelationInput[]
+  cursor?: Prisma.DealWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DealScalarFieldEnum | Prisma.DealScalarFieldEnum[]
+}
+
+/**
+ * User.uploadedMedia
+ */
+export type User$uploadedMediaArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Media
+   */
+  select?: Prisma.MediaSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Media
+   */
+  omit?: Prisma.MediaOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MediaInclude<ExtArgs> | null
+  where?: Prisma.MediaWhereInput
+  orderBy?: Prisma.MediaOrderByWithRelationInput | Prisma.MediaOrderByWithRelationInput[]
+  cursor?: Prisma.MediaWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MediaScalarFieldEnum | Prisma.MediaScalarFieldEnum[]
 }
 
 /**

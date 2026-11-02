@@ -38,7 +38,11 @@ await withServer(3105, {}, async (base) => {
   assert.equal(home.status, 200);
   const html = await home.text();
   assert.match(html, /MetaDeals/);
-  assert.match(html, /DEMO PREVIEW/);
+  assert.doesNotMatch(html, /DEMO PREVIEW/);
+  const deals = await fetch(`${base}/api/v1/deals`);
+  assert.equal(deals.status, 200);
+  assert.ok(Array.isArray((await deals.json()).data));
+  assert.equal((await fetch(`${base}/api/v1/admin/deals`)).status, 401);
   assert.match(html, /Today.*Top Deals/);
   for (const asset of ["hero", "products/phone", "products/laptop", "products/headphones", "products/watch", "products/air-fryer", "products/shoes"]) {
     const image = await fetch(`${base}/images/${asset}.png`);

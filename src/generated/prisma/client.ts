@@ -91,3 +91,28 @@ export type BootstrapState = Prisma.BootstrapStateModel
  * 
  */
 export type AuditEvent = Prisma.AuditEventModel
+/**
+ * Model Category
+ * 
+ */
+export type Category = Prisma.CategoryModel
+/**
+ * Model Merchant
+ * 
+ */
+export type Merchant = Prisma.MerchantModel
+/**
+ * Model Media
+ * 
+ */
+export type Media = Prisma.MediaModel
+/**
+ * Model Deal
+ * 
+ */
+export type Deal = Prisma.DealModel
+/**
+ * Model PurchaseOption
+ * 
+ */
+export type PurchaseOption = Prisma.PurchaseOptionModel

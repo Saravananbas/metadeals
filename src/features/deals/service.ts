@@ -1,7 +1,10 @@
 import "server-only";
-import { demoDeals } from "./demo-data";
+import { getDatabase } from "@/server/db/client";
+import { listPublicDeals } from "@/server/deals/repository";
+import { listingSchema } from "./validation";
+import { toCard } from "./presentation";
 
-/** Replace this source boundary with an approved repository in the deal-management milestone. */
 export async function getHomepageDeals() {
-  return { source: "demo" as const, deals: demoDeals };
+  const result = await listPublicDeals(getDatabase(), listingSchema.parse({}));
+  return { source: "database" as const, deals: result.data.map(toCard), nextCursor: result.nextCursor };
 }

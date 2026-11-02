@@ -60,7 +60,12 @@ export const ModelName = {
   AuthToken: 'AuthToken',
   AuthRateLimit: 'AuthRateLimit',
   BootstrapState: 'BootstrapState',
-  AuditEvent: 'AuditEvent'
+  AuditEvent: 'AuditEvent',
+  Category: 'Category',
+  Merchant: 'Merchant',
+  Media: 'Media',
+  Deal: 'Deal',
+  PurchaseOption: 'PurchaseOption'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -215,6 +220,94 @@ export const AuditEventScalarFieldEnum = {
 } as const
 
 export type AuditEventScalarFieldEnum = (typeof AuditEventScalarFieldEnum)[keyof typeof AuditEventScalarFieldEnum]
+
+
+export const CategoryScalarFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  name: 'name',
+  parentId: 'parentId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CategoryScalarFieldEnum = (typeof CategoryScalarFieldEnum)[keyof typeof CategoryScalarFieldEnum]
+
+
+export const MerchantScalarFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  name: 'name',
+  websiteUrl: 'websiteUrl',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MerchantScalarFieldEnum = (typeof MerchantScalarFieldEnum)[keyof typeof MerchantScalarFieldEnum]
+
+
+export const MediaScalarFieldEnum = {
+  id: 'id',
+  storageKey: 'storageKey',
+  provider: 'provider',
+  mimeType: 'mimeType',
+  byteSize: 'byteSize',
+  width: 'width',
+  height: 'height',
+  alt: 'alt',
+  uploadedById: 'uploadedById',
+  createdAt: 'createdAt'
+} as const
+
+export type MediaScalarFieldEnum = (typeof MediaScalarFieldEnum)[keyof typeof MediaScalarFieldEnum]
+
+
+export const DealScalarFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  title: 'title',
+  brand: 'brand',
+  description: 'description',
+  categoryId: 'categoryId',
+  merchantId: 'merchantId',
+  mediaId: 'mediaId',
+  mrpMinor: 'mrpMinor',
+  priceMinor: 'priceMinor',
+  currency: 'currency',
+  rating: 'rating',
+  reviewCount: 'reviewCount',
+  ratingSource: 'ratingSource',
+  productUrl: 'productUrl',
+  affiliateUrl: 'affiliateUrl',
+  status: 'status',
+  publishedAt: 'publishedAt',
+  startsAt: 'startsAt',
+  expiresAt: 'expiresAt',
+  featured: 'featured',
+  trending: 'trending',
+  everPublished: 'everPublished',
+  version: 'version',
+  createdById: 'createdById',
+  updatedById: 'updatedById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DealScalarFieldEnum = (typeof DealScalarFieldEnum)[keyof typeof DealScalarFieldEnum]
+
+
+export const PurchaseOptionScalarFieldEnum = {
+  id: 'id',
+  dealId: 'dealId',
+  merchantId: 'merchantId',
+  priceMinor: 'priceMinor',
+  productUrl: 'productUrl',
+  affiliateUrl: 'affiliateUrl',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PurchaseOptionScalarFieldEnum = (typeof PurchaseOptionScalarFieldEnum)[keyof typeof PurchaseOptionScalarFieldEnum]
 
 
 export const SortOrder = {

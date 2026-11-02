@@ -6,5 +6,6 @@ import { roleCan } from "@/server/auth/permissions";
 export default async function AdminLoginPage() {
   const context = await getCurrentAuthContext();
   if (context && roleCan(context.user.role, "account:read")) redirect("/admin");
+  if (context) redirect("/admin/deals");
   return <LoginForm />;
 }

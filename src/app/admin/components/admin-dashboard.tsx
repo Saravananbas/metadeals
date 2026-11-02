@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { type FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { UserRole, UserStatus } from "@/generated/prisma/client";
@@ -122,7 +123,7 @@ export function AdminDashboard({
     : role === "ADMIN" ? ["EDITOR"] : [];
 
   return (
-    <main className={styles.adminPage}>
+    <main className={styles.adminPage}><Link href="/admin/deals">Manage deals</Link>
       <header className={styles.topBar}>
         <div>
           <div className={styles.eyebrow}>MetaDeals4U · M2.5</div>

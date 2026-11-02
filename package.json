@@ -23,7 +23,9 @@
     "env:setup": "node scripts/setup-env.mjs",
     "auth:bootstrap": "node --conditions=react-server --import tsx scripts/bootstrap-super-admin.ts",
     "auth:reset-link": "node --conditions=react-server --import tsx scripts/manual-password-reset.ts",
-    "test:auth:integration": "node --conditions=react-server --import tsx scripts/auth-integration-test.ts"
+    "test:auth:integration": "node --conditions=react-server --import tsx scripts/auth-integration-test.ts",
+    "test:deals:integration": "node --conditions=react-server --import tsx scripts/deals-integration-test.ts",
+    "test:deals:http": "node --conditions=react-server --import tsx scripts/m3-http-test.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "3.1161.0",
@@ -45,7 +47,9 @@
     "qrcode": "1.5.4",
     "react": "19.3.1",
     "react-dom": "19.3.1",
+    "read-excel-file": "9.3.14",
     "server-only": "0.0.1",
+    "sharp": "0.35.5",
     "tailwind-merge": "3.7.0",
     "zod": "4.6.7"
   },

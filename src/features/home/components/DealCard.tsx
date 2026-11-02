@@ -14,11 +14,12 @@ export function DealCard({ deal, saved, onSave, onView }: { deal: Deal; saved: b
     </div>
     <div className="deal-details">
       <h3 id={`title-${deal.id}`}><button onClick={() => onView(deal)}>{deal.name}</button></h3>
-      <div className="deal-rating" aria-label={`Demo rating ${deal.rating} out of 5 from ${deal.reviewCount} reviews`}><Star size={14} fill="currentColor" /><span>{deal.rating}</span><span>({deal.reviewCount.toLocaleString("en-IN")})</span></div>
+      {deal.rating !== null && <div className="deal-rating" aria-label={`Rating ${deal.rating} out of 5. Source: ${deal.ratingSource ?? "demo"}`}><Star size={14} fill="currentColor" /><span>{deal.rating}</span><span>{deal.reviewCount !== null ? `(${deal.reviewCount.toLocaleString("en-IN")})` : ""}</span></div>}
+      {deal.ratingSource && <small>{deal.ratingSource}</small>}
       <div className="deal-price"><strong>{formatINR(deal.price)}</strong><del>{formatINR(deal.originalPrice)}</del></div>
       <span className="savings">Save {formatINR(savings.amount)}</span>
-      <div className="deal-bottom"><StoreLogo store={deal.store} /><button className="deal-link" onClick={() => onView(deal)}>View Deal <ArrowRight size={15} /></button></div>
-      <p className="deal-expiry"><Clock3 size={11} />{deal.expiry === "expired" ? "Expired · demo" : "Demo · expiry unverified"}</p>
+      <div className="deal-bottom"><StoreLogo store={deal.store} name={deal.storeName} /><button className="deal-link" onClick={() => onView(deal)}>View Deal <ArrowRight size={15} /></button></div>
+      <p className="deal-expiry"><Clock3 size={11} />{deal.source === "database" ? deal.expiresAt ? `Ends ${new Date(deal.expiresAt).toLocaleDateString("en-IN", { timeZone: "Asia/Kolkata" })}` : "No expiry supplied" : "Demo · expiry unverified"}</p>
     </div>
   </article>;
 }
