@@ -8,6 +8,8 @@ import { dealInclude } from "@/server/deals/repository";
 import { boundedBody, normalizeImage, storeImage, removeStoredImage } from "@/server/storage/media";
 import { api, json } from "@/server/http";
 import { parseDealImport } from "@/server/deals/import";
+import { getAffiliateClickStats, getAffiliateTransactions, importAffiliateTransactions } from "@/server/affiliate/service";
+import { importBatchSchema } from "@/server/affiliate/types";
 
 async function handle(request: Request, { params }: { params: Promise<{ path: string[] }> }) {
   return api(async () => {
@@ -36,6 +38,28 @@ async function handle(request: Request, { params }: { params: Promise<{ path: st
     if ((resource === "categories" || resource === "merchants") && !action) {
       if (request.method === "GET") return json({ data: await (resource === "categories" ? db.category.findMany({ take: 500, orderBy: { name: "asc" } }) : db.merchant.findMany({ take: 500, orderBy: { name: "asc" }, select: merchantSelect })) });
       if (request.method === "POST" || request.method === "PUT") { const body = await readJson(request); return json({ data: await db.$transaction((tx) => saveTaxonomy(tx, actor, resource, body, id), { isolationLevel: "Serializable" }) }); }
+    }
+    if (resource === "affiliate") {
+      const url = new URL(request.url);
+      if (id === "clicks" && request.method === "GET") {
+        const dealId = url.searchParams.get("dealId") ?? undefined;
+        const merchantId = url.searchParams.get("merchantId") ?? undefined;
+        const channel = url.searchParams.get("channel") ?? undefined;
+        return json({ data: await getAffiliateClickStats(db, actor, { dealId, merchantId, channel }) });
+      }
+      if (id === "transactions") {
+        if (request.method === "GET") {
+          const provider = url.searchParams.get("provider") ?? undefined;
+          const status = url.searchParams.get("status") ?? undefined;
+          return json({ data: await getAffiliateTransactions(db, actor, { provider, status }) });
+        }
+        if (request.method === "POST") {
+          const raw = await readJson(request);
+          const parsed = importBatchSchema.parse(raw);
+          return json({ data: await importAffiliateTransactions(db, actor, parsed) }, 201);
+        }
+      }
+      throw new DealError("Affiliate endpoint not found.", 404);
     }
     if (resource !== "deals") throw new DealError("Endpoint not found.", 404);
     if (request.method === "GET") {

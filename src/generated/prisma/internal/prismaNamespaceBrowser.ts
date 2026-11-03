@@ -245,6 +245,7 @@ export const MerchantScalarFieldEnum = {
   slug: 'slug',
   name: 'name',
   websiteUrl: 'websiteUrl',
+  affiliateHosts: 'affiliateHosts',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

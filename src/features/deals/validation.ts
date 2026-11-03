@@ -45,7 +45,10 @@ export const dealInputSchema = z.object({
 });
 export type DealInput = z.infer<typeof dealInputSchema>;
 export const categoryInputSchema = z.object({ slug: slugSchema, name: z.string().trim().min(2).max(100), parentId: z.string().min(1).max(100).nullable().default(null) }).strict();
-export const merchantInputSchema = categoryInputSchema.omit({ parentId: true }).extend({ websiteUrl: publicUrl });
+export const merchantInputSchema = categoryInputSchema.omit({ parentId: true }).extend({
+  websiteUrl: publicUrl,
+  affiliateHosts: z.array(z.string().trim().toLowerCase()).default([]),
+});
 export const listingSchema = z.object({
   q: z.string().trim().max(100).default(""),
   category: z.string().max(100).default(""),

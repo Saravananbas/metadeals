@@ -197,16 +197,15 @@ model Category {
 }
 
 model Merchant {
-  id         String   @id @default(cuid())
-  slug       String   @unique @db.VarChar(100)
-  name       String   @db.VarChar(100)
-  websiteUrl String   @db.VarChar(2048)
-  // M4 draft: excluded from the client until its additive migration is applied.
-  affiliateHosts String[] @default([]) @ignore
-  deals      Deal[]
-  options    PurchaseOption[]
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id             String           @id @default(cuid())
+  slug           String           @unique @db.VarChar(100)
+  name           String           @db.VarChar(100)
+  websiteUrl     String           @db.VarChar(2048)
+  affiliateHosts String[]         @default([])
+  deals          Deal[]
+  options        PurchaseOption[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
 }
 
 model AffiliateClick {

@@ -25,7 +25,8 @@
     "auth:reset-link": "node --conditions=react-server --import tsx scripts/manual-password-reset.ts",
     "test:auth:integration": "node --conditions=react-server --import tsx scripts/auth-integration-test.ts",
     "test:deals:integration": "node --conditions=react-server --import tsx scripts/deals-integration-test.ts",
-    "test:deals:http": "node --conditions=react-server --import tsx scripts/m3-http-test.ts"
+    "test:deals:http": "node --conditions=react-server --import tsx scripts/m3-http-test.ts",
+    "test:affiliate:integration": "node --conditions=react-server --import tsx scripts/m4-affiliate-test.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "3.1161.0",

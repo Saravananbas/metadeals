@@ -47,6 +47,7 @@ export type MerchantCountAggregateOutputType = {
   slug: number
   name: number
   websiteUrl: number
+  affiliateHosts: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -76,6 +77,7 @@ export type MerchantCountAggregateInputType = {
   slug?: true
   name?: true
   websiteUrl?: true
+  affiliateHosts?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -158,6 +160,7 @@ export type MerchantGroupByOutputType = {
   slug: string
   name: string
   websiteUrl: string
+  affiliateHosts: string[]
   createdAt: Date
   updatedAt: Date
   _count: MerchantCountAggregateOutputType | null
@@ -188,6 +191,7 @@ export type MerchantWhereInput = {
   slug?: Prisma.StringFilter<"Merchant"> | string
   name?: Prisma.StringFilter<"Merchant"> | string
   websiteUrl?: Prisma.StringFilter<"Merchant"> | string
+  affiliateHosts?: Prisma.StringNullableListFilter<"Merchant">
   createdAt?: Prisma.DateTimeFilter<"Merchant"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Merchant"> | Date | string
   deals?: Prisma.DealListRelationFilter
@@ -199,6 +203,7 @@ export type MerchantOrderByWithRelationInput = {
   slug?: Prisma.SortOrder
   name?: Prisma.SortOrder
   websiteUrl?: Prisma.SortOrder
+  affiliateHosts?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deals?: Prisma.DealOrderByRelationAggregateInput
@@ -213,6 +218,7 @@ export type MerchantWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.MerchantWhereInput | Prisma.MerchantWhereInput[]
   name?: Prisma.StringFilter<"Merchant"> | string
   websiteUrl?: Prisma.StringFilter<"Merchant"> | string
+  affiliateHosts?: Prisma.StringNullableListFilter<"Merchant">
   createdAt?: Prisma.DateTimeFilter<"Merchant"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Merchant"> | Date | string
   deals?: Prisma.DealListRelationFilter
@@ -224,6 +230,7 @@ export type MerchantOrderByWithAggregationInput = {
   slug?: Prisma.SortOrder
   name?: Prisma.SortOrder
   websiteUrl?: Prisma.SortOrder
+  affiliateHosts?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.MerchantCountOrderByAggregateInput
@@ -239,6 +246,7 @@ export type MerchantScalarWhereWithAggregatesInput = {
   slug?: Prisma.StringWithAggregatesFilter<"Merchant"> | string
   name?: Prisma.StringWithAggregatesFilter<"Merchant"> | string
   websiteUrl?: Prisma.StringWithAggregatesFilter<"Merchant"> | string
+  affiliateHosts?: Prisma.StringNullableListFilter<"Merchant">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Merchant"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Merchant"> | Date | string
 }
@@ -248,6 +256,7 @@ export type MerchantCreateInput = {
   slug: string
   name: string
   websiteUrl: string
+  affiliateHosts?: Prisma.MerchantCreateaffiliateHostsInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
   deals?: Prisma.DealCreateNestedManyWithoutMerchantInput
@@ -259,6 +268,7 @@ export type MerchantUncheckedCreateInput = {
   slug: string
   name: string
   websiteUrl: string
+  affiliateHosts?: Prisma.MerchantCreateaffiliateHostsInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
   deals?: Prisma.DealUncheckedCreateNestedManyWithoutMerchantInput
@@ -270,6 +280,7 @@ export type MerchantUpdateInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   websiteUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  affiliateHosts?: Prisma.MerchantUpdateaffiliateHostsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deals?: Prisma.DealUpdateManyWithoutMerchantNestedInput
@@ -281,6 +292,7 @@ export type MerchantUncheckedUpdateInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   websiteUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  affiliateHosts?: Prisma.MerchantUpdateaffiliateHostsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deals?: Prisma.DealUncheckedUpdateManyWithoutMerchantNestedInput
@@ -292,6 +304,7 @@ export type MerchantCreateManyInput = {
   slug: string
   name: string
   websiteUrl: string
+  affiliateHosts?: Prisma.MerchantCreateaffiliateHostsInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -301,6 +314,7 @@ export type MerchantUpdateManyMutationInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   websiteUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  affiliateHosts?: Prisma.MerchantUpdateaffiliateHostsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -310,8 +324,17 @@ export type MerchantUncheckedUpdateManyInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   websiteUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  affiliateHosts?: Prisma.MerchantUpdateaffiliateHostsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type StringNullableListFilter<$PrismaModel = never> = {
+  equals?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null
+  has?: string | Prisma.StringFieldRefInput<$PrismaModel> | null
+  hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  isEmpty?: boolean
 }
 
 export type MerchantCountOrderByAggregateInput = {
@@ -319,6 +342,7 @@ export type MerchantCountOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   name?: Prisma.SortOrder
   websiteUrl?: Prisma.SortOrder
+  affiliateHosts?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -344,6 +368,15 @@ export type MerchantMinOrderByAggregateInput = {
 export type MerchantScalarRelationFilter = {
   is?: Prisma.MerchantWhereInput
   isNot?: Prisma.MerchantWhereInput
+}
+
+export type MerchantCreateaffiliateHostsInput = {
+  set: string[]
+}
+
+export type MerchantUpdateaffiliateHostsInput = {
+  set?: string[]
+  push?: string | string[]
 }
 
 export type MerchantCreateNestedOneWithoutDealsInput = {
@@ -379,6 +412,7 @@ export type MerchantCreateWithoutDealsInput = {
   slug: string
   name: string
   websiteUrl: string
+  affiliateHosts?: Prisma.MerchantCreateaffiliateHostsInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
   options?: Prisma.PurchaseOptionCreateNestedManyWithoutMerchantInput
@@ -389,6 +423,7 @@ export type MerchantUncheckedCreateWithoutDealsInput = {
   slug: string
   name: string
   websiteUrl: string
+  affiliateHosts?: Prisma.MerchantCreateaffiliateHostsInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
   options?: Prisma.PurchaseOptionUncheckedCreateNestedManyWithoutMerchantInput
@@ -415,6 +450,7 @@ export type MerchantUpdateWithoutDealsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   websiteUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  affiliateHosts?: Prisma.MerchantUpdateaffiliateHostsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   options?: Prisma.PurchaseOptionUpdateManyWithoutMerchantNestedInput
@@ -425,6 +461,7 @@ export type MerchantUncheckedUpdateWithoutDealsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   websiteUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  affiliateHosts?: Prisma.MerchantUpdateaffiliateHostsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   options?: Prisma.PurchaseOptionUncheckedUpdateManyWithoutMerchantNestedInput
@@ -435,6 +472,7 @@ export type MerchantCreateWithoutOptionsInput = {
   slug: string
   name: string
   websiteUrl: string
+  affiliateHosts?: Prisma.MerchantCreateaffiliateHostsInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
   deals?: Prisma.DealCreateNestedManyWithoutMerchantInput
@@ -445,6 +483,7 @@ export type MerchantUncheckedCreateWithoutOptionsInput = {
   slug: string
   name: string
   websiteUrl: string
+  affiliateHosts?: Prisma.MerchantCreateaffiliateHostsInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
   deals?: Prisma.DealUncheckedCreateNestedManyWithoutMerchantInput
@@ -471,6 +510,7 @@ export type MerchantUpdateWithoutOptionsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   websiteUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  affiliateHosts?: Prisma.MerchantUpdateaffiliateHostsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deals?: Prisma.DealUpdateManyWithoutMerchantNestedInput
@@ -481,6 +521,7 @@ export type MerchantUncheckedUpdateWithoutOptionsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   websiteUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  affiliateHosts?: Prisma.MerchantUpdateaffiliateHostsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deals?: Prisma.DealUncheckedUpdateManyWithoutMerchantNestedInput
@@ -531,6 +572,7 @@ export type MerchantSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   slug?: boolean
   name?: boolean
   websiteUrl?: boolean
+  affiliateHosts?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deals?: boolean | Prisma.Merchant$dealsArgs<ExtArgs>
@@ -543,6 +585,7 @@ export type MerchantSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   slug?: boolean
   name?: boolean
   websiteUrl?: boolean
+  affiliateHosts?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["merchant"]>
@@ -552,6 +595,7 @@ export type MerchantSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   slug?: boolean
   name?: boolean
   websiteUrl?: boolean
+  affiliateHosts?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["merchant"]>
@@ -561,11 +605,12 @@ export type MerchantSelectScalar = {
   slug?: boolean
   name?: boolean
   websiteUrl?: boolean
+  affiliateHosts?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type MerchantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "name" | "websiteUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["merchant"]>
+export type MerchantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "name" | "websiteUrl" | "affiliateHosts" | "createdAt" | "updatedAt", ExtArgs["result"]["merchant"]>
 export type MerchantInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   deals?: boolean | Prisma.Merchant$dealsArgs<ExtArgs>
   options?: boolean | Prisma.Merchant$optionsArgs<ExtArgs>
@@ -585,6 +630,7 @@ export type $MerchantPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     slug: string
     name: string
     websiteUrl: string
+    affiliateHosts: string[]
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["merchant"]>
@@ -1016,6 +1062,7 @@ export interface MerchantFieldRefs {
   readonly slug: Prisma.FieldRef<"Merchant", 'String'>
   readonly name: Prisma.FieldRef<"Merchant", 'String'>
   readonly websiteUrl: Prisma.FieldRef<"Merchant", 'String'>
+  readonly affiliateHosts: Prisma.FieldRef<"Merchant", 'String[]'>
   readonly createdAt: Prisma.FieldRef<"Merchant", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Merchant", 'DateTime'>
 }
