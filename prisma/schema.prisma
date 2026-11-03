@@ -290,6 +290,8 @@ model Deal {
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
   options        PurchaseOption[]
+  candidates     DealCandidate[]
+  priceObservations PriceObservation[]
 
   @@index([status, publishedAt, id])
   @@index([categoryId, status, publishedAt])
@@ -395,5 +397,84 @@ model DistributionPost {
   @@unique([dealId, destinationId])
   @@index([status, createdAt])
 }
+
+enum CandidateStatus {
+  DISCOVERED
+  VALIDATING
+  VERIFIED
+  UNCERTAIN
+  REJECTED
+  PUBLISHED
+}
+
+model DealCandidate {
+  id                 String          @id @default(cuid())
+  sourceUrl          String          @db.VarChar(2048)
+  sourcePlatform     String          @db.VarChar(60)
+  externalId         String?         @db.VarChar(120)
+  rawTitle           String          @db.VarChar(300)
+  brand              String?         @db.VarChar(100)
+  categorySlug       String          @db.VarChar(100)
+  observedPriceMinor Int
+  observedMrpMinor   Int
+  currency           String          @default("INR") @db.Char(3)
+  discountPercent    Int             @default(0)
+  imageUrl           String?         @db.VarChar(2048)
+  sellerName         String?         @db.VarChar(150)
+  inStock            Boolean         @default(true)
+  confidenceScore    Int             @default(0)
+  status             CandidateStatus @default(DISCOVERED)
+  rejectionReason    String?         @db.VarChar(500)
+  rawData            String?         @db.Text
+  dealId             String?
+  deal               Deal?           @relation(fields: [dealId], references: [id], onDelete: SetNull)
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+
+  priceObservations  PriceObservation[]
+
+  @@index([status, createdAt])
+  @@index([sourcePlatform, externalId])
+  @@index([dealId])
+}
+
+model PriceObservation {
+  id                 String         @id @default(cuid())
+  dealId             String?
+  deal               Deal?          @relation(fields: [dealId], references: [id], onDelete: SetNull)
+  candidateId        String?
+  candidate          DealCandidate? @relation(fields: [candidateId], references: [id], onDelete: SetNull)
+  merchantSlug       String         @db.VarChar(100)
+  priceMinor         Int
+  mrpMinor           Int
+  currency           String         @default("INR") @db.Char(3)
+  sourceUrl          String         @db.VarChar(2048)
+  observedAt         DateTime       @default(now())
+
+  @@index([merchantSlug, observedAt])
+  @@index([dealId, observedAt])
+  @@index([candidateId, observedAt])
+}
+
+enum ScraperJobStatus {
+  RUNNING
+  COMPLETED
+  FAILED
+}
+
+model ScraperJob {
+  id             String           @id @default(cuid())
+  connectorCode  String           @db.VarChar(60)
+  status         ScraperJobStatus @default(RUNNING)
+  itemsFound     Int              @default(0)
+  itemsVerified  Int              @default(0)
+  itemsPublished Int              @default(0)
+  errorMessage   String?          @db.Text
+  startedAt      DateTime         @default(now())
+  completedAt    DateTime?
+
+  @@index([connectorCode, startedAt])
+}
+
 
 

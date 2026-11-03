@@ -17,6 +17,7 @@ playwright-report/
 test-results/
 
 .vercel/
+*.tsbuildinfo
 
 # Private local database backups and uploaded media
 .local/

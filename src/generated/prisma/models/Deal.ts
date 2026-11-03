@@ -422,6 +422,8 @@ export type DealWhereInput = {
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   updatedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   options?: Prisma.PurchaseOptionListRelationFilter
+  candidates?: Prisma.DealCandidateListRelationFilter
+  priceObservations?: Prisma.PriceObservationListRelationFilter
 }
 
 export type DealOrderByWithRelationInput = {
@@ -459,6 +461,8 @@ export type DealOrderByWithRelationInput = {
   createdBy?: Prisma.UserOrderByWithRelationInput
   updatedBy?: Prisma.UserOrderByWithRelationInput
   options?: Prisma.PurchaseOptionOrderByRelationAggregateInput
+  candidates?: Prisma.DealCandidateOrderByRelationAggregateInput
+  priceObservations?: Prisma.PriceObservationOrderByRelationAggregateInput
 }
 
 export type DealWhereUniqueInput = Prisma.AtLeast<{
@@ -499,6 +503,8 @@ export type DealWhereUniqueInput = Prisma.AtLeast<{
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   updatedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   options?: Prisma.PurchaseOptionListRelationFilter
+  candidates?: Prisma.DealCandidateListRelationFilter
+  priceObservations?: Prisma.PriceObservationListRelationFilter
 }, "id" | "slug">
 
 export type DealOrderByWithAggregationInput = {
@@ -601,6 +607,8 @@ export type DealCreateInput = {
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedDealsInput
   updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedDealsInput
   options?: Prisma.PurchaseOptionCreateNestedManyWithoutDealInput
+  candidates?: Prisma.DealCandidateCreateNestedManyWithoutDealInput
+  priceObservations?: Prisma.PriceObservationCreateNestedManyWithoutDealInput
 }
 
 export type DealUncheckedCreateInput = {
@@ -633,6 +641,8 @@ export type DealUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   options?: Prisma.PurchaseOptionUncheckedCreateNestedManyWithoutDealInput
+  candidates?: Prisma.DealCandidateUncheckedCreateNestedManyWithoutDealInput
+  priceObservations?: Prisma.PriceObservationUncheckedCreateNestedManyWithoutDealInput
 }
 
 export type DealUpdateInput = {
@@ -665,6 +675,8 @@ export type DealUpdateInput = {
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedDealsNestedInput
   updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedDealsNestedInput
   options?: Prisma.PurchaseOptionUpdateManyWithoutDealNestedInput
+  candidates?: Prisma.DealCandidateUpdateManyWithoutDealNestedInput
+  priceObservations?: Prisma.PriceObservationUpdateManyWithoutDealNestedInput
 }
 
 export type DealUncheckedUpdateInput = {
@@ -697,6 +709,8 @@ export type DealUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   options?: Prisma.PurchaseOptionUncheckedUpdateManyWithoutDealNestedInput
+  candidates?: Prisma.DealCandidateUncheckedUpdateManyWithoutDealNestedInput
+  priceObservations?: Prisma.PriceObservationUncheckedUpdateManyWithoutDealNestedInput
 }
 
 export type DealCreateManyInput = {
@@ -909,6 +923,11 @@ export type DealSumOrderByAggregateInput = {
 export type DealScalarRelationFilter = {
   is?: Prisma.DealWhereInput
   isNot?: Prisma.DealWhereInput
+}
+
+export type DealNullableScalarRelationFilter = {
+  is?: Prisma.DealWhereInput | null
+  isNot?: Prisma.DealWhereInput | null
 }
 
 export type DealCreateNestedManyWithoutCreatedByInput = {
@@ -1147,6 +1166,38 @@ export type DealUpdateOneRequiredWithoutOptionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.DealUpdateToOneWithWhereWithoutOptionsInput, Prisma.DealUpdateWithoutOptionsInput>, Prisma.DealUncheckedUpdateWithoutOptionsInput>
 }
 
+export type DealCreateNestedOneWithoutCandidatesInput = {
+  create?: Prisma.XOR<Prisma.DealCreateWithoutCandidatesInput, Prisma.DealUncheckedCreateWithoutCandidatesInput>
+  connectOrCreate?: Prisma.DealCreateOrConnectWithoutCandidatesInput
+  connect?: Prisma.DealWhereUniqueInput
+}
+
+export type DealUpdateOneWithoutCandidatesNestedInput = {
+  create?: Prisma.XOR<Prisma.DealCreateWithoutCandidatesInput, Prisma.DealUncheckedCreateWithoutCandidatesInput>
+  connectOrCreate?: Prisma.DealCreateOrConnectWithoutCandidatesInput
+  upsert?: Prisma.DealUpsertWithoutCandidatesInput
+  disconnect?: Prisma.DealWhereInput | boolean
+  delete?: Prisma.DealWhereInput | boolean
+  connect?: Prisma.DealWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DealUpdateToOneWithWhereWithoutCandidatesInput, Prisma.DealUpdateWithoutCandidatesInput>, Prisma.DealUncheckedUpdateWithoutCandidatesInput>
+}
+
+export type DealCreateNestedOneWithoutPriceObservationsInput = {
+  create?: Prisma.XOR<Prisma.DealCreateWithoutPriceObservationsInput, Prisma.DealUncheckedCreateWithoutPriceObservationsInput>
+  connectOrCreate?: Prisma.DealCreateOrConnectWithoutPriceObservationsInput
+  connect?: Prisma.DealWhereUniqueInput
+}
+
+export type DealUpdateOneWithoutPriceObservationsNestedInput = {
+  create?: Prisma.XOR<Prisma.DealCreateWithoutPriceObservationsInput, Prisma.DealUncheckedCreateWithoutPriceObservationsInput>
+  connectOrCreate?: Prisma.DealCreateOrConnectWithoutPriceObservationsInput
+  upsert?: Prisma.DealUpsertWithoutPriceObservationsInput
+  disconnect?: Prisma.DealWhereInput | boolean
+  delete?: Prisma.DealWhereInput | boolean
+  connect?: Prisma.DealWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DealUpdateToOneWithWhereWithoutPriceObservationsInput, Prisma.DealUpdateWithoutPriceObservationsInput>, Prisma.DealUncheckedUpdateWithoutPriceObservationsInput>
+}
+
 export type DealCreateWithoutCreatedByInput = {
   id?: string
   slug: string
@@ -1176,6 +1227,8 @@ export type DealCreateWithoutCreatedByInput = {
   media: Prisma.MediaCreateNestedOneWithoutDealsInput
   updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedDealsInput
   options?: Prisma.PurchaseOptionCreateNestedManyWithoutDealInput
+  candidates?: Prisma.DealCandidateCreateNestedManyWithoutDealInput
+  priceObservations?: Prisma.PriceObservationCreateNestedManyWithoutDealInput
 }
 
 export type DealUncheckedCreateWithoutCreatedByInput = {
@@ -1207,6 +1260,8 @@ export type DealUncheckedCreateWithoutCreatedByInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   options?: Prisma.PurchaseOptionUncheckedCreateNestedManyWithoutDealInput
+  candidates?: Prisma.DealCandidateUncheckedCreateNestedManyWithoutDealInput
+  priceObservations?: Prisma.PriceObservationUncheckedCreateNestedManyWithoutDealInput
 }
 
 export type DealCreateOrConnectWithoutCreatedByInput = {
@@ -1248,6 +1303,8 @@ export type DealCreateWithoutUpdatedByInput = {
   media: Prisma.MediaCreateNestedOneWithoutDealsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedDealsInput
   options?: Prisma.PurchaseOptionCreateNestedManyWithoutDealInput
+  candidates?: Prisma.DealCandidateCreateNestedManyWithoutDealInput
+  priceObservations?: Prisma.PriceObservationCreateNestedManyWithoutDealInput
 }
 
 export type DealUncheckedCreateWithoutUpdatedByInput = {
@@ -1279,6 +1336,8 @@ export type DealUncheckedCreateWithoutUpdatedByInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   options?: Prisma.PurchaseOptionUncheckedCreateNestedManyWithoutDealInput
+  candidates?: Prisma.DealCandidateUncheckedCreateNestedManyWithoutDealInput
+  priceObservations?: Prisma.PriceObservationUncheckedCreateNestedManyWithoutDealInput
 }
 
 export type DealCreateOrConnectWithoutUpdatedByInput = {
@@ -1386,6 +1445,8 @@ export type DealCreateWithoutCategoryInput = {
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedDealsInput
   updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedDealsInput
   options?: Prisma.PurchaseOptionCreateNestedManyWithoutDealInput
+  candidates?: Prisma.DealCandidateCreateNestedManyWithoutDealInput
+  priceObservations?: Prisma.PriceObservationCreateNestedManyWithoutDealInput
 }
 
 export type DealUncheckedCreateWithoutCategoryInput = {
@@ -1417,6 +1478,8 @@ export type DealUncheckedCreateWithoutCategoryInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   options?: Prisma.PurchaseOptionUncheckedCreateNestedManyWithoutDealInput
+  candidates?: Prisma.DealCandidateUncheckedCreateNestedManyWithoutDealInput
+  priceObservations?: Prisma.PriceObservationUncheckedCreateNestedManyWithoutDealInput
 }
 
 export type DealCreateOrConnectWithoutCategoryInput = {
@@ -1474,6 +1537,8 @@ export type DealCreateWithoutMerchantInput = {
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedDealsInput
   updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedDealsInput
   options?: Prisma.PurchaseOptionCreateNestedManyWithoutDealInput
+  candidates?: Prisma.DealCandidateCreateNestedManyWithoutDealInput
+  priceObservations?: Prisma.PriceObservationCreateNestedManyWithoutDealInput
 }
 
 export type DealUncheckedCreateWithoutMerchantInput = {
@@ -1505,6 +1570,8 @@ export type DealUncheckedCreateWithoutMerchantInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   options?: Prisma.PurchaseOptionUncheckedCreateNestedManyWithoutDealInput
+  candidates?: Prisma.DealCandidateUncheckedCreateNestedManyWithoutDealInput
+  priceObservations?: Prisma.PriceObservationUncheckedCreateNestedManyWithoutDealInput
 }
 
 export type DealCreateOrConnectWithoutMerchantInput = {
@@ -1562,6 +1629,8 @@ export type DealCreateWithoutMediaInput = {
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedDealsInput
   updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedDealsInput
   options?: Prisma.PurchaseOptionCreateNestedManyWithoutDealInput
+  candidates?: Prisma.DealCandidateCreateNestedManyWithoutDealInput
+  priceObservations?: Prisma.PriceObservationCreateNestedManyWithoutDealInput
 }
 
 export type DealUncheckedCreateWithoutMediaInput = {
@@ -1593,6 +1662,8 @@ export type DealUncheckedCreateWithoutMediaInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   options?: Prisma.PurchaseOptionUncheckedCreateNestedManyWithoutDealInput
+  candidates?: Prisma.DealCandidateUncheckedCreateNestedManyWithoutDealInput
+  priceObservations?: Prisma.PriceObservationUncheckedCreateNestedManyWithoutDealInput
 }
 
 export type DealCreateOrConnectWithoutMediaInput = {
@@ -1650,6 +1721,8 @@ export type DealCreateWithoutOptionsInput = {
   media: Prisma.MediaCreateNestedOneWithoutDealsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedDealsInput
   updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedDealsInput
+  candidates?: Prisma.DealCandidateCreateNestedManyWithoutDealInput
+  priceObservations?: Prisma.PriceObservationCreateNestedManyWithoutDealInput
 }
 
 export type DealUncheckedCreateWithoutOptionsInput = {
@@ -1681,6 +1754,8 @@ export type DealUncheckedCreateWithoutOptionsInput = {
   updatedById: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  candidates?: Prisma.DealCandidateUncheckedCreateNestedManyWithoutDealInput
+  priceObservations?: Prisma.PriceObservationUncheckedCreateNestedManyWithoutDealInput
 }
 
 export type DealCreateOrConnectWithoutOptionsInput = {
@@ -1728,6 +1803,8 @@ export type DealUpdateWithoutOptionsInput = {
   media?: Prisma.MediaUpdateOneRequiredWithoutDealsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedDealsNestedInput
   updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedDealsNestedInput
+  candidates?: Prisma.DealCandidateUpdateManyWithoutDealNestedInput
+  priceObservations?: Prisma.PriceObservationUpdateManyWithoutDealNestedInput
 }
 
 export type DealUncheckedUpdateWithoutOptionsInput = {
@@ -1759,6 +1836,304 @@ export type DealUncheckedUpdateWithoutOptionsInput = {
   updatedById?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  candidates?: Prisma.DealCandidateUncheckedUpdateManyWithoutDealNestedInput
+  priceObservations?: Prisma.PriceObservationUncheckedUpdateManyWithoutDealNestedInput
+}
+
+export type DealCreateWithoutCandidatesInput = {
+  id?: string
+  slug: string
+  title: string
+  brand: string
+  description: string
+  mrpMinor: number
+  priceMinor: number
+  currency?: string
+  rating?: number | null
+  reviewCount?: number | null
+  ratingSource?: string | null
+  productUrl: string
+  affiliateUrl?: string | null
+  status?: $Enums.DealStatus
+  publishedAt?: Date | string | null
+  startsAt?: Date | string | null
+  expiresAt?: Date | string | null
+  featured?: boolean
+  trending?: boolean
+  everPublished?: boolean
+  version?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  category: Prisma.CategoryCreateNestedOneWithoutDealsInput
+  merchant: Prisma.MerchantCreateNestedOneWithoutDealsInput
+  media: Prisma.MediaCreateNestedOneWithoutDealsInput
+  createdBy: Prisma.UserCreateNestedOneWithoutCreatedDealsInput
+  updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedDealsInput
+  options?: Prisma.PurchaseOptionCreateNestedManyWithoutDealInput
+  priceObservations?: Prisma.PriceObservationCreateNestedManyWithoutDealInput
+}
+
+export type DealUncheckedCreateWithoutCandidatesInput = {
+  id?: string
+  slug: string
+  title: string
+  brand: string
+  description: string
+  categoryId: string
+  merchantId: string
+  mediaId: string
+  mrpMinor: number
+  priceMinor: number
+  currency?: string
+  rating?: number | null
+  reviewCount?: number | null
+  ratingSource?: string | null
+  productUrl: string
+  affiliateUrl?: string | null
+  status?: $Enums.DealStatus
+  publishedAt?: Date | string | null
+  startsAt?: Date | string | null
+  expiresAt?: Date | string | null
+  featured?: boolean
+  trending?: boolean
+  everPublished?: boolean
+  version?: number
+  createdById: string
+  updatedById: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  options?: Prisma.PurchaseOptionUncheckedCreateNestedManyWithoutDealInput
+  priceObservations?: Prisma.PriceObservationUncheckedCreateNestedManyWithoutDealInput
+}
+
+export type DealCreateOrConnectWithoutCandidatesInput = {
+  where: Prisma.DealWhereUniqueInput
+  create: Prisma.XOR<Prisma.DealCreateWithoutCandidatesInput, Prisma.DealUncheckedCreateWithoutCandidatesInput>
+}
+
+export type DealUpsertWithoutCandidatesInput = {
+  update: Prisma.XOR<Prisma.DealUpdateWithoutCandidatesInput, Prisma.DealUncheckedUpdateWithoutCandidatesInput>
+  create: Prisma.XOR<Prisma.DealCreateWithoutCandidatesInput, Prisma.DealUncheckedCreateWithoutCandidatesInput>
+  where?: Prisma.DealWhereInput
+}
+
+export type DealUpdateToOneWithWhereWithoutCandidatesInput = {
+  where?: Prisma.DealWhereInput
+  data: Prisma.XOR<Prisma.DealUpdateWithoutCandidatesInput, Prisma.DealUncheckedUpdateWithoutCandidatesInput>
+}
+
+export type DealUpdateWithoutCandidatesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  brand?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  mrpMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  priceMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  reviewCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ratingSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  productUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  trending?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  everPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.CategoryUpdateOneRequiredWithoutDealsNestedInput
+  merchant?: Prisma.MerchantUpdateOneRequiredWithoutDealsNestedInput
+  media?: Prisma.MediaUpdateOneRequiredWithoutDealsNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedDealsNestedInput
+  updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedDealsNestedInput
+  options?: Prisma.PurchaseOptionUpdateManyWithoutDealNestedInput
+  priceObservations?: Prisma.PriceObservationUpdateManyWithoutDealNestedInput
+}
+
+export type DealUncheckedUpdateWithoutCandidatesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  brand?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  merchantId?: Prisma.StringFieldUpdateOperationsInput | string
+  mediaId?: Prisma.StringFieldUpdateOperationsInput | string
+  mrpMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  priceMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  reviewCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ratingSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  productUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  trending?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  everPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  updatedById?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  options?: Prisma.PurchaseOptionUncheckedUpdateManyWithoutDealNestedInput
+  priceObservations?: Prisma.PriceObservationUncheckedUpdateManyWithoutDealNestedInput
+}
+
+export type DealCreateWithoutPriceObservationsInput = {
+  id?: string
+  slug: string
+  title: string
+  brand: string
+  description: string
+  mrpMinor: number
+  priceMinor: number
+  currency?: string
+  rating?: number | null
+  reviewCount?: number | null
+  ratingSource?: string | null
+  productUrl: string
+  affiliateUrl?: string | null
+  status?: $Enums.DealStatus
+  publishedAt?: Date | string | null
+  startsAt?: Date | string | null
+  expiresAt?: Date | string | null
+  featured?: boolean
+  trending?: boolean
+  everPublished?: boolean
+  version?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  category: Prisma.CategoryCreateNestedOneWithoutDealsInput
+  merchant: Prisma.MerchantCreateNestedOneWithoutDealsInput
+  media: Prisma.MediaCreateNestedOneWithoutDealsInput
+  createdBy: Prisma.UserCreateNestedOneWithoutCreatedDealsInput
+  updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedDealsInput
+  options?: Prisma.PurchaseOptionCreateNestedManyWithoutDealInput
+  candidates?: Prisma.DealCandidateCreateNestedManyWithoutDealInput
+}
+
+export type DealUncheckedCreateWithoutPriceObservationsInput = {
+  id?: string
+  slug: string
+  title: string
+  brand: string
+  description: string
+  categoryId: string
+  merchantId: string
+  mediaId: string
+  mrpMinor: number
+  priceMinor: number
+  currency?: string
+  rating?: number | null
+  reviewCount?: number | null
+  ratingSource?: string | null
+  productUrl: string
+  affiliateUrl?: string | null
+  status?: $Enums.DealStatus
+  publishedAt?: Date | string | null
+  startsAt?: Date | string | null
+  expiresAt?: Date | string | null
+  featured?: boolean
+  trending?: boolean
+  everPublished?: boolean
+  version?: number
+  createdById: string
+  updatedById: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  options?: Prisma.PurchaseOptionUncheckedCreateNestedManyWithoutDealInput
+  candidates?: Prisma.DealCandidateUncheckedCreateNestedManyWithoutDealInput
+}
+
+export type DealCreateOrConnectWithoutPriceObservationsInput = {
+  where: Prisma.DealWhereUniqueInput
+  create: Prisma.XOR<Prisma.DealCreateWithoutPriceObservationsInput, Prisma.DealUncheckedCreateWithoutPriceObservationsInput>
+}
+
+export type DealUpsertWithoutPriceObservationsInput = {
+  update: Prisma.XOR<Prisma.DealUpdateWithoutPriceObservationsInput, Prisma.DealUncheckedUpdateWithoutPriceObservationsInput>
+  create: Prisma.XOR<Prisma.DealCreateWithoutPriceObservationsInput, Prisma.DealUncheckedCreateWithoutPriceObservationsInput>
+  where?: Prisma.DealWhereInput
+}
+
+export type DealUpdateToOneWithWhereWithoutPriceObservationsInput = {
+  where?: Prisma.DealWhereInput
+  data: Prisma.XOR<Prisma.DealUpdateWithoutPriceObservationsInput, Prisma.DealUncheckedUpdateWithoutPriceObservationsInput>
+}
+
+export type DealUpdateWithoutPriceObservationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  brand?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  mrpMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  priceMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  reviewCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ratingSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  productUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  trending?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  everPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.CategoryUpdateOneRequiredWithoutDealsNestedInput
+  merchant?: Prisma.MerchantUpdateOneRequiredWithoutDealsNestedInput
+  media?: Prisma.MediaUpdateOneRequiredWithoutDealsNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedDealsNestedInput
+  updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedDealsNestedInput
+  options?: Prisma.PurchaseOptionUpdateManyWithoutDealNestedInput
+  candidates?: Prisma.DealCandidateUpdateManyWithoutDealNestedInput
+}
+
+export type DealUncheckedUpdateWithoutPriceObservationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  brand?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  merchantId?: Prisma.StringFieldUpdateOperationsInput | string
+  mediaId?: Prisma.StringFieldUpdateOperationsInput | string
+  mrpMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  priceMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  reviewCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ratingSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  productUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  trending?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  everPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  updatedById?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  options?: Prisma.PurchaseOptionUncheckedUpdateManyWithoutDealNestedInput
+  candidates?: Prisma.DealCandidateUncheckedUpdateManyWithoutDealNestedInput
 }
 
 export type DealCreateManyCreatedByInput = {
@@ -1850,6 +2225,8 @@ export type DealUpdateWithoutCreatedByInput = {
   media?: Prisma.MediaUpdateOneRequiredWithoutDealsNestedInput
   updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedDealsNestedInput
   options?: Prisma.PurchaseOptionUpdateManyWithoutDealNestedInput
+  candidates?: Prisma.DealCandidateUpdateManyWithoutDealNestedInput
+  priceObservations?: Prisma.PriceObservationUpdateManyWithoutDealNestedInput
 }
 
 export type DealUncheckedUpdateWithoutCreatedByInput = {
@@ -1881,6 +2258,8 @@ export type DealUncheckedUpdateWithoutCreatedByInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   options?: Prisma.PurchaseOptionUncheckedUpdateManyWithoutDealNestedInput
+  candidates?: Prisma.DealCandidateUncheckedUpdateManyWithoutDealNestedInput
+  priceObservations?: Prisma.PriceObservationUncheckedUpdateManyWithoutDealNestedInput
 }
 
 export type DealUncheckedUpdateManyWithoutCreatedByInput = {
@@ -1942,6 +2321,8 @@ export type DealUpdateWithoutUpdatedByInput = {
   media?: Prisma.MediaUpdateOneRequiredWithoutDealsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedDealsNestedInput
   options?: Prisma.PurchaseOptionUpdateManyWithoutDealNestedInput
+  candidates?: Prisma.DealCandidateUpdateManyWithoutDealNestedInput
+  priceObservations?: Prisma.PriceObservationUpdateManyWithoutDealNestedInput
 }
 
 export type DealUncheckedUpdateWithoutUpdatedByInput = {
@@ -1973,6 +2354,8 @@ export type DealUncheckedUpdateWithoutUpdatedByInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   options?: Prisma.PurchaseOptionUncheckedUpdateManyWithoutDealNestedInput
+  candidates?: Prisma.DealCandidateUncheckedUpdateManyWithoutDealNestedInput
+  priceObservations?: Prisma.PriceObservationUncheckedUpdateManyWithoutDealNestedInput
 }
 
 export type DealUncheckedUpdateManyWithoutUpdatedByInput = {
@@ -2064,6 +2447,8 @@ export type DealUpdateWithoutCategoryInput = {
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedDealsNestedInput
   updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedDealsNestedInput
   options?: Prisma.PurchaseOptionUpdateManyWithoutDealNestedInput
+  candidates?: Prisma.DealCandidateUpdateManyWithoutDealNestedInput
+  priceObservations?: Prisma.PriceObservationUpdateManyWithoutDealNestedInput
 }
 
 export type DealUncheckedUpdateWithoutCategoryInput = {
@@ -2095,6 +2480,8 @@ export type DealUncheckedUpdateWithoutCategoryInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   options?: Prisma.PurchaseOptionUncheckedUpdateManyWithoutDealNestedInput
+  candidates?: Prisma.DealCandidateUncheckedUpdateManyWithoutDealNestedInput
+  priceObservations?: Prisma.PriceObservationUncheckedUpdateManyWithoutDealNestedInput
 }
 
 export type DealUncheckedUpdateManyWithoutCategoryInput = {
@@ -2186,6 +2573,8 @@ export type DealUpdateWithoutMerchantInput = {
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedDealsNestedInput
   updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedDealsNestedInput
   options?: Prisma.PurchaseOptionUpdateManyWithoutDealNestedInput
+  candidates?: Prisma.DealCandidateUpdateManyWithoutDealNestedInput
+  priceObservations?: Prisma.PriceObservationUpdateManyWithoutDealNestedInput
 }
 
 export type DealUncheckedUpdateWithoutMerchantInput = {
@@ -2217,6 +2606,8 @@ export type DealUncheckedUpdateWithoutMerchantInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   options?: Prisma.PurchaseOptionUncheckedUpdateManyWithoutDealNestedInput
+  candidates?: Prisma.DealCandidateUncheckedUpdateManyWithoutDealNestedInput
+  priceObservations?: Prisma.PriceObservationUncheckedUpdateManyWithoutDealNestedInput
 }
 
 export type DealUncheckedUpdateManyWithoutMerchantInput = {
@@ -2308,6 +2699,8 @@ export type DealUpdateWithoutMediaInput = {
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedDealsNestedInput
   updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedDealsNestedInput
   options?: Prisma.PurchaseOptionUpdateManyWithoutDealNestedInput
+  candidates?: Prisma.DealCandidateUpdateManyWithoutDealNestedInput
+  priceObservations?: Prisma.PriceObservationUpdateManyWithoutDealNestedInput
 }
 
 export type DealUncheckedUpdateWithoutMediaInput = {
@@ -2339,6 +2732,8 @@ export type DealUncheckedUpdateWithoutMediaInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   options?: Prisma.PurchaseOptionUncheckedUpdateManyWithoutDealNestedInput
+  candidates?: Prisma.DealCandidateUncheckedUpdateManyWithoutDealNestedInput
+  priceObservations?: Prisma.PriceObservationUncheckedUpdateManyWithoutDealNestedInput
 }
 
 export type DealUncheckedUpdateManyWithoutMediaInput = {
@@ -2378,10 +2773,14 @@ export type DealUncheckedUpdateManyWithoutMediaInput = {
 
 export type DealCountOutputType = {
   options: number
+  candidates: number
+  priceObservations: number
 }
 
 export type DealCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   options?: boolean | DealCountOutputTypeCountOptionsArgs
+  candidates?: boolean | DealCountOutputTypeCountCandidatesArgs
+  priceObservations?: boolean | DealCountOutputTypeCountPriceObservationsArgs
 }
 
 /**
@@ -2399,6 +2798,20 @@ export type DealCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensi
  */
 export type DealCountOutputTypeCountOptionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.PurchaseOptionWhereInput
+}
+
+/**
+ * DealCountOutputType without action
+ */
+export type DealCountOutputTypeCountCandidatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DealCandidateWhereInput
+}
+
+/**
+ * DealCountOutputType without action
+ */
+export type DealCountOutputTypeCountPriceObservationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PriceObservationWhereInput
 }
 
 
@@ -2437,6 +2850,8 @@ export type DealSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   updatedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   options?: boolean | Prisma.Deal$optionsArgs<ExtArgs>
+  candidates?: boolean | Prisma.Deal$candidatesArgs<ExtArgs>
+  priceObservations?: boolean | Prisma.Deal$priceObservationsArgs<ExtArgs>
   _count?: boolean | Prisma.DealCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["deal"]>
 
@@ -2551,6 +2966,8 @@ export type DealInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   updatedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   options?: boolean | Prisma.Deal$optionsArgs<ExtArgs>
+  candidates?: boolean | Prisma.Deal$candidatesArgs<ExtArgs>
+  priceObservations?: boolean | Prisma.Deal$priceObservationsArgs<ExtArgs>
   _count?: boolean | Prisma.DealCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type DealIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2577,6 +2994,8 @@ export type $DealPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     createdBy: Prisma.$UserPayload<ExtArgs>
     updatedBy: Prisma.$UserPayload<ExtArgs>
     options: Prisma.$PurchaseOptionPayload<ExtArgs>[]
+    candidates: Prisma.$DealCandidatePayload<ExtArgs>[]
+    priceObservations: Prisma.$PriceObservationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -3007,6 +3426,8 @@ export interface Prisma__DealClient<T, Null = never, ExtArgs extends runtime.Typ
   createdBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   updatedBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   options<T extends Prisma.Deal$optionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Deal$optionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PurchaseOptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  candidates<T extends Prisma.Deal$candidatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Deal$candidatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DealCandidatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  priceObservations<T extends Prisma.Deal$priceObservationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Deal$priceObservationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PriceObservationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3486,6 +3907,54 @@ export type Deal$optionsArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   distinct?: Prisma.PurchaseOptionScalarFieldEnum | Prisma.PurchaseOptionScalarFieldEnum[]
+}
+
+/**
+ * Deal.candidates
+ */
+export type Deal$candidatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DealCandidate
+   */
+  select?: Prisma.DealCandidateSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DealCandidate
+   */
+  omit?: Prisma.DealCandidateOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DealCandidateInclude<ExtArgs> | null
+  where?: Prisma.DealCandidateWhereInput
+  orderBy?: Prisma.DealCandidateOrderByWithRelationInput | Prisma.DealCandidateOrderByWithRelationInput[]
+  cursor?: Prisma.DealCandidateWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DealCandidateScalarFieldEnum | Prisma.DealCandidateScalarFieldEnum[]
+}
+
+/**
+ * Deal.priceObservations
+ */
+export type Deal$priceObservationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PriceObservation
+   */
+  select?: Prisma.PriceObservationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PriceObservation
+   */
+  omit?: Prisma.PriceObservationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PriceObservationInclude<ExtArgs> | null
+  where?: Prisma.PriceObservationWhereInput
+  orderBy?: Prisma.PriceObservationOrderByWithRelationInput | Prisma.PriceObservationOrderByWithRelationInput[]
+  cursor?: Prisma.PriceObservationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PriceObservationScalarFieldEnum | Prisma.PriceObservationScalarFieldEnum[]
 }
 
 /**

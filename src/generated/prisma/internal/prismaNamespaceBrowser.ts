@@ -73,7 +73,10 @@ export const ModelName = {
   CustomerSignupChallenge: 'CustomerSignupChallenge',
   CustomerRateLimit: 'CustomerRateLimit',
   DistributionDestination: 'DistributionDestination',
-  DistributionPost: 'DistributionPost'
+  DistributionPost: 'DistributionPost',
+  DealCandidate: 'DealCandidate',
+  PriceObservation: 'PriceObservation',
+  ScraperJob: 'ScraperJob'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -425,6 +428,63 @@ export const DistributionPostScalarFieldEnum = {
 } as const
 
 export type DistributionPostScalarFieldEnum = (typeof DistributionPostScalarFieldEnum)[keyof typeof DistributionPostScalarFieldEnum]
+
+
+export const DealCandidateScalarFieldEnum = {
+  id: 'id',
+  sourceUrl: 'sourceUrl',
+  sourcePlatform: 'sourcePlatform',
+  externalId: 'externalId',
+  rawTitle: 'rawTitle',
+  brand: 'brand',
+  categorySlug: 'categorySlug',
+  observedPriceMinor: 'observedPriceMinor',
+  observedMrpMinor: 'observedMrpMinor',
+  currency: 'currency',
+  discountPercent: 'discountPercent',
+  imageUrl: 'imageUrl',
+  sellerName: 'sellerName',
+  inStock: 'inStock',
+  confidenceScore: 'confidenceScore',
+  status: 'status',
+  rejectionReason: 'rejectionReason',
+  rawData: 'rawData',
+  dealId: 'dealId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DealCandidateScalarFieldEnum = (typeof DealCandidateScalarFieldEnum)[keyof typeof DealCandidateScalarFieldEnum]
+
+
+export const PriceObservationScalarFieldEnum = {
+  id: 'id',
+  dealId: 'dealId',
+  candidateId: 'candidateId',
+  merchantSlug: 'merchantSlug',
+  priceMinor: 'priceMinor',
+  mrpMinor: 'mrpMinor',
+  currency: 'currency',
+  sourceUrl: 'sourceUrl',
+  observedAt: 'observedAt'
+} as const
+
+export type PriceObservationScalarFieldEnum = (typeof PriceObservationScalarFieldEnum)[keyof typeof PriceObservationScalarFieldEnum]
+
+
+export const ScraperJobScalarFieldEnum = {
+  id: 'id',
+  connectorCode: 'connectorCode',
+  status: 'status',
+  itemsFound: 'itemsFound',
+  itemsVerified: 'itemsVerified',
+  itemsPublished: 'itemsPublished',
+  errorMessage: 'errorMessage',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt'
+} as const
+
+export type ScraperJobScalarFieldEnum = (typeof ScraperJobScalarFieldEnum)[keyof typeof ScraperJobScalarFieldEnum]
 
 
 export const SortOrder = {

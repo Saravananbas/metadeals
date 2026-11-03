@@ -63,3 +63,24 @@ export const PostStatus = {
 } as const
 
 export type PostStatus = (typeof PostStatus)[keyof typeof PostStatus]
+
+
+export const CandidateStatus = {
+  DISCOVERED: 'DISCOVERED',
+  VALIDATING: 'VALIDATING',
+  VERIFIED: 'VERIFIED',
+  UNCERTAIN: 'UNCERTAIN',
+  REJECTED: 'REJECTED',
+  PUBLISHED: 'PUBLISHED'
+} as const
+
+export type CandidateStatus = (typeof CandidateStatus)[keyof typeof CandidateStatus]
+
+
+export const ScraperJobStatus = {
+  RUNNING: 'RUNNING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+} as const
+
+export type ScraperJobStatus = (typeof ScraperJobStatus)[keyof typeof ScraperJobStatus]

@@ -13,6 +13,8 @@ import { importBatchSchema } from "@/server/affiliate/types";
 import { createDestination, listDestinations, publishDealToDestinations, getDistributionHistory } from "@/server/distribution/service";
 import { destinationInputSchema, publishDealInputSchema } from "@/features/distribution/formatting";
 import { getUnifiedAnalyticsSummary } from "@/server/analytics/service";
+import { scraperService } from "@/server/scraper/service";
+import { candidateReviewActionSchema } from "@/features/scraper/validation";
 
 async function handle(request: Request, { params }: { params: Promise<{ path: string[] }> }) {
   return api(async () => {
@@ -85,6 +87,39 @@ async function handle(request: Request, { params }: { params: Promise<{ path: st
     }
     if (resource === "analytics" && request.method === "GET") {
       return json({ data: await getUnifiedAnalyticsSummary(db, actor) });
+    }
+    if (resource === "scraper") {
+      const url = new URL(request.url);
+      if (id === "candidates") {
+        if (request.method === "GET") {
+          const statusParam = url.searchParams.get("status");
+          const validStatuses = ["DISCOVERED", "VALIDATING", "VERIFIED", "UNCERTAIN", "REJECTED", "PUBLISHED"] as const;
+          type StatusType = (typeof validStatuses)[number];
+          const status: StatusType | undefined = statusParam && (validStatuses as readonly string[]).includes(statusParam)
+            ? (statusParam as StatusType)
+            : undefined;
+          const limit = url.searchParams.get("limit") ? Number(url.searchParams.get("limit")) : 20;
+          const offset = url.searchParams.get("offset") ? Number(url.searchParams.get("offset")) : 0;
+          return json({ data: await scraperService.listCandidates(db, { status, limit, offset }) });
+        }
+        if (request.method === "POST") {
+          const body = await readJson(request);
+          return json({ data: await scraperService.ingestCandidate(db, body) }, 201);
+        }
+      }
+      if (id === "review" && request.method === "POST") {
+        const body = await readJson(request) as { candidateId: string; action: "APPROVE" | "REJECT"; reason?: string };
+        const actionParsed = candidateReviewActionSchema.parse({ action: body.action, reason: body.reason });
+        return json({ data: await scraperService.reviewCandidate(db, body.candidateId, actionParsed, actor.id) });
+      }
+      if (id === "scan" && request.method === "POST") {
+        const body = await readJson(request) as { connectorCode: string };
+        return json({ data: await scraperService.runConnectorScan(db, body.connectorCode) });
+      }
+      if (id === "metrics" && request.method === "GET") {
+        return json({ data: await scraperService.getScraperMetrics(db) });
+      }
+      throw new DealError("Scraper endpoint not found.", 404);
     }
     if (resource !== "deals") throw new DealError("Endpoint not found.", 404);
     if (request.method === "GET") {

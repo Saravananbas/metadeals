@@ -2,10 +2,12 @@ import type { AffiliateProviderAdapter, AffiliateConversionContext, ConvertedLin
 import { AmazonAdapter } from "./amazon";
 import { FlipkartAdapter } from "./flipkart";
 import { CuelinksAdapter } from "./cuelinks";
+import { CuelinksMcpAdapter } from "./cuelinks-mcp";
 
 const adapters: AffiliateProviderAdapter[] = [
   new AmazonAdapter(),
   new FlipkartAdapter(),
+  new CuelinksMcpAdapter(),
   new CuelinksAdapter(),
 ];
 

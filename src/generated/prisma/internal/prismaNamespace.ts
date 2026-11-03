@@ -419,7 +419,10 @@ export const ModelName = {
   CustomerSignupChallenge: 'CustomerSignupChallenge',
   CustomerRateLimit: 'CustomerRateLimit',
   DistributionDestination: 'DistributionDestination',
-  DistributionPost: 'DistributionPost'
+  DistributionPost: 'DistributionPost',
+  DealCandidate: 'DealCandidate',
+  PriceObservation: 'PriceObservation',
+  ScraperJob: 'ScraperJob'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -435,7 +438,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "account" | "session" | "verificationToken" | "authSession" | "recoveryCode" | "authToken" | "authRateLimit" | "bootstrapState" | "auditEvent" | "category" | "merchant" | "affiliateClick" | "affiliateTransaction" | "media" | "deal" | "purchaseOption" | "customer" | "customerIdentity" | "customerSignupChallenge" | "customerRateLimit" | "distributionDestination" | "distributionPost"
+    modelProps: "user" | "account" | "session" | "verificationToken" | "authSession" | "recoveryCode" | "authToken" | "authRateLimit" | "bootstrapState" | "auditEvent" | "category" | "merchant" | "affiliateClick" | "affiliateTransaction" | "media" | "deal" | "purchaseOption" | "customer" | "customerIdentity" | "customerSignupChallenge" | "customerRateLimit" | "distributionDestination" | "distributionPost" | "dealCandidate" | "priceObservation" | "scraperJob"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2141,6 +2144,228 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    DealCandidate: {
+      payload: Prisma.$DealCandidatePayload<ExtArgs>
+      fields: Prisma.DealCandidateFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DealCandidateFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealCandidatePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DealCandidateFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealCandidatePayload>
+        }
+        findFirst: {
+          args: Prisma.DealCandidateFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealCandidatePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DealCandidateFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealCandidatePayload>
+        }
+        findMany: {
+          args: Prisma.DealCandidateFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealCandidatePayload>[]
+        }
+        create: {
+          args: Prisma.DealCandidateCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealCandidatePayload>
+        }
+        createMany: {
+          args: Prisma.DealCandidateCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DealCandidateCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealCandidatePayload>[]
+        }
+        delete: {
+          args: Prisma.DealCandidateDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealCandidatePayload>
+        }
+        update: {
+          args: Prisma.DealCandidateUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealCandidatePayload>
+        }
+        deleteMany: {
+          args: Prisma.DealCandidateDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DealCandidateUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DealCandidateUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealCandidatePayload>[]
+        }
+        upsert: {
+          args: Prisma.DealCandidateUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealCandidatePayload>
+        }
+        aggregate: {
+          args: Prisma.DealCandidateAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDealCandidate>
+        }
+        groupBy: {
+          args: Prisma.DealCandidateGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DealCandidateGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DealCandidateCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DealCandidateCountAggregateOutputType> | number
+        }
+      }
+    }
+    PriceObservation: {
+      payload: Prisma.$PriceObservationPayload<ExtArgs>
+      fields: Prisma.PriceObservationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PriceObservationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PriceObservationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PriceObservationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PriceObservationPayload>
+        }
+        findFirst: {
+          args: Prisma.PriceObservationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PriceObservationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PriceObservationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PriceObservationPayload>
+        }
+        findMany: {
+          args: Prisma.PriceObservationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PriceObservationPayload>[]
+        }
+        create: {
+          args: Prisma.PriceObservationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PriceObservationPayload>
+        }
+        createMany: {
+          args: Prisma.PriceObservationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PriceObservationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PriceObservationPayload>[]
+        }
+        delete: {
+          args: Prisma.PriceObservationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PriceObservationPayload>
+        }
+        update: {
+          args: Prisma.PriceObservationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PriceObservationPayload>
+        }
+        deleteMany: {
+          args: Prisma.PriceObservationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PriceObservationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PriceObservationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PriceObservationPayload>[]
+        }
+        upsert: {
+          args: Prisma.PriceObservationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PriceObservationPayload>
+        }
+        aggregate: {
+          args: Prisma.PriceObservationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePriceObservation>
+        }
+        groupBy: {
+          args: Prisma.PriceObservationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PriceObservationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PriceObservationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PriceObservationCountAggregateOutputType> | number
+        }
+      }
+    }
+    ScraperJob: {
+      payload: Prisma.$ScraperJobPayload<ExtArgs>
+      fields: Prisma.ScraperJobFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ScraperJobFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScraperJobPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ScraperJobFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScraperJobPayload>
+        }
+        findFirst: {
+          args: Prisma.ScraperJobFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScraperJobPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ScraperJobFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScraperJobPayload>
+        }
+        findMany: {
+          args: Prisma.ScraperJobFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScraperJobPayload>[]
+        }
+        create: {
+          args: Prisma.ScraperJobCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScraperJobPayload>
+        }
+        createMany: {
+          args: Prisma.ScraperJobCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ScraperJobCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScraperJobPayload>[]
+        }
+        delete: {
+          args: Prisma.ScraperJobDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScraperJobPayload>
+        }
+        update: {
+          args: Prisma.ScraperJobUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScraperJobPayload>
+        }
+        deleteMany: {
+          args: Prisma.ScraperJobDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ScraperJobUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ScraperJobUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScraperJobPayload>[]
+        }
+        upsert: {
+          args: Prisma.ScraperJobUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScraperJobPayload>
+        }
+        aggregate: {
+          args: Prisma.ScraperJobAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateScraperJob>
+        }
+        groupBy: {
+          args: Prisma.ScraperJobGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ScraperJobGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ScraperJobCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ScraperJobCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2515,6 +2740,63 @@ export const DistributionPostScalarFieldEnum = {
 export type DistributionPostScalarFieldEnum = (typeof DistributionPostScalarFieldEnum)[keyof typeof DistributionPostScalarFieldEnum]
 
 
+export const DealCandidateScalarFieldEnum = {
+  id: 'id',
+  sourceUrl: 'sourceUrl',
+  sourcePlatform: 'sourcePlatform',
+  externalId: 'externalId',
+  rawTitle: 'rawTitle',
+  brand: 'brand',
+  categorySlug: 'categorySlug',
+  observedPriceMinor: 'observedPriceMinor',
+  observedMrpMinor: 'observedMrpMinor',
+  currency: 'currency',
+  discountPercent: 'discountPercent',
+  imageUrl: 'imageUrl',
+  sellerName: 'sellerName',
+  inStock: 'inStock',
+  confidenceScore: 'confidenceScore',
+  status: 'status',
+  rejectionReason: 'rejectionReason',
+  rawData: 'rawData',
+  dealId: 'dealId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DealCandidateScalarFieldEnum = (typeof DealCandidateScalarFieldEnum)[keyof typeof DealCandidateScalarFieldEnum]
+
+
+export const PriceObservationScalarFieldEnum = {
+  id: 'id',
+  dealId: 'dealId',
+  candidateId: 'candidateId',
+  merchantSlug: 'merchantSlug',
+  priceMinor: 'priceMinor',
+  mrpMinor: 'mrpMinor',
+  currency: 'currency',
+  sourceUrl: 'sourceUrl',
+  observedAt: 'observedAt'
+} as const
+
+export type PriceObservationScalarFieldEnum = (typeof PriceObservationScalarFieldEnum)[keyof typeof PriceObservationScalarFieldEnum]
+
+
+export const ScraperJobScalarFieldEnum = {
+  id: 'id',
+  connectorCode: 'connectorCode',
+  status: 'status',
+  itemsFound: 'itemsFound',
+  itemsVerified: 'itemsVerified',
+  itemsPublished: 'itemsPublished',
+  errorMessage: 'errorMessage',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt'
+} as const
+
+export type ScraperJobScalarFieldEnum = (typeof ScraperJobScalarFieldEnum)[keyof typeof ScraperJobScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -2736,6 +3018,34 @@ export type EnumPostStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Prism
 export type ListEnumPostStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PostStatus[]'>
     
 
+
+/**
+ * Reference to a field of type 'CandidateStatus'
+ */
+export type EnumCandidateStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CandidateStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'CandidateStatus[]'
+ */
+export type ListEnumCandidateStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CandidateStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'ScraperJobStatus'
+ */
+export type EnumScraperJobStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ScraperJobStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'ScraperJobStatus[]'
+ */
+export type ListEnumScraperJobStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ScraperJobStatus[]'>
+    
+
 /**
  * Batch Payload for updateMany & deleteMany & createMany
  */
@@ -2910,6 +3220,9 @@ export type GlobalOmitConfig = {
   customerRateLimit?: Prisma.CustomerRateLimitOmit
   distributionDestination?: Prisma.DistributionDestinationOmit
   distributionPost?: Prisma.DistributionPostOmit
+  dealCandidate?: Prisma.DealCandidateOmit
+  priceObservation?: Prisma.PriceObservationOmit
+  scraperJob?: Prisma.ScraperJobOmit
 }
 
 /* Types for Logging */

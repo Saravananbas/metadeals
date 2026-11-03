@@ -156,3 +156,18 @@ export type DistributionDestination = Prisma.DistributionDestinationModel
  * 
  */
 export type DistributionPost = Prisma.DistributionPostModel
+/**
+ * Model DealCandidate
+ * 
+ */
+export type DealCandidate = Prisma.DealCandidateModel
+/**
+ * Model PriceObservation
+ * 
+ */
+export type PriceObservation = Prisma.PriceObservationModel
+/**
+ * Model ScraperJob
+ * 
+ */
+export type ScraperJob = Prisma.ScraperJobModel
