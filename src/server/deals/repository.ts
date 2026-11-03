@@ -4,7 +4,8 @@ import type { ListingInput } from "@/features/deals/validation";
 import { minorSavings } from "@/features/deals/validation";
 
 export type DealDatabase = Prisma.TransactionClient;
-export const dealInclude = { category: true, merchant: true, media: true, options: { include: { merchant: true } } } as const;
+export const merchantSelect = { id: true, slug: true, name: true, websiteUrl: true, createdAt: true, updatedAt: true } as const;
+export const dealInclude = { category: true, merchant: { select: merchantSelect }, media: true, options: { include: { merchant: { select: merchantSelect } } } } as const;
 export type DealRecord = Prisma.DealGetPayload<{ include: typeof dealInclude }>;
 
 export function publicWhere(input: ListingInput, now = new Date()): Prisma.DealWhereInput {

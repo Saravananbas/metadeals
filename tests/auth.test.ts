@@ -59,7 +59,11 @@ test("TOTP secrets are authenticated-encrypted and recovery codes are one-time-r
   const secret = createTotpSecret();
   const encrypted = encryptTotpSecret(secret, encryptionKey);
   assert.equal(decryptTotpSecret(encrypted, encryptionKey), secret);
-  assert.throws(() => decryptTotpSecret(`${encrypted.slice(0, -1)}x`, encryptionKey));
+  const parts = encrypted.split(".");
+  const tampered = Buffer.from(parts[2], "base64url");
+  tampered[0] ^= 1;
+  parts[2] = tampered.toString("base64url");
+  assert.throws(() => decryptTotpSecret(parts.join("."), encryptionKey));
 
   const codes = createRecoveryCodes();
   assert.equal(codes.length, 10);

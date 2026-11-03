@@ -78,6 +78,16 @@ export type Category = Prisma.CategoryModel
  */
 export type Merchant = Prisma.MerchantModel
 /**
+ * Model AffiliateClick
+ * 
+ */
+export type AffiliateClick = Prisma.AffiliateClickModel
+/**
+ * Model AffiliateTransaction
+ * 
+ */
+export type AffiliateTransaction = Prisma.AffiliateTransactionModel
+/**
  * Model Media
  * 
  */
@@ -92,3 +102,23 @@ export type Deal = Prisma.DealModel
  * 
  */
 export type PurchaseOption = Prisma.PurchaseOptionModel
+/**
+ * Model Customer
+ * 
+ */
+export type Customer = Prisma.CustomerModel
+/**
+ * Model CustomerIdentity
+ * 
+ */
+export type CustomerIdentity = Prisma.CustomerIdentityModel
+/**
+ * Model CustomerSignupChallenge
+ * 
+ */
+export type CustomerSignupChallenge = Prisma.CustomerSignupChallengeModel
+/**
+ * Model CustomerRateLimit
+ * 
+ */
+export type CustomerRateLimit = Prisma.CustomerRateLimitModel

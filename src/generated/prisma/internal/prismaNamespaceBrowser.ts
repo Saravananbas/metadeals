@@ -63,9 +63,15 @@ export const ModelName = {
   AuditEvent: 'AuditEvent',
   Category: 'Category',
   Merchant: 'Merchant',
+  AffiliateClick: 'AffiliateClick',
+  AffiliateTransaction: 'AffiliateTransaction',
   Media: 'Media',
   Deal: 'Deal',
-  PurchaseOption: 'PurchaseOption'
+  PurchaseOption: 'PurchaseOption',
+  Customer: 'Customer',
+  CustomerIdentity: 'CustomerIdentity',
+  CustomerSignupChallenge: 'CustomerSignupChallenge',
+  CustomerRateLimit: 'CustomerRateLimit'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -246,6 +252,36 @@ export const MerchantScalarFieldEnum = {
 export type MerchantScalarFieldEnum = (typeof MerchantScalarFieldEnum)[keyof typeof MerchantScalarFieldEnum]
 
 
+export const AffiliateClickScalarFieldEnum = {
+  id: 'id',
+  dealId: 'dealId',
+  optionId: 'optionId',
+  merchantId: 'merchantId',
+  channel: 'channel',
+  actorHash: 'actorHash',
+  createdAt: 'createdAt'
+} as const
+
+export type AffiliateClickScalarFieldEnum = (typeof AffiliateClickScalarFieldEnum)[keyof typeof AffiliateClickScalarFieldEnum]
+
+
+export const AffiliateTransactionScalarFieldEnum = {
+  id: 'id',
+  provider: 'provider',
+  externalId: 'externalId',
+  dealId: 'dealId',
+  status: 'status',
+  commissionMinor: 'commissionMinor',
+  currency: 'currency',
+  reportedAt: 'reportedAt',
+  enteredById: 'enteredById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AffiliateTransactionScalarFieldEnum = (typeof AffiliateTransactionScalarFieldEnum)[keyof typeof AffiliateTransactionScalarFieldEnum]
+
+
 export const MediaScalarFieldEnum = {
   id: 'id',
   storageKey: 'storageKey',
@@ -308,6 +344,54 @@ export const PurchaseOptionScalarFieldEnum = {
 } as const
 
 export type PurchaseOptionScalarFieldEnum = (typeof PurchaseOptionScalarFieldEnum)[keyof typeof PurchaseOptionScalarFieldEnum]
+
+
+export const CustomerScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  passwordHash: 'passwordHash',
+  emailVerifiedAt: 'emailVerifiedAt',
+  disabledAt: 'disabledAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CustomerScalarFieldEnum = (typeof CustomerScalarFieldEnum)[keyof typeof CustomerScalarFieldEnum]
+
+
+export const CustomerIdentityScalarFieldEnum = {
+  id: 'id',
+  customerId: 'customerId',
+  provider: 'provider',
+  subject: 'subject'
+} as const
+
+export type CustomerIdentityScalarFieldEnum = (typeof CustomerIdentityScalarFieldEnum)[keyof typeof CustomerIdentityScalarFieldEnum]
+
+
+export const CustomerSignupChallengeScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  name: 'name',
+  passwordHash: 'passwordHash',
+  codeHash: 'codeHash',
+  attempts: 'attempts',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt',
+  consumedAt: 'consumedAt'
+} as const
+
+export type CustomerSignupChallengeScalarFieldEnum = (typeof CustomerSignupChallengeScalarFieldEnum)[keyof typeof CustomerSignupChallengeScalarFieldEnum]
+
+
+export const CustomerRateLimitScalarFieldEnum = {
+  key: 'key',
+  count: 'count',
+  expiresAt: 'expiresAt'
+} as const
+
+export type CustomerRateLimitScalarFieldEnum = (typeof CustomerRateLimitScalarFieldEnum)[keyof typeof CustomerRateLimitScalarFieldEnum]
 
 
 export const SortOrder = {

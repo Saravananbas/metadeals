@@ -1,3 +1,4 @@
+import { merchantSelect } from "@/server/deals/repository";
 import { z } from "zod";
 import { getDatabase } from "@/server/db/client";
 import { getCurrentAuthContext } from "@/server/auth/session";
@@ -33,7 +34,7 @@ async function handle(request: Request, { params }: { params: Promise<{ path: st
       catch (error) { await removeStoredImage(storage.provider, storage.storageKey); throw error; }
     }
     if ((resource === "categories" || resource === "merchants") && !action) {
-      if (request.method === "GET") return json({ data: await (resource === "categories" ? db.category.findMany({ take: 500, orderBy: { name: "asc" } }) : db.merchant.findMany({ take: 500, orderBy: { name: "asc" } })) });
+      if (request.method === "GET") return json({ data: await (resource === "categories" ? db.category.findMany({ take: 500, orderBy: { name: "asc" } }) : db.merchant.findMany({ take: 500, orderBy: { name: "asc" }, select: merchantSelect })) });
       if (request.method === "POST" || request.method === "PUT") { const body = await readJson(request); return json({ data: await db.$transaction((tx) => saveTaxonomy(tx, actor, resource, body, id), { isolationLevel: "Serializable" }) }); }
     }
     if (resource !== "deals") throw new DealError("Endpoint not found.", 404);

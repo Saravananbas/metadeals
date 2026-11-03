@@ -3,7 +3,7 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 import { getAuthEnv } from "@/config/env";
 import { roleCan, type Permission, type AdminRole } from "@/server/auth/permissions";
 import { dealInputSchema, categoryInputSchema, merchantInputSchema } from "@/features/deals/validation";
-import { dealInclude, type DealDatabase, type DealRecord } from "./repository";
+import { dealInclude, merchantSelect, type DealDatabase, type DealRecord } from "./repository";
 
 export class DealError extends Error {
   constructor(message: string, public status = 400) { super(message); }
@@ -34,7 +34,7 @@ export async function saveDeal(db: DealDatabase, actor: DealActor, raw: unknown,
   if (JSON.stringify(input.options.filter((o) => o.affiliateUrl).map((o) => [o.merchantId,o.affiliateUrl]).sort()) !== JSON.stringify(before?.options.filter((o) => o.affiliateUrl).map((o) => [o.merchantId,o.affiliateUrl]).sort() ?? [])) await assertDealPermission(db, actor, "affiliate:manage");
   const [category, merchant, media] = await Promise.all([
     db.category.findUnique({ where: { id: input.categoryId } }),
-    db.merchant.findUnique({ where: { id: input.merchantId } }),
+    db.merchant.findUnique({ where: { id: input.merchantId }, select: merchantSelect }),
     db.media.findUnique({ where: { id: input.mediaId } }),
   ]);
   if (!category || !merchant || !media) throw new DealError("Select an existing category, merchant and uploaded image.");
@@ -109,7 +109,7 @@ export async function saveTaxonomy(db: DealDatabase, actor: DealActor, kind: "ca
   }
   const record = kind === "categories"
     ? await (id ? db.category.update({ where: { id }, data: categoryInputSchema.parse(raw) }) : db.category.create({ data: categoryInputSchema.parse(raw) }))
-    : await (id ? db.merchant.update({ where: { id }, data: merchantInputSchema.parse(raw) }) : db.merchant.create({ data: merchantInputSchema.parse(raw) }));
+    : await (id ? db.merchant.update({ where: { id }, data: merchantInputSchema.parse(raw), select: merchantSelect }) : db.merchant.create({ data: merchantInputSchema.parse(raw), select: merchantSelect }));
   await db.auditEvent.create({ data: { actorId: actor.id, action: `${kind}.${id ? "updated" : "created"}`, targetId: record.id, success: true, metadata: { name: record.name, slug: record.slug } } });
   return record;
 }

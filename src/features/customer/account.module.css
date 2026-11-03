@@ -1,0 +1,26 @@
+.page{min-height:100dvh;padding:28px 24px 48px;background:var(--md-gradient-blue-glow),var(--md-color-page);color:var(--md-color-text)}
+.navigation{max-width:1080px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:16px}
+.navigation a{display:flex;align-items:center;gap:8px}.brand{font-size:24px;font-weight:850;color:var(--md-color-primary-active)}.brand span{color:var(--md-color-accent)}
+.card{position:relative;max-width:960px;min-height:680px;margin:42px auto 20px;background:var(--md-color-surface);border-radius:28px;box-shadow:var(--md-shadow-card);overflow:hidden}
+.formPanel{width:50%;min-height:680px;transition:none;padding:38px 44px;display:flex;align-items:center}
+.formPanel form{width:100%;display:flex;flex-direction:column;gap:8px}.formPanel h1{font-size:29px;font-weight:800;line-height:1.15;margin:5px 0}
+.formPanel p{font-size:14px;color:var(--md-color-text-secondary);line-height:1.55;margin:0 0 8px}.eyebrow{font-size:10px;letter-spacing:.12em;color:var(--md-color-primary);font-weight:750}
+.formPanel label{font-size:12px;font-weight:650;margin-top:3px}
+.formPanel input{width:100%;border:1px solid var(--md-input-border);border-radius:10px;background:var(--md-input-bg);color:var(--md-input-text);padding:11px 12px;font-size:14px}
+.formPanel input:focus-visible{outline:2px solid var(--md-input-border-focus);outline-offset:2px}
+.formPanel small{font-size:11px;color:var(--md-color-text-secondary)}
+.social{display:flex;gap:10px;margin-top:10px}.social button{flex:1;border:1px solid var(--md-input-border);border-radius:10px;padding:10px;font-weight:650;background:var(--md-color-surface)}
+.page button:disabled{opacity:.55;cursor:not-allowed}.divider{display:flex;align-items:center;gap:12px;font-size:11px;color:var(--md-color-text-secondary);margin:6px 0}
+.divider:before,.divider:after{content:"";height:1px;flex:1;background:var(--md-input-border)}
+.page .primary{display:block;text-align:center;background:var(--md-gradient-cta);color:var(--md-button-accent-text);border-radius:10px;padding:12px 20px;font-weight:750;margin-top:10px}
+.welcome{position:absolute;inset:0 0 0 50%;width:50%;background:linear-gradient(135deg,var(--md-color-primary),var(--md-color-primary-active));color:var(--md-color-text-inverse);border-radius:100px 0 0 100px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px;text-align:center;transition:none}
+.welcome h2{font-size:32px;font-weight:800;line-height:1.2;margin:24px 0 12px}.welcome p{font-size:15px;line-height:1.7;opacity:.9}.welcome button{border:1px solid currentColor;border-radius:10px;padding:12px 28px;margin-top:26px;font-weight:700}
+.welcome>span{display:flex;align-items:center;gap:7px;font-size:11px;margin-top:40px;opacity:.8}
+.signup .formPanel{transform:translateX(100%)}.signup .welcome{transform:translateX(-100%);border-radius:0 100px 100px 0}
+.caption{text-align:center;font-size:12px;color:var(--md-color-text-secondary)}.page .message,.page .notice{padding:10px;border-radius:8px;background:var(--md-color-primary-soft);color:var(--md-color-primary-active);font-size:12px}
+.otp{text-align:center;letter-spacing:.5em;font-size:24px!important}.success{max-width:520px;margin:40px auto;text-align:center;display:flex;flex-direction:column;gap:16px;align-items:center}.success h1{font-size:28px;font-weight:800}.success svg{color:var(--md-color-success)}.mobileSwitch{display:none}
+@media(max-width:700px){.page{padding:18px 12px 32px}.brand{font-size:19px}.navigation{font-size:12px}.card{margin-top:24px;min-height:0;display:flex;flex-direction:column}.formPanel{width:100%;min-height:0;padding:30px 24px;transition:none}.welcome{position:relative;inset:auto;width:100%;border-radius:28px 28px 0 0;padding:26px;transition:none}.welcome h2{font-size:23px;margin:12px 0}.welcome>svg{width:36px;height:36px}.welcome>span{margin-top:20px}.welcome button{margin-top:16px}.signup .formPanel,.signup .welcome{transform:none}.signup .welcome{border-radius:28px 28px 0 0}.mobileSwitch{display:block;font-size:12px;margin-top:10px}}
+@media(prefers-reduced-motion:reduce){.formPanel,.welcome{transition:none}}
+
+.switching .formPanel{transition:transform .6s ease-in-out}.switching .welcome{transition:transform .6s ease-in-out,border-radius .6s ease}
+@media(prefers-reduced-motion:reduce){.switching .formPanel,.switching .welcome{transition:none}}
