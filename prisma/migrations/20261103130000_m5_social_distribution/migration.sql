@@ -45,3 +45,4 @@ CREATE UNIQUE INDEX "DistributionPost_dealId_destinationId_key" ON "Distribution
 
 -- AddForeignKey
 ALTER TABLE "DistributionPost" ADD CONSTRAINT "DistributionPost_destinationId_fkey" FOREIGN KEY ("destinationId") REFERENCES "DistributionDestination"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+

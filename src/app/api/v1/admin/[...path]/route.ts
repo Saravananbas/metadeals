@@ -12,6 +12,7 @@ import { getAffiliateClickStats, getAffiliateTransactions, importAffiliateTransa
 import { importBatchSchema } from "@/server/affiliate/types";
 import { createDestination, listDestinations, publishDealToDestinations, getDistributionHistory } from "@/server/distribution/service";
 import { destinationInputSchema, publishDealInputSchema } from "@/features/distribution/formatting";
+import { getUnifiedAnalyticsSummary } from "@/server/analytics/service";
 
 async function handle(request: Request, { params }: { params: Promise<{ path: string[] }> }) {
   return api(async () => {
@@ -81,6 +82,9 @@ async function handle(request: Request, { params }: { params: Promise<{ path: st
         return json({ data: await getDistributionHistory(db, actor, dealId) });
       }
       throw new DealError("Distribution endpoint not found.", 404);
+    }
+    if (resource === "analytics" && request.method === "GET") {
+      return json({ data: await getUnifiedAnalyticsSummary(db, actor) });
     }
     if (resource !== "deals") throw new DealError("Endpoint not found.", 404);
     if (request.method === "GET") {

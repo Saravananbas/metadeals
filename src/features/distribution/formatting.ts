@@ -74,3 +74,4 @@ export function createWhatsAppShareUrl(deal: DealDistributionPayload): string {
   const text = formatWhatsAppMessage(deal);
   return `https://wa.me/?text=${encodeURIComponent(text)}`;
 }
+
