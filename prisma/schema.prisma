@@ -353,3 +353,47 @@ model CustomerRateLimit {
   @@index([expiresAt])
 }
 
+enum DistributionPlatform {
+  TELEGRAM
+  WHATSAPP
+}
+
+enum PostStatus {
+  QUEUED
+  SENT
+  FAILED
+  SKIPPED
+}
+
+model DistributionDestination {
+  id            String               @id @default(cuid())
+  platform      DistributionPlatform
+  name          String               @db.VarChar(100)
+  destinationId String               @db.VarChar(120)
+  isActive      Boolean              @default(true)
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+  posts         DistributionPost[]
+
+  @@unique([platform, destinationId])
+}
+
+model DistributionPost {
+  id                String                  @id @default(cuid())
+  dealId            String
+  destinationId     String
+  platform          DistributionPlatform
+  status            PostStatus              @default(QUEUED)
+  messageContent    String                  @db.Text
+  externalMessageId String?                 @db.VarChar(120)
+  errorMessage      String?                 @db.Text
+  sentAt            DateTime?
+  createdAt         DateTime                @default(now())
+  updatedAt         DateTime                @updatedAt
+  destination       DistributionDestination @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+
+  @@unique([dealId, destinationId])
+  @@index([status, createdAt])
+}
+
+

@@ -10,6 +10,8 @@ import { api, json } from "@/server/http";
 import { parseDealImport } from "@/server/deals/import";
 import { getAffiliateClickStats, getAffiliateTransactions, importAffiliateTransactions } from "@/server/affiliate/service";
 import { importBatchSchema } from "@/server/affiliate/types";
+import { createDestination, listDestinations, publishDealToDestinations, getDistributionHistory } from "@/server/distribution/service";
+import { destinationInputSchema, publishDealInputSchema } from "@/features/distribution/formatting";
 
 async function handle(request: Request, { params }: { params: Promise<{ path: string[] }> }) {
   return api(async () => {
@@ -60,6 +62,25 @@ async function handle(request: Request, { params }: { params: Promise<{ path: st
         }
       }
       throw new DealError("Affiliate endpoint not found.", 404);
+    }
+    if (resource === "distribution") {
+      const url = new URL(request.url);
+      if (id === "destinations") {
+        if (request.method === "GET") return json({ data: await listDestinations(db, actor) });
+        if (request.method === "POST") {
+          const body = destinationInputSchema.parse(await readJson(request));
+          return json({ data: await createDestination(db, actor, body) }, 201);
+        }
+      }
+      if (id === "publish" && request.method === "POST") {
+        const body = publishDealInputSchema.parse(await readJson(request));
+        return json({ data: await publishDealToDestinations(db, actor, body) });
+      }
+      if (id === "history" && request.method === "GET") {
+        const dealId = url.searchParams.get("dealId") ?? undefined;
+        return json({ data: await getDistributionHistory(db, actor, dealId) });
+      }
+      throw new DealError("Distribution endpoint not found.", 404);
     }
     if (resource !== "deals") throw new DealError("Endpoint not found.", 404);
     if (request.method === "GET") {

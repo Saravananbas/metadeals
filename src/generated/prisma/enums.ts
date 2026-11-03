@@ -45,3 +45,21 @@ export const DealStatus = {
 } as const
 
 export type DealStatus = (typeof DealStatus)[keyof typeof DealStatus]
+
+
+export const DistributionPlatform = {
+  TELEGRAM: 'TELEGRAM',
+  WHATSAPP: 'WHATSAPP'
+} as const
+
+export type DistributionPlatform = (typeof DistributionPlatform)[keyof typeof DistributionPlatform]
+
+
+export const PostStatus = {
+  QUEUED: 'QUEUED',
+  SENT: 'SENT',
+  FAILED: 'FAILED',
+  SKIPPED: 'SKIPPED'
+} as const
+
+export type PostStatus = (typeof PostStatus)[keyof typeof PostStatus]

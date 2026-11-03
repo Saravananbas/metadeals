@@ -122,3 +122,13 @@ export type CustomerSignupChallenge = Prisma.CustomerSignupChallengeModel
  * 
  */
 export type CustomerRateLimit = Prisma.CustomerRateLimitModel
+/**
+ * Model DistributionDestination
+ * 
+ */
+export type DistributionDestination = Prisma.DistributionDestinationModel
+/**
+ * Model DistributionPost
+ * 
+ */
+export type DistributionPost = Prisma.DistributionPostModel

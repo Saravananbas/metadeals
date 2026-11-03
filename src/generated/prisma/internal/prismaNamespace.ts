@@ -417,7 +417,9 @@ export const ModelName = {
   Customer: 'Customer',
   CustomerIdentity: 'CustomerIdentity',
   CustomerSignupChallenge: 'CustomerSignupChallenge',
-  CustomerRateLimit: 'CustomerRateLimit'
+  CustomerRateLimit: 'CustomerRateLimit',
+  DistributionDestination: 'DistributionDestination',
+  DistributionPost: 'DistributionPost'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -433,7 +435,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "account" | "session" | "verificationToken" | "authSession" | "recoveryCode" | "authToken" | "authRateLimit" | "bootstrapState" | "auditEvent" | "category" | "merchant" | "affiliateClick" | "affiliateTransaction" | "media" | "deal" | "purchaseOption" | "customer" | "customerIdentity" | "customerSignupChallenge" | "customerRateLimit"
+    modelProps: "user" | "account" | "session" | "verificationToken" | "authSession" | "recoveryCode" | "authToken" | "authRateLimit" | "bootstrapState" | "auditEvent" | "category" | "merchant" | "affiliateClick" | "affiliateTransaction" | "media" | "deal" | "purchaseOption" | "customer" | "customerIdentity" | "customerSignupChallenge" | "customerRateLimit" | "distributionDestination" | "distributionPost"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1991,6 +1993,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    DistributionDestination: {
+      payload: Prisma.$DistributionDestinationPayload<ExtArgs>
+      fields: Prisma.DistributionDestinationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DistributionDestinationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DistributionDestinationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DistributionDestinationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DistributionDestinationPayload>
+        }
+        findFirst: {
+          args: Prisma.DistributionDestinationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DistributionDestinationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DistributionDestinationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DistributionDestinationPayload>
+        }
+        findMany: {
+          args: Prisma.DistributionDestinationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DistributionDestinationPayload>[]
+        }
+        create: {
+          args: Prisma.DistributionDestinationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DistributionDestinationPayload>
+        }
+        createMany: {
+          args: Prisma.DistributionDestinationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DistributionDestinationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DistributionDestinationPayload>[]
+        }
+        delete: {
+          args: Prisma.DistributionDestinationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DistributionDestinationPayload>
+        }
+        update: {
+          args: Prisma.DistributionDestinationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DistributionDestinationPayload>
+        }
+        deleteMany: {
+          args: Prisma.DistributionDestinationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DistributionDestinationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DistributionDestinationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DistributionDestinationPayload>[]
+        }
+        upsert: {
+          args: Prisma.DistributionDestinationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DistributionDestinationPayload>
+        }
+        aggregate: {
+          args: Prisma.DistributionDestinationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDistributionDestination>
+        }
+        groupBy: {
+          args: Prisma.DistributionDestinationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DistributionDestinationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DistributionDestinationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DistributionDestinationCountAggregateOutputType> | number
+        }
+      }
+    }
+    DistributionPost: {
+      payload: Prisma.$DistributionPostPayload<ExtArgs>
+      fields: Prisma.DistributionPostFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DistributionPostFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DistributionPostPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DistributionPostFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DistributionPostPayload>
+        }
+        findFirst: {
+          args: Prisma.DistributionPostFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DistributionPostPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DistributionPostFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DistributionPostPayload>
+        }
+        findMany: {
+          args: Prisma.DistributionPostFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DistributionPostPayload>[]
+        }
+        create: {
+          args: Prisma.DistributionPostCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DistributionPostPayload>
+        }
+        createMany: {
+          args: Prisma.DistributionPostCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DistributionPostCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DistributionPostPayload>[]
+        }
+        delete: {
+          args: Prisma.DistributionPostDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DistributionPostPayload>
+        }
+        update: {
+          args: Prisma.DistributionPostUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DistributionPostPayload>
+        }
+        deleteMany: {
+          args: Prisma.DistributionPostDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DistributionPostUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DistributionPostUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DistributionPostPayload>[]
+        }
+        upsert: {
+          args: Prisma.DistributionPostUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DistributionPostPayload>
+        }
+        aggregate: {
+          args: Prisma.DistributionPostAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDistributionPost>
+        }
+        groupBy: {
+          args: Prisma.DistributionPostGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DistributionPostGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DistributionPostCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DistributionPostCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2335,6 +2485,36 @@ export const CustomerRateLimitScalarFieldEnum = {
 export type CustomerRateLimitScalarFieldEnum = (typeof CustomerRateLimitScalarFieldEnum)[keyof typeof CustomerRateLimitScalarFieldEnum]
 
 
+export const DistributionDestinationScalarFieldEnum = {
+  id: 'id',
+  platform: 'platform',
+  name: 'name',
+  destinationId: 'destinationId',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DistributionDestinationScalarFieldEnum = (typeof DistributionDestinationScalarFieldEnum)[keyof typeof DistributionDestinationScalarFieldEnum]
+
+
+export const DistributionPostScalarFieldEnum = {
+  id: 'id',
+  dealId: 'dealId',
+  destinationId: 'destinationId',
+  platform: 'platform',
+  status: 'status',
+  messageContent: 'messageContent',
+  externalMessageId: 'externalMessageId',
+  errorMessage: 'errorMessage',
+  sentAt: 'sentAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DistributionPostScalarFieldEnum = (typeof DistributionPostScalarFieldEnum)[keyof typeof DistributionPostScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -2528,6 +2708,34 @@ export type EnumDealStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Prism
 export type ListEnumDealStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DealStatus[]'>
     
 
+
+/**
+ * Reference to a field of type 'DistributionPlatform'
+ */
+export type EnumDistributionPlatformFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DistributionPlatform'>
+    
+
+
+/**
+ * Reference to a field of type 'DistributionPlatform[]'
+ */
+export type ListEnumDistributionPlatformFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DistributionPlatform[]'>
+    
+
+
+/**
+ * Reference to a field of type 'PostStatus'
+ */
+export type EnumPostStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PostStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'PostStatus[]'
+ */
+export type ListEnumPostStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PostStatus[]'>
+    
+
 /**
  * Batch Payload for updateMany & deleteMany & createMany
  */
@@ -2700,6 +2908,8 @@ export type GlobalOmitConfig = {
   customerIdentity?: Prisma.CustomerIdentityOmit
   customerSignupChallenge?: Prisma.CustomerSignupChallengeOmit
   customerRateLimit?: Prisma.CustomerRateLimitOmit
+  distributionDestination?: Prisma.DistributionDestinationOmit
+  distributionPost?: Prisma.DistributionPostOmit
 }
 
 /* Types for Logging */

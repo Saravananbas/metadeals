@@ -71,7 +71,9 @@ export const ModelName = {
   Customer: 'Customer',
   CustomerIdentity: 'CustomerIdentity',
   CustomerSignupChallenge: 'CustomerSignupChallenge',
-  CustomerRateLimit: 'CustomerRateLimit'
+  CustomerRateLimit: 'CustomerRateLimit',
+  DistributionDestination: 'DistributionDestination',
+  DistributionPost: 'DistributionPost'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -393,6 +395,36 @@ export const CustomerRateLimitScalarFieldEnum = {
 } as const
 
 export type CustomerRateLimitScalarFieldEnum = (typeof CustomerRateLimitScalarFieldEnum)[keyof typeof CustomerRateLimitScalarFieldEnum]
+
+
+export const DistributionDestinationScalarFieldEnum = {
+  id: 'id',
+  platform: 'platform',
+  name: 'name',
+  destinationId: 'destinationId',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DistributionDestinationScalarFieldEnum = (typeof DistributionDestinationScalarFieldEnum)[keyof typeof DistributionDestinationScalarFieldEnum]
+
+
+export const DistributionPostScalarFieldEnum = {
+  id: 'id',
+  dealId: 'dealId',
+  destinationId: 'destinationId',
+  platform: 'platform',
+  status: 'status',
+  messageContent: 'messageContent',
+  externalMessageId: 'externalMessageId',
+  errorMessage: 'errorMessage',
+  sentAt: 'sentAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DistributionPostScalarFieldEnum = (typeof DistributionPostScalarFieldEnum)[keyof typeof DistributionPostScalarFieldEnum]
 
 
 export const SortOrder = {
