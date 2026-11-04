@@ -1,10 +1,13 @@
+import { redirect } from "next/navigation";
 import { AdminDashboard } from "../components/admin-dashboard";
 import { getCurrentAuthContext } from "@/server/auth/session";
+import { roleCan } from "@/server/auth/permissions";
 import { getDatabase } from "@/server/db/client";
 
 export default async function AdminHomePage() {
   const context = await getCurrentAuthContext();
-  if (!context) return null;
+  if (!context) redirect("/admin/login");
+  if (!roleCan(context.user.role, "account:read")) redirect("/admin/deals");
   const db = getDatabase();
   const [users, events] = await Promise.all([
     db.user.findMany({

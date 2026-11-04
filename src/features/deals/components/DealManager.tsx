@@ -339,6 +339,7 @@ export function DealManager({ role }: { role: AdminRole }) {
         <Link href="/">MetaDeals4U</Link>
         <Link href="/admin">Account administration</Link>
         <Link href="/admin/deals">Deals</Link>
+        <Link href="/admin/scraper">Deal Scraper</Link>
       </nav>
       <h1>Deal management</h1>
       <p>

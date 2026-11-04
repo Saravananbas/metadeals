@@ -128,6 +128,7 @@ export function AdminDashboard({
         <Link href="/">MetaDeals4U</Link>
         <Link href="/admin">Account administration</Link>
         <Link href="/admin/deals">Deals</Link>
+        <Link href="/admin/scraper">Deal Scraper</Link>
       </nav>
       <header className={styles.topBar}>
         <div>
