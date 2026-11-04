@@ -1,6 +1,10 @@
-export const formatINR = (value: number) => new Intl.NumberFormat("en-IN", {
-  style: "currency", currency: "INR", maximumFractionDigits: 0,
-}).format(value);
+export {
+  rupeesToPaise,
+  paiseToRupees,
+  paiseToRupeeInputString,
+  formatINR,
+  formatPaise,
+} from "./currency";
 
 export function getSavings(original: number, price: number) {
   if (!Number.isFinite(original) || !Number.isFinite(price) || original <= 0 || price < 0 || price >= original) {

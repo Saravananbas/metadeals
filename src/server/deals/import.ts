@@ -2,6 +2,7 @@ import "server-only";
 import { inflateRawSync } from "node:zlib";
 import { readSheet } from "read-excel-file/node";
 import { dealInputSchema } from "@/features/deals/validation";
+import { rupeesToPaise } from "@/features/deals/currency";
 import { DealError } from "./service";
 
 export function csvRows(text: string): string[][] {
@@ -50,12 +51,35 @@ export async function parseDealImport(bytes: Buffer, format: string) {
   else throw new DealError("Use CSV or XLSX.");
   if (rows.length < 2 || rows.length > 101) throw new DealError("Import 1–100 rows at a time.");
   const headers = rows[0].map(String);
-  const allowed = ["slug", "title", "brand", "description", "categoryId", "merchantId", "mediaId", "mrpMinor", "priceMinor", "productUrl", "affiliateUrl", "rating", "reviewCount", "ratingSource", "publishedAt", "startsAt", "expiresAt", "featured", "trending"];
+  const allowed = ["slug", "title", "brand", "description", "categoryId", "merchantId", "mediaId", "mrpMinor", "priceMinor", "mrp", "price", "productUrl", "affiliateUrl", "rating", "reviewCount", "ratingSource", "publishedAt", "startsAt", "expiresAt", "featured", "trending"];
   if (new Set(headers).size !== headers.length || headers.some((h) => !allowed.includes(h))) throw new DealError("Duplicate or unknown import columns.");
   return rows.slice(1).map((row, index) => {
     const obj = Object.fromEntries(headers.map((key, i) => [key, row[i] instanceof Date ? row[i].toISOString() : row[i] ?? ""]));
     const optional = (key: string) => obj[key] === undefined || obj[key] === "" ? null : obj[key];
-    const parsed = dealInputSchema.safeParse({ ...obj, brand: obj.brand ?? "", currency: "INR", status: "DRAFT", mrpMinor: Number(obj.mrpMinor), priceMinor: Number(obj.priceMinor), rating: optional("rating") === null ? null : Number(obj.rating), reviewCount: optional("reviewCount") === null ? null : Number(obj.reviewCount), ratingSource: optional("ratingSource"), affiliateUrl: optional("affiliateUrl"), publishedAt: optional("publishedAt"), startsAt: optional("startsAt"), expiresAt: optional("expiresAt"), featured: String(obj.featured).toLowerCase() === "true", trending: String(obj.trending).toLowerCase() === "true", options: [] });
+
+    let mrpMinor: number;
+    try {
+      if (obj.mrp !== undefined && obj.mrp !== "") {
+        mrpMinor = rupeesToPaise(String(obj.mrp));
+      } else {
+        mrpMinor = Number(obj.mrpMinor);
+      }
+    } catch {
+      throw new DealError(`Row ${index + 2}: Invalid MRP value.`);
+    }
+
+    let priceMinor: number;
+    try {
+      if (obj.price !== undefined && obj.price !== "") {
+        priceMinor = rupeesToPaise(String(obj.price));
+      } else {
+        priceMinor = Number(obj.priceMinor);
+      }
+    } catch {
+      throw new DealError(`Row ${index + 2}: Invalid price value.`);
+    }
+
+    const parsed = dealInputSchema.safeParse({ ...obj, brand: obj.brand ?? "", currency: "INR", status: "DRAFT", mrpMinor, priceMinor, rating: optional("rating") === null ? null : Number(obj.rating), reviewCount: optional("reviewCount") === null ? null : Number(obj.reviewCount), ratingSource: optional("ratingSource"), affiliateUrl: optional("affiliateUrl"), publishedAt: optional("publishedAt"), startsAt: optional("startsAt"), expiresAt: optional("expiresAt"), featured: String(obj.featured).toLowerCase() === "true", trending: String(obj.trending).toLowerCase() === "true", options: [] });
     if (!parsed.success) throw new DealError(`Row ${index + 2}: ${parsed.error.issues.map((x) => x.path.join(".") + " " + x.message).join("; ")}`);
     return parsed.data;
   });
