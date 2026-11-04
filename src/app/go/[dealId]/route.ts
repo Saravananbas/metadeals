@@ -29,11 +29,15 @@ export async function GET(
       channel,
     });
 
-    const response = Response.redirect(result.destinationUrl, 302);
-    response.headers.set("Cache-Control", "no-store, private");
-    response.headers.set("X-Robots-Tag", "noindex, nofollow");
-    response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
-    return response;
+    return new Response(null, {
+      status: 302,
+      headers: {
+        Location: result.destinationUrl,
+        "Cache-Control": "no-store, private",
+        "X-Robots-Tag": "noindex, nofollow",
+        "Referrer-Policy": "strict-origin-when-cross-origin",
+      },
+    });
   } catch (error) {
     if (error instanceof AffiliateError) {
       return Response.json({ error: error.message }, { status: error.status });

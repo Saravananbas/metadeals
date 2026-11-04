@@ -15,6 +15,7 @@ import { destinationInputSchema, publishDealInputSchema } from "@/features/distr
 import { getUnifiedAnalyticsSummary } from "@/server/analytics/service";
 import { scraperService } from "@/server/scraper/service";
 import { candidateReviewActionSchema } from "@/features/scraper/validation";
+import { productExtractionService } from "@/server/product-extraction/core/service";
 
 async function handle(request: Request, { params }: { params: Promise<{ path: string[] }> }) {
   return api(async () => {
@@ -39,6 +40,17 @@ async function handle(request: Request, { params }: { params: Promise<{ path: st
         await tx.auditEvent.create({ data: { actorId: actor.id, action: "media.uploaded", targetId: row.id, success: true } }); return row;
       }); return json({ data: { id: media.id, url: `/api/v1/media/${media.id}`, alt } }, 201); }
       catch (error) { await removeStoredImage(storage.provider, storage.storageKey); throw error; }
+    }
+    if (resource === "product-extraction" && request.method === "POST" && !id) {
+      const body = await readJson(request) as { url?: string; importImage?: boolean };
+      if (!body.url || typeof body.url !== "string") throw new DealError("Product URL is required.", 400);
+      return json({
+        data: await productExtractionService.extractProduct({
+          url: body.url,
+          importImage: body.importImage ?? false,
+          actorId: actor.id,
+        }),
+      });
     }
     if ((resource === "categories" || resource === "merchants") && !action) {
       if (request.method === "GET") return json({ data: await (resource === "categories" ? db.category.findMany({ take: 500, orderBy: { name: "asc" } }) : db.merchant.findMany({ take: 500, orderBy: { name: "asc" }, select: merchantSelect })) });

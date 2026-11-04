@@ -123,7 +123,12 @@ export function AdminDashboard({
     : role === "ADMIN" ? ["EDITOR"] : [];
 
   return (
-    <main className={styles.adminPage}><Link href="/admin/deals">Manage deals</Link>
+    <main className={styles.adminPage}>
+      <nav className={styles.navBar}>
+        <Link href="/">MetaDeals4U</Link>
+        <Link href="/admin">Account administration</Link>
+        <Link href="/admin/deals">Deals</Link>
+      </nav>
       <header className={styles.topBar}>
         <div>
           <div className={styles.eyebrow}>MetaDeals4U · M2.5</div>

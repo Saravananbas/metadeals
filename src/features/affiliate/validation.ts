@@ -30,15 +30,19 @@ export function validateDestinationHost(
 
     const destHost = dest.hostname.toLowerCase();
     const merchantHost = new URL(merchantWebsiteUrl).hostname.toLowerCase();
+    const apexMerchantHost = merchantHost.startsWith("www.") ? merchantHost.slice(4) : merchantHost;
 
     const allowed = [
       merchantHost,
+      apexMerchantHost,
       ...affiliateHosts.map((h) => h.trim().toLowerCase()),
     ].filter(Boolean);
 
     return allowed.some(
       (allowedHost) =>
-        destHost === allowedHost || destHost.endsWith("." + allowedHost)
+        destHost === allowedHost ||
+        destHost.endsWith("." + allowedHost) ||
+        (allowedHost.startsWith("www.") && destHost === allowedHost.slice(4))
     );
   } catch {
     return false;

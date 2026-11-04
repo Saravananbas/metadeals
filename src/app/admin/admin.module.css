@@ -1,7 +1,14 @@
-.authPage,
-.adminPage {
+.authPage {
   min-height: 100vh;
   padding: 48px 24px;
+  color: var(--md-color-text);
+}
+
+.adminPage {
+  min-height: 100vh;
+  max-width: 1280px;
+  margin: auto;
+  padding: 24px;
   color: var(--md-color-text);
 }
 
@@ -154,10 +161,26 @@
   line-height: 1.7;
 }
 
-.adminPage {
-  width: min(100%, 1440px);
-  margin-inline: auto;
+.navBar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 16px 0;
+  align-items: center;
 }
+
+.navBar a {
+  color: var(--md-color-link);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.navBar a:hover {
+  color: var(--md-color-link-hover);
+  text-decoration: underline;
+}
+
 
 .topBar {
   display: flex;

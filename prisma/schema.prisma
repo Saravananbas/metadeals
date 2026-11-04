@@ -476,5 +476,20 @@ model ScraperJob {
   @@index([connectorCode, startedAt])
 }
 
+model ProductExtractionLog {
+  id               String   @id @default(cuid())
+  adminUserId      String?
+  retailer         String   @db.VarChar(60)
+  originalUrl      String   @db.VarChar(2048)
+  extractionStatus String   @db.VarChar(40)
+  fieldsSummary    Json?
+  sourceMethod     String   @db.VarChar(60)
+  errorCode        String?  @db.VarChar(60)
+  createdAt        DateTime @default(now())
+
+  @@index([retailer, createdAt])
+  @@index([adminUserId, createdAt])
+}
+
 
 

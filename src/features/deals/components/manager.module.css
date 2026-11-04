@@ -9,7 +9,8 @@
 .page button { padding: 10px 14px; border-radius: 8px; background: var(--md-color-primary); color: var(--md-color-primary-contrast); cursor: pointer; }
 .page button:disabled { opacity: .5; cursor: default; }
 .actions { display: flex; flex-wrap: wrap; gap: 16px; margin: 16px 0; align-items: center; }
-.actions a { color: var(--md-color-link); }
+.actions a { color: var(--md-color-link); text-decoration: none; font-size: 14px; font-weight: 500; }
+.actions a:hover { color: var(--md-color-link-hover); text-decoration: underline; }
 .wide { grid-column: 1/-1; }
 .wide .grid { margin: 14px 0; }
 .notice { padding: 14px; background: var(--md-color-primary-soft); border-radius: 8px; }
@@ -19,5 +20,27 @@
 .list { display: grid; gap: 10px; }
 .list button { text-align: left; background: var(--md-color-surface-muted); color: var(--md-color-text); }
 .list span { display: block; font-size: 13px; }
+.scrapeContainer { grid-column: 1 / -1; margin-bottom: 8px; }
+.scrapeInputRow { display: flex; gap: 12px; align-items: flex-end; }
+.scrapeInputRow label { flex: 1; }
+.scrapeBtn { min-width: 110px; height: 42px; font-weight: 700; background: var(--md-color-accent); color: var(--md-color-accent-contrast); border: none; border-radius: 8px; }
+.scrapeBtn:hover:not(:disabled) { background: var(--md-color-accent-hover); }
+.retailerBadge { display: inline-block; margin-left: 8px; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; background: var(--md-color-primary-soft); color: var(--md-color-primary); }
+.extractStatus { margin-top: 6px; font-size: 13px; color: var(--md-color-text-secondary); font-style: italic; }
+.previewModal { grid-column: 1 / -1; margin: 16px 0; padding: 20px; border: 2px solid var(--md-color-primary); border-radius: 12px; background: var(--md-color-surface-muted); }
+.previewHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.previewStatus { padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 700; }
+.statusFull { background: var(--md-green-100); color: var(--md-green-700); }
+.statusPartial { background: var(--md-amber-100); color: var(--md-amber-700); }
+.previewTable { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 14px; }
+.previewTable th, .previewTable td { padding: 8px 12px; border-bottom: 1px solid var(--md-color-border); text-align: left; }
+.badgeRetrieved { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; background: var(--md-green-100); color: var(--md-green-700); }
+.badgeMissing { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; background: var(--md-red-100); color: var(--md-red-700); }
+.badgeSuggested { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; background: var(--md-blue-100); color: var(--md-blue-700); }
+.badgeRestricted { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; background: var(--md-amber-100); color: var(--md-amber-700); }
+.warningBox { margin: 12px 0; padding: 12px; border-radius: 8px; background: var(--md-amber-50); border: 1px solid var(--md-amber-100); color: var(--md-amber-700); font-size: 13px; }
+.previewActions { display: flex; gap: 12px; margin-top: 16px; }
+.acceptBtn { background: var(--md-green-700); color: var(--md-color-primary-contrast); font-weight: 700; border: none; }
+.dismissBtn { background: var(--md-color-surface); color: var(--md-color-text); border: 1px solid var(--md-color-border-strong); }
 @media(max-width:800px) { .grid { grid-template-columns: repeat(2,minmax(0,1fr)); } }
 @media(max-width:500px) { .grid { grid-template-columns: 1fr; } .page { padding: 12px; } .panel { padding: 16px; } }

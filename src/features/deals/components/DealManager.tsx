@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useEffect, useState, type FormEvent } from "react";
 import type { DealInput } from "../validation";
 import { minorSavings } from "../validation";
+import type { ClientExtractionResult } from "../extraction-types";
 import {
   rupeesToPaise,
   paiseToRupeeInputString,
@@ -83,6 +84,103 @@ export function DealManager({ role }: { role: AdminRole }) {
     websiteUrl: "",
   });
 
+  const [extracting, setExtracting] = useState(false);
+  const [extractProgress, setExtractProgress] = useState("");
+  const [detectedRetailer, setDetectedRetailer] = useState<string | null>(null);
+  const [extractionResult, setExtractionResult] = useState<ClientExtractionResult | null>(null);
+  const [showPreviewModal, setShowPreviewModal] = useState(false);
+
+  function detectRetailer(urlStr: string): string | null {
+    if (!urlStr) return null;
+    try {
+      const lower = urlStr.toLowerCase();
+      if (lower.includes("amazon.in") || lower.includes("amzn.to") || lower.includes("amzn.in")) return "Amazon India";
+      if (lower.includes("flipkart.com") || lower.includes("dl.flipkart.com") || lower.includes("fkrt.it")) return "Flipkart";
+      if (lower.includes("myntra.com")) return "Myntra";
+      if (lower.includes("croma.com")) return "Croma";
+      if (lower.includes("reliancedigital.in")) return "Reliance Digital";
+      if (lower.includes("tatacliq.com")) return "Tata CLiQ";
+      if (lower.includes("ajio.com")) return "AJIO";
+      if (lower.includes("nykaa.com")) return "Nykaa";
+      if (lower.includes("jiomart.com")) return "JioMart";
+      if (lower.includes("bigbasket.com")) return "BigBasket";
+      if (lower.includes("vijaysales.com")) return "Vijay Sales";
+      if (lower.startsWith("http://") || lower.startsWith("https://")) return "Partner Retailer";
+      return null;
+    } catch {
+      return null;
+    }
+  }
+
+  async function handleScrape() {
+    if (!form.productUrl || !form.productUrl.trim()) {
+      setMessage("Please enter a valid product URL before clicking Scrape.");
+      return;
+    }
+
+    try {
+      new URL(form.productUrl.trim());
+    } catch {
+      setMessage("Please enter a valid URL (e.g. https://www.amazon.in/dp/...)");
+      return;
+    }
+
+    setExtracting(true);
+    setMessage("");
+    setExtractProgress("Detecting retailer...");
+
+    try {
+      await new Promise((r) => setTimeout(r, 150));
+      setExtractProgress("Checking supported extraction method...");
+      await new Promise((r) => setTimeout(r, 200));
+      setExtractProgress("Extracting product information...");
+
+      const response = await request<{ data: ClientExtractionResult }>("product-extraction", "POST", {
+        url: form.productUrl.trim(),
+        importImage: true,
+      });
+
+      setExtractProgress("Product information retrieved.");
+      setExtractionResult(response.data);
+      setShowPreviewModal(true);
+      setMessage(
+        response.data.status === "FULL_SUCCESS"
+          ? "Product information retrieved successfully."
+          : "Partial information retrieved. Please review the summary below."
+      );
+    } catch (err) {
+      setExtractProgress("Extraction unavailable — manual entry required.");
+      setMessage(err instanceof Error ? err.message : "Extraction failed. Manual entry required.");
+    } finally {
+      setExtracting(false);
+    }
+  }
+
+  function applyExtractedData() {
+    if (!extractionResult?.suggestedFormValues) return;
+    const s = extractionResult.suggestedFormValues;
+
+    setForm((prev) => ({
+      ...prev,
+      title: s.title || prev.title,
+      slug: s.slug || prev.slug,
+      brand: s.brand || prev.brand,
+      description: s.description || prev.description,
+      productUrl: s.productUrl || prev.productUrl,
+      categoryId: s.categoryId || prev.categoryId,
+      merchantId: s.merchantId || prev.merchantId,
+      mrpRupees: s.mrpRupees || prev.mrpRupees,
+      priceRupees: s.priceRupees || prev.priceRupees,
+      mediaId: s.mediaId || prev.mediaId,
+      rating: s.rating !== undefined ? s.rating : prev.rating,
+      reviewCount: s.reviewCount !== undefined ? s.reviewCount : prev.reviewCount,
+      ratingSource: s.ratingSource !== undefined ? s.ratingSource : prev.ratingSource,
+    }));
+
+    setShowPreviewModal(false);
+    setMessage("Form auto-populated with extracted product details. Review and save as draft when ready.");
+  }
+
   async function load(currentPage = page) {
     const [deals, cats, stores] = await Promise.all([
       request<{ data: Row[] }>(`deals?page=${currentPage}`),
@@ -159,6 +257,8 @@ export function DealManager({ role }: { role: AdminRole }) {
       })),
     };
     setForm(data);
+    setDetectedRetailer(detectRetailer(row.productUrl));
+    setShowPreviewModal(false);
     setSelected(row);
     setPreview(null);
   }
@@ -362,25 +462,315 @@ export function DealManager({ role }: { role: AdminRole }) {
         <p>Saving an edit withdraws a published deal until it is previewed and published again.</p>
         <form onSubmit={save}>
           <fieldset disabled={busy || selected?.status === "ARCHIVED"} className={styles.grid}>
-            {(["title", "slug", "brand", "description", "productUrl"] as const).map((key) => (
-              <label key={key}>
-                {
-                  ({
-                    title: "Product title",
-                    slug: "Stable slug",
-                    brand: "Brand",
-                    description: "Description",
-                    productUrl: "Original product URL",
-                  })[key]
-                }
-                <input
-                  required={key !== "brand"}
-                  type={key === "productUrl" ? "url" : "text"}
-                  value={form[key]}
-                  onChange={(e) => field(key, e.target.value)}
-                />
-              </label>
-            ))}
+            <div className={styles.scrapeContainer}>
+              <div className={styles.scrapeInputRow}>
+                <label>
+                  Original product URL (HTTPS only, clean product page)
+                  {detectedRetailer && (
+                    <span className={styles.retailerBadge}>{detectedRetailer}</span>
+                  )}
+                  <input
+                    required
+                    type="url"
+                    placeholder="https://www.amazon.in/dp/... or https://www.flipkart.com/..."
+                    value={form.productUrl}
+                    onChange={(e) => {
+                      field("productUrl", e.target.value);
+                      setDetectedRetailer(detectRetailer(e.target.value));
+                    }}
+                  />
+                </label>
+                <button
+                  type="button"
+                  disabled={extracting || busy || !form.productUrl.trim()}
+                  onClick={handleScrape}
+                  className={styles.scrapeBtn}
+                >
+                  {extracting ? "Scraping..." : "Scrape"}
+                </button>
+              </div>
+              {extractProgress && (
+                <div className={styles.extractStatus}>{extractProgress}</div>
+              )}
+            </div>
+
+            {showPreviewModal && extractionResult && (
+              <div className={styles.previewModal}>
+                <div className={styles.previewHeader}>
+                  <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+                    {extractionResult.data.media.primaryImageUrl.value && (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={extractionResult.data.media.primaryImageUrl.value}
+                        alt="Product preview"
+                        style={{ width: "48px", height: "48px", objectFit: "contain", borderRadius: "6px", background: "var(--md-color-surface)", border: "1px solid var(--md-color-border)" }}
+                      />
+                    )}
+                    <div>
+                      <h3 style={{ margin: 0, fontSize: "16px", fontWeight: 700 }}>
+                        Extraction Preview: {extractionResult.retailer}
+                      </h3>
+                      <span style={{ fontSize: "12px", color: "var(--md-color-text-secondary)" }}>
+                        Provenance: {extractionResult.diagnostics.extractionMethodUsed} ({extractionResult.diagnostics.executionTimeMs}ms)
+                      </span>
+                    </div>
+                  </div>
+                  <span
+                    className={`${styles.previewStatus} ${
+                      extractionResult.status === "FULL_SUCCESS"
+                        ? styles.statusFull
+                        : styles.statusPartial
+                    }`}
+                  >
+                    {extractionResult.status}
+                  </span>
+                </div>
+
+                <table className={styles.previewTable}>
+                  <thead>
+                    <tr>
+                      <th>Field</th>
+                      <th>Extracted Value</th>
+                      <th>Source & Confidence</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Merchant</td>
+                      <td>{extractionResult.retailer}</td>
+                      <td>
+                        <span className={styles.badgeRetrieved}>Domain match</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Product title</td>
+                      <td>{extractionResult.data.identity.title.value || "(Not available)"}</td>
+                      <td>
+                        <span
+                          className={
+                            extractionResult.data.identity.title.value
+                              ? styles.badgeRetrieved
+                              : styles.badgeMissing
+                          }
+                        >
+                          {extractionResult.data.identity.title.source} · {extractionResult.data.identity.title.confidence}
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Brand</td>
+                      <td>{extractionResult.data.identity.brand.value || "(Not available)"}</td>
+                      <td>
+                        <span
+                          className={
+                            extractionResult.data.identity.brand.value
+                              ? styles.badgeRetrieved
+                              : styles.badgeMissing
+                          }
+                        >
+                          {extractionResult.data.identity.brand.source} · {extractionResult.data.identity.brand.confidence}
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Description</td>
+                      <td>
+                        {extractionResult.data.content.description.value
+                          ? extractionResult.data.content.description.value.slice(0, 100) + "..."
+                          : "(Not available)"}
+                      </td>
+                      <td>
+                        <span
+                          className={
+                            extractionResult.data.content.description.value
+                              ? styles.badgeRetrieved
+                              : styles.badgeMissing
+                          }
+                        >
+                          {extractionResult.data.content.description.source} · {extractionResult.data.content.description.confidence}
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Category</td>
+                      <td>
+                        {extractionResult.matchedTaxonomy?.categoryName ||
+                          extractionResult.data.content.category.value ||
+                          "(Not matched)"}
+                      </td>
+                      <td>
+                        <span
+                          className={
+                            extractionResult.matchedTaxonomy?.categoryName
+                              ? styles.badgeSuggested
+                              : styles.badgeMissing
+                          }
+                        >
+                          {extractionResult.matchedTaxonomy?.categoryName ? "Suggested" : "Missing"}
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>MRP</td>
+                      <td>
+                        {extractionResult.suggestedFormValues?.mrpRupees
+                          ? `₹${extractionResult.suggestedFormValues.mrpRupees}`
+                          : "(Manual entry required)"}
+                      </td>
+                      <td>
+                        <span
+                          className={
+                            extractionResult.suggestedFormValues?.mrpRupees
+                              ? styles.badgeRetrieved
+                              : styles.badgeRestricted
+                          }
+                        >
+                          {extractionResult.data.pricing.mrpMinor.source} · {extractionResult.data.pricing.mrpMinor.confidence}
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Selling price</td>
+                      <td>
+                        {extractionResult.suggestedFormValues?.priceRupees
+                          ? `₹${extractionResult.suggestedFormValues.priceRupees}`
+                          : "(Manual entry required)"}
+                      </td>
+                      <td>
+                        <span
+                          className={
+                            extractionResult.suggestedFormValues?.priceRupees
+                              ? styles.badgeRetrieved
+                              : styles.badgeRestricted
+                          }
+                        >
+                          {extractionResult.data.pricing.priceMinor.source} · {extractionResult.data.pricing.priceMinor.confidence}
+                        </span>
+                      </td>
+                    </tr>
+                    {extractionResult.suggestedFormValues?.mrpRupees && extractionResult.suggestedFormValues?.priceRupees && (
+                      <tr>
+                        <td>Discount</td>
+                        <td>
+                          {Math.round(((parseFloat(extractionResult.suggestedFormValues.mrpRupees) - parseFloat(extractionResult.suggestedFormValues.priceRupees)) / parseFloat(extractionResult.suggestedFormValues.mrpRupees)) * 100)}% OFF
+                        </td>
+                        <td>
+                          <span className={styles.badgeRetrieved}>Calculated</span>
+                        </td>
+                      </tr>
+                    )}
+                    <tr>
+                      <td>Product image</td>
+                      <td>
+                        {extractionResult.suggestedFormValues?.mediaId ? (
+                          <span>Imported (ID: {extractionResult.suggestedFormValues.mediaId.slice(0, 12)}...)</span>
+                        ) : extractionResult.data.media.primaryImageUrl.value ? (
+                          <span>Remote URL: {extractionResult.data.media.primaryImageUrl.value.slice(0, 40)}...</span>
+                        ) : (
+                          <span>(Upload manually)</span>
+                        )}
+                      </td>
+                      <td>
+                        <span
+                          className={
+                            extractionResult.suggestedFormValues?.mediaId || extractionResult.data.media.primaryImageUrl.value
+                              ? styles.badgeRetrieved
+                              : styles.badgeMissing
+                          }
+                        >
+                          {extractionResult.data.media.primaryImageUrl.source} · {extractionResult.data.media.primaryImageUrl.confidence}
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Rating / Reviews</td>
+                      <td>
+                        {extractionResult.data.ratings.rating.value !== null
+                          ? `★ ${extractionResult.data.ratings.rating.value} (${
+                              extractionResult.data.ratings.reviewCount.value ?? 0
+                            } reviews)`
+                          : "(Not available)"}
+                      </td>
+                      <td>
+                        <span
+                          className={
+                            extractionResult.data.ratings.rating.value !== null
+                              ? styles.badgeRetrieved
+                              : styles.badgeMissing
+                          }
+                        >
+                          {extractionResult.data.ratings.rating.source} · {extractionResult.data.ratings.rating.confidence}
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                {extractionResult.diagnostics.warnings.length > 0 && (
+                  <div className={styles.warningBox}>
+                    <strong>Extraction notices & warnings:</strong>
+                    <ul style={{ margin: "6px 0 0 16px", padding: 0 }}>
+                      {extractionResult.diagnostics.warnings.map((w: string, i: number) => (
+                        <li key={i}>{w}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                <div className={styles.previewActions}>
+                  <button
+                    type="button"
+                    onClick={applyExtractedData}
+                    className={styles.acceptBtn}
+                  >
+                    Accept & Populate Form
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowPreviewModal(false)}
+                    className={styles.dismissBtn}
+                  >
+                    Dismiss / Continue Manually
+                  </button>
+                </div>
+              </div>
+            )}
+
+            <label>
+              Product title
+              <input
+                required
+                type="text"
+                value={form.title}
+                onChange={(e) => field("title", e.target.value)}
+              />
+            </label>
+            <label>
+              Stable slug
+              <input
+                required
+                type="text"
+                value={form.slug}
+                onChange={(e) => field("slug", e.target.value)}
+              />
+            </label>
+            <label>
+              Brand
+              <input
+                type="text"
+                value={form.brand}
+                onChange={(e) => field("brand", e.target.value)}
+              />
+            </label>
+            <label>
+              Description
+              <input
+                required
+                type="text"
+                value={form.description}
+                onChange={(e) => field("description", e.target.value)}
+              />
+            </label>
             <label>
               Category
               <select required value={form.categoryId} onChange={(e) => field("categoryId", e.target.value)}>
@@ -644,6 +1034,10 @@ export function DealManager({ role }: { role: AdminRole }) {
                 setSelected(null);
                 setForm(empty);
                 setPreview(null);
+                setDetectedRetailer(null);
+                setShowPreviewModal(false);
+                setExtractionResult(null);
+                setExtractProgress("");
               }}
             >
               New deal

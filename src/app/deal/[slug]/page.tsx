@@ -17,7 +17,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const row = await getDatabase().deal.findFirst({
-    where: { ...publicWhere(listingSchema.parse({})), slug },
+    where: { ...publicWhere(listingSchema.parse({})), OR: [{ slug }, { id: slug }] },
     include: dealInclude,
   });
 
@@ -66,14 +66,27 @@ export default async function DealDetail({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const row = await getDatabase().deal.findFirst({
-    where: { ...publicWhere(listingSchema.parse({})), slug },
+  const db = getDatabase();
+  const row = await db.deal.findFirst({
+    where: { ...publicWhere(listingSchema.parse({})), OR: [{ slug }, { id: slug }] },
     include: dealInclude,
   });
 
   if (!row) notFound();
   const deal = publicDeal(row);
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://metadeals4u.in";
+
+  const relatedRecords = await db.deal.findMany({
+    where: {
+      ...publicWhere(listingSchema.parse({})),
+      categoryId: row.categoryId,
+      id: { not: row.id },
+    },
+    include: dealInclude,
+    orderBy: [{ featured: "desc" }, { publishedAt: "desc" }],
+    take: 6,
+  });
+  const relatedDeals = relatedRecords.filter((r) => r.title !== row.title).slice(0, 3).map(publicDeal);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -148,6 +161,48 @@ export default async function DealDetail({
             </a>
           ))}
         </div>
+        {relatedDeals.length > 0 && (
+          <div style={{ marginTop: 32, paddingTop: 24, borderTop: "1px solid var(--md-color-border)" }}>
+            <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 16 }}>You May Also Like</h2>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 }}>
+              {relatedDeals.map((rel) => (
+                <Link
+                  key={rel.id}
+                  href={`/deal/${rel.slug || rel.id}`}
+                  style={{
+                    padding: 12,
+                    borderRadius: 14,
+                    border: "1px solid var(--md-color-border)",
+                    background: "var(--md-color-surface)",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                    color: "inherit",
+                    textDecoration: "none",
+                  }}
+                >
+                  <div style={{ position: "relative", width: "100%", height: 120, marginBottom: 8 }}>
+                    <Image
+                      unoptimized
+                      src={rel.image.url}
+                      alt={rel.image.alt || rel.title}
+                      fill
+                      style={{ objectFit: "contain" }}
+                    />
+                  </div>
+                  <h3 style={{ fontSize: 13, fontWeight: 700, margin: "6px 0", lineHeight: 1.3 }}>{rel.title}</h3>
+                  <div style={{ display: "flex", gap: 8, alignItems: "baseline" }}>
+                    <strong style={{ color: "var(--md-deal-price)" }}>{formatINR(rel.priceMinor / 100)}</strong>
+                    <del style={{ fontSize: 12, color: "var(--md-deal-mrp)" }}>{formatINR(rel.mrpMinor / 100)}</del>
+                  </div>
+                  <span style={{ fontSize: 11, color: "var(--md-color-primary)", marginTop: 6, fontWeight: 700 }}>
+                    {rel.merchant.name} · View Deal →
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
       </article>
     </main>
   );

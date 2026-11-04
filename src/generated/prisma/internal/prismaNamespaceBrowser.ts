@@ -76,7 +76,8 @@ export const ModelName = {
   DistributionPost: 'DistributionPost',
   DealCandidate: 'DealCandidate',
   PriceObservation: 'PriceObservation',
-  ScraperJob: 'ScraperJob'
+  ScraperJob: 'ScraperJob',
+  ProductExtractionLog: 'ProductExtractionLog'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -485,6 +486,21 @@ export const ScraperJobScalarFieldEnum = {
 } as const
 
 export type ScraperJobScalarFieldEnum = (typeof ScraperJobScalarFieldEnum)[keyof typeof ScraperJobScalarFieldEnum]
+
+
+export const ProductExtractionLogScalarFieldEnum = {
+  id: 'id',
+  adminUserId: 'adminUserId',
+  retailer: 'retailer',
+  originalUrl: 'originalUrl',
+  extractionStatus: 'extractionStatus',
+  fieldsSummary: 'fieldsSummary',
+  sourceMethod: 'sourceMethod',
+  errorCode: 'errorCode',
+  createdAt: 'createdAt'
+} as const
+
+export type ProductExtractionLogScalarFieldEnum = (typeof ProductExtractionLogScalarFieldEnum)[keyof typeof ProductExtractionLogScalarFieldEnum]
 
 
 export const SortOrder = {

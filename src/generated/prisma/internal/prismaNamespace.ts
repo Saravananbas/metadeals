@@ -422,7 +422,8 @@ export const ModelName = {
   DistributionPost: 'DistributionPost',
   DealCandidate: 'DealCandidate',
   PriceObservation: 'PriceObservation',
-  ScraperJob: 'ScraperJob'
+  ScraperJob: 'ScraperJob',
+  ProductExtractionLog: 'ProductExtractionLog'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -438,7 +439,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "account" | "session" | "verificationToken" | "authSession" | "recoveryCode" | "authToken" | "authRateLimit" | "bootstrapState" | "auditEvent" | "category" | "merchant" | "affiliateClick" | "affiliateTransaction" | "media" | "deal" | "purchaseOption" | "customer" | "customerIdentity" | "customerSignupChallenge" | "customerRateLimit" | "distributionDestination" | "distributionPost" | "dealCandidate" | "priceObservation" | "scraperJob"
+    modelProps: "user" | "account" | "session" | "verificationToken" | "authSession" | "recoveryCode" | "authToken" | "authRateLimit" | "bootstrapState" | "auditEvent" | "category" | "merchant" | "affiliateClick" | "affiliateTransaction" | "media" | "deal" | "purchaseOption" | "customer" | "customerIdentity" | "customerSignupChallenge" | "customerRateLimit" | "distributionDestination" | "distributionPost" | "dealCandidate" | "priceObservation" | "scraperJob" | "productExtractionLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2366,6 +2367,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ProductExtractionLog: {
+      payload: Prisma.$ProductExtractionLogPayload<ExtArgs>
+      fields: Prisma.ProductExtractionLogFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ProductExtractionLogFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductExtractionLogPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ProductExtractionLogFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductExtractionLogPayload>
+        }
+        findFirst: {
+          args: Prisma.ProductExtractionLogFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductExtractionLogPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ProductExtractionLogFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductExtractionLogPayload>
+        }
+        findMany: {
+          args: Prisma.ProductExtractionLogFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductExtractionLogPayload>[]
+        }
+        create: {
+          args: Prisma.ProductExtractionLogCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductExtractionLogPayload>
+        }
+        createMany: {
+          args: Prisma.ProductExtractionLogCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ProductExtractionLogCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductExtractionLogPayload>[]
+        }
+        delete: {
+          args: Prisma.ProductExtractionLogDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductExtractionLogPayload>
+        }
+        update: {
+          args: Prisma.ProductExtractionLogUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductExtractionLogPayload>
+        }
+        deleteMany: {
+          args: Prisma.ProductExtractionLogDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ProductExtractionLogUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ProductExtractionLogUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductExtractionLogPayload>[]
+        }
+        upsert: {
+          args: Prisma.ProductExtractionLogUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductExtractionLogPayload>
+        }
+        aggregate: {
+          args: Prisma.ProductExtractionLogAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateProductExtractionLog>
+        }
+        groupBy: {
+          args: Prisma.ProductExtractionLogGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProductExtractionLogGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ProductExtractionLogCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProductExtractionLogCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2797,6 +2872,21 @@ export const ScraperJobScalarFieldEnum = {
 export type ScraperJobScalarFieldEnum = (typeof ScraperJobScalarFieldEnum)[keyof typeof ScraperJobScalarFieldEnum]
 
 
+export const ProductExtractionLogScalarFieldEnum = {
+  id: 'id',
+  adminUserId: 'adminUserId',
+  retailer: 'retailer',
+  originalUrl: 'originalUrl',
+  extractionStatus: 'extractionStatus',
+  fieldsSummary: 'fieldsSummary',
+  sourceMethod: 'sourceMethod',
+  errorCode: 'errorCode',
+  createdAt: 'createdAt'
+} as const
+
+export type ProductExtractionLogScalarFieldEnum = (typeof ProductExtractionLogScalarFieldEnum)[keyof typeof ProductExtractionLogScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -3223,6 +3313,7 @@ export type GlobalOmitConfig = {
   dealCandidate?: Prisma.DealCandidateOmit
   priceObservation?: Prisma.PriceObservationOmit
   scraperJob?: Prisma.ScraperJobOmit
+  productExtractionLog?: Prisma.ProductExtractionLogOmit
 }
 
 /* Types for Logging */

@@ -171,3 +171,8 @@ export type PriceObservation = Prisma.PriceObservationModel
  * 
  */
 export type ScraperJob = Prisma.ScraperJobModel
+/**
+ * Model ProductExtractionLog
+ * 
+ */
+export type ProductExtractionLog = Prisma.ProductExtractionLogModel
