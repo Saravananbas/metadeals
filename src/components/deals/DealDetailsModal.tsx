@@ -266,12 +266,13 @@ export function DealDetailsModal({
                   <Heart size={20} fill={saved ? "currentColor" : "none"} />
                 </button>
                 <Image
-                  src={imgSrc || "/images/placeholder.png"}
-                  alt={activeDeal.name}
+                  src={imgSrc || "/images/placeholder.svg"}
+                  alt=""
+                  aria-hidden="true"
                   fill
                   sizes="(max-width: 768px) 90vw, 420px"
                   className={styles.mainImage}
-                  onError={() => setImgSrc("/images/placeholder.png")}
+                  onError={() => setImgSrc("/images/placeholder.svg")}
                   priority
                 />
               </div>

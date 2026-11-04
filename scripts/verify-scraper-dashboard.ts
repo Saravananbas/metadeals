@@ -12,7 +12,6 @@ async function main() {
   const env = getAuthEnv();
   const testId = randomUUID().slice(0, 8);
   const testEmail = `admin-dash-${testId}@test.invalid`;
-  const tempPassword = `P@ssword123-${testId}`;
   let tempUserId: string | null = null;
   const cleanupJobIds: string[] = [];
   const cleanupCandidateIds: string[] = [];

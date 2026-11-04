@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import { ArrowRight, Clock3, Heart, Star } from "lucide-react";
 import type { Deal } from "@/features/deals/types";
@@ -6,6 +9,13 @@ import { StoreLogo } from "./StoreLogo";
 
 export function DealCard({ deal, saved, onSave, onView }: { deal: Deal; saved: boolean; onSave: (id: string) => void; onView: (deal: Deal) => void }) {
   const savings = getSavings(deal.originalPrice, deal.price);
+  const [prevDealImage, setPrevDealImage] = useState(deal.image);
+  const [imgSrc, setImgSrc] = useState(deal.image || "/images/placeholder.svg");
+
+  if (deal.image !== prevDealImage) {
+    setPrevDealImage(deal.image);
+    setImgSrc(deal.image || "/images/placeholder.svg");
+  }
 
   return (
     <article
@@ -38,10 +48,12 @@ export function DealCard({ deal, saved, onSave, onView }: { deal: Deal; saved: b
         </button>
         <div className="product-image-button" aria-label={`Preview ${deal.name}`}>
           <Image
-            src={deal.image || "/images/placeholder.png"}
-            alt={deal.name}
+            src={imgSrc}
+            alt=""
+            aria-hidden="true"
             fill
             sizes="(max-width: 639px) 46vw, (max-width: 1099px) 30vw, (max-width: 1279px) 23vw, 16vw"
+            onError={() => setImgSrc("/images/placeholder.svg")}
           />
         </div>
       </div>

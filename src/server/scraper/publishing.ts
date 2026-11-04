@@ -87,7 +87,70 @@ export async function publishVerifiedCandidate(
   }
 
   // 4. Resolve or create Media
-  let media = await db.media.findFirst();
+  const titleLower = candidate.rawTitle.toLowerCase();
+  let mediaKeyword = "phone";
+  if (
+    titleLower.includes("macbook") ||
+    titleLower.includes("laptop") ||
+    titleLower.includes("thinkpad") ||
+    titleLower.includes("dell") ||
+    category.slug === "laptops"
+  ) {
+    mediaKeyword = "laptop";
+  } else if (
+    titleLower.includes("wh-1000xm5") ||
+    titleLower.includes("headphone") ||
+    titleLower.includes("earphone") ||
+    titleLower.includes("airpods") ||
+    titleLower.includes("buds") ||
+    titleLower.includes("audio")
+  ) {
+    mediaKeyword = "headphones";
+  } else if (
+    titleLower.includes("tv") ||
+    titleLower.includes("oled") ||
+    titleLower.includes("bravia") ||
+    titleLower.includes("washing machine") ||
+    titleLower.includes("refrigerator") ||
+    titleLower.includes("air fryer") ||
+    category.slug === "appliances"
+  ) {
+    mediaKeyword = "air-fryer";
+  } else if (
+    titleLower.includes("shoes") ||
+    titleLower.includes("backpack") ||
+    titleLower.includes("daypack") ||
+    titleLower.includes("trolley") ||
+    titleLower.includes("rucksack") ||
+    category.slug === "travel"
+  ) {
+    mediaKeyword = "shoes";
+  } else if (
+    titleLower.includes("watch") ||
+    titleLower.includes("smartwatch")
+  ) {
+    mediaKeyword = "watch";
+  }
+
+  let media = await db.media.findFirst({
+    where: {
+      alt: { contains: mediaKeyword, mode: "insensitive" },
+      storageKey: { endsWith: ".webp" },
+    },
+  });
+
+  if (!media) {
+    media = await db.media.findFirst({
+      where: {
+        storageKey: { endsWith: ".webp" },
+      },
+    });
+  }
+
+  if (!media) {
+    media = await db.media.findFirst();
+  }
+
   if (!media) {
     media = await db.media.create({
       data: {
