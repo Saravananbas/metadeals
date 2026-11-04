@@ -28,7 +28,8 @@
     "test:deals:http": "node --conditions=react-server --import tsx scripts/m3-http-test.ts",
     "test:affiliate:integration": "node --conditions=react-server --import tsx scripts/m4-affiliate-test.ts",
     "test:distribution:integration": "node --conditions=react-server --import tsx scripts/m5-distribution-test.ts",
-    "test:scraper:integration": "node --conditions=react-server --import tsx scripts/scraper-integration-test.ts"
+    "test:scraper:integration": "node --conditions=react-server --import tsx scripts/scraper-integration-test.ts",
+    "db:seed:deals": "node --conditions=react-server --import tsx scripts/seed-100-deals.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "3.1161.0",
