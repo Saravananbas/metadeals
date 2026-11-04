@@ -89,6 +89,9 @@ export function DealManager({ role }: { role: AdminRole }) {
   const [detectedRetailer, setDetectedRetailer] = useState<string | null>(null);
   const [extractionResult, setExtractionResult] = useState<ClientExtractionResult | null>(null);
   const [showPreviewModal, setShowPreviewModal] = useState(false);
+  const [previewCategory, setPreviewCategory] = useState<string>("");
+  const [previewMerchant, setPreviewMerchant] = useState<string>("");
+  const [publishingDirect, setPublishingDirect] = useState<boolean>(false);
 
   function detectRetailer(urlStr: string): string | null {
     if (!urlStr) return null;
@@ -142,6 +145,18 @@ export function DealManager({ role }: { role: AdminRole }) {
 
       setExtractProgress("Product information retrieved.");
       setExtractionResult(response.data);
+      setPreviewCategory(
+        response.data.suggestedFormValues?.categoryId ||
+        response.data.matchedTaxonomy?.categoryId ||
+        form.categoryId ||
+        ""
+      );
+      setPreviewMerchant(
+        response.data.suggestedFormValues?.merchantId ||
+        response.data.matchedTaxonomy?.merchantId ||
+        form.merchantId ||
+        ""
+      );
       setShowPreviewModal(true);
       setMessage(
         response.data.status === "FULL_SUCCESS"
@@ -157,28 +172,170 @@ export function DealManager({ role }: { role: AdminRole }) {
   }
 
   function applyExtractedData() {
-    if (!extractionResult?.suggestedFormValues) return;
+    if (!extractionResult) return;
     const s = extractionResult.suggestedFormValues;
 
     setForm((prev) => ({
       ...prev,
-      title: s.title || prev.title,
-      slug: s.slug || prev.slug,
-      brand: s.brand || prev.brand,
-      description: s.description || prev.description,
-      productUrl: s.productUrl || prev.productUrl,
-      categoryId: s.categoryId || prev.categoryId,
-      merchantId: s.merchantId || prev.merchantId,
-      mrpRupees: s.mrpRupees || prev.mrpRupees,
-      priceRupees: s.priceRupees || prev.priceRupees,
-      mediaId: s.mediaId || prev.mediaId,
-      rating: s.rating !== undefined ? s.rating : prev.rating,
-      reviewCount: s.reviewCount !== undefined ? s.reviewCount : prev.reviewCount,
-      ratingSource: s.ratingSource !== undefined ? s.ratingSource : prev.ratingSource,
+      title: s?.title || extractionResult.data.identity.title.value || prev.title,
+      slug: s?.slug || prev.slug,
+      brand: s?.brand || extractionResult.data.identity.brand.value || prev.brand,
+      description: s?.description || extractionResult.data.content.description.value || prev.description,
+      productUrl: s?.productUrl || extractionResult.canonicalUrl || prev.productUrl,
+      categoryId: previewCategory || s?.categoryId || prev.categoryId,
+      merchantId: previewMerchant || s?.merchantId || prev.merchantId,
+      mrpRupees: s?.mrpRupees || prev.mrpRupees,
+      priceRupees: s?.priceRupees || prev.priceRupees,
+      mediaId: s?.mediaId || prev.mediaId,
+      rating: s?.rating !== undefined ? s.rating : prev.rating,
+      reviewCount: s?.reviewCount !== undefined ? s.reviewCount : prev.reviewCount,
+      ratingSource: s?.ratingSource !== undefined ? s.ratingSource : prev.ratingSource,
     }));
 
     setShowPreviewModal(false);
-    setMessage("Form auto-populated with extracted product details. Review and save as draft when ready.");
+    setMessage("Form populated with extracted details. You can now edit any fields and save or publish below.");
+
+    setTimeout(() => {
+      const target = document.getElementById("product-title-input") || document.getElementById("new-deal-form");
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }, 50);
+  }
+
+  async function handleDirectPublish() {
+    if (!extractionResult) return;
+    const s = extractionResult.suggestedFormValues;
+
+    const title = (s?.title || extractionResult.data.identity.title.value || form.title || "").trim();
+    if (!title) {
+      setMessage("Product title is required to publish.");
+      return;
+    }
+
+    const categoryId = previewCategory || s?.categoryId || form.categoryId;
+    if (!categoryId) {
+      setMessage("Please select a Category from the dropdown in the preview table before publishing.");
+      return;
+    }
+
+    let merchantId = previewMerchant || s?.merchantId || form.merchantId;
+    if (!merchantId) {
+      const matched = merchants.find((m) =>
+        m.name.toLowerCase().includes(extractionResult.retailer.toLowerCase()) ||
+        extractionResult.retailer.toLowerCase().includes(m.name.toLowerCase())
+      );
+      if (matched) {
+        merchantId = matched.id;
+      } else if (merchants.length > 0) {
+        merchantId = merchants[0].id;
+      } else {
+        setMessage("Please select a Merchant before publishing.");
+        return;
+      }
+    }
+
+    const mrpStr = s?.mrpRupees || form.mrpRupees;
+    const priceStr = s?.priceRupees || form.priceRupees;
+
+    let mrpMinor: number;
+    let priceMinor: number;
+    try {
+      mrpMinor = rupeesToPaise(mrpStr);
+    } catch {
+      setMessage("Valid MRP is required to publish. Please click 'Edit Details' to specify MRP.");
+      return;
+    }
+
+    try {
+      priceMinor = rupeesToPaise(priceStr);
+    } catch {
+      setMessage("Valid Deal Price is required to publish. Please click 'Edit Details' to specify Deal Price.");
+      return;
+    }
+
+    if (priceMinor > mrpMinor) {
+      setMessage("Deal price cannot exceed MRP.");
+      return;
+    }
+
+    let mediaId = s?.mediaId || form.mediaId;
+    if (!mediaId) {
+      const categoryMatch = rows.find((r) => r.categoryId === categoryId && r.mediaId);
+      const anyMatch = rows.find((r) => r.mediaId);
+      if (categoryMatch) {
+        mediaId = categoryMatch.mediaId;
+      } else if (anyMatch) {
+        mediaId = anyMatch.mediaId;
+      }
+    }
+
+    if (!mediaId) {
+      setMessage("Product image is required. Please click 'Edit Details' below to upload an image before publishing.");
+      return;
+    }
+
+    const slug = s?.slug || form.slug || title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    const description = s?.description || form.description || title;
+    const productUrl = s?.productUrl || form.productUrl || extractionResult.canonicalUrl;
+
+    const payload: DealInput = {
+      slug,
+      title,
+      brand: s?.brand || extractionResult.data.identity.brand.value || form.brand || "",
+      description,
+      categoryId,
+      merchantId,
+      mediaId,
+      mrpMinor,
+      priceMinor,
+      currency: "INR",
+      rating: s?.rating ?? form.rating ?? null,
+      reviewCount: s?.reviewCount ?? form.reviewCount ?? null,
+      ratingSource: s?.ratingSource ?? form.ratingSource ?? null,
+      productUrl,
+      affiliateUrl: form.affiliateUrl || null,
+      status: "DRAFT",
+      publishedAt: null,
+      startsAt: null,
+      expiresAt: null,
+      featured: form.featured || false,
+      trending: form.trending || false,
+      options: [],
+    };
+
+    setPublishingDirect(true);
+    setMessage("");
+
+    try {
+      const createRes = await request<{ data: Row }>("deals", "POST", { deal: payload });
+      const createdDeal = createRes.data;
+
+      const previewRes = await request<{ data: Row; previewToken: string }>(
+        `deals/${createdDeal.id}/preview`,
+        "POST",
+        {}
+      );
+
+      const publishRes = await request<{ data: Row }>(
+        `deals/${createdDeal.id}/publish`,
+        "POST",
+        { version: previewRes.data.version, previewToken: previewRes.previewToken }
+      );
+
+      await load();
+
+      setShowPreviewModal(false);
+      setExtractionResult(null);
+      setExtractProgress("");
+      setForm(empty);
+      setSelected(publishRes.data);
+      setMessage(`🎉 "${publishRes.data.title}" has been successfully published to the live store!`);
+    } catch (err) {
+      setMessage(err instanceof Error ? err.message : "Failed to publish deal directly.");
+    } finally {
+      setPublishingDirect(false);
+    }
   }
 
   async function load(currentPage = page) {
@@ -538,9 +695,25 @@ export function DealManager({ role }: { role: AdminRole }) {
                   <tbody>
                     <tr>
                       <td>Merchant</td>
-                      <td>{extractionResult.retailer}</td>
                       <td>
-                        <span className={styles.badgeRetrieved}>Domain match</span>
+                        <select
+                          value={previewMerchant}
+                          onChange={(e) => setPreviewMerchant(e.target.value)}
+                          className={styles.inlineSelect}
+                          aria-label="Select Merchant"
+                        >
+                          <option value="">-- Select Merchant --</option>
+                          {merchants.map((m) => (
+                            <option key={m.id} value={m.id}>
+                              {m.name}
+                            </option>
+                          ))}
+                        </select>
+                      </td>
+                      <td>
+                        <span className={previewMerchant ? styles.badgeRetrieved : styles.badgeMissing}>
+                          {previewMerchant ? "Matched" : "Missing"}
+                        </span>
                       </td>
                     </tr>
                     <tr>
@@ -595,19 +768,29 @@ export function DealManager({ role }: { role: AdminRole }) {
                     <tr>
                       <td>Category</td>
                       <td>
-                        {extractionResult.matchedTaxonomy?.categoryName ||
-                          extractionResult.data.content.category.value ||
-                          "(Not matched)"}
+                        <select
+                          value={previewCategory}
+                          onChange={(e) => setPreviewCategory(e.target.value)}
+                          className={styles.inlineSelect}
+                          aria-label="Select Category"
+                        >
+                          <option value="">-- Select Category --</option>
+                          {categories.map((c) => (
+                            <option key={c.id} value={c.id}>
+                              {c.name}
+                            </option>
+                          ))}
+                        </select>
                       </td>
                       <td>
                         <span
                           className={
-                            extractionResult.matchedTaxonomy?.categoryName
+                            previewCategory
                               ? styles.badgeSuggested
                               : styles.badgeMissing
                           }
                         >
-                          {extractionResult.matchedTaxonomy?.categoryName ? "Suggested" : "Missing"}
+                          {previewCategory ? "Selected" : "Missing"}
                         </span>
                       </td>
                     </tr>
@@ -721,17 +904,27 @@ export function DealManager({ role }: { role: AdminRole }) {
                 <div className={styles.previewActions}>
                   <button
                     type="button"
-                    onClick={applyExtractedData}
-                    className={styles.acceptBtn}
+                    onClick={handleDirectPublish}
+                    disabled={busy || publishingDirect || extracting}
+                    className={styles.publishBtn}
                   >
-                    Accept & Populate Form
+                    {publishingDirect ? "Publishing..." : "🚀 Publish Deal"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={applyExtractedData}
+                    disabled={busy || publishingDirect || extracting}
+                    className={styles.editBtn}
+                  >
+                    ✏️ Edit Details
                   </button>
                   <button
                     type="button"
                     onClick={() => setShowPreviewModal(false)}
+                    disabled={busy || publishingDirect || extracting}
                     className={styles.dismissBtn}
                   >
-                    Dismiss / Continue Manually
+                    Dismiss
                   </button>
                 </div>
               </div>
@@ -740,6 +933,7 @@ export function DealManager({ role }: { role: AdminRole }) {
             <label>
               Product title
               <input
+                id="product-title-input"
                 required
                 type="text"
                 value={form.title}

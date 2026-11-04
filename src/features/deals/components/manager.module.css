@@ -39,7 +39,14 @@
 .badgeSuggested { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; background: var(--md-blue-100); color: var(--md-blue-700); }
 .badgeRestricted { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; background: var(--md-amber-100); color: var(--md-amber-700); }
 .warningBox { margin: 12px 0; padding: 12px; border-radius: 8px; background: var(--md-amber-50); border: 1px solid var(--md-amber-100); color: var(--md-amber-700); font-size: 13px; }
-.previewActions { display: flex; gap: 12px; margin-top: 16px; }
+.inlineSelect { padding: 6px 10px; border-radius: 6px; border: 1px solid var(--md-color-border-strong); background: var(--md-color-surface); color: var(--md-color-text); font-size: 13px; max-width: 260px; font-weight: 500; }
+.previewActions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; align-items: center; }
+.publishBtn { background: var(--md-green-700); color: var(--md-color-primary-contrast); font-weight: 700; border: none; padding: 10px 18px; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.publishBtn:hover:not(:disabled) { background: var(--md-green-600); }
+.publishBtn:disabled { opacity: .6; cursor: not-allowed; }
+.editBtn { background: var(--md-color-primary); color: var(--md-color-primary-contrast); font-weight: 700; border: none; padding: 10px 18px; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.editBtn:hover:not(:disabled) { background: var(--md-color-primary-hover); }
+.editBtn:disabled { opacity: .6; cursor: not-allowed; }
 .acceptBtn { background: var(--md-green-700); color: var(--md-color-primary-contrast); font-weight: 700; border: none; }
 .dismissBtn { background: var(--md-color-surface); color: var(--md-color-text); border: 1px solid var(--md-color-border-strong); }
 @media(max-width:800px) { .grid { grid-template-columns: repeat(2,minmax(0,1fr)); } }
