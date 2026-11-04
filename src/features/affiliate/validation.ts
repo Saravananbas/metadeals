@@ -22,7 +22,8 @@ export type ImportBatchInput = z.infer<typeof importBatchSchema>;
 export function validateDestinationHost(
   destinationUrl: string,
   merchantWebsiteUrl: string,
-  affiliateHosts: string[] = []
+  affiliateHosts: string[] = [],
+  permittedHosts: string[] = []
 ): boolean {
   try {
     const dest = new URL(destinationUrl);
@@ -36,6 +37,7 @@ export function validateDestinationHost(
       merchantHost,
       apexMerchantHost,
       ...affiliateHosts.map((h) => h.trim().toLowerCase()),
+      ...permittedHosts.map((h) => h.trim().toLowerCase()),
     ].filter(Boolean);
 
     return allowed.some(

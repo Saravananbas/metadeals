@@ -2,6 +2,8 @@ import "server-only";
 import { getAuthEnv } from "@/config/env";
 import { roleCan, type AdminRole } from "@/server/auth/permissions";
 import { merchantSelect, type DealDatabase } from "@/server/deals/repository";
+import { ALLOWED_RETAILER_DOMAINS } from "@/server/product-extraction/security/domain-allowlist";
+import { convertMerchantUrl } from "./adapters/registry";
 import {
   validateDestinationHost,
   isCrawlerOrPrefetch,
@@ -11,6 +13,21 @@ import {
 } from "./types";
 
 export { validateDestinationHost, isCrawlerOrPrefetch };
+
+export const PERMITTED_AFFILIATE_NETWORK_HOSTS = [
+  "cuelinks.com",
+  "clnk.in",
+  "linksredirect.com",
+  "amzn.to",
+  "amzn.in",
+  "dl.flipkart.com",
+  "fkrt.it",
+];
+
+export const PERMITTED_RETAILER_HOSTS = [
+  ...ALLOWED_RETAILER_DOMAINS.map((d) => d.domain),
+  ...PERMITTED_AFFILIATE_NETWORK_HOSTS,
+];
 
 export function createActorHash(
   ip: string,
@@ -68,8 +85,9 @@ export async function resolveDealRedirect(
   }
 
   let targetMerchant = deal.merchant;
-  let targetUrl = deal.affiliateUrl || deal.productUrl;
   let selectedOptionId: string | null = null;
+  let candidateAffiliateUrl: string | null = deal.affiliateUrl;
+  let candidateProductUrl: string = deal.productUrl;
 
   if (optionId) {
     const option = deal.options.find((o) => o.id === optionId);
@@ -78,17 +96,53 @@ export async function resolveDealRedirect(
     }
     selectedOptionId = option.id;
     targetMerchant = option.merchant;
-    targetUrl = option.affiliateUrl || option.productUrl;
+    candidateAffiliateUrl = option.affiliateUrl || null;
+    candidateProductUrl = option.productUrl;
   }
 
-  const isHostValid = validateDestinationHost(
-    targetUrl,
-    targetMerchant.websiteUrl,
-    targetMerchant.affiliateHosts
-  );
+  // Validate destination against merchant allowed hosts and permitted retailer hosts
+  const isUrlAllowed = (url: string | null | undefined): boolean => {
+    if (!url) return false;
+    return validateDestinationHost(
+      url,
+      targetMerchant.websiteUrl,
+      targetMerchant.affiliateHosts,
+      PERMITTED_RETAILER_HOSTS
+    );
+  };
 
-  if (!isHostValid) {
-    throw new AffiliateError("Untrusted destination domain.", 400);
+  let targetUrl: string | null = null;
+
+  if (candidateAffiliateUrl) {
+    // Configured affiliate URL is present: validate destination host
+    if (!isUrlAllowed(candidateAffiliateUrl)) {
+      throw new AffiliateError("Untrusted destination domain.", 400);
+    }
+    targetUrl = candidateAffiliateUrl;
+  } else if (candidateProductUrl) {
+    // Affiliate URL is missing: attempt adapter conversion on the original product URL
+    try {
+      const parsed = new URL(candidateProductUrl);
+      const converted = convertMerchantUrl(candidateProductUrl, parsed.hostname, {
+        dealId: deal.slug || deal.id,
+        subId: requestMeta.channel || "web",
+      });
+      if (converted.isAffiliate && converted.url && isUrlAllowed(converted.url)) {
+        targetUrl = converted.url;
+      }
+    } catch {
+      // Continue to direct product URL fallback
+    }
+
+    // Fall back to original retailer product URL if conversion was unavailable or returned direct
+    if (!targetUrl) {
+      if (!isUrlAllowed(candidateProductUrl)) {
+        throw new AffiliateError("Untrusted destination domain.", 400);
+      }
+      targetUrl = candidateProductUrl;
+    }
+  } else {
+    throw new AffiliateError("Destination URL is unavailable.", 404);
   }
 
   const isBot = isCrawlerOrPrefetch(
