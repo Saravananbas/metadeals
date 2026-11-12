@@ -119,3 +119,72 @@ export function formatPaise(
   return formatINR(paiseToRupees(paise), options);
 }
 
+/**
+ * Calculates decimal-safe savings amount and discount percentage between MRP and selling/deal price.
+ * Converts to integer paise minor units for precision and formats discount to 2 decimal places.
+ * Example: MRP ₹12,995, Deal Price ₹7,995 -> Savings ₹5,000, Discount 38.48% OFF.
+ */
+export function calculateSavingsAndDiscount(
+  mrpStr?: string | number | null,
+  priceStr?: string | number | null
+): {
+  valid: boolean;
+  mrpMinor?: number;
+  priceMinor?: number;
+  savingsMinor?: number;
+  savingsRupees?: number;
+  savingsStr: string;
+  discountPercent?: number;
+  discountStr: string;
+  error: string | null;
+} {
+  if (mrpStr === undefined || mrpStr === null || mrpStr === "" || priceStr === undefined || priceStr === null || priceStr === "") {
+    return { valid: false, savingsStr: "", discountStr: "Unavailable", error: null };
+  }
+
+  const cleanMrp = String(mrpStr).replace(/[^0-9.]/g, "");
+  const cleanPrice = String(priceStr).replace(/[^0-9.]/g, "");
+
+  const mrp = parseFloat(cleanMrp);
+  const price = parseFloat(cleanPrice);
+
+  if (isNaN(mrp) || isNaN(price) || mrp <= 0 || price < 0) {
+    return { valid: false, savingsStr: "", discountStr: "Unavailable", error: null };
+  }
+
+  if (price > mrp) {
+    return {
+      valid: false,
+      savingsStr: "₹0",
+      discountStr: "0.00% (Deal price exceeds MRP)",
+      error: "Deal price cannot exceed MRP.",
+    };
+  }
+
+  const mrpMinor = Math.round(mrp * 100);
+  const priceMinor = Math.round(price * 100);
+  const savingsMinor = mrpMinor - priceMinor;
+  const savingsRupees = savingsMinor / 100;
+  const discountPercent = (savingsMinor / mrpMinor) * 100;
+
+  const formattedSavings = `₹${savingsRupees.toLocaleString("en-IN", {
+    minimumFractionDigits: savingsRupees % 1 === 0 ? 0 : 2,
+    maximumFractionDigits: 2,
+  })}`;
+
+  const formattedDiscount = `${discountPercent.toFixed(2)}% OFF`;
+
+  return {
+    valid: true,
+    mrpMinor,
+    priceMinor,
+    savingsMinor,
+    savingsRupees,
+    savingsStr: formattedSavings,
+    discountPercent,
+    discountStr: formattedDiscount,
+    error: null,
+  };
+}
+
+

@@ -36,62 +36,119 @@ export async function matchCategoryAndMerchant(
 ): Promise<MatchedTaxonomy> {
   const result: MatchedTaxonomy = {};
 
-  const [categories, merchants] = await Promise.all([
-    db.category.findMany({ select: { id: true, name: true, slug: true } }),
-    db.merchant.findMany({ select: { id: true, name: true, slug: true } }),
+  const [categories, merchants, directoryMerchants] = await Promise.all([
+    db.category.findMany({ select: { id: true, name: true, slug: true, parentId: true } }),
+    db.merchant.findMany({ select: { id: true, name: true, slug: true, websiteUrl: true } }),
+    db.merchantWebsiteDirectory.findMany({
+      where: { status: "ACTIVE" },
+      select: { id: true, name: true, domain: true, websiteUrl: true },
+    }),
   ]);
 
-  // 1. Match merchant
-  const retailerSlug = extraction.merchant.retailerSlug.toLowerCase();
-  const retailerName = extraction.merchant.retailerName.toLowerCase();
+  const normalize = (value: string) => value.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+  const domainOf = (value: string) => {
+    try {
+      return new URL(value.startsWith("http") ? value : `https://${value}`).hostname.toLowerCase().replace(/^www\./, "");
+    } catch {
+      return "";
+    }
+  };
+  const retailerSlug = normalize(extraction.merchant.retailerSlug);
+  const retailerName = normalize(extraction.merchant.retailerName);
+  const urlDomains = [extraction.merchant.canonicalUrl, extraction.merchant.originalUrl]
+    .map(domainOf)
+    .filter(Boolean);
+  const domainMatches = (host: string, domain: string) => host === domain || host.endsWith(`.${domain}`);
 
-  const matchedMerchant = merchants.find(
-    (m) =>
-      m.slug.toLowerCase() === retailerSlug ||
-      m.name.toLowerCase().includes(retailerName) ||
-      retailerName.includes(m.name.toLowerCase())
-  );
+  // Prefer a domain match from the merchant directory. For short-link/redirect
+  // URLs, fall back only to an exact normalized retailer identity supplied by
+  // the extraction adapter, never an arbitrary substring match.
+  const matchedDirectoryMerchant = directoryMerchants.find((merchant) => {
+    const domain = domainOf(merchant.domain || merchant.websiteUrl);
+    if (domain && urlDomains.some((host) => domainMatches(host, domain))) return true;
+    const name = normalize(merchant.name);
+    return Boolean(name && ((retailerName && name === retailerName) || (retailerSlug && name === retailerSlug)));
+  });
+  if (matchedDirectoryMerchant) {
+    result.merchantDirectoryId = matchedDirectoryMerchant.id;
+    result.merchantName = matchedDirectoryMerchant.name;
+  }
+
+  // Keep the operational merchant ID for the existing deal schema/workflow.
+  const matchedMerchant = merchants.find((merchant) => {
+    const domain = domainOf(merchant.websiteUrl || merchant.slug);
+    if (domain && urlDomains.some((host) => domainMatches(host, domain))) return true;
+    const name = normalize(merchant.name);
+    const slug = normalize(merchant.slug);
+    return Boolean((retailerName && (name === retailerName || slug === retailerName)) || (retailerSlug && (name === retailerSlug || slug === retailerSlug)));
+  });
 
   if (matchedMerchant) {
     result.merchantId = matchedMerchant.id;
-    result.merchantName = matchedMerchant.name;
+    result.merchantName ||= matchedMerchant.name;
   }
 
-  // 2. Match category
-  const extractedCat = extraction.content.category.value?.toLowerCase() || "";
-  const title = extraction.identity.title.value?.toLowerCase() || "";
-  const subcat = extraction.content.subcategory.value?.toLowerCase() || "";
-
-  // Category keyword heuristics
-  const matchCat = categories.find((c) => {
-    const cName = c.name.toLowerCase();
-    const cSlug = c.slug.toLowerCase();
-
-    if (extractedCat && (cName.includes(extractedCat) || extractedCat.includes(cName) || cSlug === extractedCat)) {
-      return true;
+  // Prefer an extracted leaf/subcategory or the most specific matching
+  // breadcrumb. Use conservative title keywords only when they identify a
+  // clear leaf; ambiguous products remain available for manual review.
+  const extractedCategory = normalize(extraction.content.category.value || "");
+  const extractedSubcategory = normalize(extraction.content.subcategory.value || "");
+  const breadcrumbs = (extraction.content.breadcrumb.value || []).map(normalize).filter(Boolean);
+  let productPath = "";
+  try {
+    productPath = decodeURIComponent(new URL(extraction.merchant.canonicalUrl || extraction.merchant.originalUrl).pathname)
+      .replace(/\.[a-z0-9]{2,5}$/i, "");
+  } catch {
+    // A malformed/missing URL does not prevent matching from extracted fields.
+  }
+  const titleContext = normalize(`${extraction.identity.title.value || ""} ${extraction.identity.brand.value || ""} ${productPath}`);
+  const taxonomyContext = normalize([extractedCategory, extractedSubcategory, ...breadcrumbs].join(" "));
+  const combinedContext = normalize(`${taxonomyContext} ${titleContext}`);
+  const keywordGroups: Array<{ terms: string[]; categoryTerms: string[] }> = [
+    { terms: ["shoe", "shoes", "footwear", "sneaker", "sneakers", "running shoe", "walking shoe", "sandal", "slipper", "flip flop", "mule", "boot"], categoryTerms: ["shoe", "footwear", "sandal", "slipper", "mule", "boot"] },
+    { terms: ["mobile", "phone", "smartphone", "iphone", "galaxy", "5g"], categoryTerms: ["mobile", "phone", "smartphone"] },
+    { terms: ["laptop", "notebook", "macbook", "thinkpad"], categoryTerms: ["laptop", "notebook"] },
+    { terms: ["headphone", "headphones", "earphone", "earphones", "earbuds", "smartwatch"], categoryTerms: ["audio", "headphone", "earphone", "wearable"] },
+    { terms: ["refrigerator", "washing machine", "microwave", "air fryer", "air conditioner", "split ac", "window ac"], categoryTerms: ["appliance", "refrigerator", "washing machine", "microwave", "air conditioner", "air conditioners", " ac "] },
+    { terms: ["kurta", "shirt", "ethnic wear", "dress", "saree", "jeans", "trouser", "cargo pants", "t shirt", "top", "jacket"], categoryTerms: ["fashion", "apparel", "clothing", "kurta", "shirt", "dress", "saree", "jeans", "trouser", "pants", "tops", "jackets"] },
+    { terms: ["sofa", "bed", "dining table", "chair", "wardrobe", "mattress", "showpiece", "home decor"], categoryTerms: ["home", "kitchen", "furniture", "decor", "bed", "sofa", "chair"] },
+    { terms: ["face wash", "moisturizer", "shampoo", "serum", "sunscreen", "lipstick", "perfume"], categoryTerms: ["beauty", "personal care", "skin", "hair", "fragrance", "makeup"] },
+    { terms: ["camera", "speaker", "smart tv", "television", "monitor", "router", "power bank", "charger"], categoryTerms: ["electronics", "gadgets", "audio", "camera", "television", "tv", "computer"] },
+  ];
+  const childrenByParent = new Map<string, number>();
+  for (const category of categories) if (category.parentId) childrenByParent.set(category.parentId, (childrenByParent.get(category.parentId) || 0) + 1);
+  const scored = categories.map((category) => {
+    const name = normalize(category.name);
+    const slug = normalize(category.slug);
+    const target = `${name} ${slug}`;
+    let score = 0;
+    if (extractedSubcategory && (name === extractedSubcategory || slug === extractedSubcategory)) score = Math.max(score, 500);
+    if (extractedCategory && (name === extractedCategory || slug === extractedCategory)) score = Math.max(score, category.parentId ? 320 : 180);
+    for (let index = 0; index < breadcrumbs.length; index += 1) {
+      const crumb = breadcrumbs[index];
+      const specificity = category.parentId ? 350 : 170;
+      if (name === crumb || slug === crumb) score = Math.max(score, specificity + index);
+      else if (crumb.length > 3 && (crumb.includes(name) || crumb.includes(slug))) score = Math.max(score, specificity - 25 + index);
     }
-
-    if (cSlug === "mobiles" && (title.includes("smartphone") || title.includes("galaxy") || title.includes("iphone") || title.includes("5g") || title.includes("phone"))) {
-      return true;
+    if (combinedContext) {
+      for (const group of keywordGroups) {
+        if (!group.terms.some((term) => combinedContext.includes(normalize(term)))) continue;
+        if (group.categoryTerms.some((term) => target.includes(normalize(term)))) {
+          score = Math.max(score, category.parentId ? 160 : 90);
+        }
+      }
+      const categoryWords = new Set((name || slug).split(" ").filter((word) => word.length > 3));
+      const contextWords = new Set(combinedContext.split(" "));
+      const overlaps = [...categoryWords].filter((word) => contextWords.has(word)).length;
+      if (overlaps) score = Math.max(score, 35 + overlaps * (category.parentId ? 14 : 7));
     }
-    if (cSlug === "laptops" && (title.includes("laptop") || title.includes("macbook") || title.includes("notebook") || title.includes("thinkpad"))) {
-      return true;
-    }
-    if ((cSlug === "men" || cSlug === "women") && (subcat.includes("kurta") || title.includes("kurta") || title.includes("shirt") || title.includes("ethnic"))) {
-      return cSlug === "men";
-    }
-    if (cSlug === "electronics" && (title.includes("headphones") || title.includes("earbuds") || title.includes("smartwatch") || title.includes("audio"))) {
-      return true;
-    }
-    if (cSlug === "appliances" && (title.includes("refrigerator") || title.includes("washing machine") || title.includes("microwave"))) {
-      return true;
-    }
-    return false;
-  });
-
-  if (matchCat) {
-    result.categoryId = matchCat.id;
-    result.categoryName = matchCat.name;
+    if (!category.parentId && childrenByParent.has(category.id) && score > 0) score -= 45;
+    return { category, score };
+  }).filter((item) => item.score >= 80).sort((a, b) => b.score - a.score);
+  const best = scored[0];
+  if (best && (!scored[1] || best.score > scored[1].score)) {
+    result.categoryId = best.category.id;
+    result.categoryName = best.category.name;
   }
 
   return result;

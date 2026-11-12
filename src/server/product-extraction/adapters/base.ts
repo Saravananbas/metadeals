@@ -429,8 +429,14 @@ export function parseEmbeddedJson(html: string, baseUrl?: string): ParsedEmbedde
         if (mrp) result.mrp = mrp;
 
         if (product.images && Array.isArray(product.images) && product.images.length > 0) {
-          const first = typeof product.images[0] === "string" ? product.images[0] : product.images[0]?.url;
-          result.image = resolveUrl(first, baseUrl);
+          const images = product.images
+            .map((item: unknown) => {
+              const candidate = typeof item === "string" ? item : item && typeof item === "object" && "url" in item ? String((item as { url: unknown }).url) : "";
+              return resolveUrl(candidate, baseUrl);
+            })
+            .filter((image: string | undefined): image is string => Boolean(image));
+          result.image = images[0];
+          result.additionalImages = images.slice(1);
         }
       }
     } catch {
@@ -454,8 +460,11 @@ export function parseEmbeddedJson(html: string, baseUrl?: string): ParsedEmbedde
 
         const images = pdpData.media?.albums?.[0]?.images;
         if (Array.isArray(images) && images.length > 0) {
-          const firstImg = images[0]?.imageURL || images[0]?.src;
-          result.image = resolveUrl(firstImg, baseUrl);
+          const resolvedImages = images
+            .map((image: { imageURL?: string; src?: string }) => resolveUrl(image?.imageURL || image?.src, baseUrl))
+            .filter((image): image is string => Boolean(image));
+          result.image = resolvedImages[0];
+          result.additionalImages = resolvedImages.slice(1);
         }
       }
     } catch {

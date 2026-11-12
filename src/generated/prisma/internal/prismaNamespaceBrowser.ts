@@ -68,6 +68,7 @@ export const ModelName = {
   Media: 'Media',
   Deal: 'Deal',
   PurchaseOption: 'PurchaseOption',
+  DealGalleryImage: 'DealGalleryImage',
   Customer: 'Customer',
   CustomerIdentity: 'CustomerIdentity',
   CustomerSignupChallenge: 'CustomerSignupChallenge',
@@ -77,7 +78,19 @@ export const ModelName = {
   DealCandidate: 'DealCandidate',
   PriceObservation: 'PriceObservation',
   ScraperJob: 'ScraperJob',
-  ProductExtractionLog: 'ProductExtractionLog'
+  ProductExtractionLog: 'ProductExtractionLog',
+  DealVideoReview: 'DealVideoReview',
+  YouTubeQuotaLedger: 'YouTubeQuotaLedger',
+  MerchantWebsiteDirectory: 'MerchantWebsiteDirectory',
+  ProductMaster: 'ProductMaster',
+  ProductVariant: 'ProductVariant',
+  ProductOffer: 'ProductOffer',
+  PriceObservationRecord: 'PriceObservationRecord',
+  SourceHealthRecord: 'SourceHealthRecord',
+  PublicationAuthorization: 'PublicationAuthorization',
+  ShadowCandidate: 'ShadowCandidate',
+  DealLifecycleEvent: 'DealLifecycleEvent',
+  DealComment: 'DealComment'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -319,9 +332,12 @@ export const DealScalarFieldEnum = {
   currency: 'currency',
   rating: 'rating',
   reviewCount: 'reviewCount',
+  viewCount: 'viewCount',
+  shareCount: 'shareCount',
   ratingSource: 'ratingSource',
   productUrl: 'productUrl',
   affiliateUrl: 'affiliateUrl',
+  couponCode: 'couponCode',
   status: 'status',
   publishedAt: 'publishedAt',
   startsAt: 'startsAt',
@@ -333,7 +349,9 @@ export const DealScalarFieldEnum = {
   createdById: 'createdById',
   updatedById: 'updatedById',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  youtubeReviewStatus: 'youtubeReviewStatus',
+  youtubeLastSearchedAt: 'youtubeLastSearchedAt'
 } as const
 
 export type DealScalarFieldEnum = (typeof DealScalarFieldEnum)[keyof typeof DealScalarFieldEnum]
@@ -353,10 +371,22 @@ export const PurchaseOptionScalarFieldEnum = {
 export type PurchaseOptionScalarFieldEnum = (typeof PurchaseOptionScalarFieldEnum)[keyof typeof PurchaseOptionScalarFieldEnum]
 
 
+export const DealGalleryImageScalarFieldEnum = {
+  id: 'id',
+  dealId: 'dealId',
+  mediaId: 'mediaId',
+  position: 'position',
+  createdAt: 'createdAt'
+} as const
+
+export type DealGalleryImageScalarFieldEnum = (typeof DealGalleryImageScalarFieldEnum)[keyof typeof DealGalleryImageScalarFieldEnum]
+
+
 export const CustomerScalarFieldEnum = {
   id: 'id',
   name: 'name',
   email: 'email',
+  image: 'image',
   passwordHash: 'passwordHash',
   emailVerifiedAt: 'emailVerifiedAt',
   disabledAt: 'disabledAt',
@@ -371,7 +401,12 @@ export const CustomerIdentityScalarFieldEnum = {
   id: 'id',
   customerId: 'customerId',
   provider: 'provider',
-  subject: 'subject'
+  subject: 'subject',
+  email: 'email',
+  name: 'name',
+  avatarUrl: 'avatarUrl',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type CustomerIdentityScalarFieldEnum = (typeof CustomerIdentityScalarFieldEnum)[keyof typeof CustomerIdentityScalarFieldEnum]
@@ -501,6 +536,227 @@ export const ProductExtractionLogScalarFieldEnum = {
 } as const
 
 export type ProductExtractionLogScalarFieldEnum = (typeof ProductExtractionLogScalarFieldEnum)[keyof typeof ProductExtractionLogScalarFieldEnum]
+
+
+export const DealVideoReviewScalarFieldEnum = {
+  id: 'id',
+  dealId: 'dealId',
+  videoId: 'videoId',
+  title: 'title',
+  channelTitle: 'channelTitle',
+  channelId: 'channelId',
+  thumbnailUrl: 'thumbnailUrl',
+  publishedAt: 'publishedAt',
+  duration: 'duration',
+  viewCount: 'viewCount',
+  likeCount: 'likeCount',
+  language: 'language',
+  relevanceScore: 'relevanceScore',
+  rankingPosition: 'rankingPosition',
+  isEmbeddable: 'isEmbeddable',
+  isPinned: 'isPinned',
+  isActive: 'isActive',
+  lastFetchedAt: 'lastFetchedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DealVideoReviewScalarFieldEnum = (typeof DealVideoReviewScalarFieldEnum)[keyof typeof DealVideoReviewScalarFieldEnum]
+
+
+export const YouTubeQuotaLedgerScalarFieldEnum = {
+  id: 'id',
+  endpoint: 'endpoint',
+  units: 'units',
+  outcome: 'outcome',
+  dealId: 'dealId',
+  canonicalProduct: 'canonicalProduct',
+  adminUserId: 'adminUserId',
+  errorCategory: 'errorCategory',
+  errorMessage: 'errorMessage',
+  createdAt: 'createdAt'
+} as const
+
+export type YouTubeQuotaLedgerScalarFieldEnum = (typeof YouTubeQuotaLedgerScalarFieldEnum)[keyof typeof YouTubeQuotaLedgerScalarFieldEnum]
+
+
+export const MerchantWebsiteDirectoryScalarFieldEnum = {
+  id: 'id',
+  merchantCode: 'merchantCode',
+  name: 'name',
+  websiteUrl: 'websiteUrl',
+  domain: 'domain',
+  category: 'category',
+  categories: 'categories',
+  productFocus: 'productFocus',
+  businessModel: 'businessModel',
+  description: 'description',
+  country: 'country',
+  status: 'status',
+  verificationStatus: 'verificationStatus',
+  logoMediaId: 'logoMediaId',
+  logoUrl: 'logoUrl',
+  source: 'source',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MerchantWebsiteDirectoryScalarFieldEnum = (typeof MerchantWebsiteDirectoryScalarFieldEnum)[keyof typeof MerchantWebsiteDirectoryScalarFieldEnum]
+
+
+export const ProductMasterScalarFieldEnum = {
+  id: 'id',
+  canonicalTitle: 'canonicalTitle',
+  brand: 'brand',
+  categorySlug: 'categorySlug',
+  gtin: 'gtin',
+  mpn: 'mpn',
+  modelNumber: 'modelNumber',
+  description: 'description',
+  defaultImageId: 'defaultImageId',
+  verifiedAt: 'verifiedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProductMasterScalarFieldEnum = (typeof ProductMasterScalarFieldEnum)[keyof typeof ProductMasterScalarFieldEnum]
+
+
+export const ProductVariantScalarFieldEnum = {
+  id: 'id',
+  productId: 'productId',
+  variantKey: 'variantKey',
+  title: 'title',
+  color: 'color',
+  size: 'size',
+  storageCapacity: 'storageCapacity',
+  condition: 'condition',
+  asin: 'asin',
+  fsn: 'fsn',
+  sku: 'sku',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProductVariantScalarFieldEnum = (typeof ProductVariantScalarFieldEnum)[keyof typeof ProductVariantScalarFieldEnum]
+
+
+export const ProductOfferScalarFieldEnum = {
+  id: 'id',
+  productId: 'productId',
+  variantId: 'variantId',
+  merchantSlug: 'merchantSlug',
+  sellerName: 'sellerName',
+  sellerRating: 'sellerRating',
+  retailerUrl: 'retailerUrl',
+  inStock: 'inStock',
+  currentPricePaise: 'currentPricePaise',
+  mrpPaise: 'mrpPaise',
+  lastCheckedAt: 'lastCheckedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProductOfferScalarFieldEnum = (typeof ProductOfferScalarFieldEnum)[keyof typeof ProductOfferScalarFieldEnum]
+
+
+export const PriceObservationRecordScalarFieldEnum = {
+  id: 'id',
+  variantId: 'variantId',
+  merchantSlug: 'merchantSlug',
+  sellerName: 'sellerName',
+  url: 'url',
+  mrpPaise: 'mrpPaise',
+  sellingPricePaise: 'sellingPricePaise',
+  couponPricePaise: 'couponPricePaise',
+  bankOfferPaise: 'bankOfferPaise',
+  deliveryFeePaise: 'deliveryFeePaise',
+  effectivePricePaise: 'effectivePricePaise',
+  currency: 'currency',
+  extractionMethod: 'extractionMethod',
+  isAvailable: 'isAvailable',
+  observedAt: 'observedAt'
+} as const
+
+export type PriceObservationRecordScalarFieldEnum = (typeof PriceObservationRecordScalarFieldEnum)[keyof typeof PriceObservationRecordScalarFieldEnum]
+
+
+export const SourceHealthRecordScalarFieldEnum = {
+  id: 'id',
+  connectorCode: 'connectorCode',
+  state: 'state',
+  totalRequests: 'totalRequests',
+  successfulRequests: 'successfulRequests',
+  consecutiveFailures: 'consecutiveFailures',
+  lastSuccessAt: 'lastSuccessAt',
+  lastFailureAt: 'lastFailureAt',
+  lastFailureReason: 'lastFailureReason',
+  updatedAt: 'updatedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type SourceHealthRecordScalarFieldEnum = (typeof SourceHealthRecordScalarFieldEnum)[keyof typeof SourceHealthRecordScalarFieldEnum]
+
+
+export const PublicationAuthorizationScalarFieldEnum = {
+  id: 'id',
+  candidateId: 'candidateId',
+  authorizedByAdmin: 'authorizedByAdmin',
+  approvalToken: 'approvalToken',
+  status: 'status',
+  isPriceErrorSuspected: 'isPriceErrorSuspected',
+  confidenceScore: 'confidenceScore',
+  attractivenessScore: 'attractivenessScore',
+  approvedAt: 'approvedAt',
+  publishedAt: 'publishedAt',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt'
+} as const
+
+export type PublicationAuthorizationScalarFieldEnum = (typeof PublicationAuthorizationScalarFieldEnum)[keyof typeof PublicationAuthorizationScalarFieldEnum]
+
+
+export const ShadowCandidateScalarFieldEnum = {
+  id: 'id',
+  competitorSource: 'competitorSource',
+  sourceUrl: 'sourceUrl',
+  title: 'title',
+  pricePaise: 'pricePaise',
+  mrpPaise: 'mrpPaise',
+  brand: 'brand',
+  matchedProductId: 'matchedProductId',
+  matchedVariantId: 'matchedVariantId',
+  dealScore: 'dealScore',
+  discoveredAt: 'discoveredAt'
+} as const
+
+export type ShadowCandidateScalarFieldEnum = (typeof ShadowCandidateScalarFieldEnum)[keyof typeof ShadowCandidateScalarFieldEnum]
+
+
+export const DealLifecycleEventScalarFieldEnum = {
+  id: 'id',
+  dealId: 'dealId',
+  eventType: 'eventType',
+  previousState: 'previousState',
+  newState: 'newState',
+  triggeredBy: 'triggeredBy',
+  recordedAt: 'recordedAt'
+} as const
+
+export type DealLifecycleEventScalarFieldEnum = (typeof DealLifecycleEventScalarFieldEnum)[keyof typeof DealLifecycleEventScalarFieldEnum]
+
+
+export const DealCommentScalarFieldEnum = {
+  id: 'id',
+  dealId: 'dealId',
+  authorName: 'authorName',
+  content: 'content',
+  authorIpHash: 'authorIpHash',
+  createdAt: 'createdAt'
+} as const
+
+export type DealCommentScalarFieldEnum = (typeof DealCommentScalarFieldEnum)[keyof typeof DealCommentScalarFieldEnum]
 
 
 export const SortOrder = {

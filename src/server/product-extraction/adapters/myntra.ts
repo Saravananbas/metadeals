@@ -183,10 +183,8 @@ export class MyntraAdapter implements RetailerAdapter {
 
       // Pricing resolution
       const priceRupees = jsonLd.price ?? selectorPrice ?? og.price ?? embedded.price ?? meta.price ?? null;
-      let mrpRupees = jsonLd.mrp ?? selectorMrp ?? og.mrp ?? embedded.mrp ?? meta.mrp ?? null;
-      if (priceRupees && !mrpRupees) {
-        mrpRupees = Number((priceRupees * 1.5).toFixed(2));
-      }
+      // MRP must come from an explicit source; never estimate it from price.
+      const mrpRupees = jsonLd.mrp ?? selectorMrp ?? og.mrp ?? embedded.mrp ?? meta.mrp ?? null;
       const priceMinor = convertRupeesToIntegerPaise(priceRupees);
       const mrpMinor = convertRupeesToIntegerPaise(mrpRupees);
       const priceSource = jsonLd.price ? "json_ld" : selectorPrice ? "retailer_html_selector" : og.price ? "open_graph" : "html_metadata";

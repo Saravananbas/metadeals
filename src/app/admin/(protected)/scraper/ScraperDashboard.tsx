@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useCallback, useTransition } from "react";
+import { useState, useCallback, useTransition, useEffect } from "react";
 import {
   RefreshCw,
   Play,
@@ -16,6 +16,7 @@ import {
   Radio,
 } from "lucide-react";
 import { formatINR } from "@/features/deals/pricing";
+import { AdminNav } from "@/components/admin/AdminNav";
 import styles from "./scraper-dashboard.module.css";
 
 export type CandidateItem = {
@@ -47,9 +48,13 @@ export type CandidateItem = {
 export type ConnectorInfo = {
   code: string;
   name: string;
+  status?: string;
   isHealthy: boolean;
+  isLive?: boolean;
   message?: string;
   lastCheckedAt: string;
+  lastLiveRetrievalAt?: string | null;
+  lastMockScanAt?: string | null;
   lastJob?: {
     id: string;
     status: "RUNNING" | "COMPLETED" | "FAILED";
@@ -96,8 +101,9 @@ export type ScraperMetricsData = {
 export type ScraperDashboardProps = {
   actorId: string;
   role: string;
-  initialMetrics: ScraperMetricsData;
-  initialCandidates: {
+  initialTab?: TabKey;
+  initialMetrics?: ScraperMetricsData;
+  initialCandidates?: {
     items: CandidateItem[];
     total: number;
     limit: number;
@@ -105,27 +111,49 @@ export type ScraperDashboardProps = {
   };
 };
 
-type TabKey = "overview" | "review" | "discovered" | "published" | "intelligence" | "connectors";
+const defaultMetrics: ScraperMetricsData = {
+  totalCandidates: 0,
+  verifiedCandidates: 0,
+  publishedDeals: 0,
+  pendingReview: 0,
+  rejectedCandidates: 0,
+  totalObservations: 0,
+  latestJob: null,
+  lastSuccessfulScanAt: null,
+  priceStats: {
+    observationCount: 0,
+    median7DayMinor: null,
+    median30DayMinor: null,
+    median90DayMinor: null,
+    lowestObservedMinor: null,
+    highestObservedMinor: null,
+    latestObservedAt: null,
+  },
+  connectors: [],
+};
+
+export type TabKey = "overview" | "review" | "discovered" | "published" | "intelligence" | "connectors";
 
 export function ScraperDashboard({
   role,
   initialMetrics,
   initialCandidates,
+  initialTab = "overview",
 }: ScraperDashboardProps) {
-  const [activeTab, setActiveTab] = useState<TabKey>("overview");
-  const [metrics, setMetrics] = useState<ScraperMetricsData>(initialMetrics);
-  const [candidates, setCandidates] = useState<CandidateItem[]>(initialCandidates.items);
-  const [totalCandidatesCount, setTotalCandidatesCount] = useState(initialCandidates.total);
+  const [activeTab, setActiveTab] = useState<TabKey>(initialTab);
+  const [metrics, setMetrics] = useState<ScraperMetricsData>(initialMetrics ?? defaultMetrics);
+  const [candidates, setCandidates] = useState<CandidateItem[]>(initialCandidates?.items ?? []);
+  const [totalCandidatesCount, setTotalCandidatesCount] = useState(initialCandidates?.total ?? 0);
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
   const [page, setPage] = useState<number>(1);
   const pageSize = 20;
 
   const [selectedConnector, setSelectedConnector] = useState<string>(
-    initialMetrics.connectors[0]?.code || "cuelinks-feed"
+    initialMetrics?.connectors[0]?.code || "cuelinks-feed"
   );
   const [isScanning, setIsScanning] = useState<boolean>(false);
   const [scanResult, setScanResult] = useState<ScraperMetricsData["latestJob"]>(
-    initialMetrics.latestJob
+    initialMetrics?.latestJob ?? null
   );
 
   const [notice, setNotice] = useState<string>("");
@@ -170,9 +198,16 @@ export function ScraperDashboard({
     }
   }, [statusFilter, page, pageSize]);
 
+  useEffect(() => {
+    if (!initialMetrics) void Promise.resolve().then(refreshData);
+  }, [initialMetrics, refreshData]);
+
   // Handle Tab Change
   const handleTabChange = (tab: TabKey) => {
     setActiveTab(tab);
+    const url = new URL(window.location.href);
+    url.searchParams.set("tab", tab);
+    window.history.replaceState(null, "", url);
     setNotice("");
     setError("");
     if (tab === "review") {
@@ -277,12 +312,7 @@ export function ScraperDashboard({
   return (
     <main className={styles.adminPage}>
       {/* Admin Navigation */}
-      <nav className={styles.navBar}>
-        <Link href="/">MetaDeals4U</Link>
-        <Link href="/admin">Account administration</Link>
-        <Link href="/admin/deals">Deals</Link>
-        <span className={styles.activeNav}>Deal Scraper</span>
-      </nav>
+      <AdminNav active="scraper" />
 
       {/* Header */}
       <header className={styles.topBar}>
@@ -1057,10 +1087,14 @@ export function ScraperDashboard({
                   </div>
                   <span
                     className={`${styles.statusBadge} ${
-                      c.isHealthy ? styles.statusPublished : styles.statusRejected
+                      c.isLive
+                        ? styles.statusPublished
+                        : c.status === "FIXTURE_MODE" || c.status === "MOCK_MODE"
+                        ? styles.statusUncertain
+                        : styles.statusRejected
                     }`}
                   >
-                    {c.isHealthy ? "HEALTHY" : "DEGRADED"}
+                    {c.status ?? (c.isHealthy ? "HEALTHY" : "DEGRADED")}
                   </span>
                 </div>
 
@@ -1070,10 +1104,42 @@ export function ScraperDashboard({
 
                 <div className={styles.connectorStats}>
                   <div>
+                    <span style={{ color: "var(--md-color-text-muted)" }}>Mode:</span>{" "}
+                    <strong>{c.isLive ? "Live Connected" : "Static Fixture / Mock"}</strong>
+                  </div>
+                  <div>
                     <span style={{ color: "var(--md-color-text-muted)" }}>Checked At:</span>{" "}
                     {new Date(c.lastCheckedAt).toLocaleTimeString("en-IN", {
                       timeZone: "Asia/Kolkata",
                     })}
+                  </div>
+                  <div>
+                    <span style={{ color: "var(--md-color-text-muted)" }}>Last Live Retrieval:</span>{" "}
+                    {c.lastLiveRetrievalAt ? (
+                      new Date(c.lastLiveRetrievalAt).toLocaleString("en-IN", {
+                        timeZone: "Asia/Kolkata",
+                        month: "short",
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })
+                    ) : (
+                      <span style={{ color: "var(--md-amber-700)" }}>None (API credentials required)</span>
+                    )}
+                  </div>
+                  <div>
+                    <span style={{ color: "var(--md-color-text-muted)" }}>Last Mock Scan:</span>{" "}
+                    {c.lastMockScanAt ? (
+                      new Date(c.lastMockScanAt).toLocaleString("en-IN", {
+                        timeZone: "Asia/Kolkata",
+                        month: "short",
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })
+                    ) : (
+                      "None recorded"
+                    )}
                   </div>
                   {c.lastJob ? (
                     <>

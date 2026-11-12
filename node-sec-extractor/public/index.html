@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SEC Filing Element Extractor</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>SEC Filing Element Extractor</h1>
+      <p>
+        Paste an SEC Archives URL, extract data elements with page numbers, and export JSON payload for a Kafka topic.
+      </p>
+
+      <form id="extract-form">
+        <label for="filingUrl">SEC Filing URL</label>
+        <input
+          id="filingUrl"
+          name="filingUrl"
+          type="url"
+          placeholder="https://www.sec.gov/Archives/..."
+          required
+        />
+
+        <label for="kafkaTopic">Kafka Topic</label>
+        <input id="kafkaTopic" name="kafkaTopic" type="text" value="sec.filing.elements" />
+
+        <button type="submit" id="extractBtn">Extract Elements</button>
+      </form>
+
+      <section id="status" aria-live="polite"></section>
+
+      <section id="summary" class="hidden">
+        <h2>Extraction Summary</h2>
+        <div id="summary-content"></div>
+        <button id="downloadJsonBtn" type="button">Download JSON</button>
+      </section>
+
+      <section id="results" class="hidden">
+        <h2>Extracted Elements</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Page #</th>
+              <th>Element</th>
+              <th>Value</th>
+              <th>Source</th>
+            </tr>
+          </thead>
+          <tbody id="resultsBody"></tbody>
+        </table>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

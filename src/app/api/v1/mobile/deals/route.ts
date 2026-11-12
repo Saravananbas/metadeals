@@ -74,6 +74,7 @@ export async function GET(request: NextRequest) {
       discountPercent: d.discountPercent,
       savings: Math.round(d.savingsMinor / 100),
       imageUrl: d.image.url.startsWith("http") ? d.image.url : `${baseUrl}${d.image.url}`,
+      imageGallery: d.imageGallery.map((image) => image.url.startsWith("http") ? image.url : `${baseUrl}${image.url}`),
       rating: d.rating,
       reviewCount: d.reviewCount,
       ratingSource: d.ratingSource,

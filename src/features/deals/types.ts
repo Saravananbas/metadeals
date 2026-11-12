@@ -5,12 +5,14 @@ export type Deal = {
   brand: string;
   category: string;
   image: string;
+  imageGallery?: string[];
   originalPrice: number;
   price: number;
   rating: number | null;
   reviewCount: number | null;
   ratingSource?: string | null;
   storeName?: string;
+  storeLogoUrl?: string | null;
   slug?: string;
   description?: string;
   expiresAt?: string | null;
@@ -20,6 +22,9 @@ export type Deal = {
   expiry: "unknown" | "expired" | "active";
   featured: boolean;
   publishedAt: string;
+  viewCount?: number;
+  shareCount?: number;
+  couponCode?: string | null;
 };
 
 export type DealFilters = { query: string; category: string; store: string; view: "top" | "latest" | "featured" };

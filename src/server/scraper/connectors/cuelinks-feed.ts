@@ -1,4 +1,3 @@
-import "server-only";
 import type { RetailerConnector, ConnectorHealthResult, RetailerProductListing } from "../types";
 import { cuelinksClient } from "@/server/affiliate/cuelinks-client";
 
@@ -6,14 +5,20 @@ export class CuelinksFeedConnector implements RetailerConnector {
   readonly code = "cuelinks-feed";
   readonly name = "Cuelinks Deal Feed Connector";
 
+  get isLive(): boolean {
+    return cuelinksClient.isConfigured();
+  }
+
   async checkHealth(): Promise<ConnectorHealthResult> {
     const isConfigured = cuelinksClient.isConfigured();
     return {
       code: this.code,
-      isHealthy: true,
+      status: isConfigured ? "LIVE_CONNECTED" : "MOCK_MODE",
+      isHealthy: isConfigured,
+      isLive: isConfigured,
       message: isConfigured
-        ? "Cuelinks API key and Publisher ID configured."
-        : "Running in mock/fallback mode without external API key.",
+        ? "Cuelinks API key and Publisher ID configured for live deal discovery."
+        : "Running in mock/fallback mode without external API key (CUELINKS_API_KEY / CUELINKS_PUBLISHER_ID missing).",
       lastCheckedAt: new Date(),
     };
   }
@@ -22,9 +27,9 @@ export class CuelinksFeedConnector implements RetailerConnector {
     // When live credentials are provided, search campaigns/deals
     if (cuelinksClient.isConfigured()) {
       try {
-        const campaigns = await cuelinksClient.searchCampaigns("electronics");
-        if (campaigns.length > 0) {
-          return campaigns.slice(0, 10).map((c) => ({
+        const res = await cuelinksClient.searchCampaigns("electronics");
+        if (res.campaigns.length > 0) {
+          return res.campaigns.slice(0, 10).map((c) => ({
             sourceUrl: c.url || `https://${c.domain}`,
             sourcePlatform: "cuelinks",
             externalId: String(c.id),
@@ -36,6 +41,7 @@ export class CuelinksFeedConnector implements RetailerConnector {
             sellerName: c.name,
             inStock: true,
             rawData: JSON.stringify(c),
+            isMockOrFixture: false,
           }));
         }
       } catch {
@@ -58,6 +64,7 @@ export class CuelinksFeedConnector implements RetailerConnector {
         imageUrl: "https://images.unsplash.com/photo-1593784991095-a205069470b6?w=600&auto=format&fit=crop",
         sellerName: "Tata CLiQ Official",
         inStock: true,
+        isMockOrFixture: true,
       },
       {
         sourceUrl: "https://www.croma.com/apple-macbook-air-m2-chip-8gb-256gb-ssd-13-6-inch-space-grey/p/256605",
@@ -72,6 +79,7 @@ export class CuelinksFeedConnector implements RetailerConnector {
         imageUrl: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600&auto=format&fit=crop",
         sellerName: "Croma Retail",
         inStock: true,
+        isMockOrFixture: true,
       },
     ];
   }

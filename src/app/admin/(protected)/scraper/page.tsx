@@ -1,11 +1,13 @@
 import { redirect } from "next/navigation";
 import { getCurrentAuthContext } from "@/server/auth/session";
 import { roleCan } from "@/server/auth/permissions";
-import { getDatabase } from "@/server/db/client";
-import { scraperService } from "@/server/scraper/service";
-import { ScraperDashboard } from "./ScraperDashboard";
+import { ScraperDashboard, type TabKey } from "./ScraperDashboard";
 
-export default async function ScraperAdminPage() {
+export default async function ScraperAdminPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ tab?: string }>;
+}) {
   const context = await getCurrentAuthContext();
   if (!context) redirect("/admin/login");
 
@@ -14,45 +16,15 @@ export default async function ScraperAdminPage() {
     redirect("/admin/login");
   }
 
-  const db = getDatabase();
-
-  const [metricsRaw, candidatesRaw] = await Promise.all([
-    scraperService.getScraperMetrics(db),
-    scraperService.listCandidates(db, { limit: 20, offset: 0 }),
-  ]);
-
-  const initialMetrics = {
-    ...metricsRaw,
-    priceStats: {
-      ...metricsRaw.priceStats,
-      latestObservedAt: metricsRaw.priceStats.latestObservedAt
-        ? metricsRaw.priceStats.latestObservedAt.toISOString()
-        : null,
-    },
-  };
-
-  const initialCandidates = {
-    total: candidatesRaw.total,
-    limit: candidatesRaw.limit,
-    offset: candidatesRaw.offset,
-    items: candidatesRaw.items.map((c) => ({
-      ...c,
-      createdAt: c.createdAt.toISOString(),
-      updatedAt: c.updatedAt.toISOString(),
-      priceObservations: c.priceObservations?.map((p) => ({
-        priceMinor: p.priceMinor,
-        mrpMinor: p.mrpMinor,
-        observedAt: p.observedAt.toISOString(),
-      })),
-    })),
-  };
+  const requestedTab = (await searchParams).tab;
+  const allowedTabs: TabKey[] = ["overview", "review", "discovered", "published", "intelligence", "connectors"];
+  const initialTab = allowedTabs.includes(requestedTab as TabKey) ? requestedTab as TabKey : "overview";
 
   return (
     <ScraperDashboard
       actorId={context.user.id}
       role={context.user.role}
-      initialMetrics={initialMetrics}
-      initialCandidates={initialCandidates}
+      initialTab={initialTab}
     />
   );
 }

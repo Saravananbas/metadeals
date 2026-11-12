@@ -1,14 +1,19 @@
 import type { AffiliateProviderAdapter, AffiliateConversionContext, ConvertedLinkResult } from "./types";
-import { AmazonAdapter } from "./amazon";
-import { FlipkartAdapter } from "./flipkart";
 import { CuelinksAdapter } from "./cuelinks";
 import { CuelinksMcpAdapter } from "./cuelinks-mcp";
+import { AmazonAdapter } from "./amazon";
+import { FlipkartAdapter } from "./flipkart";
 
+/**
+ * Cuelinks V3 is the primary and consolidated affiliate monetization provider for MetaDeals4U.
+ * All retailer links (Amazon, Flipkart, Myntra, Tata CLiQ, Croma, Reliance Digital, AJIO, etc.)
+ * route through Cuelinks. Direct retailer adapters serve only as fallback.
+ */
 const adapters: AffiliateProviderAdapter[] = [
-  new AmazonAdapter(),
-  new FlipkartAdapter(),
   new CuelinksMcpAdapter(),
   new CuelinksAdapter(),
+  new AmazonAdapter(),
+  new FlipkartAdapter(),
 ];
 
 export function getProviderAdapter(name: string): AffiliateProviderAdapter | undefined {

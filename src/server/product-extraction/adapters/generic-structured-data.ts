@@ -32,8 +32,8 @@ export class GenericStructuredDataAdapter implements RetailerAdapter {
 
   async extract(context: ExtractionContext): Promise<NormalizedProductExtraction> {
     const domainInfo = findAllowedDomain(context.url.hostname);
-    const retailerName = domainInfo?.retailerName ?? "Partner Store";
-    const retailerSlug = domainInfo?.retailerSlug ?? "cuelinks";
+    const retailerName = context.directoryMerchant?.name ?? domainInfo?.retailerName ?? "Partner Store";
+    const retailerSlug = context.directoryMerchant?.domain ?? domainInfo?.retailerSlug ?? "generic";
     const canonicalUrl = cleanProductUrl(context.rawUrl);
     const observedAt = new Date().toISOString();
 
@@ -42,10 +42,11 @@ export class GenericStructuredDataAdapter implements RetailerAdapter {
       const jsonLd = parseJsonLd(html, context.url.origin);
       const og = parseOpenGraph(html, context.url.origin);
 
-      const title = jsonLd.name || og.title || `${retailerName} Product`;
-      const brand = jsonLd.brand || parseTitleToBrand(title);
+      const title = jsonLd.name || og.title || null;
+      const brand = jsonLd.brand || og.brand || parseTitleToBrand(title || "");
+      const brandSource = jsonLd.brand ? "json_ld" : og.brand ? "open_graph" : brand ? "url_heuristic" : "manual_fallback";
       const priceRupees = jsonLd.price || og.price;
-      const mrpRupees = jsonLd.mrp || (priceRupees ? priceRupees * 1.2 : null);
+      const mrpRupees = jsonLd.mrp || null;
       const priceMinor = convertRupeesToIntegerPaise(priceRupees);
       const mrpMinor = convertRupeesToIntegerPaise(mrpRupees);
       const rawDesc = jsonLd.description || og.description || null;
@@ -53,8 +54,8 @@ export class GenericStructuredDataAdapter implements RetailerAdapter {
 
       return {
         identity: {
-          title: createField(title, "structured_metadata", "HIGH"),
-          brand: createField(brand ?? null, "structured_metadata", brand ? "HIGH" : "MISSING"),
+          title: createField(title, jsonLd.name ? "json_ld" : og.title ? "open_graph" : "manual_fallback", title ? (jsonLd.name ? "HIGH" : "MEDIUM") : "MISSING"),
+          brand: createField(brand ?? null, brandSource, jsonLd.brand ? "HIGH" : brand ? "MEDIUM" : "MISSING"),
           manufacturer: missingField(),
           modelNumber: createField(jsonLd.mpn ?? null, "structured_metadata", jsonLd.mpn ? "HIGH" : "MISSING"),
           sku: createField(jsonLd.sku ?? null, "structured_metadata", jsonLd.sku ? "HIGH" : "MISSING"),
@@ -110,7 +111,7 @@ export class GenericStructuredDataAdapter implements RetailerAdapter {
 
     return {
       identity: {
-        title: createField(`${retailerName} Product`, "url_heuristic", "LOW"),
+        title: missingField("Product title was not present in an extracted source."),
         brand: missingField(),
         manufacturer: missingField(),
         modelNumber: missingField(),

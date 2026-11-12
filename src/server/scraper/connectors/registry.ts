@@ -1,4 +1,3 @@
-import "server-only";
 import type { RetailerConnector } from "../types";
 import { CuelinksFeedConnector } from "./cuelinks-feed";
 import { AmazonDealsConnector, FlipkartDealsConnector } from "./retailer-generic";

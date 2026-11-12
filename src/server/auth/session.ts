@@ -40,7 +40,19 @@ export function issueSessionToken(): string {
   return createOpaqueToken(32);
 }
 
+/** Local development only: AUTH_DISABLED_DEV=true acts as the first active SUPER_ADMIN. Never honoured in production. */
+async function getDevBypassContext() {
+  if (process.env.NODE_ENV === "production" || process.env.AUTH_DISABLED_DEV !== "true") return null;
+  const user = await getDatabase().user.findFirst({
+    where: { role: "SUPER_ADMIN", status: "ACTIVE" },
+    select: { id: true, email: true, name: true, role: true, status: true, totpEnabledAt: true },
+  });
+  return user ? { user, session: null } : null;
+}
+
 export async function getCurrentAuthContext() {
+  const bypass = await getDevBypassContext();
+  if (bypass) return bypass;
   const jar = await cookies();
   const token = jar.get(sessionCookieName())?.value;
   if (!token || token.length > 128) return null;
@@ -54,7 +66,8 @@ export async function getCurrentAuthContext() {
   });
   if (!session || isSessionExpired(session.expiresAt, session.absoluteExpiresAt, now) ||
       session.user.status !== "ACTIVE" || !session.user.totpEnabledAt) {
-    if (session) await db.authSession.delete({ where: { id: session.id } });
+    // Concurrent requests may all discover and clean up the same expired session.
+    if (session) await db.authSession.deleteMany({ where: { id: session.id } });
     return null;
   }
 

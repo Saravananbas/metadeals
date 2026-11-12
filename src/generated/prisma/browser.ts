@@ -103,6 +103,11 @@ export type Deal = Prisma.DealModel
  */
 export type PurchaseOption = Prisma.PurchaseOptionModel
 /**
+ * Model DealGalleryImage
+ * 
+ */
+export type DealGalleryImage = Prisma.DealGalleryImageModel
+/**
  * Model Customer
  * 
  */
@@ -152,3 +157,63 @@ export type ScraperJob = Prisma.ScraperJobModel
  * 
  */
 export type ProductExtractionLog = Prisma.ProductExtractionLogModel
+/**
+ * Model DealVideoReview
+ * 
+ */
+export type DealVideoReview = Prisma.DealVideoReviewModel
+/**
+ * Model YouTubeQuotaLedger
+ * 
+ */
+export type YouTubeQuotaLedger = Prisma.YouTubeQuotaLedgerModel
+/**
+ * Model MerchantWebsiteDirectory
+ * 
+ */
+export type MerchantWebsiteDirectory = Prisma.MerchantWebsiteDirectoryModel
+/**
+ * Model ProductMaster
+ * 
+ */
+export type ProductMaster = Prisma.ProductMasterModel
+/**
+ * Model ProductVariant
+ * 
+ */
+export type ProductVariant = Prisma.ProductVariantModel
+/**
+ * Model ProductOffer
+ * 
+ */
+export type ProductOffer = Prisma.ProductOfferModel
+/**
+ * Model PriceObservationRecord
+ * 
+ */
+export type PriceObservationRecord = Prisma.PriceObservationRecordModel
+/**
+ * Model SourceHealthRecord
+ * 
+ */
+export type SourceHealthRecord = Prisma.SourceHealthRecordModel
+/**
+ * Model PublicationAuthorization
+ * 
+ */
+export type PublicationAuthorization = Prisma.PublicationAuthorizationModel
+/**
+ * Model ShadowCandidate
+ * 
+ */
+export type ShadowCandidate = Prisma.ShadowCandidateModel
+/**
+ * Model DealLifecycleEvent
+ * 
+ */
+export type DealLifecycleEvent = Prisma.DealLifecycleEventModel
+/**
+ * Model DealComment
+ * 
+ */
+export type DealComment = Prisma.DealCommentModel

@@ -106,9 +106,14 @@ export class FlipkartAdapter implements RetailerAdapter {
 
   async extract(context: ExtractionContext): Promise<NormalizedProductExtraction> {
     const pid = this.extractPid(context.url);
-    const canonicalUrl = pid
-      ? `https://www.flipkart.com/p/p?pid=${pid}`
-      : cleanProductUrl(context.rawUrl);
+    let canonicalUrl: string;
+    if (context.url.pathname && context.url.pathname !== "/" && context.url.pathname !== "/p/p") {
+      canonicalUrl = `https://www.flipkart.com${context.url.pathname}${pid ? `?pid=${pid}` : ""}`;
+    } else if (pid) {
+      canonicalUrl = `https://www.flipkart.com/product/p/itme?pid=${pid}`;
+    } else {
+      canonicalUrl = cleanProductUrl(context.rawUrl);
+    }
     const observedAt = new Date().toISOString();
     const urlInfo = this.extractProductInfoFromPath(context.url.pathname);
     const html = context.html || context.htmlFixture;
@@ -181,10 +186,9 @@ export class FlipkartAdapter implements RetailerAdapter {
 
       // Pricing resolution
       const priceRupees = jsonLd.price ?? selectorPrice ?? og.price ?? embedded.price ?? meta.price ?? null;
-      let mrpRupees = jsonLd.mrp ?? selectorMrp ?? og.mrp ?? embedded.mrp ?? meta.mrp ?? null;
-      if (priceRupees && !mrpRupees) {
-        mrpRupees = Number((priceRupees * 1.15).toFixed(2));
-      }
+      // Do not synthesize MRP from the offer price. Missing list price stays
+      // missing so discount figures cannot be fabricated.
+      const mrpRupees = jsonLd.mrp ?? selectorMrp ?? og.mrp ?? embedded.mrp ?? meta.mrp ?? null;
       const priceMinor = convertRupeesToIntegerPaise(priceRupees);
       const mrpMinor = convertRupeesToIntegerPaise(mrpRupees);
       const priceSource = jsonLd.price ? "json_ld" : selectorPrice ? "retailer_html_selector" : og.price ? "open_graph" : "html_metadata";
@@ -222,7 +226,9 @@ export class FlipkartAdapter implements RetailerAdapter {
           description: createField(resolvedDesc, descSource, resolvedDesc ? "HIGH" : "MISSING"),
           keyFeatures: createField([], "manual_fallback", "MISSING"),
           specifications: createField({}, "manual_fallback", "MISSING"),
-          category: createField(jsonLd.category ?? "Mobiles & Tablets", "json_ld", "MEDIUM"),
+          category: jsonLd.category
+            ? createField(jsonLd.category, "json_ld", "MEDIUM")
+            : missingField(),
           subcategory: missingField(),
           breadcrumb: createField([], "manual_fallback", "MISSING"),
         },
@@ -281,7 +287,7 @@ export class FlipkartAdapter implements RetailerAdapter {
         description: missingField(),
         keyFeatures: createField([], "manual_fallback", "MISSING"),
         specifications: createField({}, "manual_fallback", "MISSING"),
-        category: createField("Mobiles & Tablets", "url_heuristic", "LOW"),
+        category: missingField(),
         subcategory: missingField(),
         breadcrumb: createField([], "manual_fallback", "MISSING"),
       },

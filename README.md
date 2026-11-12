@@ -1,16 +1,16 @@
 # MetaDeals4U
 
-MetaDeals4U is an existing Next.js deals-discovery application. M0 established
-its foundation, M1/M1.5 implemented the approved responsive homepage with clearly
-labeled demo data, and M2.5 adds local administrator authentication and account
-management. Live deal management and external provider integrations are not
-implemented.
+MetaDeals4U is an existing Next.js 16 App Router application using React,
+TypeScript, Prisma, PostgreSQL/MariaDB, Redis/BullMQ, deal extraction, affiliate
+tracking, and admin tooling. The repository is under active stabilization; do not
+assume every integration or background worker is production-ready. See
+`docs/overnight/DEVELOPMENT_PLAN.md` for current scope and gates.
 
 ## Requirements
 
 - Node.js 24 LTS (24.14.1 used for validation), npm 11.
-- Docker Desktop running Linux containers, or your own PostgreSQL and Redis services.
-- Available localhost ports 4123 (app), 55432 (PostgreSQL), 6380 (Redis).
+- A local MariaDB/MySQL or PostgreSQL server (no Docker). Redis is optional.
+- Available localhost port 4123 (app).
 
 ## Run locally (PowerShell)
 
@@ -18,11 +18,31 @@ implemented.
 cd D:\Metadeals
 npm ci
 npm run env:setup
-npm run infra:up
 npm run db:deploy
-npm run db:generate
+npm run db:generate:all
 npm run dev
 ```
+
+`npm run dev` starts the in-repository Python extraction service on loopback,
+waits for it to become healthy, then starts Next.js as a regular host process on
+http://localhost:4123. Docker is not used. See `docs/STAGING-DEPLOY.md` for hosting.
+
+The deterministic product extraction engine and its private API are included
+under `python-extractor/`; the existing MetaDeals extraction UI consumes the
+engine's canonical product output. Install the Python dependencies and browser
+once before the first development run:
+
+```powershell
+python -m pip install -r python-extractor\requirements.txt
+python -m playwright install chromium
+```
+
+The integrated development launcher binds the service to `127.0.0.1:8765` and
+sets the private extractor endpoint for Next.js. The server validates product
+URLs and maps canonical Python results into the existing extraction response.
+The current Fetch UI is unchanged. A managed Node-only deployment still needs a
+supported way to run this Python engine; do not enable extraction there until
+that runtime and its browser dependencies are available.
 
 Open http://localhost:4123. `env:setup` creates an ignored `.env` with random local
 database/Redis passwords and independent auth secrets. If `.env` already exists,
@@ -33,9 +53,8 @@ These are local development secrets, not external API credentials. S3 fields
 remain empty until actual provider credentials are supplied. Do not commit
 `.env`.
 
-If using existing infrastructure, edit `.env` and skip `infra:up`. Keep passwords
-URL-encoded in connection strings. Changing local Docker passwords after initial
-database creation does not rotate the database account; manage rotation explicitly.
+If using existing infrastructure, edit `.env`. Keep passwords
+URL-encoded in connection strings.
 Do not delete volumes to resolve configuration problems without reviewing data loss.
 
 ## Checks and production build
@@ -49,6 +68,10 @@ npm run db:status
 npm run build
 npm run start
 ```
+
+`npm run start` honors the hosting platform's `PORT` environment variable (and
+defaults to port 3000). Use `npm run start:local` to run a production build on
+localhost:4123.
 
 With local PostgreSQL and Redis running, `npm run test:smoke` starts temporary
 production servers on ports 3105/3106, checks real HTTP health behavior and dependency
@@ -107,8 +130,7 @@ Remove-Item Env:AUTH_BOOTSTRAP_ENABLED
 Type the approved email exactly when prompted. The CLI prints a one-time
 30-minute setup link; deliver it privately, complete MFA enrollment, save the
 recovery codes and leave `AUTH_BOOTSTRAP_ENABLED=false` in `.env`. Bootstrap is
-disabled by default and rejected in production. PowerShell uses `$env:NAME =
-"value"` syntax; `NAME=value` is not valid PowerShell.
+disabled by default and rejected in production. PowerShell uses `$env:NAME = "value"` syntax; `NAME=value` is not valid PowerShell.
 
 Once set up, you can sign in repeatedly with the same account. Each authenticator
 time-step code is single-use for replay protection; use the current code and wait
@@ -148,8 +170,20 @@ not mounted as an auth route and is not the active credential/session path.
 - **Auth:** M2.5 uses local credentials and custom opaque database sessions to
   meet the database-only session policy. No automated email delivery, OAuth,
   mobile token API or customer sign-in is enabled.
-- **Redis/BullMQ:** connection configuration only; no jobs, queues or workers are
-  started. Future workers run in a separate process, not in a Next.js request.
+- **Redis/BullMQ:** the app uses Redis for readiness, comment throttling, shared
+  security state, and queue infrastructure. Worker code exists, but several
+  handlers and scheduler inputs are placeholders; do not treat the workers as
+  production-ready or enable automated publishing.
+- **Managed Node.js hosting:** the web process can run without a Docker container,
+  but this application is not deployment-ready on a host without Redis and a
+  supported database. MariaDB schema/migrations are present and validate locally;
+  migration parity, data migration, runtime workflows, external media storage,
+  and worker/security behavior still need a controlled rehearsal. No hosted
+  environment has been changed by this project setup.
+- **Python extraction:** an optional Python sidecar is used only when the app can
+  reach the configured internal extractor. A managed Node-only host cannot run
+  that sidecar; extraction must be verified without it or the feature must remain
+  disabled there.
 - **S3:** lazy server-only client; no uploads, public bucket or synthetic credentials.
 - **UI:** Tailwind v4, shadcn-compatible local Button and `components.json`.
   Use the shadcn CLI later to add components as needed, not an entire component library.
@@ -206,9 +240,7 @@ No new dependency, schema migration, worker or external API was added for M1.
 
 ## Operational notes
 
-`npm run infra:stop` stops only this project's local services and retains volumes.
-The local Compose project uses localhost-only ports and authenticated Redis with
-`noeviction`, appropriate for future BullMQ use. Production needs managed TLS,
+Production needs managed TLS,
 private networking, backups/restore drills, secret rotation, monitoring, rate limits
 and resource sizing. M0 is a foundation, not a claim of production deployment readiness.
 

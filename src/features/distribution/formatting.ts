@@ -34,18 +34,20 @@ export function calculateSavingPercent(priceMinor: number, mrpMinor: number): nu
   return Math.round(((mrpMinor - priceMinor) / mrpMinor) * 100);
 }
 
+const escapeHtml = (value: string) => value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
 export function formatTelegramMessage(deal: DealDistributionPayload): string {
   const saving = calculateSavingPercent(deal.priceMinor, deal.mrpMinor);
   const price = formatINR(Math.round(deal.priceMinor / 100));
   const mrp = formatINR(Math.round(deal.mrpMinor / 100));
-  const base = deal.siteBaseUrl || "https://metadeals4u.in";
+  const base = deal.siteBaseUrl || process.env.NEXT_PUBLIC_APP_URL || "https://metadeals4u.in";
   const link = `${base}/go/${deal.slug || deal.id}?c=telegram`;
 
   return [
-    `🔥 <b>${deal.title}</b>`,
-    deal.brand ? `🏷️ Brand: <b>${deal.brand}</b>` : null,
+    `🔥 <b>${escapeHtml(deal.title)}</b>`,
+    deal.brand ? `🏷️ Brand: <b>${escapeHtml(deal.brand)}</b>` : null,
     `💰 <b>${price}</b> <s>${mrp}</s> ${saving > 0 ? `(<b>${saving}% OFF</b>)` : ""}`,
-    `🏪 Store: <b>${deal.merchantName}</b>`,
+    `🏪 Store: <b>${escapeHtml(deal.merchantName)}</b>`,
     "",
     `👉 <a href="${link}">Get This Deal</a>`,
     `ℹ️ <i>Prices and availability subject to change.</i>`,
@@ -58,7 +60,7 @@ export function formatWhatsAppMessage(deal: DealDistributionPayload): string {
   const saving = calculateSavingPercent(deal.priceMinor, deal.mrpMinor);
   const price = formatINR(Math.round(deal.priceMinor / 100));
   const mrp = formatINR(Math.round(deal.mrpMinor / 100));
-  const base = deal.siteBaseUrl || "https://metadeals4u.in";
+  const base = deal.siteBaseUrl || process.env.NEXT_PUBLIC_APP_URL || "https://metadeals4u.in";
   const link = `${base}/go/${deal.slug || deal.id}?c=whatsapp`;
 
   return [

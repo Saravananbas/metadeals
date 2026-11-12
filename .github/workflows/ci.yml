@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Typecheck, schema validation, and lint
+    runs-on: ubuntu-latest
+    services:
+      mariadb:
+        image: mariadb:11.4
+        env:
+          MARIADB_ROOT_PASSWORD: ci_root_only
+          MARIADB_DATABASE: ci
+          MARIADB_USER: ci
+          MARIADB_PASSWORD: ci_only_local
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Audit dependencies
+        run: npm audit --audit-level=moderate
+      - name: Generate PostgreSQL and MariaDB clients
+        run: npm run db:generate:all
+        env:
+          DATABASE_PROVIDER: postgresql
+          DATABASE_URL: postgresql://ci:ci@127.0.0.1:5432/ci?schema=public
+      - name: Validate PostgreSQL schema
+        run: npm run db:validate
+        env:
+          DATABASE_PROVIDER: postgresql
+          DATABASE_URL: postgresql://ci:ci@127.0.0.1:5432/ci?schema=public
+      - name: Validate MariaDB schema
+        run: npm run db:validate
+        env:
+          DATABASE_PROVIDER: mysql
+          DATABASE_URL: mysql://ci:ci_only_local@127.0.0.1:3306/ci
+      - name: Apply MariaDB migrations on a clean database
+        run: npm run db:deploy
+        env:
+          DATABASE_PROVIDER: mysql
+          DATABASE_URL: mysql://ci:ci_only_local@127.0.0.1:3306/ci
+      - name: Verify MariaDB migration parity
+        run: npx prisma migrate diff --from-config-datasource --to-schema prisma/schema.mariadb.prisma --exit-code
+        env:
+          DATABASE_PROVIDER: mysql
+          DATABASE_URL: mysql://ci:ci_only_local@127.0.0.1:3306/ci
+      - name: Typecheck
+        run: npm run typecheck
+        env:
+          DATABASE_PROVIDER: postgresql
+          DATABASE_URL: postgresql://ci:ci@127.0.0.1:5432/ci?schema=public
+      - name: Lint
+        run: npm run lint

@@ -1,10 +1,10 @@
 import { Headphones, Laptop, Smartphone, Watch } from "lucide-react";
 
 const searches = [
-  { label: "Mobiles", query: "iPhone", Icon: Smartphone },
+  { label: "Mobiles", query: "Mobiles", Icon: Smartphone },
   { label: "Headphones", query: "Headphones", Icon: Headphones },
-  { label: "Smartwatches", query: "Watch", Icon: Watch },
-  { label: "Laptops", query: "Laptop", Icon: Laptop },
+  { label: "Smartwatches", query: "Smartwatches", Icon: Watch },
+  { label: "Laptops", query: "Laptops", Icon: Laptop },
 ];
 
 export function TrendingSearches({ onSearch }: { onSearch: (query: string) => void }) {

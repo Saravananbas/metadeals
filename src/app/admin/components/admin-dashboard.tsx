@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
-import { type FormEvent, useState } from "react";
+import { type FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { UserRole, UserStatus } from "@/generated/prisma/client";
+import { AdminNav } from "@/components/admin/AdminNav";
 import styles from "../admin.module.css";
 
 type Account = {
@@ -34,36 +34,60 @@ async function requestJson<T>(url: string, init?: RequestInit): Promise<T> {
 export function AdminDashboard({
   actorId,
   role,
-  initialAccounts,
-  initialEvents,
+  initialAccounts = [],
+  initialEvents = [],
 }: {
   actorId: string;
   role: UserRole;
-  initialAccounts: Account[];
-  initialEvents: AuditEvent[];
+  initialAccounts?: Account[];
+  initialEvents?: AuditEvent[];
 }) {
-  const [accounts, setAccounts] = useState(initialAccounts);
-  const [events, setEvents] = useState(initialEvents);
+  const [accounts, setAccounts] = useState<Account[]>(initialAccounts);
+  const [events, setEvents] = useState<AuditEvent[]>(initialEvents);
+  const [loading, setLoading] = useState(initialAccounts.length === 0);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [busy, setBusy] = useState(false);
   const [setupLink, setSetupLink] = useState("");
   const [roleChanges, setRoleChanges] = useState<Record<string, UserRole>>({});
+  const loadRequestRef = useRef<Promise<void> | null>(null);
   const router = useRouter();
 
-  async function load() {
-    try {
-      const accountResult = await requestJson<{ users: Account[] }>("/api/admin/accounts");
-      setAccounts(accountResult.users);
-      setError("");
-      if (role === "SUPER_ADMIN") {
-        const auditResult = await requestJson<{ events: AuditEvent[] }>("/api/admin/audit");
-        setEvents(auditResult.events);
+  const load = useCallback(async () => {
+    if (loadRequestRef.current) return loadRequestRef.current;
+
+    setLoading(true);
+    const request = (async () => {
+      try {
+        const [accountResult, auditResult] = await Promise.allSettled([
+          requestJson<{ users: Account[] }>("/api/admin/accounts"),
+          role === "SUPER_ADMIN"
+            ? requestJson<{ events: AuditEvent[] }>("/api/admin/audit")
+            : Promise.resolve(null),
+        ]);
+        if (accountResult.status === "rejected") throw accountResult.reason;
+        setAccounts(accountResult.value.users);
+        setError("");
+        if (auditResult.status === "rejected") throw auditResult.reason;
+        if (auditResult.status === "fulfilled" && auditResult.value) setEvents(auditResult.value.events);
+      } catch (reason) {
+        setError(reason instanceof Error ? reason.message : "Admin data could not be loaded.");
+      } finally {
+        setLoading(false);
       }
-    } catch (reason) {
-      setError(reason instanceof Error ? reason.message : "Admin data could not be loaded.");
+    })();
+    loadRequestRef.current = request;
+
+    try {
+      await request;
+    } finally {
+      if (loadRequestRef.current === request) loadRequestRef.current = null;
     }
-  }
+  }, [role]);
+
+  useEffect(() => {
+    if (initialAccounts.length === 0) void load();
+  }, [initialAccounts.length, load]);
 
   async function createAccount(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -124,12 +148,7 @@ export function AdminDashboard({
 
   return (
     <main className={styles.adminPage}>
-      <nav className={styles.navBar}>
-        <Link href="/">MetaDeals4U</Link>
-        <Link href="/admin">Account administration</Link>
-        <Link href="/admin/deals">Deals</Link>
-        <Link href="/admin/scraper">Deal Scraper</Link>
-      </nav>
+      <AdminNav active="account" />
       <header className={styles.topBar}>
         <div>
           <div className={styles.eyebrow}>MetaDeals4U · M2.5</div>
@@ -159,7 +178,8 @@ export function AdminDashboard({
             </form>
           )}
           {setupLink && <p className={styles.setupLink}><a href={setupLink}>{setupLink}</a></p>}
-          {accounts.length === 0 ? <p className={styles.empty}>No accounts found.</p> : (
+          {loading && accounts.length === 0 ? <p className={styles.empty}>Loading accounts…</p> :
+          accounts.length === 0 ? <p className={styles.empty}>No accounts found.</p> : (
             <ul className={styles.accountList}>
               {accounts.map((account) => {
                 const canManageAccount = account.id !== actorId &&

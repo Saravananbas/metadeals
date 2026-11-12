@@ -1,0 +1,20 @@
+export const MERCHANT_DIRECTORY_CATEGORIES = [
+  "MARKETPLACE",
+  "ECOMMERCE_RETAILER",
+  "D2C_BRAND",
+  "FASHION",
+  "ELECTRONICS",
+  "BEAUTY_PERSONAL_CARE",
+  "GROCERY",
+  "FOOD_DELIVERY",
+  "TRAVEL",
+  "TRANSPORT",
+  "ENTERTAINMENT",
+  "PAYMENTS_FINTECH",
+  "TELECOM",
+  "OTHER",
+  "UNCLASSIFIED",
+] as const;
+
+export type MerchantDirectoryCategory = (typeof MERCHANT_DIRECTORY_CATEGORIES)[number];
+

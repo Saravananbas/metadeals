@@ -6,7 +6,17 @@ const urlWithProtocols = (protocols: string[]) => z.string().url().refine(
 );
 
 export const databaseEnvSchema = z.object({
-  DATABASE_URL: urlWithProtocols(["postgres:", "postgresql:"]),
+  DATABASE_URL: urlWithProtocols(["postgres:", "postgresql:", "mysql:"]),
+  DATABASE_PROVIDER: z.enum(["postgresql", "mysql"]).optional(),
+  DATABASE_SSL: z.enum(["true", "false"]).default("false").transform((value) => value === "true"),
+}).superRefine((value, context) => {
+  if (value.DATABASE_PROVIDER && value.DATABASE_PROVIDER !== (new URL(value.DATABASE_URL).protocol === "mysql:" ? "mysql" : "postgresql")) {
+    context.addIssue({
+      code: "custom",
+      path: ["DATABASE_PROVIDER"],
+      message: "DATABASE_PROVIDER must match the DATABASE_URL protocol.",
+    });
+  }
 });
 export const redisEnvSchema = z.object({
   REDIS_URL: urlWithProtocols(["redis:", "rediss:"]),

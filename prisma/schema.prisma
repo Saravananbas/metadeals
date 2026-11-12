@@ -252,6 +252,7 @@ model Media {
   uploadedById String
   uploadedBy   User     @relation(fields: [uploadedById], references: [id], onDelete: Restrict)
   deals        Deal[]
+  galleryImages DealGalleryImage[]
   createdAt    DateTime @default(now())
 }
 
@@ -267,14 +268,18 @@ model Deal {
   merchant       Merchant   @relation(fields: [merchantId], references: [id], onDelete: Restrict)
   mediaId        String
   media          Media      @relation(fields: [mediaId], references: [id], onDelete: Restrict)
+  galleryImages  DealGalleryImage[]
   mrpMinor       Int
   priceMinor     Int
   currency       String     @default("INR") @db.Char(3)
   rating         Float?
   reviewCount    Int?
+  viewCount      Int        @default(0)
+  shareCount     Int        @default(0)
   ratingSource   String?    @db.VarChar(200)
   productUrl     String     @db.VarChar(2048)
   affiliateUrl   String?    @db.VarChar(2048)
+  couponCode     String?    @db.VarChar(50)
   status         DealStatus @default(DRAFT)
   publishedAt    DateTime?
   startsAt       DateTime?
@@ -292,6 +297,10 @@ model Deal {
   options        PurchaseOption[]
   candidates     DealCandidate[]
   priceObservations PriceObservation[]
+  videoReviews   DealVideoReview[]
+  comments       DealComment[]
+  youtubeReviewStatus String   @default("NOT_REQUESTED") @db.VarChar(50)
+  youtubeLastSearchedAt DateTime?
 
   @@index([status, publishedAt, id])
   @@index([categoryId, status, publishedAt])
@@ -316,23 +325,42 @@ model PurchaseOption {
   @@unique([dealId, merchantId])
 }
 
-model Customer {
-  id String @id @default(cuid())
-  name String
-  email String @unique
-  passwordHash String? @db.VarChar(255)
-  emailVerifiedAt DateTime
-  disabledAt DateTime?
-  identities CustomerIdentity[]
+model DealGalleryImage {
+  id        String   @id @default(cuid())
+  dealId    String
+  mediaId   String
+  position  Int
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  deal      Deal     @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  media     Media    @relation(fields: [mediaId], references: [id], onDelete: Restrict)
+
+  @@unique([dealId, position])
+  @@index([mediaId])
+}
+
+model Customer {
+  id              String             @id @default(cuid())
+  name            String
+  email           String             @unique
+  image           String?            @db.VarChar(1024)
+  passwordHash    String?            @db.VarChar(255)
+  emailVerifiedAt DateTime?
+  disabledAt      DateTime?
+  identities      CustomerIdentity[]
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
 }
 model CustomerIdentity {
-  id String @id @default(cuid())
+  id         String   @id @default(cuid())
   customerId String
-  provider String
-  subject String
-  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  provider   String
+  subject    String
+  email      String?
+  name       String?
+  avatarUrl  String?  @db.VarChar(1024)
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
   @@unique([provider, subject])
   @@index([customerId])
 }
@@ -490,6 +518,284 @@ model ProductExtractionLog {
   @@index([retailer, createdAt])
   @@index([adminUserId, createdAt])
 }
+
+model DealVideoReview {
+  id              String   @id @default(cuid())
+  dealId          String
+  deal            Deal     @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  videoId         String   @db.VarChar(50)
+  title           String   @db.VarChar(300)
+  channelTitle    String   @db.VarChar(150)
+  channelId       String?  @db.VarChar(100)
+  thumbnailUrl    String   @db.VarChar(1000)
+  publishedAt     DateTime?
+  duration        String?  @db.VarChar(30)
+  viewCount       Int      @default(0)
+  likeCount       Int?
+  language        String   @default("English") @db.VarChar(50)
+  relevanceScore  Float    @default(0)
+  rankingPosition Int      @default(1)
+  isEmbeddable    Boolean  @default(true)
+  isPinned        Boolean  @default(false)
+  isActive        Boolean  @default(true)
+  lastFetchedAt   DateTime @default(now())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([dealId, videoId])
+  @@index([dealId, isActive, rankingPosition])
+  @@index([dealId, language])
+}
+
+model YouTubeQuotaLedger {
+  id               String   @id @default(cuid())
+  endpoint         String   @db.VarChar(100)
+  units            Int
+  outcome          String   @db.VarChar(30)
+  dealId           String?  @db.VarChar(100)
+  canonicalProduct String?  @db.VarChar(255)
+  adminUserId      String?  @db.VarChar(100)
+  errorCategory    String?  @db.VarChar(100)
+  errorMessage     String?  @db.VarChar(500)
+  createdAt        DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([endpoint, createdAt])
+  @@index([outcome, createdAt])
+  @@index([dealId])
+}
+
+enum MerchantDirectoryStatus {
+  ACTIVE
+  INACTIVE
+  UNDER_REVIEW
+}
+
+enum MerchantDirectoryVerification {
+  VERIFIED
+  UNVERIFIED
+  NEEDS_REVIEW
+}
+
+model MerchantWebsiteDirectory {
+  id                 String                        @id @default(cuid())
+  merchantCode       String?                       @db.VarChar(50)
+  name               String                        @db.VarChar(150)
+  websiteUrl         String                        @db.VarChar(2048)
+  domain             String                        @unique @db.VarChar(150)
+  category           String                        @default("UNCLASSIFIED") @db.VarChar(100)
+  categories         String[]                      @default([])
+  productFocus       String?                       @db.VarChar(255)
+  businessModel      String?                       @db.VarChar(100)
+  description        String?                       @db.VarChar(2000)
+  country            String                        @default("India") @db.VarChar(50)
+  status             MerchantDirectoryStatus       @default(ACTIVE)
+  verificationStatus MerchantDirectoryVerification @default(UNVERIFIED)
+  logoMediaId        String?
+  logoUrl            String?                       @db.VarChar(2048)
+  source             String                        @default("EXCEL_IMPORT") @db.VarChar(100)
+  notes              String?                       @db.VarChar(2000)
+  createdAt          DateTime                      @default(now())
+  updatedAt          DateTime                      @updatedAt
+
+  @@index([name])
+  @@index([category])
+  @@index([status])
+  @@index([verificationStatus])
+  @@index([logoMediaId])
+  @@index([createdAt])
+}
+
+// -------------------------------------------------------------
+// AI Deal Intelligence Foundation (M02 - Additive Data Models)
+// -------------------------------------------------------------
+
+model ProductMaster {
+  id               String           @id @default(cuid())
+  canonicalTitle   String           @db.VarChar(500)
+  brand            String           @db.VarChar(150)
+  categorySlug     String?          @db.VarChar(100)
+  gtin             String?          @unique @db.VarChar(50)
+  mpn              String?          @db.VarChar(100)
+  modelNumber      String?          @db.VarChar(100)
+  description      String?          @db.Text
+  defaultImageId   String?          @db.VarChar(128)
+  verifiedAt       DateTime?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  variants         ProductVariant[]
+  offers           ProductOffer[]
+
+  @@index([brand, canonicalTitle])
+  @@index([categorySlug])
+  @@index([gtin])
+}
+
+model ProductVariant {
+  id               String           @id @default(cuid())
+  productId        String
+  product          ProductMaster    @relation(fields: [productId], references: [id], onDelete: Cascade)
+  variantKey       String           @db.VarChar(150) // e.g. "color:black|storage:128gb"
+  title            String           @db.VarChar(500)
+  color            String?          @db.VarChar(100)
+  size             String?          @db.VarChar(50)
+  storageCapacity  String?          @db.VarChar(50)
+  condition        String           @default("NEW") @db.VarChar(50)
+  asin             String?          @db.VarChar(20)
+  fsn              String?          @db.VarChar(30)
+  sku              String?          @db.VarChar(100)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  offers           ProductOffer[]
+  observations     PriceObservationRecord[]
+
+  @@unique([productId, variantKey])
+  @@index([asin])
+  @@index([fsn])
+}
+
+model ProductOffer {
+  id               String           @id @default(cuid())
+  productId        String
+  product          ProductMaster    @relation(fields: [productId], references: [id], onDelete: Cascade)
+  variantId        String?
+  variant          ProductVariant?  @relation(fields: [variantId], references: [id], onDelete: SetNull)
+  merchantSlug     String           @db.VarChar(60)
+  sellerName       String?          @db.VarChar(150)
+  sellerRating     Float?
+  retailerUrl      String           @db.VarChar(2048)
+  inStock          Boolean          @default(true)
+  currentPricePaise Int
+  mrpPaise         Int
+  lastCheckedAt    DateTime         @default(now())
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  @@index([merchantSlug, inStock])
+  @@index([productId, variantId])
+}
+
+model PriceObservationRecord {
+  id               String           @id @default(cuid())
+  variantId        String?
+  variant          ProductVariant?  @relation(fields: [variantId], references: [id], onDelete: SetNull)
+  merchantSlug     String           @db.VarChar(60)
+  sellerName       String?          @db.VarChar(150)
+  url              String           @db.VarChar(2048)
+  mrpPaise         Int
+  sellingPricePaise Int
+  couponPricePaise Int?
+  bankOfferPaise   Int?
+  deliveryFeePaise Int              @default(0)
+  effectivePricePaise Int
+  currency         String           @default("INR") @db.Char(3)
+  extractionMethod String           @db.VarChar(60)
+  isAvailable      Boolean          @default(true)
+  observedAt       DateTime         @default(now())
+
+  @@index([variantId, observedAt])
+  @@index([merchantSlug, observedAt])
+}
+
+enum SourceHealthState {
+  HEALTHY
+  DEGRADED
+  SUSPENDED
+}
+
+model SourceHealthRecord {
+  id                 String            @id @default(cuid())
+  connectorCode      String            @unique @db.VarChar(60)
+  state              SourceHealthState @default(HEALTHY)
+  totalRequests      Int               @default(0)
+  successfulRequests Int               @default(0)
+  consecutiveFailures Int              @default(0)
+  lastSuccessAt      DateTime?
+  lastFailureAt      DateTime?
+  lastFailureReason  String?           @db.VarChar(500)
+  updatedAt          DateTime          @updatedAt
+  createdAt          DateTime          @default(now())
+
+  @@index([state])
+}
+
+enum PublicationAuthStatus {
+  PENDING_APPROVAL
+  APPROVED
+  CLAIMED
+  PUBLISHING
+  PUBLISHED
+  REJECTED
+  EXPIRED
+  RECOVERY_REQUIRED
+}
+
+model PublicationAuthorization {
+  id                 String                @id @default(cuid())
+  candidateId        String                @unique @db.VarChar(128)
+  authorizedByAdmin  String?               @db.VarChar(100)
+  approvalToken      String                @unique @db.VarChar(128)
+  status             PublicationAuthStatus @default(PENDING_APPROVAL)
+  isPriceErrorSuspected Boolean            @default(false)
+  confidenceScore    Float
+  attractivenessScore Float
+  approvedAt         DateTime?
+  publishedAt        DateTime?
+  expiresAt          DateTime
+  createdAt          DateTime              @default(now())
+
+  @@index([status])
+  @@index([expiresAt])
+}
+
+model ShadowCandidate {
+  id                 String                @id @default(cuid())
+  competitorSource   String                @db.VarChar(100)
+  sourceUrl          String                @db.VarChar(2048)
+  title              String                @db.VarChar(500)
+  pricePaise         Int
+  mrpPaise           Int
+  brand              String?               @db.VarChar(150)
+  matchedProductId   String?               @db.VarChar(128)
+  matchedVariantId   String?               @db.VarChar(128)
+  dealScore          Float                 @default(0)
+  discoveredAt       DateTime              @default(now())
+
+  @@index([competitorSource, discoveredAt])
+  @@index([matchedProductId])
+}
+
+model DealLifecycleEvent {
+  id                 String                @id @default(cuid())
+  dealId             String                @db.VarChar(128)
+  eventType          String                @db.VarChar(60) // OUT_OF_STOCK, PRICE_DROP, PRICE_INCREASE, EXPIRED, RESTORED
+  previousState      Json?
+  newState           Json?
+  triggeredBy        String                @db.VarChar(100)
+  recordedAt         DateTime              @default(now())
+
+  @@index([dealId, recordedAt])
+  @@index([eventType, recordedAt])
+}
+
+model DealComment {
+  id           String   @id @default(cuid())
+  dealId       String
+  deal         Deal     @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  authorName   String   @default("Guest") @db.VarChar(80)
+  content      String   @db.VarChar(1000)
+  authorIpHash String?  @db.Char(64)
+  createdAt    DateTime @default(now())
+
+  @@index([dealId, createdAt])
+  @@index([authorIpHash, createdAt])
+}
+
+
+
+
 
 
 

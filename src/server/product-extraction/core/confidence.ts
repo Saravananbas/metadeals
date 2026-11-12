@@ -5,7 +5,8 @@ export function createField<T>(
   source: ExtractionSource,
   confidence: ConfidenceLevel,
   note?: string,
-  observedAt?: string
+  observedAt?: string,
+  evidencePath?: string,
 ): FieldProvenance<T> {
   return {
     value,
@@ -13,6 +14,7 @@ export function createField<T>(
     confidence: value === null || value === undefined ? "MISSING" : confidence,
     note,
     observedAt,
+    evidencePath,
   };
 }
 

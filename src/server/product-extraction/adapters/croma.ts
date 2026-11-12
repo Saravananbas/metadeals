@@ -127,10 +127,8 @@ export class CromaAdapter implements RetailerAdapter {
 
       // Price resolution
       const priceRupees = jsonLd.price ?? selectorPrice ?? og.price ?? embedded.price ?? meta.price ?? null;
-      let mrpRupees = jsonLd.mrp ?? selectorMrp ?? og.mrp ?? embedded.mrp ?? meta.mrp ?? null;
-      if (priceRupees && !mrpRupees) {
-        mrpRupees = Number((priceRupees * 1.15).toFixed(2));
-      }
+      // Keep MRP blank unless the page or structured data explicitly supplies it.
+      const mrpRupees = jsonLd.mrp ?? selectorMrp ?? og.mrp ?? embedded.mrp ?? meta.mrp ?? null;
       const priceMinor = convertRupeesToIntegerPaise(priceRupees);
       const mrpMinor = convertRupeesToIntegerPaise(mrpRupees);
       const priceSource = jsonLd.price ? "json_ld" : selectorPrice ? "retailer_html_selector" : og.price ? "open_graph" : "html_metadata";
@@ -168,7 +166,9 @@ export class CromaAdapter implements RetailerAdapter {
           description: createField(resolvedDesc, descSource, resolvedDesc ? "HIGH" : "MISSING"),
           keyFeatures: createField([], "manual_fallback", "MISSING"),
           specifications: createField({}, "manual_fallback", "MISSING"),
-          category: createField(jsonLd.category ?? "Electronics", "json_ld", "MEDIUM"),
+          category: jsonLd.category
+            ? createField(jsonLd.category, "json_ld", "MEDIUM")
+            : missingField(),
           subcategory: missingField(),
           breadcrumb: createField([], "manual_fallback", "MISSING"),
         },
@@ -240,7 +240,7 @@ export class CromaAdapter implements RetailerAdapter {
         description: missingField(),
         keyFeatures: createField([], "manual_fallback", "MISSING"),
         specifications: createField({}, "manual_fallback", "MISSING"),
-        category: createField("Electronics", "url_heuristic", "LOW"),
+        category: missingField(),
         subcategory: missingField(),
         breadcrumb: createField([], "manual_fallback", "MISSING"),
       },

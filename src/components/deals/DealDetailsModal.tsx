@@ -19,6 +19,8 @@ import type { Deal } from "@/features/deals/types";
 import { formatINR, getSavings } from "@/features/deals/pricing";
 import { StoreLogo } from "@/features/home/components/StoreLogo";
 import { sampleDeals } from "@/features/deals/sample-catalog";
+import { YouTubeReviewsSection } from "@/components/deals/YouTubeReviewsSection";
+import type { YouTubeReviewItem } from "@/server/youtube/reviews-service";
 import styles from "./deal-details-modal.module.css";
 
 export type DealDetailsModalProps = {
@@ -54,6 +56,7 @@ export function DealDetailsModal({
   const [activeDeal, setActiveDeal] = useState<Deal | null>(deal);
   const [enriched, setEnriched] = useState<EnrichedDealData | null>(null);
   const [apiRelatedDeals, setApiRelatedDeals] = useState<Deal[]>([]);
+  const [videoReviews, setVideoReviews] = useState<YouTubeReviewItem[]>([]);
   const [loadingRelated, setLoadingRelated] = useState(false);
   const [copied, setCopied] = useState(false);
   const [imgSrc, setImgSrc] = useState<string>(deal?.image || "");
@@ -65,6 +68,7 @@ export function DealDetailsModal({
     setActiveDeal(deal);
     setImgSrc(deal?.image || "");
     setApiRelatedDeals([]);
+    setVideoReviews([]);
   }
 
   const fallbackRelated = useMemo(() => {
@@ -143,9 +147,17 @@ export function DealDetailsModal({
           options: data.options || [],
         });
         setApiRelatedDeals(relatedList.slice(0, 3));
+        if (Array.isArray(data.videoReviews)) {
+          setVideoReviews(data.videoReviews);
+        } else {
+          setVideoReviews([]);
+        }
       })
       .catch(() => {
-        if (isMounted) setApiRelatedDeals([]);
+        if (isMounted) {
+          setApiRelatedDeals([]);
+          setVideoReviews([]);
+        }
       })
       .finally(() => {
         if (isMounted) setLoadingRelated(false);
@@ -266,6 +278,7 @@ export function DealDetailsModal({
                   <Heart size={20} fill={saved ? "currentColor" : "none"} />
                 </button>
                 <Image
+                  unoptimized
                   src={imgSrc || "/images/placeholder.svg"}
                   alt=""
                   aria-hidden="true"
@@ -469,6 +482,13 @@ export function DealDetailsModal({
             </div>
           </div>
 
+          {/* YouTube Video Reviews Section */}
+          {videoReviews.length > 0 && (
+            <div style={{ marginTop: 24, marginBottom: 8 }}>
+              <YouTubeReviewsSection reviews={videoReviews} />
+            </div>
+          )}
+
           {/* Mandatory: 3 Related Deals Section */}
           <div className={styles.relatedSection}>
             <div className={styles.relatedHeader}>
@@ -504,6 +524,7 @@ export function DealDetailsModal({
                             {relSavings.percent}% OFF
                           </span>
                           <Image
+                            unoptimized
                             src={rel.image || "/images/placeholder.png"}
                             alt={rel.name}
                             fill

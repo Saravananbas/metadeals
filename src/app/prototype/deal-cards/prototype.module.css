@@ -1,0 +1,587 @@
+.prototypeContainer {
+  min-height: 100vh;
+  background-color: var(--md-color-surface-muted);
+  padding-bottom: 60px;
+  font-family: inherit;
+}
+
+/* Prototype Control Bar */
+.topToolbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--md-white);
+  border-bottom: 1px solid var(--md-color-border);
+  padding: 12px 24px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  box-shadow: 0 1px 3px color-mix(in srgb, var(--md-black) 5%, transparent);
+}
+
+.toolbarTitle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.toolbarTitle h1 {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--md-purple-950);
+  margin: 0;
+}
+
+.badge {
+  background: var(--md-color-primary-soft);
+  color: var(--md-color-primary-hover);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.controlsGroup {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.controlSection {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.controlLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--md-color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.toggleButtonGroup {
+  display: flex;
+  background: var(--md-color-surface-muted);
+  padding: 3px;
+  border-radius: 8px;
+  border: 1px solid var(--md-color-border);
+}
+
+.toggleBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--md-color-text-secondary);
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.toggleBtn:hover {
+  color: var(--md-neutral-800);
+}
+
+.toggleBtnActive {
+  background: var(--md-color-primary);
+  color: var(--md-white) !important;
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--md-black) 10%, transparent);
+}
+
+/* Preview Canvas */
+.previewCanvasWrapper {
+  padding: 24px 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.viewportFrame {
+  width: 100%;
+  transition: max-width 0.25s ease;
+}
+
+.viewportFrame.modeDesktop {
+  max-width: 1400px;
+}
+
+.viewportFrame.modeTablet {
+  max-width: 820px;
+}
+
+.viewportFrame.modeMobile {
+  max-width: 440px;
+}
+
+.viewportFrame.modeResponsive {
+  max-width: 1400px;
+}
+
+.sectionHeader {
+  margin-bottom: 20px;
+}
+
+.sectionHeader h2 {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--md-purple-950);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 4px;
+}
+
+.sectionHeader p {
+  color: var(--md-color-text-secondary);
+  font-size: 13.5px;
+  margin: 0;
+}
+
+/* Deals Grid: Exact Requirements */
+/* Desktop (1200px+): 5 cards per row */
+/* Tablet (768px-1199px): 2 cards per row */
+/* Mobile (<768px): EXACTLY 1 card per row */
+.dealsGrid {
+  display: grid;
+  gap: 16px;
+  width: 100%;
+}
+
+/* Forced modes via prototype controls */
+.modeDesktop .dealsGrid {
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+}
+
+.modeTablet .dealsGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+
+.modeMobile .dealsGrid {
+  grid-template-columns: 1fr !important;
+}
+
+/* Natural responsive layout for "Auto / Responsive" */
+.modeResponsive .dealsGrid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+@media (max-width: 1199px) {
+  .modeResponsive .dealsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  .modeResponsive .dealsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Standalone Prototype Deal Card */
+.dealCard {
+  display: flex;
+  flex-direction: column;
+  background: var(--md-white);
+  border: 1px solid var(--md-color-primary-soft);
+  border-radius: 16px;
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--md-purple-500) 6%, transparent), 0 1px 3px color-mix(in srgb, var(--md-black) 4%, transparent);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.dealCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px color-mix(in srgb, var(--md-purple-500) 12%, transparent), 0 2px 6px color-mix(in srgb, var(--md-black) 6%, transparent);
+}
+
+/* Row 1: Product image, discount badge, wishlist */
+.rowImage {
+  position: relative;
+  width: 100%;
+  height: 170px;
+  background: var(--md-white);
+  padding: 12px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid var(--md-color-primary-soft);
+}
+
+.discountBadge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 2;
+  background: var(--md-color-danger); /* Red discount badge */
+  color: var(--md-white);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 6px;
+  letter-spacing: 0.3px;
+  box-shadow: 0 2px 4px color-mix(in srgb, var(--md-red-600) 30%, transparent);
+}
+
+.wishlistBtn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--md-color-border);
+  background: var(--md-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--md-color-text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 3px color-mix(in srgb, var(--md-black) 6%, transparent);
+}
+
+.wishlistBtn:hover {
+  color: var(--md-color-danger);
+  border-color: var(--md-color-danger-border);
+  background: var(--md-color-danger-bg);
+}
+
+.wishlistBtnActive {
+  color: var(--md-color-danger);
+  background: var(--md-color-danger-bg);
+  border-color: var(--md-color-danger-border);
+}
+
+.imgWrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.productImg {
+  object-fit: contain;
+}
+
+/* Content Container */
+.cardContent {
+  padding: 12px 14px 14px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  box-sizing: border-box;
+}
+
+/* Row 2: Product Title (max 2 lines) */
+.rowTitle {
+  margin: 0 0 8px;
+  font-size: 13.5px;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--md-color-text);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: 36px;
+  max-height: 36px;
+}
+
+/* Row 3: Deal price, original MRP, savings badge & Star Rating */
+.rowPricing {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+  min-height: 44px;
+}
+
+.priceBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.priceLine {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.dealPrice {
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--md-purple-950);
+  line-height: 1;
+}
+
+.originalMrp {
+  font-size: 12px;
+  color: var(--md-color-text-muted);
+  text-decoration: line-through;
+  line-height: 1;
+}
+
+.savingsBadge {
+  display: inline-block;
+  background: var(--md-color-success-bg); /* Green savings badge */
+  color: var(--md-green-700);
+  font-size: 11px;
+  font-weight: 750;
+  padding: 2px 7px;
+  border-radius: 9999px;
+  border: 1px solid var(--md-color-success-border);
+  line-height: 1.2;
+  width: fit-content;
+}
+
+.ratingBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.ratingScore {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--md-neutral-700);
+  line-height: 1;
+}
+
+.starsRow {
+  display: flex;
+  align-items: center;
+  gap: 1.5px;
+}
+
+.starGolden {
+  color: var(--md-amber-600);
+  fill: var(--md-amber-600);
+}
+
+.starGray {
+  color: var(--md-color-border-strong);
+}
+
+/* Row 4: Merchant branding and posted date */
+.rowMerchant {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed var(--md-color-border);
+  min-height: 24px;
+}
+
+.merchantName {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--md-color-primary-hover);
+}
+
+.postedDate {
+  font-size: 11px;
+  color: var(--md-color-text-muted);
+  white-space: nowrap;
+}
+
+/* Row 5: Coupon row (fixed height to preserve vertical alignment) */
+.rowCoupon {
+  min-height: 34px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.couponPill {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: var(--md-color-primary-subtle);
+  border: 1px dashed var(--md-purple-300);
+  border-radius: 8px;
+  padding: 4px 8px;
+  box-sizing: border-box;
+}
+
+.couponCode {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--md-promo-bank-start);
+  font-family: monospace;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.couponCopyBtn {
+  background: var(--md-color-primary-soft);
+  border: none;
+  border-radius: 4px;
+  padding: 3px 6px;
+  color: var(--md-purple-700);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10.5px;
+  font-weight: 700;
+  transition: all 0.15s ease;
+}
+
+.couponCopyBtn:hover {
+  background: var(--md-color-primary-soft);
+}
+
+.couponEmptyPlaceholder {
+  height: 34px;
+  width: 100%;
+}
+
+/* Row 6: Action row */
+.rowActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  margin-top: auto;
+}
+
+.detailsBtn {
+  flex: 1;
+  padding: 7px 10px;
+  background: var(--md-white);
+  border: 1px solid var(--md-color-primary);
+  color: var(--md-color-primary);
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.detailsBtn:hover {
+  background: var(--md-color-primary-subtle);
+}
+
+.buyNowBtn {
+  flex: 1.1;
+  padding: 7px 10px;
+  background: var(--md-orange-700); /* High contrast CTA orange */
+  border: 1px solid var(--md-orange-700);
+  color: var(--md-white);
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.buyNowBtn:hover {
+  background: var(--md-orange-800);
+  border-color: var(--md-orange-800);
+}
+
+/* Row 7: Social interaction row */
+.rowSocial {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 8px;
+  border-top: 1px solid var(--md-color-surface-muted);
+  min-height: 28px;
+}
+
+.socialBtn {
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--md-color-text-secondary);
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+
+.socialBtn:hover {
+  color: var(--md-color-primary);
+  background: var(--md-color-primary-subtle);
+}
+
+.socialLiked {
+  color: var(--md-color-primary) !important;
+}
+
+.viewsItem {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--md-color-text-secondary);
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 4px 6px;
+}
+
+/* Toast alert notification */
+.toastNotification {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--md-purple-950);
+  color: var(--md-white);
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--md-black) 15%, transparent);
+  z-index: 100;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+

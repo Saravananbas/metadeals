@@ -1,14 +1,15 @@
-import { isPrivateOrLoopbackHost } from "./url-validator";
-import { isAllowedRetailerDomain } from "./domain-allowlist";
+import { ALLOWED_RETAILER_DOMAINS, findAllowedDomain } from "./domain-allowlist";
+import { fetchPublicResponseBytes } from "./safe-image-fetch";
 
-export const MAX_HTML_BYTES = 2 * 1024 * 1024; // 2 MB
+export const MAX_HTML_BYTES = 6 * 1024 * 1024; // 6 MB
 export const MAX_IMAGE_BYTES = 5 * 1024 * 1024; // 5 MB
-export const DEFAULT_TIMEOUT_MS = 5000; // 5 seconds
+export const DEFAULT_TIMEOUT_MS = 8000; // 8 seconds
 
 export interface SafeFetchOptions {
   maxBytes?: number;
   timeoutMs?: number;
   allowedContentTypes?: string[];
+  allowedDomains?: string[];
 }
 
 export async function safeFetchText(
@@ -23,90 +24,44 @@ export async function safeFetchText(
     "application/json",
     "application/ld+json",
   ];
-
-  let currentUrl = targetUrl;
-  let redirectsRemaining = 3;
-
-  while (redirectsRemaining >= 0) {
-    const parsed = new URL(currentUrl);
-
-    // Validate SSRF and scheme on every hop
-    if (parsed.protocol !== "https:" && !(process.env.NODE_ENV === "test" && parsed.protocol === "http:")) {
-      throw new Error(`Insecure redirect scheme: ${parsed.protocol}`);
-    }
-    if (isPrivateOrLoopbackHost(parsed.hostname)) {
-      throw new Error("SSRF protection: redirect to private host blocked.");
-    }
-    if (!isAllowedRetailerDomain(parsed.hostname)) {
-      throw new Error(`Redirect to unapproved domain blocked: ${parsed.hostname}`);
-    }
-
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), timeoutMs);
-
+  let allowedDomains = options.allowedDomains;
+  if (!allowedDomains) {
+    let host: string;
     try {
-      const response = await fetch(currentUrl, {
-        method: "GET",
-        signal: controller.signal,
-        headers: {
-          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-          "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,application/json;q=0.8,*/*;q=0.7",
-          "Accept-Language": "en-IN,en;q=0.9",
-        },
-        redirect: "manual", // Handle redirects manually for strict SSRF validation
+      host = new URL(targetUrl).hostname;
+    } catch {
+      throw new Error("Malformed product URL.");
+    }
+    const retailer = findAllowedDomain(host);
+    if (!retailer) throw new Error("Request host is not an approved retailer domain.");
+    allowedDomains = ALLOWED_RETAILER_DOMAINS
+      .filter((entry) => entry.retailerSlug === retailer.retailerSlug)
+      .map((entry) => entry.domain);
+  }
+  const allowedContentTypePattern = allowedContentTypes.length
+    ? new RegExp(`^(?:${allowedContentTypes.map((type) => type.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})$`, "i")
+    : /.*/;
+  // Retailers rate-limit bursts (HTTP 429/503) and often succeed moments later. Retry twice with a pause;
+  // every attempt still goes through the same public-address, redirect and domain checks.
+  let fetched: Awaited<ReturnType<typeof fetchPublicResponseBytes>> | undefined;
+  for (let attempt = 0; ; attempt++) {
+    try {
+      fetched = await fetchPublicResponseBytes(targetUrl, maxBytes, {
+        allowedDomains,
+        contentTypePattern: allowedContentTypePattern,
+        accept: "text/html,application/xhtml+xml,application/json,application/ld+json;q=0.9,*/*;q=0.5",
+        timeoutMs,
+        userAgent: "MetaDeals4U-ProductFetcher/0.1",
       });
-
-      // Handle redirect
-      if ([301, 302, 303, 307, 308].includes(response.status)) {
-        const location = response.headers.get("location");
-        if (!location) {
-          throw new Error("Redirect response missing location header.");
-        }
-        currentUrl = new URL(location, currentUrl).toString();
-        redirectsRemaining--;
-        continue;
-      }
-
-      if (!response.ok) {
-        throw new Error(`Upstream request returned status ${response.status}`);
-      }
-
-      const contentTypeHeader = response.headers.get("content-type") || "";
-      const mimeType = contentTypeHeader.split(";")[0].trim().toLowerCase();
-
-      if (allowedContentTypes.length > 0 && !allowedContentTypes.some((t) => mimeType.includes(t))) {
-        throw new Error(`Unsupported content type: ${mimeType}`);
-      }
-
-      // Read bounded stream to prevent memory exhaustion
-      if (!response.body) {
-        return { text: "", finalUrl: currentUrl, contentType: mimeType };
-      }
-
-      const reader = response.body.getReader();
-      const chunks: Uint8Array[] = [];
-      let totalBytes = 0;
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        totalBytes += value.length;
-        if (totalBytes > maxBytes) {
-          await reader.cancel();
-          throw new Error(`Response body exceeded maximum allowed size of ${maxBytes} bytes.`);
-        }
-        chunks.push(value);
-      }
-
-      const buffer = Buffer.concat(chunks);
-      const text = buffer.toString("utf-8");
-      return { text, finalUrl: currentUrl, contentType: mimeType };
-    } finally {
-      clearTimeout(timeout);
+      break;
+    } catch (error) {
+      const throttled = error instanceof Error && /returned HTTP (?:429|503)/.test(error.message);
+      if (!throttled || attempt >= 2) throw error;
+      await new Promise((resolve) => setTimeout(resolve, 2500 * (attempt + 1)));
     }
   }
-
-  throw new Error("Too many redirects.");
+  const { bytes, contentType, finalUrl } = fetched;
+  return { text: bytes.toString("utf-8"), finalUrl, contentType };
 }
 
 export function sanitizeExtractedText(input: string): string {

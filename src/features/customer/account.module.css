@@ -9,7 +9,9 @@
 .formPanel input{width:100%;border:1px solid var(--md-input-border);border-radius:10px;background:var(--md-input-bg);color:var(--md-input-text);padding:11px 12px;font-size:14px}
 .formPanel input:focus-visible{outline:2px solid var(--md-input-border-focus);outline-offset:2px}
 .formPanel small{font-size:11px;color:var(--md-color-text-secondary)}
-.social{display:flex;gap:10px;margin-top:10px}.social button{flex:1;border:1px solid var(--md-input-border);border-radius:10px;padding:10px;font-weight:650;background:var(--md-color-surface)}
+.social{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}
+.social button{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--md-input-border);border-radius:10px;padding:9px 12px;font-size:13px;font-weight:650;background:var(--md-color-surface);color:var(--md-color-text);cursor:pointer;transition:all 0.15s ease}
+.social button:hover:not(:disabled){border-color:var(--md-color-primary);background:var(--md-color-surface-muted);transform:translateY(-1px)}
 .page button:disabled{opacity:.55;cursor:not-allowed}.divider{display:flex;align-items:center;gap:12px;font-size:11px;color:var(--md-color-text-secondary);margin:6px 0}
 .divider:before,.divider:after{content:"";height:1px;flex:1;background:var(--md-input-border)}
 .page .primary{display:block;text-align:center;background:var(--md-gradient-cta);color:var(--md-button-accent-text);border-radius:10px;padding:12px 20px;font-weight:750;margin-top:10px}

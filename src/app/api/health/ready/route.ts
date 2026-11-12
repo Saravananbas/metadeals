@@ -1,3 +1,4 @@
+import { isRedisConfigured } from "@/config/env";
 import { checkReadiness } from "@/features/health/service";
 import { getDatabase } from "@/server/db/client";
 import { createRedisProbe } from "@/server/redis/client";
@@ -11,6 +12,7 @@ export async function GET() {
   const result = await checkReadiness({
     database: async () => { await getDatabase().$queryRaw`SELECT 1`; },
     redis: async () => {
+      if (!isRedisConfigured()) return;
       const client = createRedisProbe();
       try {
         await client.connect();

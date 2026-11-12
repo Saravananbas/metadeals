@@ -266,6 +266,7 @@ export type MediaWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Media"> | Date | string
   uploadedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   deals?: Prisma.DealListRelationFilter
+  galleryImages?: Prisma.DealGalleryImageListRelationFilter
 }
 
 export type MediaOrderByWithRelationInput = {
@@ -281,6 +282,7 @@ export type MediaOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   uploadedBy?: Prisma.UserOrderByWithRelationInput
   deals?: Prisma.DealOrderByRelationAggregateInput
+  galleryImages?: Prisma.DealGalleryImageOrderByRelationAggregateInput
 }
 
 export type MediaWhereUniqueInput = Prisma.AtLeast<{
@@ -299,6 +301,7 @@ export type MediaWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Media"> | Date | string
   uploadedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   deals?: Prisma.DealListRelationFilter
+  galleryImages?: Prisma.DealGalleryImageListRelationFilter
 }, "id" | "storageKey">
 
 export type MediaOrderByWithAggregationInput = {
@@ -347,6 +350,7 @@ export type MediaCreateInput = {
   createdAt?: Date | string
   uploadedBy: Prisma.UserCreateNestedOneWithoutUploadedMediaInput
   deals?: Prisma.DealCreateNestedManyWithoutMediaInput
+  galleryImages?: Prisma.DealGalleryImageCreateNestedManyWithoutMediaInput
 }
 
 export type MediaUncheckedCreateInput = {
@@ -361,6 +365,7 @@ export type MediaUncheckedCreateInput = {
   uploadedById: string
   createdAt?: Date | string
   deals?: Prisma.DealUncheckedCreateNestedManyWithoutMediaInput
+  galleryImages?: Prisma.DealGalleryImageUncheckedCreateNestedManyWithoutMediaInput
 }
 
 export type MediaUpdateInput = {
@@ -375,6 +380,7 @@ export type MediaUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   uploadedBy?: Prisma.UserUpdateOneRequiredWithoutUploadedMediaNestedInput
   deals?: Prisma.DealUpdateManyWithoutMediaNestedInput
+  galleryImages?: Prisma.DealGalleryImageUpdateManyWithoutMediaNestedInput
 }
 
 export type MediaUncheckedUpdateInput = {
@@ -389,6 +395,7 @@ export type MediaUncheckedUpdateInput = {
   uploadedById?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deals?: Prisma.DealUncheckedUpdateManyWithoutMediaNestedInput
+  galleryImages?: Prisma.DealGalleryImageUncheckedUpdateManyWithoutMediaNestedInput
 }
 
 export type MediaCreateManyInput = {
@@ -551,6 +558,20 @@ export type MediaUpdateOneRequiredWithoutDealsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.MediaUpdateToOneWithWhereWithoutDealsInput, Prisma.MediaUpdateWithoutDealsInput>, Prisma.MediaUncheckedUpdateWithoutDealsInput>
 }
 
+export type MediaCreateNestedOneWithoutGalleryImagesInput = {
+  create?: Prisma.XOR<Prisma.MediaCreateWithoutGalleryImagesInput, Prisma.MediaUncheckedCreateWithoutGalleryImagesInput>
+  connectOrCreate?: Prisma.MediaCreateOrConnectWithoutGalleryImagesInput
+  connect?: Prisma.MediaWhereUniqueInput
+}
+
+export type MediaUpdateOneRequiredWithoutGalleryImagesNestedInput = {
+  create?: Prisma.XOR<Prisma.MediaCreateWithoutGalleryImagesInput, Prisma.MediaUncheckedCreateWithoutGalleryImagesInput>
+  connectOrCreate?: Prisma.MediaCreateOrConnectWithoutGalleryImagesInput
+  upsert?: Prisma.MediaUpsertWithoutGalleryImagesInput
+  connect?: Prisma.MediaWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MediaUpdateToOneWithWhereWithoutGalleryImagesInput, Prisma.MediaUpdateWithoutGalleryImagesInput>, Prisma.MediaUncheckedUpdateWithoutGalleryImagesInput>
+}
+
 export type MediaCreateWithoutUploadedByInput = {
   id?: string
   storageKey: string
@@ -562,6 +583,7 @@ export type MediaCreateWithoutUploadedByInput = {
   alt: string
   createdAt?: Date | string
   deals?: Prisma.DealCreateNestedManyWithoutMediaInput
+  galleryImages?: Prisma.DealGalleryImageCreateNestedManyWithoutMediaInput
 }
 
 export type MediaUncheckedCreateWithoutUploadedByInput = {
@@ -575,6 +597,7 @@ export type MediaUncheckedCreateWithoutUploadedByInput = {
   alt: string
   createdAt?: Date | string
   deals?: Prisma.DealUncheckedCreateNestedManyWithoutMediaInput
+  galleryImages?: Prisma.DealGalleryImageUncheckedCreateNestedManyWithoutMediaInput
 }
 
 export type MediaCreateOrConnectWithoutUploadedByInput = {
@@ -630,6 +653,7 @@ export type MediaCreateWithoutDealsInput = {
   alt: string
   createdAt?: Date | string
   uploadedBy: Prisma.UserCreateNestedOneWithoutUploadedMediaInput
+  galleryImages?: Prisma.DealGalleryImageCreateNestedManyWithoutMediaInput
 }
 
 export type MediaUncheckedCreateWithoutDealsInput = {
@@ -643,6 +667,7 @@ export type MediaUncheckedCreateWithoutDealsInput = {
   alt: string
   uploadedById: string
   createdAt?: Date | string
+  galleryImages?: Prisma.DealGalleryImageUncheckedCreateNestedManyWithoutMediaInput
 }
 
 export type MediaCreateOrConnectWithoutDealsInput = {
@@ -672,6 +697,7 @@ export type MediaUpdateWithoutDealsInput = {
   alt?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   uploadedBy?: Prisma.UserUpdateOneRequiredWithoutUploadedMediaNestedInput
+  galleryImages?: Prisma.DealGalleryImageUpdateManyWithoutMediaNestedInput
 }
 
 export type MediaUncheckedUpdateWithoutDealsInput = {
@@ -685,6 +711,79 @@ export type MediaUncheckedUpdateWithoutDealsInput = {
   alt?: Prisma.StringFieldUpdateOperationsInput | string
   uploadedById?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  galleryImages?: Prisma.DealGalleryImageUncheckedUpdateManyWithoutMediaNestedInput
+}
+
+export type MediaCreateWithoutGalleryImagesInput = {
+  id?: string
+  storageKey: string
+  provider: string
+  mimeType: string
+  byteSize: number
+  width: number
+  height: number
+  alt: string
+  createdAt?: Date | string
+  uploadedBy: Prisma.UserCreateNestedOneWithoutUploadedMediaInput
+  deals?: Prisma.DealCreateNestedManyWithoutMediaInput
+}
+
+export type MediaUncheckedCreateWithoutGalleryImagesInput = {
+  id?: string
+  storageKey: string
+  provider: string
+  mimeType: string
+  byteSize: number
+  width: number
+  height: number
+  alt: string
+  uploadedById: string
+  createdAt?: Date | string
+  deals?: Prisma.DealUncheckedCreateNestedManyWithoutMediaInput
+}
+
+export type MediaCreateOrConnectWithoutGalleryImagesInput = {
+  where: Prisma.MediaWhereUniqueInput
+  create: Prisma.XOR<Prisma.MediaCreateWithoutGalleryImagesInput, Prisma.MediaUncheckedCreateWithoutGalleryImagesInput>
+}
+
+export type MediaUpsertWithoutGalleryImagesInput = {
+  update: Prisma.XOR<Prisma.MediaUpdateWithoutGalleryImagesInput, Prisma.MediaUncheckedUpdateWithoutGalleryImagesInput>
+  create: Prisma.XOR<Prisma.MediaCreateWithoutGalleryImagesInput, Prisma.MediaUncheckedCreateWithoutGalleryImagesInput>
+  where?: Prisma.MediaWhereInput
+}
+
+export type MediaUpdateToOneWithWhereWithoutGalleryImagesInput = {
+  where?: Prisma.MediaWhereInput
+  data: Prisma.XOR<Prisma.MediaUpdateWithoutGalleryImagesInput, Prisma.MediaUncheckedUpdateWithoutGalleryImagesInput>
+}
+
+export type MediaUpdateWithoutGalleryImagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  storageKey?: Prisma.StringFieldUpdateOperationsInput | string
+  provider?: Prisma.StringFieldUpdateOperationsInput | string
+  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
+  byteSize?: Prisma.IntFieldUpdateOperationsInput | number
+  width?: Prisma.IntFieldUpdateOperationsInput | number
+  height?: Prisma.IntFieldUpdateOperationsInput | number
+  alt?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  uploadedBy?: Prisma.UserUpdateOneRequiredWithoutUploadedMediaNestedInput
+  deals?: Prisma.DealUpdateManyWithoutMediaNestedInput
+}
+
+export type MediaUncheckedUpdateWithoutGalleryImagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  storageKey?: Prisma.StringFieldUpdateOperationsInput | string
+  provider?: Prisma.StringFieldUpdateOperationsInput | string
+  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
+  byteSize?: Prisma.IntFieldUpdateOperationsInput | number
+  width?: Prisma.IntFieldUpdateOperationsInput | number
+  height?: Prisma.IntFieldUpdateOperationsInput | number
+  alt?: Prisma.StringFieldUpdateOperationsInput | string
+  uploadedById?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deals?: Prisma.DealUncheckedUpdateManyWithoutMediaNestedInput
 }
 
 export type MediaCreateManyUploadedByInput = {
@@ -710,6 +809,7 @@ export type MediaUpdateWithoutUploadedByInput = {
   alt?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deals?: Prisma.DealUpdateManyWithoutMediaNestedInput
+  galleryImages?: Prisma.DealGalleryImageUpdateManyWithoutMediaNestedInput
 }
 
 export type MediaUncheckedUpdateWithoutUploadedByInput = {
@@ -723,6 +823,7 @@ export type MediaUncheckedUpdateWithoutUploadedByInput = {
   alt?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deals?: Prisma.DealUncheckedUpdateManyWithoutMediaNestedInput
+  galleryImages?: Prisma.DealGalleryImageUncheckedUpdateManyWithoutMediaNestedInput
 }
 
 export type MediaUncheckedUpdateManyWithoutUploadedByInput = {
@@ -744,10 +845,12 @@ export type MediaUncheckedUpdateManyWithoutUploadedByInput = {
 
 export type MediaCountOutputType = {
   deals: number
+  galleryImages: number
 }
 
 export type MediaCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   deals?: boolean | MediaCountOutputTypeCountDealsArgs
+  galleryImages?: boolean | MediaCountOutputTypeCountGalleryImagesArgs
 }
 
 /**
@@ -767,6 +870,13 @@ export type MediaCountOutputTypeCountDealsArgs<ExtArgs extends runtime.Types.Ext
   where?: Prisma.DealWhereInput
 }
 
+/**
+ * MediaCountOutputType without action
+ */
+export type MediaCountOutputTypeCountGalleryImagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DealGalleryImageWhereInput
+}
+
 
 export type MediaSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -781,6 +891,7 @@ export type MediaSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   createdAt?: boolean
   uploadedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   deals?: boolean | Prisma.Media$dealsArgs<ExtArgs>
+  galleryImages?: boolean | Prisma.Media$galleryImagesArgs<ExtArgs>
   _count?: boolean | Prisma.MediaCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["media"]>
 
@@ -829,6 +940,7 @@ export type MediaOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = ru
 export type MediaInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   uploadedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   deals?: boolean | Prisma.Media$dealsArgs<ExtArgs>
+  galleryImages?: boolean | Prisma.Media$galleryImagesArgs<ExtArgs>
   _count?: boolean | Prisma.MediaCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type MediaIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -843,6 +955,7 @@ export type $MediaPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   objects: {
     uploadedBy: Prisma.$UserPayload<ExtArgs>
     deals: Prisma.$DealPayload<ExtArgs>[]
+    galleryImages: Prisma.$DealGalleryImagePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1251,6 +1364,7 @@ export interface Prisma__MediaClient<T, Null = never, ExtArgs extends runtime.Ty
   readonly [Symbol.toStringTag]: "PrismaPromise"
   uploadedBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   deals<T extends Prisma.Media$dealsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Media$dealsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DealPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  galleryImages<T extends Prisma.Media$galleryImagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Media$galleryImagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DealGalleryImagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1712,6 +1826,30 @@ export type Media$dealsArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
   take?: number
   skip?: number
   distinct?: Prisma.DealScalarFieldEnum | Prisma.DealScalarFieldEnum[]
+}
+
+/**
+ * Media.galleryImages
+ */
+export type Media$galleryImagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DealGalleryImage
+   */
+  select?: Prisma.DealGalleryImageSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DealGalleryImage
+   */
+  omit?: Prisma.DealGalleryImageOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DealGalleryImageInclude<ExtArgs> | null
+  where?: Prisma.DealGalleryImageWhereInput
+  orderBy?: Prisma.DealGalleryImageOrderByWithRelationInput | Prisma.DealGalleryImageOrderByWithRelationInput[]
+  cursor?: Prisma.DealGalleryImageWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DealGalleryImageScalarFieldEnum | Prisma.DealGalleryImageScalarFieldEnum[]
 }
 
 /**

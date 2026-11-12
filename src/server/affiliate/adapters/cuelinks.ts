@@ -4,6 +4,10 @@ export class CuelinksAdapter implements AffiliateProviderAdapter {
   readonly name = "cuelinks";
 
   canHandle(url: string, merchantHost: string): boolean {
+    // When Cuelinks is disabled or set to direct mode (e.g. during local dev before channel approval), bypass Cuelinks
+    if (process.env.CUELINKS_ENABLED === "false" || process.env.CUELINKS_REDIRECT_MODE === "direct") {
+      return false;
+    }
     // Cuelinks can wrap multiple merchants when configured as a fallback aggregator
     return Boolean(process.env.CUELINKS_PUB_ID && url && merchantHost);
   }

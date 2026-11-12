@@ -70,6 +70,7 @@ export const candidateInputSchema = z.object({
   sellerName: z.string().max(150).optional(),
   inStock: z.boolean().default(true),
   rawData: z.string().optional(),
+  isMockOrFixture: z.boolean().optional(),
 }).refine((data) => data.observedPriceMinor <= data.observedMrpMinor, {
   message: "Selling price cannot exceed MRP",
   path: ["observedPriceMinor"],

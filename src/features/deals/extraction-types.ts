@@ -36,6 +36,7 @@ export interface ClientExtractionResult {
     };
     media: {
       primaryImageUrl: ClientField<string>;
+      additionalImageUrls?: ClientField<string[]>;
       importedMediaId: ClientField<string>;
     };
     ratings: {
@@ -56,6 +57,7 @@ export interface ClientExtractionResult {
     categoryName?: string;
     merchantId?: string;
     merchantName?: string;
+    merchantDirectoryId?: string;
   };
   suggestedFormValues?: {
     title: string;

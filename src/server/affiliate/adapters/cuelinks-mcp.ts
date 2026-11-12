@@ -8,6 +8,9 @@ export class CuelinksMcpAdapter implements AffiliateProviderAdapter {
   readonly name = "cuelinks-mcp";
 
   canHandle(url: string, merchantHost: string): boolean {
+    if (process.env.CUELINKS_ENABLED === "false" || process.env.CUELINKS_REDIRECT_MODE === "direct") {
+      return false;
+    }
     const pubId = process.env.CUELINKS_PUBLISHER_ID || process.env.CUELINKS_PUB_ID;
     if (!pubId || !url || !merchantHost) return false;
 

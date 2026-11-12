@@ -30,8 +30,8 @@ export const ALLOWED_RETAILER_DOMAINS: AllowedDomainInfo[] = [
   { domain: "www.reliancedigital.in", retailerName: "Reliance Digital", retailerSlug: "reliancedigital", adapterId: "generic-structured-data" },
   { domain: "tatacliq.com", retailerName: "Tata CLiQ / Partner", retailerSlug: "cuelinks", adapterId: "generic-structured-data" },
   { domain: "www.tatacliq.com", retailerName: "Tata CLiQ / Partner", retailerSlug: "cuelinks", adapterId: "generic-structured-data" },
-  { domain: "ajio.com", retailerName: "AJIO", retailerSlug: "cuelinks", adapterId: "generic-structured-data" },
-  { domain: "www.ajio.com", retailerName: "AJIO", retailerSlug: "cuelinks", adapterId: "generic-structured-data" },
+  { domain: "ajio.com", retailerName: "AJIO", retailerSlug: "ajio", adapterId: "ajio" },
+  { domain: "www.ajio.com", retailerName: "AJIO", retailerSlug: "ajio", adapterId: "ajio" },
   { domain: "nykaa.com", retailerName: "Nykaa", retailerSlug: "cuelinks", adapterId: "generic-structured-data" },
   { domain: "www.nykaa.com", retailerName: "Nykaa", retailerSlug: "cuelinks", adapterId: "generic-structured-data" },
   { domain: "jiomart.com", retailerName: "JioMart", retailerSlug: "cuelinks", adapterId: "generic-structured-data" },
@@ -50,8 +50,5 @@ export function findAllowedDomain(hostname: string): AllowedDomainInfo | undefin
 }
 
 export function isAllowedRetailerDomain(hostname: string): boolean {
-  if (process.env.NODE_ENV === "test" && (hostname === "localhost" || hostname === "127.0.0.1")) {
-    return true;
-  }
   return !!findAllowedDomain(hostname);
 }

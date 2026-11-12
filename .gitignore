@@ -22,3 +22,7 @@ test-results/
 # Private local database backups and uploaded media
 .local/
 auth-passcode.txt
+How 
+
+# downloaded hosting env files
+staging/

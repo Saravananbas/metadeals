@@ -7,10 +7,15 @@ export interface RobotsEnv {
   baseUrl?: string;
 }
 
-export function buildRobotsConfig(env: RobotsEnv = {}): MetadataRoute.Robots {
-  const isProduction =
+export function isProductionIndexingEnabled(env: RobotsEnv = {}) {
+  return (
     env.nodeEnv === "production" &&
-    (env.appEnv === "production" || env.publicAppEnv === "production");
+    (env.appEnv === "production" || env.publicAppEnv === "production")
+  );
+}
+
+export function buildRobotsConfig(env: RobotsEnv = {}): MetadataRoute.Robots {
+  const isProduction = isProductionIndexingEnabled(env);
 
   const baseUrl = env.baseUrl || "https://metadeals4u.in";
 

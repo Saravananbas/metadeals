@@ -32,13 +32,17 @@ export async function saveDeal(db: DealDatabase, actor: DealActor, raw: unknown,
   if (before && before.version !== version) throw new DealError("This deal changed. Reload before saving.", 409);
   if (input.affiliateUrl !== (before?.affiliateUrl ?? null)) await assertDealPermission(db, actor, "affiliate:manage");
   if (JSON.stringify(input.options.filter((o) => o.affiliateUrl).map((o) => [o.merchantId,o.affiliateUrl]).sort()) !== JSON.stringify(before?.options.filter((o) => o.affiliateUrl).map((o) => [o.merchantId,o.affiliateUrl]).sort() ?? [])) await assertDealPermission(db, actor, "affiliate:manage");
-  const [category, merchant, media] = await Promise.all([
+  const galleryMediaIds = input.galleryMediaIds ?? [];
+  const [category, merchant, media, galleryMedia] = await Promise.all([
     db.category.findUnique({ where: { id: input.categoryId } }),
     db.merchant.findUnique({ where: { id: input.merchantId }, select: merchantSelect }),
     db.media.findUnique({ where: { id: input.mediaId } }),
+    galleryMediaIds.length ? db.media.findMany({ where: { id: { in: galleryMediaIds } }, select: { id: true } }) : Promise.resolve([]),
   ]);
   if (!category || !merchant || !media) throw new DealError("Select an existing category, merchant and uploaded image.");
+  if (galleryMedia.length !== galleryMediaIds.length) throw new DealError("One or more gallery images are unavailable. Import them again before saving.");
   const { options, ...fields } = input;
+  delete fields.galleryMediaIds;
   const data = { ...fields, publishedAt: input.publishedAt ? new Date(input.publishedAt) : null, startsAt: input.startsAt ? new Date(input.startsAt) : null, expiresAt: input.expiresAt ? new Date(input.expiresAt) : null, updatedById: actor.id };
   let result: DealRecord;
   if (before) {
@@ -47,6 +51,12 @@ export async function saveDeal(db: DealDatabase, actor: DealActor, raw: unknown,
     result = await getAdminDeal(db, before.id);
   } else {
     result = await db.deal.create({ data: { ...data, createdById: actor.id }, include: dealInclude });
+  }
+  await db.dealGalleryImage.deleteMany({ where: { dealId: result.id } });
+  if (galleryMediaIds.length) {
+    await db.dealGalleryImage.createMany({
+      data: galleryMediaIds.map((mediaId, index) => ({ dealId: result.id, mediaId, position: index + 1 })),
+    });
   }
   await db.purchaseOption.deleteMany({ where: { dealId: result.id } });
   if (options.length) await db.purchaseOption.createMany({ data: options.map((o) => ({ ...o, dealId: result.id })) });
@@ -73,8 +83,8 @@ export async function changeDealState(db: DealDatabase, actor: DealActor, id: st
   const before = await getAdminDeal(db, id);
   if (before.version !== version) throw new DealError("This deal changed. Reload first.", 409);
   if (action === "delete") {
-    if (before.everPublished || before.status !== "DRAFT") throw new DealError("Only never-published drafts can be deleted. Archive this deal instead.", 409);
-    const result = await db.deal.deleteMany({ where: { id, version, status: "DRAFT", everPublished: false } });
+    // Any status may be deleted (the admin UI confirms first); clicks and transactions keep their rows, the audit log keeps the snapshot.
+    const result = await db.deal.deleteMany({ where: { id, version } });
     if (result.count !== 1) throw new DealError("Concurrent edit. Reload first.", 409);
     await audit(db, actor, "deal.deleted", id, before, null);
     return null;

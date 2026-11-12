@@ -2,11 +2,20 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ChevronRight } from "lucide-react";
 import { getDatabase } from "@/server/db/client";
-import { publicWhere, dealInclude, publicDeal } from "@/server/deals/repository";
+import { publicWhere, dealInclude, publicDealsWithMerchantLogos } from "@/server/deals/repository";
 import { listingSchema } from "@/features/deals/validation";
 import { formatINR } from "@/features/deals/pricing";
-import styles from "@/features/deals/components/manager.module.css";
+import { DealNavbar } from "@/components/deals/DealNavbar";
+import { DealGallery } from "@/components/deals/DealGallery";
+import { DealProductInfo } from "@/components/deals/DealProductInfo";
+import { DealPurchasePanel } from "@/components/deals/DealPurchasePanel";
+import { TrustStrip } from "@/components/deals/TrustStrip";
+import { YouTubeReviewsSection } from "@/components/deals/YouTubeReviewsSection";
+import { DealViewTracker } from "@/components/deals/DealViewTracker";
+import { youtubeReviewsService } from "@/server/youtube/reviews-service";
+import styles from "./deal-detail.module.css";
 
 export const dynamic = "force-dynamic";
 
@@ -16,7 +25,8 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const row = await getDatabase().deal.findFirst({
+  const db = getDatabase();
+  const row = await db.deal.findFirst({
     where: { ...publicWhere(listingSchema.parse({})), OR: [{ slug }, { id: slug }] },
     include: dealInclude,
   });
@@ -25,7 +35,7 @@ export async function generateMetadata({
     return { title: "Deal Not Found · MetaDeals4U" };
   }
 
-  const deal = publicDeal(row);
+  const [deal] = await publicDealsWithMerchantLogos(db, [row]);
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://metadeals4u.in";
   const title = `${deal.title} - ${formatINR(deal.priceMinor / 100)} at ${deal.merchant.name} · MetaDeals4U`;
   const description = `${deal.title} on sale for ${formatINR(deal.priceMinor / 100)} (${deal.discountPercent}% off MRP ${formatINR(deal.mrpMinor / 100)}). Compare options and get genuine verified deal alerts on MetaDeals4U.`;
@@ -60,22 +70,28 @@ export async function generateMetadata({
   };
 }
 
-export default async function DealDetail({
+export default async function DealDetailPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
   const db = getDatabase();
+
   const row = await db.deal.findFirst({
     where: { ...publicWhere(listingSchema.parse({})), OR: [{ slug }, { id: slug }] },
     include: dealInclude,
   });
 
   if (!row) notFound();
-  const deal = publicDeal(row);
+
+  const [deal] = await publicDealsWithMerchantLogos(db, [row]);
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://metadeals4u.in";
 
+  // 1. YouTube Reviews (Admin-controlled; only loads stored reviews)
+  const videoReviews = await youtubeReviewsService.getReviewsForDeal(row.id);
+
+  // 2. Recommended Related Deals (Workstream 4: Same Category, Distinct Titles)
   const relatedRecords = await db.deal.findMany({
     where: {
       ...publicWhere(listingSchema.parse({})),
@@ -84,10 +100,38 @@ export default async function DealDetail({
     },
     include: dealInclude,
     orderBy: [{ featured: "desc" }, { publishedAt: "desc" }],
-    take: 6,
+    take: 20,
   });
-  const relatedDeals = relatedRecords.filter((r) => r.title !== row.title).slice(0, 3).map(publicDeal);
 
+  const sameCategoryDeals = relatedRecords
+    .filter((candidate) => candidate.title.trim().toLowerCase() !== row.title.trim().toLowerCase())
+    .slice(0, 5);
+  let relatedRows = sameCategoryDeals;
+
+  if (relatedRows.length < 5) {
+    const fallbackRecords = await db.deal.findMany({
+      where: { ...publicWhere(listingSchema.parse({})), id: { not: row.id } },
+      include: dealInclude,
+      orderBy: [{ featured: "desc" }, { publishedAt: "desc" }],
+      take: 20,
+    });
+    const relatedIds = new Set(relatedRows.map((candidate) => candidate.id));
+    const relatedTitles = new Set(relatedRows.map((candidate) => candidate.title.trim().toLowerCase()));
+    relatedRows = [
+      ...relatedRows,
+      ...fallbackRecords.filter((candidate) => {
+        const title = candidate.title.trim().toLowerCase();
+        if (relatedIds.has(candidate.id) || title === row.title.trim().toLowerCase() || relatedTitles.has(title)) return false;
+        relatedIds.add(candidate.id);
+        relatedTitles.add(title);
+        return true;
+      }).slice(0, 5 - relatedRows.length),
+    ];
+  }
+
+  const relatedDeals = await publicDealsWithMerchantLogos(db, relatedRows.slice(0, 5));
+
+  // 3. Schema.org JSON-LD
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -119,91 +163,194 @@ export default async function DealDetail({
   };
 
   return (
-    <main className={styles.page}>
+    <div className={styles.pageWrapper}>
+      <DealViewTracker slug={slug} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <Link href="/">← MetaDeals4U · All deals</Link>
-      <article className={styles.panel}>
-        <h1>{deal.title}</h1>
-        <Image
-          unoptimized
-          src={deal.image.url}
-          alt={deal.image.alt}
-          width={400}
-          height={400}
-          style={{ objectFit: "contain", maxWidth: "100%", height: "auto" }}
-        />
-        <p>{deal.description}</p>
-        <p>
-          <strong>{formatINR(deal.priceMinor / 100)}</strong>{" "}
-          <del>{formatINR(deal.mrpMinor / 100)}</del> · {deal.discountPercent}% off · Save {formatINR(deal.savingsMinor / 100)}
-        </p>
-        {deal.rating !== null && (
-          <p>
-            {deal.rating}/5 {deal.reviewCount !== null && `(${deal.reviewCount} reviews)`} · Source: {deal.ratingSource}
-          </p>
-        )}
-        <p>
-          {deal.expiresAt
-            ? `Expires ${new Date(deal.expiresAt).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })} IST`
-            : "Expiry not supplied."}
-        </p>
-        <p>Confirm the final price, stock, seller and return policy at checkout. Affiliate links may earn MetaDeals4U a commission.</p>
-        <div className={styles.actions}>
-          <a href={deal.destinationUrl} target="_blank" rel="sponsored noopener noreferrer">
-            View at {deal.merchant.name} ↗
-          </a>
-          {deal.options.map((option) => (
-            <a key={option.id} href={option.destinationUrl} target="_blank" rel="sponsored noopener noreferrer">
-              {option.merchant} · {formatINR(option.priceMinor / 100)} ↗
-            </a>
-          ))}
+
+      {/* Header and Purple Category Navigation Bar */}
+      <DealNavbar currentCategorySlug={deal.category.slug} />
+
+      <main className={styles.container}>
+        {/* Breadcrumb Navigation */}
+        <nav className={styles.breadcrumbNav} aria-label="Breadcrumb">
+          <Link href="/">Home</Link>
+          <ChevronRight size={14} className={styles.breadcrumbSeparator} />
+          <Link href="/">MetaDeals4U</Link>
+          <ChevronRight size={14} className={styles.breadcrumbSeparator} />
+          <Link href="/#deals">All Deals</Link>
+          <ChevronRight size={14} className={styles.breadcrumbSeparator} />
+          <Link href={`/?category=${deal.category.slug}`}>{deal.category.name}</Link>
+          <ChevronRight size={14} className={styles.breadcrumbSeparator} />
+          <span className={styles.breadcrumbCurrent} title={deal.title}>
+            {deal.title}
+          </span>
+        </nav>
+
+        {/* 3-Column Desktop Product Grid */}
+        <div className={styles.productGrid}>
+          {/* Column A: Product Image Gallery */}
+          <DealGallery
+            dealId={deal.id}
+            title={deal.title}
+            primaryImage={deal.image.url}
+            images={deal.imageGallery.map((image) => image.url)}
+            discountPercent={deal.discountPercent}
+          />
+
+          {/* Column B: Product Information */}
+          <DealProductInfo
+            title={deal.title}
+            brand={deal.brand}
+            category={deal.category}
+            merchantName={deal.merchant.name}
+            description={deal.description}
+            rating={deal.rating}
+            reviewCount={deal.reviewCount}
+            ratingSource={deal.ratingSource}
+            currency={deal.currency}
+          />
+
+          {/* Column C: Price & Purchase Panel */}
+          <DealPurchasePanel
+            dealId={deal.id}
+            priceMinor={deal.priceMinor}
+            mrpMinor={deal.mrpMinor}
+            discountPercent={deal.discountPercent}
+            savingsMinor={deal.savingsMinor}
+            merchantName={deal.merchant.name}
+            merchantWebsite={row.merchant.websiteUrl}
+            destinationUrl={deal.destinationUrl}
+            expiresAt={deal.expiresAt}
+            publishedAt={deal.publishedAt}
+            options={deal.options}
+          />
         </div>
+
+        {/* YouTube Video Reviews Section (Workstream 2 & 3) */}
+        {videoReviews.length > 0 && <YouTubeReviewsSection reviews={videoReviews} />}
+
+        {/* Trust Information Strip */}
+        <TrustStrip />
+
+        {/* Recommended Deals ("You May Also Like") */}
         {relatedDeals.length > 0 && (
-          <div style={{ marginTop: 32, paddingTop: 24, borderTop: "1px solid var(--md-color-border)" }}>
-            <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 16 }}>You May Also Like</h2>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 }}>
+          <section className={styles.recommendedSection} aria-label="Related Deals">
+            <h2 style={{ fontSize: 22, fontWeight: 800, margin: "0 0 20px", color: "var(--md-color-text)" }}>
+              You May Also Like
+            </h2>
+            <div className={styles.recommendedGrid}>
               {relatedDeals.map((rel) => (
                 <Link
                   key={rel.id}
                   href={`/deal/${rel.slug || rel.id}`}
                   style={{
-                    padding: 12,
-                    borderRadius: 14,
-                    border: "1px solid var(--md-color-border)",
-                    background: "var(--md-color-surface)",
+                    padding: 16,
+                    borderRadius: 16,
+                    border: "1px solid var(--md-color-border, var(--md-color-border))",
+                    background: "var(--md-white)",
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "space-between",
                     color: "inherit",
                     textDecoration: "none",
+                    boxShadow: "0 2px 8px color-mix(in srgb, var(--md-black) 4%, transparent)",
+                    transition: "transform 0.15s ease, box-shadow 0.15s ease",
                   }}
                 >
-                  <div style={{ position: "relative", width: "100%", height: 120, marginBottom: 8 }}>
+                  <div
+                    style={{
+                      position: "relative",
+                      width: "100%",
+                      aspectRatio: "1.2",
+                      marginBottom: 12,
+                      background: "var(--md-color-surface-muted)",
+                      borderRadius: 10,
+                      overflow: "hidden",
+                    }}
+                  >
+                    {rel.discountPercent > 0 && (
+                      <span
+                        style={{
+                          position: "absolute",
+                          top: 8,
+                          left: 8,
+                          background: "var(--md-red-600)",
+                          color: "var(--md-white)",
+                          fontSize: 11,
+                          fontWeight: 700,
+                          padding: "2px 6px",
+                          borderRadius: 4,
+                          zIndex: 2,
+                        }}
+                      >
+                        {rel.discountPercent}% OFF
+                      </span>
+                    )}
                     <Image
                       unoptimized
                       src={rel.image.url}
                       alt={rel.image.alt || rel.title}
                       fill
-                      style={{ objectFit: "contain" }}
+                      style={{ objectFit: "contain", padding: 8 }}
                     />
                   </div>
-                  <h3 style={{ fontSize: 13, fontWeight: 700, margin: "6px 0", lineHeight: 1.3 }}>{rel.title}</h3>
+
+                  <h3
+                    style={{
+                      fontSize: 13,
+                      fontWeight: 700,
+                      margin: "0 0 8px",
+                      lineHeight: 1.4,
+                      display: "-webkit-box",
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                    }}
+                  >
+                    {rel.title}
+                  </h3>
+
                   <div style={{ display: "flex", gap: 8, alignItems: "baseline" }}>
-                    <strong style={{ color: "var(--md-deal-price)" }}>{formatINR(rel.priceMinor / 100)}</strong>
-                    <del style={{ fontSize: 12, color: "var(--md-deal-mrp)" }}>{formatINR(rel.mrpMinor / 100)}</del>
+                    <strong style={{ color: "var(--md-color-text)", fontSize: 16 }}>
+                      {formatINR(rel.priceMinor / 100)}
+                    </strong>
+                    <del style={{ fontSize: 12, color: "var(--md-color-text-muted)" }}>
+                      {formatINR(rel.mrpMinor / 100)}
+                    </del>
                   </div>
-                  <span style={{ fontSize: 11, color: "var(--md-color-primary)", marginTop: 6, fontWeight: 700 }}>
-                    {rel.merchant.name} · View Deal →
-                  </span>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      marginTop: 10,
+                      paddingTop: 8,
+                      borderTop: "1px solid var(--md-color-surface-muted)",
+                    }}
+                  >
+                    <span style={{ fontSize: 12, color: "var(--md-color-text-secondary)", fontWeight: 600 }}>
+                      {rel.merchant.name}
+                    </span>
+                    <span
+                      style={{
+                        fontSize: 12,
+                        color: "var(--md-color-primary-hover)",
+                        fontWeight: 700,
+                      }}
+                    >
+                      View Deal &rarr;
+                    </span>
+                  </div>
                 </Link>
               ))}
             </div>
-          </div>
+          </section>
         )}
-      </article>
-    </main>
+      </main>
+    </div>
   );
 }

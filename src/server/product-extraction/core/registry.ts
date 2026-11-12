@@ -3,6 +3,7 @@ import { AmazonIndiaAdapter } from "../adapters/amazon-india";
 import { FlipkartAdapter } from "../adapters/flipkart";
 import { CromaAdapter } from "../adapters/croma";
 import { MyntraAdapter } from "../adapters/myntra";
+import { AjioAdapter } from "../adapters/ajio";
 import { GenericStructuredDataAdapter } from "../adapters/generic-structured-data";
 
 class AdapterRegistry {
@@ -13,6 +14,7 @@ class AdapterRegistry {
     this.register(new FlipkartAdapter());
     this.register(new CromaAdapter());
     this.register(new MyntraAdapter());
+    this.register(new AjioAdapter());
     this.register(new GenericStructuredDataAdapter());
   }
 

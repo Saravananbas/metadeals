@@ -1,4 +1,3 @@
-import "server-only";
 import type { Prisma } from "@/generated/prisma/client";
 import { recordPriceObservation } from "./price-history";
 import { convertMerchantUrl } from "@/server/affiliate/adapters/registry";
@@ -86,109 +85,117 @@ export async function publishVerifiedCandidate(
     });
   }
 
-  // 4. Resolve or create Media
-  const titleLower = candidate.rawTitle.toLowerCase();
-  let mediaKeyword = "phone";
-  if (
-    titleLower.includes("macbook") ||
-    titleLower.includes("laptop") ||
-    titleLower.includes("thinkpad") ||
-    titleLower.includes("dell") ||
-    category.slug === "laptops"
-  ) {
-    mediaKeyword = "laptop";
-  } else if (
-    titleLower.includes("wh-1000xm5") ||
-    titleLower.includes("headphone") ||
-    titleLower.includes("earphone") ||
-    titleLower.includes("airpods") ||
-    titleLower.includes("buds") ||
-    titleLower.includes("audio")
-  ) {
-    mediaKeyword = "headphones";
-  } else if (
-    titleLower.includes("tv") ||
-    titleLower.includes("oled") ||
-    titleLower.includes("bravia") ||
-    titleLower.includes("washing machine") ||
-    titleLower.includes("refrigerator") ||
-    titleLower.includes("air fryer") ||
-    category.slug === "appliances"
-  ) {
-    mediaKeyword = "air-fryer";
-  } else if (
-    titleLower.includes("shoes") ||
-    titleLower.includes("backpack") ||
-    titleLower.includes("daypack") ||
-    titleLower.includes("trolley") ||
-    titleLower.includes("rucksack") ||
-    category.slug === "travel"
-  ) {
-    mediaKeyword = "shoes";
-  } else if (
-    titleLower.includes("watch") ||
-    titleLower.includes("smartwatch")
-  ) {
-    mediaKeyword = "watch";
-  }
-
-  let media = await db.media.findFirst({
-    where: {
-      alt: { contains: mediaKeyword, mode: "insensitive" },
-      storageKey: { endsWith: ".webp" },
-    },
-  });
-
-  if (!media) {
-    media = await db.media.findFirst({
-      where: {
-        storageKey: { endsWith: ".webp" },
-      },
-    });
-  }
-
-  if (!media) {
-    media = await db.media.findFirst();
-  }
-
-  if (!media) {
-    media = await db.media.create({
-      data: {
-        storageKey: `scraped/${candidate.id}.jpg`,
-        provider: "LOCAL",
-        mimeType: "image/jpeg",
-        byteSize: 10240,
-        width: 800,
-        height: 600,
-        alt: candidate.rawTitle.slice(0, 100),
-        uploadedById: adminId,
-      },
-    });
-  }
-
-  // 5. Generate unique slug
+  // 4. Check for existing deal (idempotent publishing)
   const baseSlug = slugify(candidate.rawTitle);
   let dealSlug = `${baseSlug}-${candidate.externalId ? slugify(candidate.externalId) : candidate.id.slice(-6)}`;
   dealSlug = dealSlug.slice(0, 115);
 
-  const existingSlug = await db.deal.findUnique({ where: { slug: dealSlug } });
-  if (existingSlug) {
-    dealSlug = `${dealSlug}-${Date.now().toString().slice(-4)}`;
+  const existingBySlug = await db.deal.findUnique({ where: { slug: dealSlug } });
+  const existingByUrl = await db.deal.findFirst({ where: { productUrl: candidate.sourceUrl } });
+  const existingDeal = (candidate.dealId ? await db.deal.findUnique({ where: { id: candidate.dealId } }) : null) || existingBySlug || existingByUrl;
+
+  if (existingDeal) {
+    // Update existing deal prices and record price history instead of creating duplicates
+    const updated = await db.deal.update({
+      where: { id: existingDeal.id },
+      data: {
+        priceMinor: candidate.observedPriceMinor,
+        mrpMinor: candidate.observedMrpMinor > 0 ? candidate.observedMrpMinor : existingDeal.mrpMinor,
+        updatedById: adminId,
+      },
+    });
+
+    await db.dealCandidate.update({
+      where: { id: candidate.id },
+      data: {
+        dealId: updated.id,
+        status: "PUBLISHED",
+        updatedAt: new Date(),
+      },
+    });
+
+    await recordPriceObservation(db, {
+      merchantSlug: merchant.slug,
+      priceMinor: candidate.observedPriceMinor,
+      mrpMinor: candidate.observedMrpMinor,
+      sourceUrl: candidate.sourceUrl,
+      currency: candidate.currency,
+      dealId: updated.id,
+      candidateId: candidate.id,
+    });
+
+    return updated;
   }
 
-  // 6. Convert affiliate URL
+  // 5. Resolve or create Media
+  // Genuine product image from candidate.imageUrl if provided, else neutral placeholder
+  let mediaId: string | null = null;
+
+  if (candidate.imageUrl) {
+    try {
+      const { importProductImageFromUrl } = await import(
+        "@/server/product-extraction/media/image-import"
+      );
+      const imported = await importProductImageFromUrl(
+        candidate.imageUrl,
+        candidate.rawTitle,
+        adminId
+      );
+      if (imported) {
+        mediaId = imported.mediaId;
+      }
+    } catch (err) {
+      console.warn("Failed to import candidate product image from URL:", err);
+    }
+  }
+
+  if (!mediaId) {
+    let placeholderMedia = await db.media.findFirst({
+      where: {
+        alt: "Product placeholder",
+      },
+    });
+
+    if (!placeholderMedia) {
+      placeholderMedia = await db.media.create({
+        data: {
+          storageKey: "placeholders/product-placeholder.svg",
+          provider: "LOCAL",
+          mimeType: "image/svg+xml",
+          byteSize: 345,
+          width: 400,
+          height: 400,
+          alt: "Product placeholder",
+          uploadedById: adminId,
+        },
+      });
+    }
+    mediaId = placeholderMedia.id;
+  }
+
+  // 6. Convert affiliate URL via Cuelinks V3
   let affiliateUrl: string | null = null;
   try {
-    const urlObj = new URL(candidate.sourceUrl);
-    const converted = convertMerchantUrl(candidate.sourceUrl, urlObj.hostname, {
-      dealId: dealSlug,
-      subId: "scraper",
-    });
-    if (converted.isAffiliate) {
-      affiliateUrl = converted.url;
+    const { cuelinksClient } = await import("@/server/affiliate/cuelinks-client");
+    if (cuelinksClient.isConfigured()) {
+      const cuelinksRes = await cuelinksClient.convertLink(candidate.sourceUrl, `deal_${dealSlug}`);
+      if (cuelinksRes.isAffiliate && cuelinksRes.affiliateUrl) {
+        affiliateUrl = cuelinksRes.affiliateUrl;
+      }
+    }
+
+    if (!affiliateUrl) {
+      const urlObj = new URL(candidate.sourceUrl);
+      const converted = convertMerchantUrl(candidate.sourceUrl, urlObj.hostname, {
+        dealId: dealSlug,
+        subId: "scraper",
+      });
+      if (converted.isAffiliate) {
+        affiliateUrl = converted.url;
+      }
     }
   } catch {
-    // Keep affiliateUrl null if conversion fails
+    // Keep affiliateUrl null if conversion fails or network is offline
   }
 
   // 7. Create Deal
@@ -200,7 +207,7 @@ export async function publishVerifiedCandidate(
       description: `${candidate.rawTitle}. Verified deal observed at ₹${Math.round(candidate.observedPriceMinor / 100)} from ${candidate.sellerName || merchant.name}.`,
       categoryId: category.id,
       merchantId: merchant.id,
-      mediaId: media.id,
+      mediaId,
       mrpMinor: candidate.observedMrpMinor,
       priceMinor: candidate.observedPriceMinor,
       currency: candidate.currency,

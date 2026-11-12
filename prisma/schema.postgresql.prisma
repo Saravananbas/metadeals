@@ -1,0 +1,604 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  EDITOR
+}
+
+enum UserStatus {
+  PENDING_SETUP
+  ACTIVE
+  SUSPENDED
+}
+
+enum AuthTokenPurpose {
+  ACCOUNT_SETUP
+  PASSWORD_RESET
+  SUPER_ADMIN_BOOTSTRAP
+}
+
+// Identity foundation for the stable Auth.js / NextAuth Prisma adapter.
+model User {
+  id                  String         @id @default(cuid())
+  name                String?
+  email               String?        @unique
+  emailVerified       DateTime?
+  image               String?
+  role                UserRole       @default(EDITOR)
+  status              UserStatus     @default(PENDING_SETUP)
+  passwordHash        String?        @db.VarChar(255)
+  totpSecretEncrypted String?        @db.Text
+  totpEnabledAt       DateTime?
+  lastTotpStep        BigInt         @default(-1)
+  accounts            Account[]
+  sessions            Session[]
+  authSessions        AuthSession[]
+  recoveryCodes       RecoveryCode[]
+  tokens              AuthToken[]    @relation("TokenTarget")
+  createdTokens       AuthToken[]    @relation("TokenCreator")
+  auditAsActor        AuditEvent[]   @relation("AuditActor")
+  createdDeals        Deal[]         @relation("DealCreator")
+  updatedDeals        Deal[]         @relation("DealUpdater")
+  uploadedMedia       Media[]
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+
+  @@index([role, status])
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model AuthSession {
+  id                String   @id @default(cuid())
+  userId            String
+  tokenHash         String   @unique @db.Char(64)
+  createdAt         DateTime @default(now())
+  lastActivityAt    DateTime @default(now())
+  expiresAt         DateTime
+  absoluteExpiresAt DateTime
+  ipHash            String?  @db.Char(64)
+  userAgent         String?  @db.VarChar(512)
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, expiresAt])
+  @@index([expiresAt])
+}
+
+model RecoveryCode {
+  id        String    @id @default(cuid())
+  userId    String
+  codeHash  String    @db.VarChar(255)
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, usedAt])
+}
+
+model AuthToken {
+  id                    String           @id @default(cuid())
+  tokenHash             String           @unique @db.Char(64)
+  purpose               AuthTokenPurpose
+  email                 String
+  userId                String?
+  role                  UserRole?
+  createdById           String?
+  passwordHash          String?          @db.VarChar(255)
+  totpSecretEncrypted   String?          @db.Text
+  emailDeliveryVerified Boolean          @default(false)
+  createdAt             DateTime         @default(now())
+  expiresAt             DateTime
+  startedAt             DateTime?
+  completedAt           DateTime?
+  revokedAt             DateTime?
+  user                  User?            @relation("TokenTarget", fields: [userId], references: [id], onDelete: Cascade)
+  createdBy             User?            @relation("TokenCreator", fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@index([email, purpose, expiresAt])
+  @@index([userId, purpose])
+}
+
+model AuthRateLimit {
+  subjectHash String    @id @db.Char(64)
+  failures    Int       @default(0)
+  lockedUntil DateTime?
+  updatedAt   DateTime  @updatedAt
+
+  @@index([updatedAt])
+  @@index([lockedUntil])
+}
+
+model BootstrapState {
+  id          String    @id
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+}
+
+model AuditEvent {
+  id        String   @id @default(cuid())
+  actorId   String?
+  action    String   @db.VarChar(80)
+  targetId  String?  @db.VarChar(128)
+  success   Boolean
+  requestId String?  @db.VarChar(64)
+  ipHash    String?  @db.Char(64)
+  userAgent String?  @db.VarChar(512)
+  metadata  Json?
+  createdAt DateTime @default(now())
+  actor     User?    @relation("AuditActor", fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
+  @@index([actorId, createdAt])
+  @@index([action, createdAt])
+  @@index([targetId])
+}
+
+enum DealStatus {
+  DRAFT
+  PENDING_REVIEW
+  PUBLISHED
+  EXPIRED
+  ARCHIVED
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  slug      String   @unique @db.VarChar(100)
+  name      String   @db.VarChar(100)
+  deals     Deal[]
+  parentId  String?
+  parent    Category? @relation("CategoryTree", fields: [parentId], references: [id], onDelete: Restrict)
+  children  Category[] @relation("CategoryTree")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Merchant {
+  id             String           @id @default(cuid())
+  slug           String           @unique @db.VarChar(100)
+  name           String           @db.VarChar(100)
+  websiteUrl     String           @db.VarChar(2048)
+  affiliateHosts String[]         @default([])
+  deals          Deal[]
+  options        PurchaseOption[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+}
+
+model AffiliateClick {
+  id        String @id @default(cuid())
+  dealId    String
+  optionId  String?
+  merchantId String
+  channel   String @db.VarChar(30)
+  actorHash String @db.Char(64)
+  createdAt DateTime @default(now())
+
+  @@index([dealId, createdAt])
+  @@index([merchantId, createdAt])
+  @@index([actorHash, createdAt])
+  @@index([createdAt])
+}
+
+model AffiliateTransaction {
+  id              String @id @default(cuid())
+  provider        String @db.VarChar(60)
+  externalId      String @db.VarChar(120)
+  dealId          String?
+  status          String @db.VarChar(20)
+  commissionMinor Int
+  currency        String @default("INR") @db.Char(3)
+  reportedAt      DateTime
+  enteredById     String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([provider, externalId])
+  @@index([status, reportedAt])
+}
+
+model Media {
+  id           String   @id @default(cuid())
+  storageKey   String   @unique @db.VarChar(160)
+  provider     String   @db.VarChar(10)
+  mimeType     String   @db.VarChar(40)
+  byteSize     Int
+  width        Int
+  height       Int
+  alt          String   @db.VarChar(240)
+  uploadedById String
+  uploadedBy   User     @relation(fields: [uploadedById], references: [id], onDelete: Restrict)
+  deals        Deal[]
+  galleryImages DealGalleryImage[]
+  createdAt    DateTime @default(now())
+}
+
+model Deal {
+  id             String     @id @default(cuid())
+  slug           String     @unique @db.VarChar(120)
+  title          String     @db.VarChar(200)
+  brand          String     @db.VarChar(100)
+  description    String     @db.VarChar(2000)
+  categoryId     String
+  category       Category   @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  merchantId     String
+  merchant       Merchant   @relation(fields: [merchantId], references: [id], onDelete: Restrict)
+  mediaId        String
+  media          Media      @relation(fields: [mediaId], references: [id], onDelete: Restrict)
+  galleryImages  DealGalleryImage[]
+  mrpMinor       Int
+  priceMinor     Int
+  currency       String     @default("INR") @db.Char(3)
+  rating         Float?
+  reviewCount    Int?
+  viewCount      Int        @default(0)
+  shareCount     Int        @default(0)
+  ratingSource   String?    @db.VarChar(200)
+  productUrl     String     @db.VarChar(2048)
+  affiliateUrl   String?    @db.VarChar(2048)
+  status         DealStatus @default(DRAFT)
+  publishedAt    DateTime?
+  startsAt       DateTime?
+  expiresAt      DateTime?
+  featured       Boolean    @default(false)
+  trending       Boolean    @default(false)
+  everPublished  Boolean    @default(false)
+  version        Int        @default(1)
+  createdById    String
+  updatedById    String
+  createdBy      User       @relation("DealCreator", fields: [createdById], references: [id], onDelete: Restrict)
+  updatedBy      User       @relation("DealUpdater", fields: [updatedById], references: [id], onDelete: Restrict)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  options        PurchaseOption[]
+  candidates     DealCandidate[]
+  priceObservations PriceObservation[]
+  videoReviews   DealVideoReview[]
+  youtubeReviewStatus String   @default("NOT_REQUESTED") @db.VarChar(50)
+  youtubeLastSearchedAt DateTime?
+
+  @@index([status, publishedAt, id])
+  @@index([categoryId, status, publishedAt])
+  @@index([merchantId, status, publishedAt])
+  @@index([expiresAt])
+  @@index([featured, status, publishedAt])
+  @@index([trending, status, publishedAt])
+}
+
+model PurchaseOption {
+  id           String @id @default(cuid())
+  dealId       String
+  deal         Deal @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  merchantId   String
+  merchant     Merchant @relation(fields: [merchantId], references: [id], onDelete: Restrict)
+  priceMinor   Int
+  productUrl   String @db.VarChar(2048)
+  affiliateUrl String? @db.VarChar(2048)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([dealId, merchantId])
+}
+
+model DealGalleryImage {
+  id        String   @id @default(cuid())
+  dealId    String
+  mediaId   String
+  position  Int
+  createdAt DateTime @default(now())
+  deal      Deal     @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  media     Media    @relation(fields: [mediaId], references: [id], onDelete: Restrict)
+
+  @@unique([dealId, position])
+  @@index([mediaId])
+}
+
+model Customer {
+  id String @id @default(cuid())
+  name String
+  email String @unique
+  passwordHash String? @db.VarChar(255)
+  emailVerifiedAt DateTime
+  disabledAt DateTime?
+  identities CustomerIdentity[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+model CustomerIdentity {
+  id String @id @default(cuid())
+  customerId String
+  provider String
+  subject String
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  @@unique([provider, subject])
+  @@index([customerId])
+}
+model CustomerSignupChallenge {
+  id String @id @default(cuid())
+  email String @unique
+  name String
+  passwordHash String @db.VarChar(255)
+  codeHash String @db.Char(64)
+  attempts Int @default(0)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  consumedAt DateTime?
+  @@index([expiresAt])
+}
+model CustomerRateLimit {
+  key String @id @db.Char(64)
+  count Int @default(1)
+  expiresAt DateTime
+  @@index([expiresAt])
+}
+
+enum DistributionPlatform {
+  TELEGRAM
+  WHATSAPP
+}
+
+enum PostStatus {
+  QUEUED
+  SENT
+  FAILED
+  SKIPPED
+}
+
+model DistributionDestination {
+  id            String               @id @default(cuid())
+  platform      DistributionPlatform
+  name          String               @db.VarChar(100)
+  destinationId String               @db.VarChar(120)
+  isActive      Boolean              @default(true)
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+  posts         DistributionPost[]
+
+  @@unique([platform, destinationId])
+}
+
+model DistributionPost {
+  id                String                  @id @default(cuid())
+  dealId            String
+  destinationId     String
+  platform          DistributionPlatform
+  status            PostStatus              @default(QUEUED)
+  messageContent    String                  @db.Text
+  externalMessageId String?                 @db.VarChar(120)
+  errorMessage      String?                 @db.Text
+  sentAt            DateTime?
+  createdAt         DateTime                @default(now())
+  updatedAt         DateTime                @updatedAt
+  destination       DistributionDestination @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+
+  @@unique([dealId, destinationId])
+  @@index([status, createdAt])
+}
+
+enum CandidateStatus {
+  DISCOVERED
+  VALIDATING
+  VERIFIED
+  UNCERTAIN
+  REJECTED
+  PUBLISHED
+}
+
+model DealCandidate {
+  id                 String          @id @default(cuid())
+  sourceUrl          String          @db.VarChar(2048)
+  sourcePlatform     String          @db.VarChar(60)
+  externalId         String?         @db.VarChar(120)
+  rawTitle           String          @db.VarChar(300)
+  brand              String?         @db.VarChar(100)
+  categorySlug       String          @db.VarChar(100)
+  observedPriceMinor Int
+  observedMrpMinor   Int
+  currency           String          @default("INR") @db.Char(3)
+  discountPercent    Int             @default(0)
+  imageUrl           String?         @db.VarChar(2048)
+  sellerName         String?         @db.VarChar(150)
+  inStock            Boolean         @default(true)
+  confidenceScore    Int             @default(0)
+  status             CandidateStatus @default(DISCOVERED)
+  rejectionReason    String?         @db.VarChar(500)
+  rawData            String?         @db.Text
+  dealId             String?
+  deal               Deal?           @relation(fields: [dealId], references: [id], onDelete: SetNull)
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+
+  priceObservations  PriceObservation[]
+
+  @@index([status, createdAt])
+  @@index([sourcePlatform, externalId])
+  @@index([dealId])
+}
+
+model PriceObservation {
+  id                 String         @id @default(cuid())
+  dealId             String?
+  deal               Deal?          @relation(fields: [dealId], references: [id], onDelete: SetNull)
+  candidateId        String?
+  candidate          DealCandidate? @relation(fields: [candidateId], references: [id], onDelete: SetNull)
+  merchantSlug       String         @db.VarChar(100)
+  priceMinor         Int
+  mrpMinor           Int
+  currency           String         @default("INR") @db.Char(3)
+  sourceUrl          String         @db.VarChar(2048)
+  observedAt         DateTime       @default(now())
+
+  @@index([merchantSlug, observedAt])
+  @@index([dealId, observedAt])
+  @@index([candidateId, observedAt])
+}
+
+enum ScraperJobStatus {
+  RUNNING
+  COMPLETED
+  FAILED
+}
+
+model ScraperJob {
+  id             String           @id @default(cuid())
+  connectorCode  String           @db.VarChar(60)
+  status         ScraperJobStatus @default(RUNNING)
+  itemsFound     Int              @default(0)
+  itemsVerified  Int              @default(0)
+  itemsPublished Int              @default(0)
+  errorMessage   String?          @db.Text
+  startedAt      DateTime         @default(now())
+  completedAt    DateTime?
+
+  @@index([connectorCode, startedAt])
+}
+
+model ProductExtractionLog {
+  id               String   @id @default(cuid())
+  adminUserId      String?
+  retailer         String   @db.VarChar(60)
+  originalUrl      String   @db.VarChar(2048)
+  extractionStatus String   @db.VarChar(40)
+  fieldsSummary    Json?
+  sourceMethod     String   @db.VarChar(60)
+  errorCode        String?  @db.VarChar(60)
+  createdAt        DateTime @default(now())
+
+  @@index([retailer, createdAt])
+  @@index([adminUserId, createdAt])
+}
+
+model DealVideoReview {
+  id              String   @id @default(cuid())
+  dealId          String
+  deal            Deal     @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  videoId         String   @db.VarChar(50)
+  title           String   @db.VarChar(300)
+  channelTitle    String   @db.VarChar(150)
+  channelId       String?  @db.VarChar(100)
+  thumbnailUrl    String   @db.VarChar(1000)
+  publishedAt     DateTime?
+  duration        String?  @db.VarChar(30)
+  viewCount       Int      @default(0)
+  likeCount       Int?
+  language        String   @default("English") @db.VarChar(50)
+  relevanceScore  Float    @default(0)
+  rankingPosition Int      @default(1)
+  isEmbeddable    Boolean  @default(true)
+  isPinned        Boolean  @default(false)
+  isActive        Boolean  @default(true)
+  lastFetchedAt   DateTime @default(now())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([dealId, videoId])
+  @@index([dealId, isActive, rankingPosition])
+  @@index([dealId, language])
+}
+
+model YouTubeQuotaLedger {
+  id               String   @id @default(cuid())
+  endpoint         String   @db.VarChar(100)
+  units            Int
+  outcome          String   @db.VarChar(30)
+  dealId           String?  @db.VarChar(100)
+  canonicalProduct String?  @db.VarChar(255)
+  adminUserId      String?  @db.VarChar(100)
+  errorCategory    String?  @db.VarChar(100)
+  errorMessage     String?  @db.VarChar(500)
+  createdAt        DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([endpoint, createdAt])
+  @@index([outcome, createdAt])
+  @@index([dealId])
+}
+
+enum MerchantDirectoryStatus {
+  ACTIVE
+  INACTIVE
+  UNDER_REVIEW
+}
+
+enum MerchantDirectoryVerification {
+  VERIFIED
+  UNVERIFIED
+  NEEDS_REVIEW
+}
+
+model MerchantWebsiteDirectory {
+  id                 String                        @id @default(cuid())
+  merchantCode       String?                       @db.VarChar(50)
+  name               String                        @db.VarChar(150)
+  websiteUrl         String                        @db.VarChar(2048)
+  domain             String                        @unique @db.VarChar(150)
+  category           String                        @default("UNCLASSIFIED") @db.VarChar(100)
+  categories         String[]                      @default([])
+  productFocus       String?                       @db.VarChar(255)
+  businessModel      String?                       @db.VarChar(100)
+  description        String?                       @db.VarChar(2000)
+  country            String                        @default("India") @db.VarChar(50)
+  status             MerchantDirectoryStatus       @default(ACTIVE)
+  verificationStatus MerchantDirectoryVerification @default(UNVERIFIED)
+  logoMediaId        String?
+  logoUrl            String?                       @db.VarChar(2048)
+  source             String                        @default("EXCEL_IMPORT") @db.VarChar(100)
+  notes              String?                       @db.VarChar(2000)
+  createdAt          DateTime                      @default(now())
+  updatedAt          DateTime                      @updatedAt
+
+  @@index([name])
+  @@index([category])
+  @@index([status])
+  @@index([verificationStatus])
+  @@index([logoMediaId])
+  @@index([createdAt])
+}
+
+
+
+
+

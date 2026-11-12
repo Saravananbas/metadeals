@@ -1,8 +1,51 @@
-import "server-only";
 import type { ConnectionOptions } from "bullmq";
 import { getRedisEnv } from "@/config/env";
 
-/** Configuration only. No queues, jobs or workers run in M0. */
+export const QUEUE_NAMES = {
+  SOURCE_SCRAPE: "source-scrape-queue",
+  DEAL_DISCOVERY: "deal-discovery-queue",
+  DEAL_LIFECYCLE: "deal-lifecycle-queue",
+  COMPETITOR_SHADOW: "competitor-shadow-queue",
+} as const;
+
+export type QueueName = typeof QUEUE_NAMES[keyof typeof QUEUE_NAMES];
+
+export interface ScrapeJobPayload {
+  sourceId: string;
+  sourceType: "RETAILER" | "COMPETITOR";
+  category?: string;
+  triggeredBy: string;
+  timestamp: number;
+}
+
+export interface DiscoveryJobPayload {
+  candidateId: string;
+  offerData: {
+    sourceId: string;
+    productName: string;
+    brand: string;
+    productUrl: string;
+    mrpPaise: number;
+    sellingPricePaise: number;
+    isAvailable: boolean;
+  };
+  observedAt: number;
+}
+
+export interface LifecycleJobPayload {
+  dealId: string;
+  action: "CHECK_STOCK" | "REVERIFY_PRICE" | "CHECK_EXPIRY";
+  scheduledAt: number;
+}
+
+export interface ShadowJobPayload {
+  competitorSource: string;
+  productUrl: string;
+  pricePaise: number;
+  mrpPaise: number;
+  observedAt: number;
+}
+
 export function getQueueConnection(role: "producer" | "worker"): ConnectionOptions {
   const url = new URL(getRedisEnv().REDIS_URL);
   const db = url.pathname.slice(1) || "0";

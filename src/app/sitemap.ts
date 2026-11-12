@@ -20,6 +20,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const deals = await getDatabase().deal.findMany({
       where: {
         status: "PUBLISHED",
+        publishedAt: { not: null, lte: now },
         OR: [{ startsAt: null }, { startsAt: { lte: now } }],
         AND: [{ OR: [{ expiresAt: null }, { expiresAt: { gt: now } }] }],
       },

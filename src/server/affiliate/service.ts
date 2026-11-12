@@ -89,6 +89,14 @@ export async function resolveDealRedirect(
   let candidateAffiliateUrl: string | null = deal.affiliateUrl;
   let candidateProductUrl: string = deal.productUrl;
 
+  // Sanitize broken legacy Flipkart URLs (/p/p?pid= -> /product/p/itme?pid=)
+  if (candidateProductUrl.includes("flipkart.com/p/p?pid=")) {
+    candidateProductUrl = candidateProductUrl.replace("flipkart.com/p/p?pid=", "flipkart.com/product/p/itme?pid=");
+  }
+  if (candidateAffiliateUrl?.includes("flipkart.com/p/p?pid=")) {
+    candidateAffiliateUrl = candidateAffiliateUrl.replace("flipkart.com/p/p?pid=", "flipkart.com/product/p/itme?pid=");
+  }
+
   if (optionId) {
     const option = deal.options.find((o) => o.id === optionId);
     if (!option) {

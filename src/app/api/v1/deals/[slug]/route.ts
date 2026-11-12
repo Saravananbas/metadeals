@@ -1,7 +1,8 @@
 import { listingSchema } from "@/features/deals/validation";
 import { getDatabase } from "@/server/db/client";
-import { dealInclude, publicDeal, publicWhere, type DealRecord } from "@/server/deals/repository";
+import { dealInclude, publicDealsWithMerchantLogos, publicWhere, type DealRecord } from "@/server/deals/repository";
 import { api, json } from "@/server/http";
+import { youtubeReviewsService } from "@/server/youtube/reviews-service";
 
 export async function GET(_request: Request, { params }: { params: Promise<{ slug: string }> }) {
   return api(async () => {
@@ -66,10 +67,18 @@ export async function GET(_request: Request, { params }: { params: Promise<{ slu
       }
     }
 
+    const videoReviews = await youtubeReviewsService.getReviewsForDeal(record.id);
+
+    const [dealWithLogo, relatedDealsWithLogos] = await Promise.all([
+      publicDealsWithMerchantLogos(db, [record]),
+      publicDealsWithMerchantLogos(db, selectedRelated),
+    ]);
+
     return json({
       data: {
-        ...publicDeal(record),
-        relatedDeals: selectedRelated.map(publicDeal),
+        ...dealWithLogo[0],
+        videoReviews,
+        relatedDeals: relatedDealsWithLogos,
       },
     });
   });

@@ -84,3 +84,44 @@ export const ScraperJobStatus = {
 } as const
 
 export type ScraperJobStatus = (typeof ScraperJobStatus)[keyof typeof ScraperJobStatus]
+
+
+export const MerchantDirectoryStatus = {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE',
+  UNDER_REVIEW: 'UNDER_REVIEW'
+} as const
+
+export type MerchantDirectoryStatus = (typeof MerchantDirectoryStatus)[keyof typeof MerchantDirectoryStatus]
+
+
+export const MerchantDirectoryVerification = {
+  VERIFIED: 'VERIFIED',
+  UNVERIFIED: 'UNVERIFIED',
+  NEEDS_REVIEW: 'NEEDS_REVIEW'
+} as const
+
+export type MerchantDirectoryVerification = (typeof MerchantDirectoryVerification)[keyof typeof MerchantDirectoryVerification]
+
+
+export const SourceHealthState = {
+  HEALTHY: 'HEALTHY',
+  DEGRADED: 'DEGRADED',
+  SUSPENDED: 'SUSPENDED'
+} as const
+
+export type SourceHealthState = (typeof SourceHealthState)[keyof typeof SourceHealthState]
+
+
+export const PublicationAuthStatus = {
+  PENDING_APPROVAL: 'PENDING_APPROVAL',
+  APPROVED: 'APPROVED',
+  CLAIMED: 'CLAIMED',
+  PUBLISHING: 'PUBLISHING',
+  PUBLISHED: 'PUBLISHED',
+  REJECTED: 'REJECTED',
+  EXPIRED: 'EXPIRED',
+  RECOVERY_REQUIRED: 'RECOVERY_REQUIRED'
+} as const
+
+export type PublicationAuthStatus = (typeof PublicationAuthStatus)[keyof typeof PublicationAuthStatus]

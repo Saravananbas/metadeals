@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { getDatabase } from "@/server/db/client";
-import { publicWhere, dealInclude, publicDeal } from "@/server/deals/repository";
+import { publicWhere, dealInclude, publicDealsWithMerchantLogos } from "@/server/deals/repository";
 import { listingSchema } from "@/features/deals/validation";
 
 export const dynamic = "force-dynamic";
@@ -25,7 +25,7 @@ export async function GET(
     return Response.json({ error: "Deal not found or expired." }, { status: 404 });
   }
 
-  const deal = publicDeal(row);
+  const [deal] = await publicDealsWithMerchantLogos(db, [row]);
   return Response.json({
     data: {
       id: deal.id,
@@ -38,12 +38,14 @@ export async function GET(
         id: deal.merchant.id,
         name: deal.merchant.name,
         slug: deal.merchant.slug,
+        logoUrl: deal.merchant.logoUrl,
       },
       price: Math.round(deal.priceMinor / 100),
       mrp: Math.round(deal.mrpMinor / 100),
       discountPercent: deal.discountPercent,
       savings: Math.round(deal.savingsMinor / 100),
       imageUrl: deal.image.url.startsWith("http") ? deal.image.url : `${baseUrl}${deal.image.url}`,
+      imageGallery: deal.imageGallery.map((image) => image.url.startsWith("http") ? image.url : `${baseUrl}${image.url}`),
       rating: deal.rating,
       reviewCount: deal.reviewCount,
       ratingSource: deal.ratingSource,

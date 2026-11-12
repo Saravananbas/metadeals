@@ -1,18 +1,31 @@
 import "server-only";
 import { getDatabase } from "@/server/db/client";
-import { listPublicDeals, publicWhere } from "@/server/deals/repository";
+import { listPublicDeals } from "@/server/deals/repository";
 import { listingSchema, type ListingInput } from "./validation";
 import { toCard } from "./presentation";
 import { listSampleDeals } from "./sample-catalog";
 
 export async function getHomepageListing(input: ListingInput) {
   const db = getDatabase();
-  // Empty search results must not introduce sample offers into a live catalog.
-  const hasPublished = await db.deal.findFirst({ where: publicWhere(listingSchema.parse({})), select: { id: true } });
-  const samplesEnabled = process.env.DEMO_DEALS_ENABLED === "true" ||
-    (process.env.NODE_ENV !== "production" && process.env.DEMO_DEALS_ENABLED !== "false");
-  if (!hasPublished && samplesEnabled) return { ...listSampleDeals(input), source: "demo" as const };
   const result = await listPublicDeals(db, input);
+
+  // If no published deals exist in database and samples are allowed, fallback to demo deals
+  if (result.data.length === 0 && !input.q && !input.category && !input.store) {
+    const samplesEnabled =
+      process.env.DEMO_DEALS_ENABLED === "true" ||
+      (process.env.NODE_ENV !== "production" && process.env.DEMO_DEALS_ENABLED !== "false");
+
+    if (samplesEnabled) {
+      const hasAnyPublished = await db.deal.findFirst({
+        where: { status: "PUBLISHED" },
+        select: { id: true },
+      });
+      if (!hasAnyPublished) {
+        return { ...listSampleDeals(input), source: "demo" as const };
+      }
+    }
+  }
+
   return { ...result, data: result.data.map(toCard), source: "database" as const };
 }
 export async function getHomepageDeals() {

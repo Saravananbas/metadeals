@@ -1,4 +1,3 @@
-import "server-only";
 import type { Prisma } from "@/generated/prisma/client";
 import {
   candidateInputSchema,
@@ -15,24 +14,127 @@ export type DatabaseClient = Prisma.TransactionClient;
 
 export class ScraperService {
   /**
-   * Ingests a discovered deal candidate. Applies price observation, verification gates,
-   * anomaly detection, and triggers auto-publishing if VERIFIED or review queue if UNCERTAIN.
+   * Ingests a discovered deal candidate with idempotent deduplication.
+   *
+   * Idempotency Policy:
+   * 1. If a listing with the same (sourcePlatform, externalId) or sourceUrl already exists:
+   *    - Do NOT create a duplicate candidate or deal.
+   *    - Record a new historical PriceObservation timestamped with current observed values.
+   *    - If price/mrp changed, update the existing candidate & published deal.
+   * 2. If genuine new listing:
+   *    - Apply deterministic verification gates and anomaly detection.
+   *    - Public Catalogue Protection: If discovered from mock/fixture sources, keep as UNCERTAIN
+   *      and DO NOT automatically publish to the public website.
+   *    - Genuinely verified live candidates are automatically published.
+   * 3. Distinct product variants (different externalId or distinct URL) are never merged.
    */
-  async ingestCandidate(db: DatabaseClient, raw: unknown) {
+  async ingestCandidate(
+    db: DatabaseClient,
+    raw: unknown,
+    options?: { isMockOrFixture?: boolean }
+  ) {
     const input: CandidateInput = candidateInputSchema.parse(raw);
+    const isMock = options?.isMockOrFixture ?? Boolean(input.isMockOrFixture);
+    const merchantSlug = input.sourcePlatform.toLowerCase().replace(/[^\w-]/g, "");
+
+    // 1. Idempotency Check: Look for existing candidate for this retailer & product identity
+    let existingCandidate = input.externalId
+      ? await db.dealCandidate.findFirst({
+          where: {
+            sourcePlatform: input.sourcePlatform,
+            externalId: input.externalId,
+          },
+          include: { deal: true },
+        })
+      : null;
+
+    if (!existingCandidate) {
+      existingCandidate = await db.dealCandidate.findFirst({
+        where: {
+          sourceUrl: input.sourceUrl,
+        },
+        include: { deal: true },
+      });
+    }
+
+    if (existingCandidate) {
+      // Record historical price observation without duplicating candidate or deal
+      await recordPriceObservation(db, {
+        merchantSlug,
+        priceMinor: input.observedPriceMinor,
+        mrpMinor: input.observedMrpMinor,
+        sourceUrl: input.sourceUrl,
+        currency: input.currency,
+        candidateId: existingCandidate.id,
+        dealId: existingCandidate.dealId ?? undefined,
+      });
+
+      const priceChanged =
+        existingCandidate.observedPriceMinor !== input.observedPriceMinor ||
+        existingCandidate.observedMrpMinor !== input.observedMrpMinor;
+
+      let updatedCandidate = existingCandidate;
+      if (priceChanged) {
+        const discountPercent = calculateDiscountPercent(
+          input.observedMrpMinor,
+          input.observedPriceMinor
+        );
+        updatedCandidate = await db.dealCandidate.update({
+          where: { id: existingCandidate.id },
+          data: {
+            observedPriceMinor: input.observedPriceMinor,
+            observedMrpMinor: input.observedMrpMinor,
+            discountPercent,
+            inStock: input.inStock,
+            updatedAt: new Date(),
+          },
+          include: { deal: true },
+        });
+
+        // If candidate is linked to a published deal, update the Deal's current price
+        if (existingCandidate.dealId) {
+          await db.deal.update({
+            where: { id: existingCandidate.dealId },
+            data: {
+              priceMinor: input.observedPriceMinor,
+              mrpMinor: input.observedMrpMinor,
+              updatedAt: new Date(),
+            },
+          });
+        }
+      }
+
+      return {
+        candidate: updatedCandidate,
+        deal: existingCandidate.deal,
+        outcome: priceChanged ? ("PRICE_UPDATED" as const) : ("EXISTING_RETAINED" as const),
+        isDuplicate: true,
+      };
+    }
+
+    // 2. Check if a Deal already exists with the same source productUrl
+    const existingDeal = await db.deal.findFirst({
+      where: { productUrl: input.sourceUrl },
+    });
+
     const discountPercent = calculateDiscountPercent(
       input.observedMrpMinor,
       input.observedPriceMinor
     );
 
-    // 1. Fetch historical price stats for this retailer/product
-    const merchantSlug = input.sourcePlatform.toLowerCase().replace(/[^\w-]/g, "");
+    // 3. Fetch historical price stats for this retailer/product
     const priceStats = await getPriceReferenceStats(db, { merchantSlug });
 
-    // 2. Run deterministic verification rules
+    // 4. Run deterministic verification rules
     const verification = verifyCandidate(input, priceStats);
 
-    // 3. Create Candidate record
+    // 5. Public Catalogue Safety: Never auto-publish fixture/mock products to the public site
+    const effectiveStatus = isMock ? "UNCERTAIN" : verification.status;
+    const effectiveRejectionReason = isMock
+      ? "Discovered from mock/fixture source; automated publishing prevented to protect public catalogue."
+      : verification.rejectionReason;
+
+    // 6. Create Candidate record
     const candidate = await db.dealCandidate.create({
       data: {
         sourceUrl: input.sourceUrl,
@@ -48,14 +150,15 @@ export class ScraperService {
         imageUrl: input.imageUrl,
         sellerName: input.sellerName,
         inStock: input.inStock,
-        confidenceScore: verification.confidenceScore,
-        status: verification.status,
-        rejectionReason: verification.rejectionReason,
+        confidenceScore: isMock ? Math.min(verification.confidenceScore, 40) : verification.confidenceScore,
+        status: effectiveStatus,
+        rejectionReason: effectiveRejectionReason,
         rawData: input.rawData,
+        dealId: existingDeal?.id ?? null,
       },
     });
 
-    // 4. Record raw price observation
+    // 7. Record raw price observation
     await recordPriceObservation(db, {
       merchantSlug,
       priceMinor: input.observedPriceMinor,
@@ -63,11 +166,25 @@ export class ScraperService {
       sourceUrl: input.sourceUrl,
       currency: input.currency,
       candidateId: candidate.id,
+      dealId: existingDeal?.id ?? undefined,
     });
 
-    // 5. Automatic Publication Policy:
-    // If VERIFIED -> immediately publish to the live site
-    if (verification.status === "VERIFIED") {
+    // 8. Automatic Publication Policy:
+    // Only genuinely live verified candidates are auto-published.
+    if (!isMock && verification.status === "VERIFIED") {
+      if (existingDeal) {
+        // Link to existing deal rather than creating a duplicate
+        const updated = await db.dealCandidate.update({
+          where: { id: candidate.id },
+          data: { status: "PUBLISHED", dealId: existingDeal.id },
+        });
+        return {
+          candidate: updated,
+          deal: existingDeal,
+          outcome: "LINKED_EXISTING" as const,
+        };
+      }
+
       const deal = await publishVerifiedCandidate(db, candidate.id);
       return {
         candidate: await db.dealCandidate.findUnique({ where: { id: candidate.id } }),
@@ -76,12 +193,12 @@ export class ScraperService {
       };
     }
 
-    // If UNCERTAIN -> routed to admin review queue
+    // If UNCERTAIN / MOCK -> routed to admin review queue
     // If REJECTED -> rejected without publishing
     return {
       candidate,
       deal: null,
-      outcome: verification.status,
+      outcome: isMock ? ("MOCK_HELD" as const) : verification.status,
     };
   }
 
@@ -144,15 +261,23 @@ export class ScraperService {
     });
 
     try {
+      const isConnectorLive = connector.isLive ?? false;
       const listings = await connector.discoverListings();
       let itemsVerified = 0;
       let itemsPublished = 0;
 
       for (const listing of listings) {
-        const result = await this.ingestCandidate(db, listing);
+        const isMockOrFixture = listing.isMockOrFixture ?? !isConnectorLive;
+        const result = await this.ingestCandidate(db, listing, { isMockOrFixture });
         if (result.outcome === "PUBLISHED") {
           itemsVerified++;
           itemsPublished++;
+        } else if (
+          result.outcome === "EXISTING_RETAINED" ||
+          result.outcome === "PRICE_UPDATED" ||
+          result.outcome === "LINKED_EXISTING"
+        ) {
+          itemsVerified++;
         }
       }
 
@@ -250,12 +375,32 @@ export class ScraperService {
           where: { connectorCode: c.code },
           orderBy: { startedAt: "desc" },
         });
+
+        // Determine last live retrieval vs last mock/fixture scan
+        const lastLiveJob = health.isLive
+          ? await db.scraperJob.findFirst({
+              where: { connectorCode: c.code, status: "COMPLETED" },
+              orderBy: { completedAt: "desc" },
+            })
+          : null;
+
+        const lastMockJob = !health.isLive
+          ? await db.scraperJob.findFirst({
+              where: { connectorCode: c.code, status: "COMPLETED" },
+              orderBy: { completedAt: "desc" },
+            })
+          : null;
+
         return {
           code: c.code,
           name: c.name,
+          status: health.status,
           isHealthy: health.isHealthy,
+          isLive: health.isLive,
           message: health.message,
           lastCheckedAt: health.lastCheckedAt.toISOString(),
+          lastLiveRetrievalAt: lastLiveJob?.completedAt ? lastLiveJob.completedAt.toISOString() : null,
+          lastMockScanAt: lastMockJob?.completedAt ? lastMockJob.completedAt.toISOString() : null,
           lastJob: lastJob
             ? {
                 id: lastJob.id,

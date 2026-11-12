@@ -9,6 +9,11 @@ export interface ValidatedUrlResult {
   error?: string;
 }
 
+export interface KnownDirectoryMerchant {
+  name: string;
+  domain: string;
+}
+
 const PRIVATE_IP_PATTERNS = [
   /^127\./,                         // 127.0.0.0/8 (Loopback)
   /^10\./,                          // 10.0.0.0/8 (Private)
@@ -23,14 +28,17 @@ const PRIVATE_IP_PATTERNS = [
 
 export function isPrivateOrLoopbackHost(hostname: string): boolean {
   const host = hostname.toLowerCase().trim();
-  if (host === "localhost" || host.endsWith(".localhost") || host === "127.0.0.1") {
-    // Allowed only in automated unit test environment when explicitly testing fixtures
-    return process.env.NODE_ENV !== "test";
-  }
+  if (host === "localhost" || host.endsWith(".localhost") || host === "127.0.0.1") return true;
   return PRIVATE_IP_PATTERNS.some((pattern) => pattern.test(host));
 }
 
-export function validateProductUrl(input: string): ValidatedUrlResult {
+export function isTestFixtureLoopbackHost(hostname: string): boolean {
+  if (process.env.NODE_ENV !== "test") return false;
+  const host = hostname.toLowerCase().trim();
+  return host === "localhost" || host.endsWith(".localhost") || host === "127.0.0.1";
+}
+
+export function validateProductUrl(input: string, knownDirectoryMerchant?: KnownDirectoryMerchant | null): ValidatedUrlResult {
   if (!input || typeof input !== "string") {
     return { valid: false, error: "Product URL is required." };
   }
@@ -66,7 +74,7 @@ export function validateProductUrl(input: string): ValidatedUrlResult {
   const host = parsed.hostname.toLowerCase();
 
   // SSRF check: reject private and loopback IPs
-  if (isPrivateOrLoopbackHost(host)) {
+  if (isPrivateOrLoopbackHost(host) && !isTestFixtureLoopbackHost(host)) {
     return { valid: false, error: "Access to private or local network hosts is prohibited (SSRF prevention)." };
   }
 
@@ -77,7 +85,12 @@ export function validateProductUrl(input: string): ValidatedUrlResult {
 
   // Check retailer allowlist
   const domainInfo = findAllowedDomain(host);
-  if (!domainInfo && !isAllowedRetailerDomain(host)) {
+  const merchantDomain = knownDirectoryMerchant?.domain.toLowerCase().trim().replace(/^www\./, "").replace(/\.$/, "");
+  const knownMerchantMatchesHost = Boolean(
+    merchantDomain && merchantDomain.split(".").length >= 2 &&
+      (host === merchantDomain || host.endsWith(`.${merchantDomain}`)),
+  );
+  if (!domainInfo && !isAllowedRetailerDomain(host) && !knownMerchantMatchesHost) {
     return {
       valid: false,
       error: `Retailer domain "${host}" is not supported. Supported retailers include Amazon India, Flipkart, Myntra, Croma, and other partner stores.`,
@@ -88,8 +101,10 @@ export function validateProductUrl(input: string): ValidatedUrlResult {
     valid: true,
     url: parsed,
     hostname: host,
-    retailerName: domainInfo?.retailerName ?? "Generic Retailer",
-    retailerSlug: domainInfo?.retailerSlug ?? "generic",
+    retailerName: domainInfo?.retailerName ?? (knownMerchantMatchesHost ? knownDirectoryMerchant!.name : "Generic Retailer"),
+    retailerSlug: domainInfo?.retailerSlug ?? (knownMerchantMatchesHost
+      ? knownDirectoryMerchant!.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")
+      : "generic"),
   };
 }
 

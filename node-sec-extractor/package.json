@@ -1,0 +1,14 @@
+{
+  "name": "sec-filing-element-extractor-ui",
+  "version": "1.0.0",
+  "description": "Node.js UI to extract SEC filing data elements with page numbers and export JSON for Kafka topics",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0",
+    "express": "^4.21.2"
+  }
+}

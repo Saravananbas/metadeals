@@ -21,6 +21,7 @@ export const dealInputSchema = z.object({
   categoryId: z.string().min(1).max(100),
   merchantId: z.string().min(1).max(100),
   mediaId: z.string().min(1).max(100),
+  galleryMediaIds: z.array(z.string().min(1).max(100)).max(10).optional(),
   mrpMinor: z.number().int().min(1).max(2_000_000_000),
   priceMinor: z.number().int().min(0).max(2_000_000_000),
   currency: z.literal("INR"),
@@ -29,6 +30,7 @@ export const dealInputSchema = z.object({
   ratingSource: z.string().trim().min(1).max(200).nullable(),
   productUrl: publicUrl,
   affiliateUrl: publicUrl.nullable(),
+  couponCode: z.string().trim().max(50).nullable().optional(),
   status: z.enum(["DRAFT", "PENDING_REVIEW", "EXPIRED"]),
   publishedAt: optionalDate,
   startsAt: optionalDate,
@@ -39,6 +41,7 @@ export const dealInputSchema = z.object({
 }).strict().superRefine((value, ctx) => {
   if (value.priceMinor > value.mrpMinor) ctx.addIssue({ code: "custom", path: ["priceMinor"], message: "Deal price cannot exceed MRP." });
   if (new Set(value.options.map((o) => o.merchantId)).size !== value.options.length || value.options.some((o) => o.priceMinor > value.mrpMinor)) ctx.addIssue({ code: "custom", path: ["options"], message: "Options need distinct merchants and prices at or below MRP." });
+  if (value.galleryMediaIds && (new Set(value.galleryMediaIds).size !== value.galleryMediaIds.length || value.galleryMediaIds.includes(value.mediaId))) ctx.addIssue({ code: "custom", path: ["galleryMediaIds"], message: "Gallery images must be unique and exclude the primary image." });
   if ((value.rating !== null || value.reviewCount !== null) && !value.ratingSource) ctx.addIssue({ code: "custom", path: ["ratingSource"], message: "Ratings/review counts require a source label." });
   const start = Math.max(value.startsAt ? Date.parse(value.startsAt) : 0, value.publishedAt ? Date.parse(value.publishedAt) : 0);
   if (value.expiresAt && Date.parse(value.expiresAt) <= start) ctx.addIssue({ code: "custom", path: ["expiresAt"], message: "Expiry must be later than start/publication." });

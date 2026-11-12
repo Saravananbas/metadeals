@@ -3,6 +3,8 @@ import { authEnvSchema, databaseEnvSchema, parseEnvironment, redisEnvSchema, sto
 
 // Validate lazily at the server boundary: static builds do not need infrastructure credentials.
 export const getDatabaseEnv = () => parseEnvironment(databaseEnvSchema, process.env);
+/** Redis is optional: without REDIS_URL the app uses in-process fallbacks (single instance, e.g. shared hosting). */
+export const isRedisConfigured = () => Boolean(process.env.REDIS_URL?.trim());
 export const getRedisEnv = () => parseEnvironment(redisEnvSchema, process.env);
 export const getStorageEnv = () => parseEnvironment(storageEnvSchema, process.env);
 export const getAuthEnv = () => {

@@ -3,7 +3,11 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
-  serverExternalPackages: ["pino", "pg", "bullmq", "ioredis"],
+  // Keep the dev watcher scoped to this app instead of inferring a drive-wide root.
+  turbopack: { root: process.cwd() },
+  // Images shipped with the deploy (seed-media/) must be traced into the server output.
+  outputFileTracingIncludes: { "/api/v1/media/\\[id\\]": ["./seed-media/**/*"] },
+  serverExternalPackages: ["pino", "pg", "bullmq", "ioredis", "mariadb"],
   async headers() {
     const isProd = process.env.NODE_ENV === "production";
     return [{

@@ -7,9 +7,12 @@ import { AmazonIndiaAdapter } from "../src/server/product-extraction/adapters/am
 import { FlipkartAdapter } from "../src/server/product-extraction/adapters/flipkart";
 import { MyntraAdapter } from "../src/server/product-extraction/adapters/myntra";
 import { CromaAdapter } from "../src/server/product-extraction/adapters/croma";
+import { AjioAdapter } from "../src/server/product-extraction/adapters/ajio";
 import { GenericStructuredDataAdapter } from "../src/server/product-extraction/adapters/generic-structured-data";
 import { parseJsonLd, parseOpenGraph, parseHtmlMetadata, parseEmbeddedJson, parseTitleToBrand, cleanDescription } from "../src/server/product-extraction/adapters/base";
-import { generateStableSlug } from "../src/server/product-extraction/core/normalizer";
+import { generateStableSlug, matchCategoryAndMerchant } from "../src/server/product-extraction/core/normalizer";
+import type { NormalizedProductExtraction } from "../src/server/product-extraction/core/types";
+import type { PrismaClient } from "../src/generated/prisma/client";
 import { sanitizeExtractedText } from "../src/server/product-extraction/security/fetch-policy";
 
 // 1. URL Identification and Retailer Detection Tests
@@ -65,11 +68,13 @@ test("Adapter registry routes URLs to the correct retailer adapter", () => {
   const flipkartUrl = new URL("https://www.flipkart.com/samsung-galaxy-s25-fe-5g/p/itm90e887b150eea?pid=MOBHQCH6FPTX5FZ2");
   const myntraUrl = new URL("https://www.myntra.com/kurtas/house+pataudi/kurta/31647768/buy");
   const cromaUrl = new URL("https://www.croma.com/apple-iphone-15/p/272304");
+  const ajioUrl = new URL("https://www.ajio.com/indie-picks-self-design-anarkali-kurta-set/p/702772571_white");
 
   assert.equal(adapterRegistry.findAdapterForUrl(amazonUrl)?.id, "amazon-india");
   assert.equal(adapterRegistry.findAdapterForUrl(flipkartUrl)?.id, "flipkart");
   assert.equal(adapterRegistry.findAdapterForUrl(myntraUrl)?.id, "myntra");
   assert.equal(adapterRegistry.findAdapterForUrl(cromaUrl)?.id, "croma");
+  assert.equal(adapterRegistry.findAdapterForUrl(ajioUrl)?.id, "ajio");
 
   const relianceUrl = new URL("https://www.reliancedigital.in/item/12345");
   assert.equal(adapterRegistry.findAdapterForUrl(relianceUrl)?.id, "generic-structured-data");
@@ -87,6 +92,76 @@ test("domain allowlist correctly identifies approved Indian retail domains", () 
 
   const found = findAllowedDomain("www.amazon.in");
   assert.equal(found?.retailerSlug, "amazon");
+});
+
+test("extraction taxonomy resolves the merchant directory and the most specific shoe subcategory", async () => {
+  const categories = [
+    { id: "fashion", name: "Fashion & Apparel", slug: "fashion-apparel", parentId: null },
+    { id: "shoes", name: "Shoes", slug: "shoes", parentId: "fashion" },
+    { id: "mobiles", name: "Mobiles", slug: "mobiles", parentId: null },
+  ];
+  const db = {
+    category: { findMany: async () => categories },
+    merchant: { findMany: async () => [{ id: "operational-flipkart", name: "Flipkart", slug: "flipkart", websiteUrl: "https://www.flipkart.com" }] },
+    merchantWebsiteDirectory: { findMany: async () => [{ id: "directory-flipkart", name: "Flipkart", domain: "flipkart.com", websiteUrl: "https://www.flipkart.com" }] },
+  } as unknown as PrismaClient;
+  const extraction = {
+    merchant: { retailerSlug: "flipkart", retailerName: "Flipkart", canonicalUrl: "https://www.flipkart.com/p/item", originalUrl: "https://www.flipkart.com/p/item" },
+    content: { category: { value: null }, subcategory: { value: null }, breadcrumb: { value: [] } },
+    identity: { title: { value: "BRUTON EVA walking and running shoes for men" }, brand: { value: "BRUTON" } },
+  } as unknown as NormalizedProductExtraction;
+
+  const matched = await matchCategoryAndMerchant(db, extraction);
+  assert.equal(matched.merchantDirectoryId, "directory-flipkart");
+  assert.equal(matched.merchantId, "operational-flipkart");
+  assert.equal(matched.categoryId, "shoes");
+
+  const sandalMatch = await matchCategoryAndMerchant(db, {
+    ...extraction,
+    identity: {
+      ...extraction.identity,
+      title: { value: "Floatz Grey Sandals For Men", source: "manual_fallback", confidence: "HIGH" },
+    },
+  });
+  assert.equal(sandalMatch.categoryId, "shoes");
+});
+
+test("extraction taxonomy can use product URL words when the retailer omits its category", async () => {
+  const categories = [
+    { id: "fashion", name: "Fashion & Apparel", slug: "fashion-apparel", parentId: null },
+    { id: "shoes", name: "Shoes", slug: "shoes", parentId: "fashion" },
+    { id: "appliances", name: "Appliances", slug: "appliances", parentId: null },
+    { id: "air-conditioners", name: "Air Conditioners", slug: "air-conditioners", parentId: "appliances" },
+  ];
+  const db = {
+    category: { findMany: async () => categories },
+    merchant: { findMany: async () => [] },
+    merchantWebsiteDirectory: { findMany: async () => [] },
+  } as unknown as PrismaClient;
+  const extraction = {
+    merchant: { retailerSlug: "unknown", retailerName: "Partner Retailer", canonicalUrl: "https://shop.example.in/products/mens-running-shoes", originalUrl: "https://shop.example.in/products/mens-running-shoes" },
+    content: { category: { value: null }, subcategory: { value: null }, breadcrumb: { value: [] } },
+    identity: { title: { value: "" }, brand: { value: "" } },
+  } as unknown as NormalizedProductExtraction;
+
+  const matched = await matchCategoryAndMerchant(db, extraction);
+  assert.equal(matched.categoryId, "shoes");
+});
+
+test("extraction merchant matching rejects deceptive domain suffixes", async () => {
+  const db = {
+    category: { findMany: async () => [] },
+    merchant: { findMany: async () => [] },
+    merchantWebsiteDirectory: { findMany: async () => [{ id: "directory-flipkart", name: "Flipkart", domain: "flipkart.com", websiteUrl: "https://www.flipkart.com" }] },
+  } as unknown as PrismaClient;
+  const extraction = {
+    merchant: { retailerSlug: "unknown", retailerName: "Unknown Store", canonicalUrl: "https://notflipkart.com/p/item", originalUrl: "https://notflipkart.com/p/item" },
+    content: { category: { value: null }, subcategory: { value: null }, breadcrumb: { value: [] } },
+    identity: { title: { value: "Mystery item" }, brand: { value: "" } },
+  } as unknown as NormalizedProductExtraction;
+
+  const matched = await matchCategoryAndMerchant(db, extraction);
+  assert.equal(matched.merchantDirectoryId, undefined);
 });
 
 // 2. Security & SSRF Protection Tests
@@ -169,6 +244,16 @@ test("Amazon adapter enforces PA-API authorization policy and fails safely with 
   assert.match(extraction.pricing.priceMinor.note ?? "", /manual/i);
 });
 
+test("Amazon URL fallback preserves the product title from the original slug", async () => {
+  const adapter = new AmazonIndiaAdapter();
+  const extraction = await adapter.extract({
+    url: new URL("https://www.amazon.in/dp/B0DHGM4YTL"),
+    rawUrl: "https://www.amazon.in/BRUTON-Lite-Sport-Shoes-Running/dp/B0DHGM4YTL/ref=sr_1_2",
+  });
+
+  assert.equal(extraction.identity.title.value, "BRUTON Lite Sport Shoes Running");
+});
+
 test("Flipkart adapter extracts PID from URL and marks dynamic price for manual review", async () => {
   const adapter = new FlipkartAdapter();
   const extraction = await adapter.extract({
@@ -182,6 +267,20 @@ test("Flipkart adapter extracts PID from URL and marks dynamic price for manual 
   assert.equal(extraction.identity.storageRam.value, "128 GB");
   assert.equal(extraction.pricing.priceMinor.confidence, "RESTRICTED");
   assert.match(extraction.pricing.priceMinor.note ?? "", /manual/i);
+});
+
+test("Flipkart does not estimate MRP when structured data only contains the offer price", async () => {
+  const adapter = new FlipkartAdapter();
+  const url = new URL("https://www.flipkart.com/example-product/p/itm123?pid=ABCD123456789012");
+  const extraction = await adapter.extract({
+    url,
+    rawUrl: url.toString(),
+    htmlFixture: '<script type="application/ld+json">{"@type":"Product","name":"Example Product","offers":{"@type":"Offer","price":"1499","priceCurrency":"INR"}}</script>',
+  });
+
+  assert.equal(extraction.pricing.priceRupees.value, 1499);
+  assert.equal(extraction.pricing.mrpRupees.value, null);
+  assert.equal(extraction.pricing.mrpMinor.value, null);
 });
 
 // 4. Authorized Structured Data & Fixture Parsing
@@ -286,6 +385,58 @@ test("Authorized adapter extracts high-confidence fields from fixture HTML", asy
   assert.equal(extraction.pricing.currency.value, "INR");
   assert.equal(extraction.ratings.rating.value, 4.8);
   assert.equal(extraction.ratings.reviewCount.value, 430);
+});
+
+test("AJIO rules extract product identity, labelled price fields, commodity, code and product images", async () => {
+  const adapter = new AjioAdapter();
+  const fixture = `
+    <html><head>
+      <title>Buy Off White Kurta Suit Sets for Women by Indie Picks Online | Ajio.com</title>
+      <meta name="description" content="Buy Off White Kurta Suit Sets for Women by Indie Picks Online in India at Rs. 832.">
+      <meta property="og:image" content="https://assets.ajio.com/medias/sys_master/root1/20260119/uqeG/696e39797ef0c7385c766169/-78Wx98H-702772571-white-MODEL.jpg">
+    </head>
+    <body>
+      <script type="application/ld+json">
+        {
+          "@context":"http://schema.org/",
+          "@type":"ProductGroup",
+          "category":"Women > Ethnic Wear > Kurta Suit Sets",
+          "name":"Self-design Anarkali Kurta Set",
+          "image":"https://assets.ajio.com/medias/sys_master/root1/20260119/uqeG/696e39797ef0c7385c766169/-78Wx98H-702772571-white-MODEL.jpg",
+          "productGroupID":"702772571_white",
+          "brand":{"@type":"Thing","name":"Indie Picks"},
+          "offers":{"@type":"Offer","price":"832","priceCurrency":"INR","availability":"https://schema.org/InStock"},
+          "hasVariant":[
+            {"@type":"Product","sku":"702772571003","name":"Self-design Anarkali Kurta Set","image":"https://assets.ajio.com/medias/sys_master/root1/20260119/uqeG/696e39797ef0c7385c76615b/-473Wx593H-702772571-white-MODEL.jpg","offers":{"@type":"Offer","price":832,"highPrice":4897,"priceCurrency":"INR"}},
+            {"@type":"Product","sku":"702772571002","name":"Self-design Anarkali Kurta Set","image":"https://assets.ajio.com/medias/sys_master/root1/20260119/uqeG/696e39797ef0c7385c7660e6/-473Wx593H-702772571-white-MODEL3.jpg","offers":{"@type":"Offer","price":832,"highPrice":4897,"priceCurrency":"INR"}},
+            {"@type":"Product","sku":"702772571004","name":"Self-design Anarkali Kurta Set","image":"https://assets.ajio.com/medias/sys_master/root1/20260119/uqeG/696e39797ef0c7385c7660e0/-1117Wx1400H-702772571-white-MODEL4.jpg","offers":{"@type":"Offer","price":832,"highPrice":4897,"priceCurrency":"INR"}}
+          ]
+        }
+      </script>
+      <div>Product Code : 702772571003</div>
+    </body></html>`;
+
+  const result = await adapter.extract({
+    url: new URL("https://www.ajio.com/indie-picks-self-design-anarkali-kurta-set/p/702772571_white"),
+    rawUrl: "https://www.ajio.com/indie-picks-self-design-anarkali-kurta-set/p/702772571_white",
+    htmlFixture: fixture,
+    directoryMerchant: { id: "directory-ajio", name: "AJIO", domain: "ajio.com" },
+  });
+
+  assert.equal(result.merchant.retailerName, "AJIO");
+  assert.equal(result.identity.title.value, "Self-design Anarkali Kurta Set");
+  assert.equal(result.identity.brand.value, "Indie Picks");
+  assert.equal(result.identity.sku.value, "702772571003");
+  assert.equal(result.content.category.value, "Women > Ethnic Wear > Kurta Suit Sets");
+  assert.equal(result.pricing.priceRupees.value, 832);
+  assert.equal(result.pricing.mrpRupees.value, 4897);
+  assert.equal(result.media.primaryImageUrl.value, "https://assets.ajio.com/medias/sys_master/root1/20260119/uqeG/696e39797ef0c7385c7660e0/-1117Wx1400H-702772571-white-MODEL4.jpg");
+  assert.ok((result.media.additionalImageUrls.value?.length ?? 0) >= 2);
+  assert.ok((result.media.additionalImageUrls.value?.length ?? 0) <= 10);
+  assert.equal(result.pricing.mrpRupees.source, "json_ld");
+  assert.equal(result.pricing.mrpRupees.confidence, "MEDIUM");
+  assert.equal(result.pricing.priceMinor.value, 83200);
+  assert.equal(result.pricing.mrpMinor.value, 489700);
 });
 
 // 5. Normalizer and Slug Generation Tests

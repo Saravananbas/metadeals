@@ -132,6 +132,7 @@ export async function publishDealToDestinations(
       priceMinor: deal.priceMinor,
       mrpMinor: deal.mrpMinor,
       merchantName: deal.merchant.name,
+      siteBaseUrl: process.env.NEXT_PUBLIC_APP_URL,
     };
 
     let content = "";
@@ -215,4 +216,19 @@ export async function getDistributionHistory(
     orderBy: { createdAt: "desc" },
     take: 100,
   });
+}
+
+/**
+ * Called after a deal is published. Posts to every active Telegram destination; never throws, so publishing cannot fail because of Telegram.
+ * Does nothing without TELEGRAM_BOT_TOKEN (or in mock mode) so no fake "sent" record blocks a later real post.
+ */
+export async function autoPostToTelegram(db: DealDatabase, actor: DistributionActor, dealId: string) {
+  try {
+    if (!process.env.TELEGRAM_BOT_TOKEN || process.env.TELEGRAM_MOCK === "true") return;
+    const destinations = await db.distributionDestination.findMany({ where: { platform: "TELEGRAM", isActive: true }, select: { id: true } });
+    if (!destinations.length) return;
+    await publishDealToDestinations(db, actor, { dealId, destinationIds: destinations.map((d) => d.id), mockOnly: false });
+  } catch (error) {
+    console.warn("Telegram auto-post failed:", error instanceof Error ? error.message : "unknown");
+  }
 }

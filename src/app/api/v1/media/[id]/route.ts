@@ -9,17 +9,28 @@ import { api, json } from "@/server/http";
 
 export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   return api(async () => {
-    const { id } = await params; const db = getDatabase(); const media = await db.media.findUnique({ where: { id } });
+    const { id } = await params;
+    const db = getDatabase();
+    const media = await db.media.findUnique({
+      where: { id },
+      include: {
+        deals: {
+          where: publicWhere(listingSchema.parse({})),
+          select: { id: true },
+          take: 1,
+        },
+      },
+    });
     if (!media) return json({ error: { code: "NOT_FOUND", message: "Image unavailable." } }, 404);
-    const visible = await db.deal.findFirst({ where: { mediaId: id, ...publicWhere(listingSchema.parse({})) }, select: { id: true } });
-    if (!visible && !await getCurrentAuthContext()) return json({ error: { code: "NOT_FOUND", message: "Image unavailable." } }, 404);
+    const isPublic = media.deals.length > 0;
+    if (!isPublic && !await getCurrentAuthContext()) return json({ error: { code: "NOT_FOUND", message: "Image unavailable." } }, 404);
     try {
       const buffer = await readImage(media.provider, media.storageKey);
       return new Response(new Uint8Array(buffer), {
         headers: {
           "Content-Type": media.mimeType,
           "X-Content-Type-Options": "nosniff",
-          "Cache-Control": "private, no-store",
+          "Cache-Control": isPublic ? "public, max-age=300" : "private, no-store",
         },
       });
     } catch {

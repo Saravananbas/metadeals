@@ -9,7 +9,22 @@ export function assertSameOrigin(request: Request): boolean {
   const origin = request.headers.get("origin");
   if (!origin) return false;
   try {
-    return new URL(origin).origin === new URL(getAuthEnv().NEXTAUTH_URL).origin;
+    const originHost = new URL(origin).host;
+    const nextAuthHost = new URL(getAuthEnv().NEXTAUTH_URL).host;
+    const requestHost = request.headers.get("host") || request.headers.get("x-forwarded-host");
+
+    if (originHost === nextAuthHost) return true;
+    if (requestHost && originHost === requestHost) return true;
+
+    // Allow loopback variants in development/local environments (localhost <-> 127.0.0.1)
+    const isLocal = (h: string) => h.startsWith("localhost") || h.startsWith("127.0.0.1") || h.startsWith("[::1]");
+    if (isLocal(originHost) && (isLocal(nextAuthHost) || (requestHost && isLocal(requestHost)))) {
+      const originPort = new URL(origin).port;
+      const nextAuthPort = new URL(getAuthEnv().NEXTAUTH_URL).port;
+      if (originPort === nextAuthPort) return true;
+    }
+
+    return false;
   } catch {
     return false;
   }
@@ -27,9 +42,9 @@ export function getRequestMetadata(request: Request) {
   };
 }
 
-export async function readJson(request: Request): Promise<unknown> {
+export async function readJson(request: Request, maxBytes = 16_384): Promise<unknown> {
   const contentLength = Number(request.headers.get("content-length") ?? 0);
-  if (contentLength > 16_384) throw new RequestBodyError("Request body is too large");
+  if (contentLength > maxBytes) throw new RequestBodyError("Request body is too large");
   if (!request.body) throw new RequestBodyError("A JSON request body is required");
 
   const reader = request.body.getReader();
@@ -39,7 +54,7 @@ export async function readJson(request: Request): Promise<unknown> {
     const { done, value } = await reader.read();
     if (done) break;
     total += value.byteLength;
-    if (total > 16_384) {
+    if (total > maxBytes) {
       await reader.cancel();
       throw new RequestBodyError("Request body is too large");
     }

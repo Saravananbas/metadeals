@@ -10,6 +10,7 @@ export type ExtractionSource =
   | "retailer_html_selector"
   | "embedded_json"
   | "structured_metadata"
+  | "ai_extraction"
   | "url_heuristic"
   | "manual_fallback"
   | "unauthorized_restricted";
@@ -27,6 +28,7 @@ export interface FieldProvenance<T> {
   confidence: ConfidenceLevel;
   observedAt?: string;
   note?: string;
+  evidencePath?: string;
 }
 
 export interface ProductIdentity {
@@ -116,6 +118,7 @@ export interface MatchedTaxonomy {
   categoryName?: string;
   merchantId?: string;
   merchantName?: string;
+  merchantDirectoryId?: string;
 }
 
 export interface SuggestedFormValues {
@@ -159,6 +162,7 @@ export interface ExtractionContext {
   htmlFixture?: string; // used for testing & authorized static fixtures
   importImage?: boolean;
   userId?: string;
+  directoryMerchant?: { id: string; name: string; domain: string };
 }
 
 export interface RetailerAdapter {
