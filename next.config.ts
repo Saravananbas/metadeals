@@ -2,6 +2,8 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // The Hostinger build server reports 64 CPUs but allows few threads; fewer build workers avoids "can't spawn worker thread".
+  experimental: { cpus: 2 },
   reactStrictMode: true,
   // Keep the dev watcher scoped to this app instead of inferring a drive-wide root.
   turbopack: { root: process.cwd() },

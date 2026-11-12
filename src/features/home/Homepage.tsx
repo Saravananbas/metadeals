@@ -19,6 +19,7 @@ import { PromotionalBanners } from "./components/PromotionalBanners";
 import { WhyMetaDeals } from "./components/WhyMetaDeals";
 import { Footer } from "./components/Footer";
 import { PopularStores } from "./components/PopularStores";
+import { MobileFeedBar } from "./components/MobileFeedBar";
 import { Dialog } from "./components/Dialog";
 import { useSavedDeals } from "./saved-store";
 
@@ -201,6 +202,12 @@ export function Homepage({
   return <>
     <Header communityEnabled={communityEnabled} categories={catalog.categories} onCategory={(cat) => { setFilters({ ...defaults, category: cat }); setQuery(""); scrollToDeals(); }} savedCount={saved.ids.filter((id) => deals.some((deal) => deal.id === id)).length} onHome={() => { setFilters(defaults); setQuery(""); window.scrollTo({ top: 0, behavior: "smooth" }); }} onPanel={(next)=>{if(next==="account")router.push("/account");else setPanel(next);}} onView={(view) => { setFilters({ ...defaults, view }); setQuery(""); scrollToDeals(); }} />
     <main id="main">
+      <MobileFeedBar
+        query={query} onQuery={setQuery} onSearch={search}
+        categories={mainCategories.map((c) => ({ slug: c.slug, name: c.name }))}
+        selected={filters.category}
+        onSelect={(category) => { setFilters({ ...defaults, category }); setQuery(""); scrollToDeals(); }}
+      />
       <HeroSection query={query} onQuery={setQuery} onSearch={search} />
       <CategorySection
         items={
