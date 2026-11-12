@@ -50,7 +50,8 @@ export type DealInput = z.infer<typeof dealInputSchema>;
 export const categoryInputSchema = z.object({ slug: slugSchema, name: z.string().trim().min(2).max(100), parentId: z.string().min(1).max(100).nullable().default(null) }).strict();
 export const merchantInputSchema = categoryInputSchema.omit({ parentId: true }).extend({
   websiteUrl: publicUrl,
-  affiliateHosts: z.array(z.string().trim().toLowerCase()).default([]),
+  // A bare "com" would let every .com address through the redirect allowlist, so entries must be real host names with a dot.
+  affiliateHosts: z.array(z.string().trim().toLowerCase().max(253).regex(/^(?=.{3,253}$)([a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z][a-z0-9-]{1,62}$/, "Use a full host name such as example.com")).max(100).default([]),
 });
 export const listingSchema = z.object({
   q: z.string().trim().max(100).default(""),

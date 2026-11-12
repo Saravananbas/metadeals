@@ -30,9 +30,16 @@ export function customerErrorResponse(error: unknown): Response {
 const MAX_UPLOAD = 6 * 1024 * 1024;
 
 /** multipart/form-data with a JSON `data` field and an optional `image` file, size-bounded before parsing. */
+/** Uploads must declare their size up front, so a chunked body without Content-Length cannot be buffered without limit. */
+export function assertDeclaredUploadSize(request: Request, maxBytes: number, message: string) {
+  const declared = request.headers.get("content-length");
+  if (declared === null || !/^\d+$/.test(declared)) throw new CustomerError("The upload size must be declared.", 411);
+  if (Number(declared) > maxBytes) throw new CustomerError(message, 413);
+}
+
 export async function readSubmissionForm(request: Request): Promise<{ data: unknown; version: unknown; image: Buffer | null }> {
   if (!request.headers.get("content-type")?.toLowerCase().startsWith("multipart/form-data")) throw new CustomerError("Send the form as multipart/form-data.", 415);
-  if (Number(request.headers.get("content-length") ?? 0) > MAX_UPLOAD) throw new CustomerError("The upload is too large (5 MB image limit).", 413);
+  assertDeclaredUploadSize(request, MAX_UPLOAD, "The upload is too large (5 MB image limit).");
   const form = await request.formData();
   let data: unknown;
   try { data = JSON.parse(String(form.get("data") ?? "")); } catch { throw new CustomerError("The deal details could not be read."); }

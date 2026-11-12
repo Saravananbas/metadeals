@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { getDatabase } from "@/server/db/client";
 import { resolveDealRedirect, AffiliateError } from "@/server/affiliate/service";
 import { recordBuyClick, SESSION_COOKIE } from "@/server/analytics/collector";
+import { clientIpFromHeaders } from "@/server/client-ip";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -15,8 +16,7 @@ export async function GET(
   const optionId = searchParams.get("option");
   const channel = searchParams.get("c") || searchParams.get("channel") || "web";
 
-  const forwarded = request.headers.get("x-forwarded-for");
-  const ip = forwarded ? forwarded.split(",")[0].trim() : "127.0.0.1";
+  const ip = clientIpFromHeaders(request.headers) ?? "unknown";
   const userAgent = request.headers.get("user-agent") || "";
   const prefetch = request.headers.get("purpose") || request.headers.get("sec-purpose");
 

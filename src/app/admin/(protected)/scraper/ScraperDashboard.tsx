@@ -18,6 +18,7 @@ import {
 import { formatINR } from "@/features/deals/pricing";
 import { AdminNav } from "@/components/admin/AdminNav";
 import styles from "./scraper-dashboard.module.css";
+import { safeHttpsHref } from "@/lib/json-ld";
 
 export type CandidateItem = {
   id: string;
@@ -655,7 +656,7 @@ export function ScraperDashboard({
                       <span><strong>Category:</strong> {candidate.categorySlug}</span>
                       <span>•</span>
                       <a
-                        href={candidate.sourceUrl}
+                        href={safeHttpsHref(candidate.sourceUrl)}
                         target="_blank"
                         rel="noreferrer noopener"
                         className={styles.linkExternal}
@@ -788,7 +789,7 @@ export function ScraperDashboard({
                               <span>{item.brand || "No Brand"}</span>
                               <span>•</span>
                               <a
-                                href={item.sourceUrl}
+                                href={safeHttpsHref(item.sourceUrl)}
                                 target="_blank"
                                 rel="noreferrer noopener"
                                 className={styles.linkExternal}

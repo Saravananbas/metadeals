@@ -4,6 +4,7 @@ import { readJson } from "@/server/auth/request";
 import { customerApi, customerErrorResponse, customerJson } from "@/server/customer/http";
 import { getCustomerAuthOptions } from "@/server/customer/options";
 import { assertCommunityEnabled, throttleRead } from "./config";
+import { clientIpFromHeaders } from "@/server/client-ip";
 
 export { customerJson as json, readJson };
 
@@ -11,7 +12,7 @@ export { customerJson as json, readJson };
 export async function communityRead(request: Request, run: (customerId: string | null) => Promise<Response>): Promise<Response> {
   try {
     assertCommunityEnabled();
-    throttleRead(request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "unknown");
+    throttleRead(clientIpFromHeaders(request.headers) ?? "unknown");
     let customerId: string | null = null;
     try { customerId = (await getServerSession(getCustomerAuthOptions()))?.user?.id ?? null; } catch { customerId = null; }
     const response = await run(customerId);

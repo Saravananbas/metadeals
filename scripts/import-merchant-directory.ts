@@ -68,7 +68,8 @@ function mapRawCategoryToStandard(raw?: string | null) {
 async function main() {
   console.log("--- Starting Merchant Website Directory Import ---");
 
-  const dbUrl = process.env.DATABASE_URL || "postgresql://postgres:postgres@127.0.0.1:55432/metadeals";
+  const dbUrl = process.env.DATABASE_URL;
+  if (!dbUrl) throw new Error("Set DATABASE_URL before running this script.");
   const adapter = new PrismaPg({
     connectionString: dbUrl,
     max: 5,

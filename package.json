@@ -16,6 +16,7 @@
     "test": "node --conditions=react-server --import tsx --test tests/*.test.ts",
     "test:watch": "node --conditions=react-server --import tsx --test --watch tests/*.test.ts",
     "test:smoke": "node scripts/smoke.mjs",
+    "test:security": "node --conditions=react-server --import tsx --test tests/security-regression.test.ts tests/admin-ip-proxy.test.ts",
     "perf:check": "node scripts/perf-check.mjs",
     "db:generate": "prisma generate",
     "db:generate:all": "prisma generate --schema prisma/schema.prisma && prisma generate --schema prisma/schema.mariadb.prisma",

@@ -12,6 +12,7 @@ import { DealGallery } from "@/components/deals/DealGallery";
 import { DealProductInfo } from "@/components/deals/DealProductInfo";
 import { DealPurchasePanel } from "@/components/deals/DealPurchasePanel";
 import { TrustStrip } from "@/components/deals/TrustStrip";
+import { serializeJsonLd } from "@/lib/json-ld";
 import { YouTubeReviewsSection } from "@/components/deals/YouTubeReviewsSection";
 import { DealViewTracker } from "@/components/deals/DealViewTracker";
 import { youtubeReviewsService } from "@/server/youtube/reviews-service";
@@ -173,7 +174,7 @@ export default async function DealDetailPage({
       <DealViewTracker slug={slug} />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
 
       {/* Header and Purple Category Navigation Bar */}

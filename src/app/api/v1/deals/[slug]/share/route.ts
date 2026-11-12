@@ -1,8 +1,12 @@
 import { NextResponse } from "next/server";
 import { getDatabase } from "@/server/db/client";
+import { throttleRead } from "@/server/community/config";
+import { clientIpFromHeaders } from "@/server/client-ip";
+import { publicWhere } from "@/server/deals/repository";
+import { listingSchema } from "@/features/deals/validation";
 
 export async function POST(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
@@ -11,9 +15,12 @@ export async function POST(
       return NextResponse.json({ ok: false, message: "Missing slug" }, { status: 400 });
     }
 
+    // Shares are counted for the public; keep one visitor from inflating the number (per-process, resets on restart).
+    try { throttleRead(`share:${clientIpFromHeaders(request.headers) ?? "unknown"}`, 20); } catch { return NextResponse.json({ ok: false, message: "Too many requests" }, { status: 429 }); }
+
     const db = getDatabase();
     const deal = await db.deal.findFirst({
-      where: { OR: [{ slug }, { id: slug }] },
+      where: { AND: [{ OR: [{ slug }, { id: slug }] }, publicWhere(listingSchema.parse({}))] },
       select: { id: true },
     });
 

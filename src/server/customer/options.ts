@@ -127,7 +127,7 @@ export function getCustomerAuthOptions(): NextAuthOptions {
           user.id = customer.id;
           return true;
         } catch (err) {
-          console.error("Sign in transaction error:", err);
+          console.error("Sign in transaction error:", err instanceof Error ? err.name : "unknown");
           return false;
         }
       },
@@ -163,7 +163,7 @@ export function getCustomerAuthOptions(): NextAuthOptions {
     },
     logger: {
       error(code, metadata) {
-        console.error("Customer authentication failed:", code, metadata);
+        console.error("Customer authentication failed:", code, typeof metadata === "object" && metadata && "name" in metadata ? String((metadata as { name?: unknown }).name) : "");
       },
       warn() {},
       debug() {},

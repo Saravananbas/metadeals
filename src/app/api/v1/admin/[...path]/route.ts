@@ -70,6 +70,8 @@ async function handle(request: Request, { params }: { params: Promise<{ path: st
     if (!roleCan(context.user.role, "deal:edit")) throw new DealError("Permission denied.", 403);
     const [resource, id, action] = (await params).path;
     if (resource === "merchant-websites") {
+      // Reading the directory is part of deal authoring; changing it (it feeds the trusted-domain list and live merchants) needs the same permission as /merchants.
+      if (request.method !== "GET" && !roleCan(context.user.role, "merchant:manage")) throw new DealError("Permission denied.", 403);
       if (request.method === "GET") {
         if (id) {
           const merchant = await MerchantWebsiteDirectoryService.getById(id);
@@ -363,20 +365,21 @@ async function handle(request: Request, { params }: { params: Promise<{ path: st
       if (request.method === "POST" || request.method === "PUT") { const body = await readJson(request); return json({ data: await db.$transaction((tx) => saveTaxonomy(tx, actor, resource, body, id), { isolationLevel: "Serializable" }) }); }
       if (request.method === "DELETE" && id) {
         if (resource === "categories") {
+          if (!roleCan(context.user.role, "category:manage")) throw new DealError("Permission denied.", 403);
           // Check if category has child subcategories or associated deals
           const childCount = await db.category.count({ where: { parentId: id } });
           if (childCount > 0) throw new DealError(`Cannot delete category with ${childCount} child subcategories. Reassign or delete them first.`, 409);
-          const dealCount = await db.deal.count({ where: { categoryId: id } });
-          if (dealCount > 0) {
-            // Unlink or reassign to another category if any exist, or throw error
-            const fallbackCat = await db.category.findFirst({ where: { id: { not: id } } });
-            if (fallbackCat) {
-              await db.deal.updateMany({ where: { categoryId: id }, data: { categoryId: fallbackCat.id } });
-            } else {
-              throw new DealError(`Cannot delete category: ${dealCount} deals are attached to it.`, 409);
+          await db.$transaction(async (tx) => {
+            const dealCount = await tx.deal.count({ where: { categoryId: id } });
+            if (dealCount > 0) {
+              // Unlink or reassign to another category if any exist, or throw error
+              const fallbackCat = await tx.category.findFirst({ where: { id: { not: id } }, orderBy: { name: "asc" } });
+              if (!fallbackCat) throw new DealError(`Cannot delete category: ${dealCount} deals are attached to it.`, 409);
+              await tx.deal.updateMany({ where: { categoryId: id }, data: { categoryId: fallbackCat.id } });
             }
-          }
-          await db.category.delete({ where: { id } });
+            await tx.category.delete({ where: { id } });
+            await tx.auditEvent.create({ data: { actorId: actor.id, action: "category.delete", targetId: id, success: true, metadata: { reassignedDeals: dealCount } } });
+          });
           return json({ success: true, message: "Category deleted successfully." });
         }
       }
@@ -465,11 +468,12 @@ async function handle(request: Request, { params }: { params: Promise<{ path: st
           const status: StatusType | undefined = statusParam && (validStatuses as readonly string[]).includes(statusParam)
             ? (statusParam as StatusType)
             : undefined;
-          const limit = url.searchParams.get("limit") ? Number(url.searchParams.get("limit")) : 20;
-          const offset = url.searchParams.get("offset") ? Number(url.searchParams.get("offset")) : 0;
+          const limit = Math.min(100, Math.max(1, Math.trunc(Number(url.searchParams.get("limit") ?? 20)) || 20));
+          const offset = Math.min(100_000, Math.max(0, Math.trunc(Number(url.searchParams.get("offset") ?? 0)) || 0));
           return json({ data: await scraperService.listCandidates(db, { status, limit, offset }) });
         }
         if (request.method === "POST") {
+          if (!roleCan(context.user.role, "operations:read")) throw new DealError("Permission denied.", 403);
           const body = await readJson(request);
           return json({ data: await scraperService.ingestCandidate(db, body) }, 201);
         }
@@ -480,6 +484,7 @@ async function handle(request: Request, { params }: { params: Promise<{ path: st
         return json({ data: await scraperService.reviewCandidate(db, body.candidateId, actionParsed, actor.id) });
       }
       if (id === "scan" && request.method === "POST") {
+        if (!roleCan(context.user.role, "operations:read")) throw new DealError("Permission denied.", 403);
         const body = await readJson(request) as { connectorCode: string };
         return json({ data: await scraperService.runConnectorScan(db, body.connectorCode) });
       }
@@ -489,6 +494,10 @@ async function handle(request: Request, { params }: { params: Promise<{ path: st
       throw new DealError("Scraper endpoint not found.", 404);
     }
     if (resource === "cuelinks") {
+      // Earnings and campaign data are operations data (ADMIN and above), like /affiliate/transactions.
+      if (request.method === "GET" && !roleCan(context.user.role, "operations:read")) throw new DealError("Permission denied.", 403);
+      // Converting links spends the shared Cuelinks quota; it pairs with writing affiliate URLs, which needs affiliate:manage.
+      if (request.method !== "GET" && !roleCan(context.user.role, "affiliate:manage")) throw new DealError("Permission denied.", 403);
       if (request.method === "GET") {
         const health = await cuelinksClient.checkHealth();
         const [totalDeals, monetizedDeals, totalClicks, transactionsSummary] = await Promise.all([
@@ -651,7 +660,7 @@ async function handle(request: Request, { params }: { params: Promise<{ path: st
 
         if (body.operation === "toggle_active" && body.reviewId) {
           const updated = await db.dealVideoReview.update({
-            where: { id: body.reviewId },
+            where: { id: body.reviewId, dealId: id },
             data: { isActive: Boolean(body.isActive) },
           });
           return json({ data: updated });
@@ -659,21 +668,22 @@ async function handle(request: Request, { params }: { params: Promise<{ path: st
 
         if (body.operation === "pin" && body.reviewId) {
           const updated = await db.dealVideoReview.update({
-            where: { id: body.reviewId },
+            where: { id: body.reviewId, dealId: id },
             data: { isPinned: Boolean(body.isPinned) },
           });
           return json({ data: updated });
         }
 
         if (body.operation === "delete" && body.reviewId) {
-          await db.dealVideoReview.delete({ where: { id: body.reviewId } });
+          await db.dealVideoReview.delete({ where: { id: body.reviewId, dealId: id } });
           return json({ data: { success: true } });
         }
 
         if (body.operation === "reorder" && Array.isArray(body.order)) {
+          if (body.order.length > 50) throw new DealError("Too many reviews to reorder.", 400);
           for (let i = 0; i < body.order.length; i++) {
             await db.dealVideoReview.update({
-              where: { id: body.order[i] },
+              where: { id: String(body.order[i]), dealId: id },
               data: { rankingPosition: i + 1 },
             });
           }

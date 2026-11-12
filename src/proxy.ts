@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { clientIpFromHeaders } from "@/server/client-ip";
 
 /**
  * The admin portal (pages, login and its APIs) can be limited to a few IP addresses.
@@ -7,12 +8,7 @@ import { NextResponse, type NextRequest } from "next/server";
  */
 const allowList = () => (process.env.ADMIN_ALLOWED_IPS ?? "").split(",").map((v) => v.trim().toLowerCase()).filter(Boolean);
 
-/** Hostinger's proxy appends the real visitor address as the LAST x-forwarded-for entry; earlier entries can be forged by the visitor. */
-function clientIp(request: NextRequest) {
-  const forwarded = request.headers.get("x-forwarded-for");
-  const last = forwarded?.split(",").map((v) => v.trim()).filter(Boolean).pop();
-  return (last || request.headers.get("x-real-ip") || "").replace(/^::ffff:/, "").toLowerCase();
-}
+const clientIp = (request: NextRequest) => clientIpFromHeaders(request.headers) ?? "";
 
 /** IPv4 or IPv6 text to a number, or null if it is not an address. */
 function ipToBig(ip: string): { value: bigint; bits: 32 | 128 } | null {

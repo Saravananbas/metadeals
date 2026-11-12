@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { AdminNav } from "@/components/admin/AdminNav";
 import styles from "./cuelinks-dashboard.module.css";
 import type { CuelinksHealth, CuelinksConvertResult } from "@/server/affiliate/cuelinks-client";
+import { safeHttpsHref } from "@/lib/json-ld";
 
 interface CuelinksStats {
   totalDeals: number;
@@ -466,7 +467,7 @@ CUELINKS_BASE_URL=https://developers.cuelinks.com/pub_api/v3`}
                       <td>
                         {o.url && (
                           <a
-                            href={o.url}
+                            href={safeHttpsHref(o.url)}
                             target="_blank"
                             rel="noopener noreferrer"
                             style={{ color: "var(--md-color-primary)", textDecoration: "none", fontWeight: 600 }}

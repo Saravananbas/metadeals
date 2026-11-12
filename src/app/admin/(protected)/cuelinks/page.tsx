@@ -7,7 +7,7 @@ export default async function CuelinksAdminPage() {
   const context = await getCurrentAuthContext();
   if (!context) redirect("/admin/login");
 
-  if (!roleCan(context.user.role, "deal:edit") && !roleCan(context.user.role, "account:read")) {
+  if (!roleCan(context.user.role, "operations:read")) {
     redirect("/admin/login");
   }
 

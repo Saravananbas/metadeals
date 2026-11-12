@@ -9,7 +9,12 @@ export const logger = pino({
   level: allowedLevels.includes(requestedLevel) ? requestedLevel : "info",
   base: { service: "metadeals4u" },
   redact: {
-    paths: ["password", "secret", "token", "authorization", "cookie", "DATABASE_URL", "REDIS_URL", "NEXTAUTH_SECRET", "S3_SECRET_ACCESS_KEY", "req.headers.authorization", "req.headers.cookie"],
+    paths: [
+      "password", "secret", "token", "authorization", "cookie", "apiKey", "DATABASE_URL", "REDIS_URL", "NEXTAUTH_SECRET", "S3_SECRET_ACCESS_KEY",
+      "req.headers.authorization", "req.headers.cookie",
+      "*.password", "*.secret", "*.token", "*.authorization", "*.cookie", "*.apiKey", "*.passwordHash", "*.code",
+      "*.headers.authorization", "*.headers.cookie", "*.headers.x-cron-secret", "*.headers.x-telegram-bot-api-secret-token",
+    ],
     censor: "[REDACTED]",
   },
 });

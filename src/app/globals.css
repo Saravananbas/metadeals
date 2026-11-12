@@ -597,4 +597,4 @@ body { background: radial-gradient(ellipse at 12% 18%, color-mix(in srgb, var(--
 
 /* The title bar stays at the top while the deals scroll (all screen sizes) */
 .site-header { position: sticky; top: 0; z-index: 50; background: color-mix(in srgb, var(--md-color-page) 88%, transparent); backdrop-filter: blur(14px); padding-bottom: 4px; }
-@media (max-width: 639px) { .mobile-feed-bar { top: var(--md-mobile-header-h, 62px); z-index: 40; } }
+@media (max-width: 639px) { .mobile-feed-bar { top: 62px; z-index: 40; } }

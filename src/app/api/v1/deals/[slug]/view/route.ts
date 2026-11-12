@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { cookies, headers } from "next/headers";
 import { getDatabase } from "@/server/db/client";
+import { publicWhere } from "@/server/deals/repository";
+import { listingSchema } from "@/features/deals/validation";
 
 export async function POST(
   _request: Request,
@@ -24,7 +26,7 @@ export async function POST(
 
     const db = getDatabase();
     const deal = await db.deal.findFirst({
-      where: { OR: [{ slug }, { id: slug }] },
+      where: { AND: [{ OR: [{ slug }, { id: slug }] }, publicWhere(listingSchema.parse({}))] },
       select: { id: true, viewCount: true },
     });
 

@@ -13,5 +13,6 @@ export default defineConfig([
     "scripts/**",
     "tests/**",
     "node-sec-extractor/**",
+    ".agents/**",
   ]),
 ]);

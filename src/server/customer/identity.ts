@@ -9,6 +9,10 @@ import { CustomerError, limitCustomerRequests } from "./service";
 import { assertActiveCustomer } from "./session";
 
 const MAX_AVATAR_BYTES = 2 * 1024 * 1024;
+/** A member paused by moderation cannot change the public identity moderators see (name or picture). */
+function assertNotSuspended(profile: { status: string; suspendedUntil: Date | null }) {
+  if (profile.status === "SUSPENDED" && (!profile.suspendedUntil || profile.suspendedUntil > new Date())) throw new CustomerError("Your community access is paused.", 403);
+}
 export const isDefaultHandle = (handle: string) => /^member-[0-9a-f]{6}$/.test(handle);
 const avatarUrl = (handle: string, key: string | null) => (key ? `/api/v1/avatars/${handle}` : null);
 
@@ -22,6 +26,7 @@ export async function getIdentity(customerId: string) {
 export async function setUserName(customerId: string, raw: unknown) {
   await assertActiveCustomer(customerId);
   const profile = await ensureProfile(customerId);
+  assertNotSuspended(profile);
   const handle = handleSchema.parse((raw as { handle?: unknown } | null)?.handle);
   await limitCustomerRequests(`username:${profile.id}`, 10, 86_400);
   try {
@@ -39,9 +44,12 @@ export async function setAvatar(customerId: string, bytes: Buffer | null) {
   if (!bytes?.length) throw new CustomerError("Choose a picture to upload.");
   if (bytes.length > MAX_AVATAR_BYTES) throw new CustomerError("The picture must be 2 MB or smaller.", 413);
   const profile = await ensureProfile(customerId);
+  assertNotSuspended(profile);
   await limitCustomerRequests(`avatar:${profile.id}`, 10, 86_400);
   let square: Buffer;
   try {
+    const meta = await sharp(bytes, { limitInputPixels: 25_000_000 }).metadata();
+    if (!["jpeg", "png", "webp"].includes(meta.format ?? "")) throw new Error("format");
     square = await sharp(bytes, { limitInputPixels: 25_000_000, failOn: "warning" }).rotate().resize(256, 256, { fit: "cover" }).webp({ quality: 82 }).toBuffer();
   } catch {
     throw new CustomerError("Use a JPEG, PNG or WebP picture.");
@@ -59,6 +67,7 @@ export async function setAvatar(customerId: string, bytes: Buffer | null) {
 export async function removeAvatar(customerId: string) {
   await assertActiveCustomer(customerId);
   const profile = await ensureProfile(customerId);
+  assertNotSuspended(profile);
   await getDatabase().forumProfile.update({ where: { id: profile.id }, data: { avatarKey: null, avatarProvider: null } });
   return getIdentity(customerId);
 }

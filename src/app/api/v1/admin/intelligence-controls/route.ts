@@ -3,6 +3,7 @@ import { getCurrentAuthContext } from "@/server/auth/session";
 import { roleCan } from "@/server/auth/permissions";
 import { Agent2PublishingEngine } from "@/server/scraper/agent2-publishing-engine";
 import { getDatabase } from "@/server/db/client";
+import { assertSameOrigin, readJson } from "@/server/auth/request";
 
 export async function GET() {
   const context = await getCurrentAuthContext();
@@ -45,11 +46,17 @@ export async function POST(request: Request) {
   if (!context || !roleCan(context.user.role, "deal:publish")) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   }
+  if (!assertSameOrigin(request)) return NextResponse.json({ error: "Request origin could not be verified." }, { status: 403 });
 
-  const body = (await request.json()) as { action: string; value?: boolean };
+  let body: { action?: unknown; value?: unknown };
+  try { body = (await readJson(request)) as { action?: unknown; value?: unknown }; } catch { return NextResponse.json({ error: "Invalid request body" }, { status: 400 }); }
 
   if (body.action === "TOGGLE_KILL_SWITCH") {
-    Agent2PublishingEngine.setKillSwitch(Boolean(body.value));
+    const activate = Boolean(body.value);
+    // Switching the safety stop ON is open to anyone who can publish; switching it OFF needs an operations role.
+    if (!activate && !roleCan(context.user.role, "operations:read")) return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    Agent2PublishingEngine.setKillSwitch(activate);
+    await getDatabase().auditEvent.create({ data: { actorId: context.user.id, action: "intelligence.kill_switch", targetId: "agent2", success: true, metadata: { active: activate } } });
     return NextResponse.json({
       success: true,
       killSwitchActive: Agent2PublishingEngine.isKillSwitchActive(),

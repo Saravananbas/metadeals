@@ -2,6 +2,7 @@ import "server-only";
 import { randomUUID } from "node:crypto";
 import { createRequestDigest } from "./crypto";
 import { getAuthEnv } from "@/config/env";
+import { clientIpFromHeaders } from "@/server/client-ip";
 
 export class RequestBodyError extends Error {}
 
@@ -17,7 +18,7 @@ export function assertSameOrigin(request: Request): boolean {
     if (requestHost && originHost === requestHost) return true;
 
     // Allow loopback variants in development/local environments (localhost <-> 127.0.0.1)
-    const isLocal = (h: string) => h.startsWith("localhost") || h.startsWith("127.0.0.1") || h.startsWith("[::1]");
+    const isLocal = (h: string) => /^(localhost|127\.0\.0\.1|\[::1\])(:\d+)?$/.test(h);
     if (isLocal(originHost) && (isLocal(nextAuthHost) || (requestHost && isLocal(requestHost)))) {
       const originPort = new URL(origin).port;
       const nextAuthPort = new URL(getAuthEnv().NEXTAUTH_URL).port;
@@ -31,9 +32,7 @@ export function assertSameOrigin(request: Request): boolean {
 }
 
 export function getRequestMetadata(request: Request) {
-  const forwardedFor = request.headers.get("x-forwarded-for");
-  const realIp = request.headers.get("x-real-ip");
-  const address = forwardedFor?.split(",")[0]?.trim() || realIp || null;
+  const address = clientIpFromHeaders(request.headers);
   const pepper = getAuthEnv().AUTH_SESSION_SECRET;
   return {
     ipHash: createRequestDigest(address, pepper),

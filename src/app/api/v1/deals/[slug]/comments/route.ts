@@ -6,6 +6,7 @@ import { getDatabase } from "@/server/db/client";
 import { hashRateLimitSubject } from "@/server/auth/crypto";
 import { readJson, RequestBodyError } from "@/server/auth/request";
 import { publicWhere } from "@/server/deals/repository";
+import { clientIpFromHeaders } from "@/server/client-ip";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -61,7 +62,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ slu
     const deal = await findPublicDeal(slug);
     if (!deal) return reply({ ok: false, error: { message: "Deal unavailable." } }, 404);
 
-    const address = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "unknown";
+    const address = clientIpFromHeaders(request.headers) ?? "unknown";
     const { AUTH_SESSION_SECRET } = getAuthEnv();
     const key = `public-comment:${hashRateLimitSubject(address.slice(0, 200), AUTH_SESSION_SECRET)}`;
     let allowed = false;

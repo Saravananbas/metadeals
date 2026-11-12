@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { assertSameOrigin } from "@/server/auth/request";
 import { collect, collectSchema, SESSION_COOKIE } from "@/server/analytics/collector";
+import { clientIpFromHeaders } from "@/server/client-ip";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -16,7 +17,7 @@ export async function POST(request: Request) {
     const cookieHeader = request.headers.get("cookie") ?? "";
     const sessionCookie = cookieHeader.split(/;\s*/).find((c) => c.startsWith(`${SESSION_COOKIE}=`))?.slice(SESSION_COOKIE.length + 1) ?? null;
     const result = await collect(parsed.data, {
-      ip: request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "unknown",
+      ip: clientIpFromHeaders(request.headers) ?? "unknown",
       userAgent: request.headers.get("user-agent") ?? "",
       host: request.headers.get("host"),
       purpose: request.headers.get("purpose") || request.headers.get("sec-purpose"),
