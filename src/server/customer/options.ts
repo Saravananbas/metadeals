@@ -155,9 +155,9 @@ export function getCustomerAuthOptions(): NextAuthOptions {
         const origin = new URL(baseUrl).origin;
         try {
           const dest = new URL(url, origin);
-          return dest.origin === origin ? dest.href : origin + "/account";
+          return dest.origin === origin ? dest.href : origin + "/";
         } catch {
-          return origin + "/account";
+          return origin + "/";
         }
       },
     },

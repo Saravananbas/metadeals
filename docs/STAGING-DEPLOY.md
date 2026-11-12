@@ -10,3 +10,8 @@ No Docker, Python, or Redis on this plan.
 6. Verify: `/api/health`, `/api/health/ready`, an admin image paste, a `/go/<dealId>` redirect.
 
 Open: `CUELINKS_REDIRECT_MODE=direct` means no commission; switch to wrap when ready. Admin login is only bypassed when `NODE_ENV` is not production.
+
+## Analytics rollup cron
+Set `ANALYTICS_CRON_SECRET` (24+ characters) in hPanel and redeploy. Add an hPanel cron job (daily, e.g. 02:30) running:
+`curl -s -X POST -H "x-cron-secret: <secret>" https://staging.metadeals4u.in/api/cron/analytics-rollup`
+It sums raw visits into daily totals and deletes raw rows older than 90 days.

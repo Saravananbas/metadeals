@@ -15,6 +15,8 @@ import { importBatchSchema } from "@/server/affiliate/types";
 import { autoPostToTelegram, createDestination, listDestinations, publishDealToDestinations, getDistributionHistory } from "@/server/distribution/service";
 import { destinationInputSchema, publishDealInputSchema } from "@/features/distribution/formatting";
 import { getUnifiedAnalyticsSummary } from "@/server/analytics/service";
+import { approveSubmission, getSubmissionImage, listSubmissions, rejectSubmission } from "@/server/community/review";
+import { getDashboard, getLive, getSessionTimeline, listSessions, resolveRange, vendorReport } from "@/server/analytics/queries";
 import { scraperService } from "@/server/scraper/service";
 import { candidateReviewActionSchema } from "@/features/scraper/validation";
 import { productExtractionService } from "@/server/product-extraction/core/service";
@@ -420,8 +422,38 @@ async function handle(request: Request, { params }: { params: Promise<{ path: st
       }
       throw new DealError("Distribution endpoint not found.", 404);
     }
+    if (resource === "submissions") {
+      const reviewer = { id: context.user.id, role: context.user.role };
+      if (request.method === "GET" && id && action === "image") {
+        const { bytes, mimeType } = await getSubmissionImage(reviewer, id);
+        return new Response(new Uint8Array(bytes), { headers: { "Content-Type": mimeType, "X-Content-Type-Options": "nosniff", "Cache-Control": "private, no-store" } });
+      }
+      if (request.method === "GET" && !id) {
+        const params = new URL(request.url).searchParams;
+        const status = z.enum(["PENDING_REVIEW", "APPROVED", "REJECTED"]).parse(params.get("status") ?? "PENDING_REVIEW");
+        return json({ data: await listSubmissions(reviewer, status, z.coerce.number().int().min(1).max(10_000).parse(params.get("page") ?? 1)) });
+      }
+      if (request.method === "POST" && id && action === "approve") return json({ data: await approveSubmission(reviewer, id, await readJson(request)) });
+      if (request.method === "POST" && id && action === "reject") return json({ data: await rejectSubmission(reviewer, id, await readJson(request)) });
+      throw new DealError("Method not supported.", 405);
+    }
     if (resource === "analytics" && request.method === "GET") {
-      return json({ data: await getUnifiedAnalyticsSummary(db, actor) });
+      if (!id) return json({ data: await getUnifiedAnalyticsSummary(db, actor) });
+      if (!roleCan(context.user.role, "operations:read")) throw new DealError("Permission denied.", 403);
+      const url = new URL(request.url);
+      const range = resolveRange(url.searchParams.get("range") ?? "7d", url.searchParams.get("from"), url.searchParams.get("to"));
+      if (id === "live") return json({ data: await getLive() });
+      if (id === "sessions") {
+        if (action) return json({ data: await getSessionTimeline(action) });
+        return json({ data: await listSessions(z.coerce.number().int().min(1).max(10_000).parse(url.searchParams.get("page") ?? 1)) });
+      }
+      if (id === "vendors") {
+        return new Response(await vendorReport(range), {
+          headers: { "Content-Type": "text/csv; charset=utf-8", "Content-Disposition": 'attachment; filename="vendor-report.csv"', "Cache-Control": "no-store" },
+        });
+      }
+      if (id === "dashboard") return json({ data: await getDashboard(range) });
+      throw new DealError("Unknown analytics report.", 404);
     }
     if (resource === "scraper") {
       const url = new URL(request.url);

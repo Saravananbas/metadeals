@@ -12,13 +12,27 @@ const dummyHash = hashPassword(randomUUID());
 export async function limitCustomerRequests(subject: string, maximum: number, seconds = 900) {
   const db = getDatabase(), now = new Date(), expiresAt = new Date(Date.now() + seconds * 1000);
   const key = digest(subject);
-  const rows = await db.$queryRaw<{count:number}[]>`
-    INSERT INTO "CustomerRateLimit" ("key", "count", "expiresAt") VALUES (${key}, 1, ${expiresAt})
-    ON CONFLICT ("key") DO UPDATE SET
-    "count" = CASE WHEN "CustomerRateLimit"."expiresAt" <= ${now} THEN 1 ELSE "CustomerRateLimit"."count" + 1 END,
-    "expiresAt" = CASE WHEN "CustomerRateLimit"."expiresAt" <= ${now} THEN ${expiresAt} ELSE "CustomerRateLimit"."expiresAt" END
-    RETURNING "count"`;
-  if (rows[0].count > maximum) throw new CustomerError("Too many attempts. Please try again later.", 429);
+  // Portable (PostgreSQL and MariaDB): atomic increment while the window is open, otherwise start a new window.
+  const attempt = () => db.$transaction(async (tx) => {
+    const open = await tx.customerRateLimit.updateMany({ where: { key, expiresAt: { gt: now } }, data: { count: { increment: 1 } } });
+    if (open.count === 0) {
+      await tx.customerRateLimit.upsert({ where: { key }, create: { key, count: 1, expiresAt }, update: { count: 1, expiresAt } });
+      return 1;
+    }
+    return (await tx.customerRateLimit.findUniqueOrThrow({ where: { key }, select: { count: true } })).count;
+  });
+  // Parallel requests from one person hit the same counter row; retry the harmless conflicts (unique race, deadlock, MariaDB "record changed" 1020).
+  let count = 0;
+  for (let tries = 1; ; tries++) {
+    try { count = await attempt(); break; }
+    catch (error) {
+      const text = error instanceof Error ? error.message : "";
+      const code = (error as { code?: string })?.code ?? "";
+      if (tries >= 6 || !(["P2002", "P2034", "P2025"].includes(code) || /1020|Record has changed since last read|deadlock|40001|could not serialize/i.test(text))) throw error;
+      await new Promise((resolve) => setTimeout(resolve, 10 * tries + Math.floor(Math.random() * 20)));
+    }
+  }
+  if (count > maximum) throw new CustomerError("Too many attempts. Please try again later.", 429);
 }
 export async function registerCustomer(raw: unknown) {
   const input = signupSchema.parse(raw);

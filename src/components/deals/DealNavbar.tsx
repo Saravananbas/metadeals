@@ -8,7 +8,6 @@ import {
   Heart,
   Tag,
   Grid2X2,
-  ShieldCheck,
   Sparkles,
   Smartphone,
   Laptop,
@@ -160,24 +159,6 @@ export function DealNavbar({ currentCategorySlug }: { currentCategorySlug?: stri
                   {saved.ids.length}
                 </span>
               )}
-            </Link>
-            <Link
-              href="/admin/deals"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 6,
-                padding: "6px 12px",
-                borderRadius: 8,
-                fontSize: 12,
-                fontWeight: 600,
-                textDecoration: "none",
-                color: "var(--md-color-primary-hover)",
-                background: "color-mix(in srgb, var(--md-purple-500) 8%, transparent)",
-                border: "1px solid color-mix(in srgb, var(--md-purple-500) 20%, transparent)",
-              }}
-            >
-              <ShieldCheck size={14} /> Admin
             </Link>
           </div>
         </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import { trackEvent } from "@/lib/analytics-client";
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import {
@@ -19,7 +20,8 @@ import {
 import type { Deal } from "@/features/deals/types";
 import { formatINR, getSavings } from "@/features/deals/pricing";
 import { StoreLogo } from "./StoreLogo";
-import { DealCommentsDialog } from "@/components/deals/DealCommentsDialog";
+import dynamic from "next/dynamic";
+const DealCommentsDialog = dynamic(() => import("@/components/deals/DealCommentsDialog").then((m) => m.DealCommentsDialog));
 
 function formatPostedDate(dateStr?: string | null): string {
   if (!dateStr) return "";
@@ -71,10 +73,8 @@ export function DealCard({
   const [imageIndex, setImageIndex] = useState(0);
   const [failedImage, setFailedImage] = useState<string | null>(null);
   const [copiedCoupon, setCopiedCoupon] = useState(false);
-  const [likeState, setLikeState] = useState<{ active: boolean; count: number }>({
-    active: false,
-    count: Math.floor((deal.reviewCount || 40) / 4) + 12,
-  });
+  // No number is shown: there is no stored like count, and a made-up one would misstate popularity.
+  const [liked, setLiked] = useState(false);
 
   useEffect(() => {
     const card = cardRef.current;
@@ -119,16 +119,15 @@ export function DealCard({
   const handleCopyCoupon = (e: React.MouseEvent, code: string) => {
     e.stopPropagation();
     navigator.clipboard?.writeText(code);
+    trackEvent("COUPON_COPY", deal.slug || deal.id);
     setCopiedCoupon(true);
     setTimeout(() => setCopiedCoupon(false), 2000);
   };
 
   const handleToggleLike = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setLikeState((prev) => ({
-      active: !prev.active,
-      count: !prev.active ? prev.count + 1 : Math.max(0, prev.count - 1),
-    }));
+    if (!liked) trackEvent("LIKE", deal.slug || deal.id);
+    setLiked((prev) => !prev);
   };
 
   const handleShare = async (e: React.MouseEvent) => {
@@ -141,6 +140,7 @@ export function DealCard({
       setCopiedShare(true);
       setTimeout(() => setCopiedShare(false), 2000);
 
+      trackEvent("SHARE", deal.slug || deal.id);
       // Increment share count
       setShareCount((prev) => prev + 1);
       fetch(`/api/v1/deals/${encodeURIComponent(deal.slug || deal.id)}/share`, {
@@ -155,7 +155,7 @@ export function DealCard({
       ref={cardRef}
       className="deal-card"
       aria-labelledby={`title-${deal.id}`}
-      onClick={() => onView(deal)}
+      onClick={() => { trackEvent("MODAL_OPEN", deal.slug || deal.id); onView(deal); }}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => {
@@ -184,7 +184,7 @@ export function DealCard({
         <div className="product-image-button" aria-label={`Preview ${deal.name}`}>
           <Image
             key={`${deal.id}-${currentImageIndex}`}
-            src={imageSrc}
+            src={imageSrc.startsWith("/api/v1/media/") && !imageSrc.includes("?") ? `${imageSrc}?w=640` : imageSrc}
             alt=""
             aria-hidden="true"
             className="deal-gallery-image"
@@ -318,12 +318,12 @@ export function DealCard({
 
           <button
             type="button"
-            className={`deal-social-btn ${likeState.active ? "deal-social-liked" : ""}`}
+            className={`deal-social-btn ${liked ? "deal-social-liked" : ""}`}
             onClick={handleToggleLike}
             title="Like deal"
           >
-            <ThumbsUp size={13} fill={likeState.active ? "currentColor" : "none"} />
-            <span>{formatCompactNumber(likeState.count)}</span>
+            <ThumbsUp size={13} fill={liked ? "currentColor" : "none"} />
+            <span>{liked ? "Liked" : "Like"}</span>
           </button>
 
           <button
@@ -341,6 +341,7 @@ export function DealCard({
             className="deal-social-btn"
             onClick={(e) => {
               e.stopPropagation();
+              trackEvent("COMMENT", deal.slug || deal.id);
               setCommentsOpen(true);
             }}
             aria-label={`View comments for ${deal.name}`}

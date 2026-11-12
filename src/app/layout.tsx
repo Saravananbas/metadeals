@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
 import { isProductionIndexingEnabled } from "./robots";
 import "./globals.css";
+import { AnalyticsTracker } from "@/components/analytics/AnalyticsTracker";
+import { ConsentBanner } from "@/components/analytics/ConsentBanner";
 
 const allowIndexing = isProductionIndexingEnabled({
   nodeEnv: process.env.NODE_ENV,
@@ -31,7 +33,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <head>
         <meta name="cuelinks-verification" content="VERIFY-CL-YN1ZO95L" />
       </head>
-      <body className={manrope.variable}>{children}</body>
+      <body className={manrope.variable}>
+        {children}
+        <AnalyticsTracker />
+        <ConsentBanner />
+      </body>
     </html>
   );
 }

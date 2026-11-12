@@ -241,3 +241,93 @@ export type DealLifecycleEvent = Prisma.DealLifecycleEventModel
  * 
  */
 export type DealComment = Prisma.DealCommentModel
+/**
+ * Model AnalyticsSession
+ * 
+ */
+export type AnalyticsSession = Prisma.AnalyticsSessionModel
+/**
+ * Model AnalyticsEvent
+ * 
+ */
+export type AnalyticsEvent = Prisma.AnalyticsEventModel
+/**
+ * Model AnalyticsDaily
+ * 
+ */
+export type AnalyticsDaily = Prisma.AnalyticsDailyModel
+/**
+ * Model CommunityDealSubmission
+ * 
+ */
+export type CommunityDealSubmission = Prisma.CommunityDealSubmissionModel
+/**
+ * Model ForumCommunity
+ * 
+ */
+export type ForumCommunity = Prisma.ForumCommunityModel
+/**
+ * Model ForumProfile
+ * 
+ */
+export type ForumProfile = Prisma.ForumProfileModel
+/**
+ * Model ForumPost
+ * 
+ */
+export type ForumPost = Prisma.ForumPostModel
+/**
+ * Model ForumComment
+ * 
+ */
+export type ForumComment = Prisma.ForumCommentModel
+/**
+ * Model ForumPostVote
+ * 
+ */
+export type ForumPostVote = Prisma.ForumPostVoteModel
+/**
+ * Model ForumCommentVote
+ * 
+ */
+export type ForumCommentVote = Prisma.ForumCommentVoteModel
+/**
+ * Model ForumSave
+ * 
+ */
+export type ForumSave = Prisma.ForumSaveModel
+/**
+ * Model ForumFollow
+ * 
+ */
+export type ForumFollow = Prisma.ForumFollowModel
+/**
+ * Model ForumReport
+ * 
+ */
+export type ForumReport = Prisma.ForumReportModel
+/**
+ * Model ForumModerationAction
+ * Append-only moderation history. Target ids are plain strings on purpose so evidence outlives the content it refers to.
+ */
+export type ForumModerationAction = Prisma.ForumModerationActionModel
+/**
+ * Model DmThread
+ * 
+ */
+export type DmThread = Prisma.DmThreadModel
+/**
+ * Model DmMessage
+ * 
+ */
+export type DmMessage = Prisma.DmMessageModel
+/**
+ * Model DmBlock
+ * 
+ */
+export type DmBlock = Prisma.DmBlockModel
+/**
+ * Model DmReport
+ * Staff see a message only when a participant reports it; the text is copied here at that moment.
+ */
+export type DmReport = Prisma.DmReportModel

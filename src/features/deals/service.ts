@@ -29,6 +29,6 @@ export async function getHomepageListing(input: ListingInput) {
   return { ...result, data: result.data.map(toCard), source: "database" as const };
 }
 export async function getHomepageDeals() {
-  const result = await getHomepageListing(listingSchema.parse({ limit: 12 }));
+  const result = await getHomepageListing(listingSchema.parse({ limit: 15 }));
   return { ...result, deals: result.data };
 }

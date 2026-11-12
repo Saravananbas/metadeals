@@ -602,3 +602,68 @@ model MerchantWebsiteDirectory {
 
 
 
+
+model AnalyticsSession {
+  id            String   @id @default(cuid())
+  startedAt     DateTime @default(now())
+  lastSeenAt    DateTime @default(now())
+  activeSeconds Int      @default(0)
+  pageCount     Int      @default(0)
+  entryPath     String   @db.VarChar(300)
+  exitPath      String   @db.VarChar(300)
+  referrerHost  String?  @db.VarChar(150)
+  utmSource     String?  @db.VarChar(100)
+  utmMedium     String?  @db.VarChar(100)
+  utmCampaign   String?  @db.VarChar(100)
+  channel       String?  @db.VarChar(30)
+  deviceType    String   @db.VarChar(20)
+  browser       String   @db.VarChar(30)
+  os            String   @db.VarChar(30)
+  returning     Boolean  @default(false)
+  customerId    String?  @db.VarChar(191)
+  events        AnalyticsEvent[]
+
+  @@index([startedAt])
+  @@index([lastSeenAt])
+  @@index([customerId])
+}
+
+model AnalyticsEvent {
+  id           String   @id @default(cuid())
+  sessionId    String?
+  visitorHash  String   @db.VarChar(32)
+  type         String   @db.VarChar(30)
+  path         String   @db.VarChar(300)
+  pageType     String   @db.VarChar(20)
+  dealId       String?  @db.VarChar(191)
+  merchantId   String?  @db.VarChar(191)
+  categoryId   String?  @db.VarChar(191)
+  referrerHost String?  @db.VarChar(150)
+  channel      String?  @db.VarChar(30)
+  deviceType   String?  @db.VarChar(20)
+  durationSec  Int      @default(0)
+  createdAt    DateTime @default(now())
+  session      AnalyticsSession? @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([createdAt])
+  @@index([type, createdAt])
+  @@index([dealId, createdAt])
+  @@index([merchantId, createdAt])
+  @@index([sessionId, createdAt])
+  @@index([pageType, createdAt])
+}
+
+model AnalyticsDaily {
+  id            String   @id @default(cuid())
+  date          DateTime @db.Date
+  dimension     String   @db.VarChar(20)
+  key           String   @db.VarChar(191)
+  views         Int      @default(0)
+  visitors      Int      @default(0)
+  sessions      Int      @default(0)
+  clicks        Int      @default(0)
+  activeSeconds Int      @default(0)
+
+  @@unique([date, dimension, key])
+  @@index([dimension, date])
+}

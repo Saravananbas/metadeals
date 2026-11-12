@@ -1,9 +1,11 @@
 "use client";
 import { useEffect,useState,type FormEvent } from "react";
 import Link from "next/link";
-import { signIn,signOut } from "next-auth/react";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { ArrowLeft,Mail,ShieldCheck,ShoppingBag } from "lucide-react";
 import styles from "./account.module.css";
+import { CustomerProfile } from "./CustomerProfile";
 type Props = {
   providers: {
     google: boolean;
@@ -14,6 +16,7 @@ type Props = {
 };
 type Shopper={name?:string|null;email?:string|null};
 export function CustomerAccount({providers,delivery,oauthError}:Props){
+  const router=useRouter();
   const [switching,setSwitching]=useState(false);
   useEffect(()=>{if(!switching)return;const timer=setTimeout(()=>setSwitching(false),650);return()=>clearTimeout(timer);},[switching]);
   const [mode,setMode]=useState<"signin"|"signup">("signin");
@@ -36,18 +39,18 @@ export function CustomerAccount({providers,delivery,oauthError}:Props){
       else if(mode==="signup"){
         const result=await post("signup",values);setEmail(String(values.email));setChallenge(result.challengeId);setStep("verify");setCooldown(60);form.reset();
       }else{
-        const result=await signIn("credentials",{email:values.email,password:values.password,redirect:false,callbackUrl:"/account"});
+        const result=await signIn("credentials",{email:values.email,password:values.password,redirect:false,callbackUrl:"/"});
         if(result?.error||!result?.ok)throw new Error("Email or password is incorrect, or sign-in is temporarily limited.");
         const session=await fetch("/api/v1/customer/session",{cache:"no-store"}).then(r=>r.json());
         if(!session.user)throw new Error("Unable to start your session. Please retry.");
-        setUser(session.user);form.reset();
+        setUser(session.user);form.reset();router.push("/");router.refresh();
       }
     }catch(error){setMessage(error instanceof Error?error.message:"Please try again.");}finally{setBusy(false);}
   }
   async function resend(){setBusy(true);setMessage("");try{await post("resend",{challengeId:challenge});setCooldown(60);setMessage(delivery==="local"?"A new test code is in the local outbox.":"If eligible, a new code has been sent.");}catch(error){setMessage(error instanceof Error?error.message:"Please retry.");}finally{setBusy(false);}}
   return <main className={styles.page}>
     <nav className={styles.navigation}><Link href="/"><ArrowLeft size={18}/> Back to deals</Link><Link href="/" className={styles.brand}>MetaDeals<span>4U</span></Link></nav>
-    {user?<section className={styles.success}><ShieldCheck size={44}/><h1>Welcome, {user.name}</h1><p>You’re signed in as {user.email}.</p><Link href="/" className={styles.primary}>Explore deals</Link><button onClick={async()=>{await signOut({redirect:false});setUser(null);}}>Sign out</button></section>:
+    {user?<CustomerProfile/>:
     <section className={`${styles.card} ${switching?styles.switching:""} ${mode==="signup"?styles.signup:""}`} aria-label="Your MetaDeals4U account" aria-busy={busy}>
       <div className={styles.formPanel}>
         {step==="success"?<div className={styles.success}><ShieldCheck size={44}/><h1>Account created!</h1><p>Your email is verified. You can now sign in to MetaDeals4U.</p><button className={styles.primary} onClick={()=>{setMode("signin");setStep("form");setMessage("");}}>Sign in to your account</button></div>:
@@ -68,7 +71,7 @@ export function CustomerAccount({providers,delivery,oauthError}:Props){
                 type="button"
                 className={styles.socialBtn}
                 disabled={busy || !providers.google}
-                onClick={() => void signIn("google", { callbackUrl: "/account" })}
+                onClick={() => void signIn("google", { callbackUrl: "/" })}
                 title={providers.google ? "Sign in with Google" : "Google sign-in awaiting provider credentials"}
               >
                 <svg width="18" height="18" viewBox="0 0 24 24">
@@ -83,7 +86,7 @@ export function CustomerAccount({providers,delivery,oauthError}:Props){
                 type="button"
                 className={styles.socialBtn}
                 disabled={busy || !providers.apple}
-                onClick={() => void signIn("apple", { callbackUrl: "/account" })}
+                onClick={() => void signIn("apple", { callbackUrl: "/" })}
                 title={providers.apple ? "Sign in with Apple" : "Apple sign-in awaiting provider credentials"}
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
@@ -101,6 +104,7 @@ export function CustomerAccount({providers,delivery,oauthError}:Props){
             {mode==="signup"&&<><label htmlFor="name">Name</label><input id="name" name="name" autoComplete="name" minLength={2} maxLength={80} required placeholder="Your name"/></>}
             <label htmlFor="email">Email address</label><input id="email" name="email" type="email" autoComplete="email" maxLength={254} required placeholder="you@example.com"/>
             <label htmlFor="password">Password</label><input id="password" name="password" type="password" autoComplete={mode==="signup"?"new-password":"current-password"} minLength={mode==="signup"?8:1} maxLength={128} required placeholder={mode==="signup"?"At least 8 characters":"Enter your password"}/>
+            {mode==="signup"&&<small>By creating an account you agree to our <Link href="/privacy">privacy details</Link>. If you accept analytics, your visits are linked to your account.</small>}
             {mode==="signup"&&<><label htmlFor="confirmPassword">Confirm password</label><input id="confirmPassword" name="confirmPassword" type="password" autoComplete="new-password" maxLength={128} required placeholder="Re-enter your password"/>
             {delivery==="local"&&<small>Local email preview is active. Codes go to a private test outbox.</small>}
             {delivery==="unavailable"&&<p className={styles.notice}>Email verification is awaiting configuration.</p>}</>}

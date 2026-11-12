@@ -162,6 +162,12 @@ export default async function DealDetailPage({
       : {}),
   };
 
+  // Deals that came from a member's submission show who shared them (their chosen user name, never their real name or email).
+  const sharer = (await db.communityDealSubmission.findFirst({
+    where: { dealId: row.id, status: "APPROVED" },
+    select: { customer: { select: { forumProfile: { select: { handle: true, avatarKey: true } } } } },
+  }))?.customer.forumProfile ?? null;
+
   return (
     <div className={styles.pageWrapper}>
       <DealViewTracker slug={slug} />
@@ -188,6 +194,16 @@ export default async function DealDetailPage({
             {deal.title}
           </span>
         </nav>
+
+        {sharer && (
+          <p style={{ display: "flex", alignItems: "center", gap: 8, margin: "0 0 12px", fontSize: 14, color: "#4b4b63" }}>
+            {sharer.avatarKey
+              // eslint-disable-next-line @next/next/no-img-element
+              ? <img src={`/api/v1/avatars/${sharer.handle}`} alt="" width={28} height={28} style={{ borderRadius: "50%", objectFit: "cover" }} />
+              : <span aria-hidden style={{ width: 28, height: 28, borderRadius: "50%", background: "#ede9fe", color: "#5b21d6", display: "inline-grid", placeItems: "center", fontWeight: 800 }}>{sharer.handle.slice(0, 1).toUpperCase()}</span>}
+            <span>Shared by <strong>@{sharer.handle}</strong></span>
+          </p>
+        )}
 
         {/* 3-Column Desktop Product Grid */}
         <div className={styles.productGrid}>

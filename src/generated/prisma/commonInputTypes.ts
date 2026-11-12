@@ -555,6 +555,142 @@ export type EnumPublicationAuthStatusWithAggregatesFilter<$PrismaModel = never> 
   _max?: Prisma.NestedEnumPublicationAuthStatusFilter<$PrismaModel>
 }
 
+export type EnumSubmissionStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.SubmissionStatus | Prisma.EnumSubmissionStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.SubmissionStatus[] | Prisma.ListEnumSubmissionStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SubmissionStatus[] | Prisma.ListEnumSubmissionStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSubmissionStatusFilter<$PrismaModel> | $Enums.SubmissionStatus
+}
+
+export type EnumSubmissionStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.SubmissionStatus | Prisma.EnumSubmissionStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.SubmissionStatus[] | Prisma.ListEnumSubmissionStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SubmissionStatus[] | Prisma.ListEnumSubmissionStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSubmissionStatusWithAggregatesFilter<$PrismaModel> | $Enums.SubmissionStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumSubmissionStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumSubmissionStatusFilter<$PrismaModel>
+}
+
+export type EnumForumMemberStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.ForumMemberStatus | Prisma.EnumForumMemberStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ForumMemberStatus[] | Prisma.ListEnumForumMemberStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ForumMemberStatus[] | Prisma.ListEnumForumMemberStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumForumMemberStatusFilter<$PrismaModel> | $Enums.ForumMemberStatus
+}
+
+export type EnumForumMemberStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ForumMemberStatus | Prisma.EnumForumMemberStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ForumMemberStatus[] | Prisma.ListEnumForumMemberStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ForumMemberStatus[] | Prisma.ListEnumForumMemberStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumForumMemberStatusWithAggregatesFilter<$PrismaModel> | $Enums.ForumMemberStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumForumMemberStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumForumMemberStatusFilter<$PrismaModel>
+}
+
+export type EnumForumPostTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.ForumPostType | Prisma.EnumForumPostTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.ForumPostType[] | Prisma.ListEnumForumPostTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ForumPostType[] | Prisma.ListEnumForumPostTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumForumPostTypeFilter<$PrismaModel> | $Enums.ForumPostType
+}
+
+export type EnumForumContentStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.ForumContentStatus | Prisma.EnumForumContentStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ForumContentStatus[] | Prisma.ListEnumForumContentStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ForumContentStatus[] | Prisma.ListEnumForumContentStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumForumContentStatusFilter<$PrismaModel> | $Enums.ForumContentStatus
+}
+
+export type EnumForumPostTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ForumPostType | Prisma.EnumForumPostTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.ForumPostType[] | Prisma.ListEnumForumPostTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ForumPostType[] | Prisma.ListEnumForumPostTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumForumPostTypeWithAggregatesFilter<$PrismaModel> | $Enums.ForumPostType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumForumPostTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumForumPostTypeFilter<$PrismaModel>
+}
+
+export type EnumForumContentStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ForumContentStatus | Prisma.EnumForumContentStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ForumContentStatus[] | Prisma.ListEnumForumContentStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ForumContentStatus[] | Prisma.ListEnumForumContentStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumForumContentStatusWithAggregatesFilter<$PrismaModel> | $Enums.ForumContentStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumForumContentStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumForumContentStatusFilter<$PrismaModel>
+}
+
+export type EnumForumReportTargetFilter<$PrismaModel = never> = {
+  equals?: $Enums.ForumReportTarget | Prisma.EnumForumReportTargetFieldRefInput<$PrismaModel>
+  in?: $Enums.ForumReportTarget[] | Prisma.ListEnumForumReportTargetFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ForumReportTarget[] | Prisma.ListEnumForumReportTargetFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumForumReportTargetFilter<$PrismaModel> | $Enums.ForumReportTarget
+}
+
+export type EnumForumReportCategoryFilter<$PrismaModel = never> = {
+  equals?: $Enums.ForumReportCategory | Prisma.EnumForumReportCategoryFieldRefInput<$PrismaModel>
+  in?: $Enums.ForumReportCategory[] | Prisma.ListEnumForumReportCategoryFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ForumReportCategory[] | Prisma.ListEnumForumReportCategoryFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumForumReportCategoryFilter<$PrismaModel> | $Enums.ForumReportCategory
+}
+
+export type EnumForumReportStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.ForumReportStatus | Prisma.EnumForumReportStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ForumReportStatus[] | Prisma.ListEnumForumReportStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ForumReportStatus[] | Prisma.ListEnumForumReportStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumForumReportStatusFilter<$PrismaModel> | $Enums.ForumReportStatus
+}
+
+export type EnumForumReportTargetWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ForumReportTarget | Prisma.EnumForumReportTargetFieldRefInput<$PrismaModel>
+  in?: $Enums.ForumReportTarget[] | Prisma.ListEnumForumReportTargetFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ForumReportTarget[] | Prisma.ListEnumForumReportTargetFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumForumReportTargetWithAggregatesFilter<$PrismaModel> | $Enums.ForumReportTarget
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumForumReportTargetFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumForumReportTargetFilter<$PrismaModel>
+}
+
+export type EnumForumReportCategoryWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ForumReportCategory | Prisma.EnumForumReportCategoryFieldRefInput<$PrismaModel>
+  in?: $Enums.ForumReportCategory[] | Prisma.ListEnumForumReportCategoryFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ForumReportCategory[] | Prisma.ListEnumForumReportCategoryFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumForumReportCategoryWithAggregatesFilter<$PrismaModel> | $Enums.ForumReportCategory
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumForumReportCategoryFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumForumReportCategoryFilter<$PrismaModel>
+}
+
+export type EnumForumReportStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ForumReportStatus | Prisma.EnumForumReportStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ForumReportStatus[] | Prisma.ListEnumForumReportStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ForumReportStatus[] | Prisma.ListEnumForumReportStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumForumReportStatusWithAggregatesFilter<$PrismaModel> | $Enums.ForumReportStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumForumReportStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumForumReportStatusFilter<$PrismaModel>
+}
+
+export type EnumDmThreadStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.DmThreadStatus | Prisma.EnumDmThreadStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.DmThreadStatus[] | Prisma.ListEnumDmThreadStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DmThreadStatus[] | Prisma.ListEnumDmThreadStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDmThreadStatusFilter<$PrismaModel> | $Enums.DmThreadStatus
+}
+
+export type EnumDmThreadStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.DmThreadStatus | Prisma.EnumDmThreadStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.DmThreadStatus[] | Prisma.ListEnumDmThreadStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DmThreadStatus[] | Prisma.ListEnumDmThreadStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDmThreadStatusWithAggregatesFilter<$PrismaModel> | $Enums.DmThreadStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumDmThreadStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumDmThreadStatusFilter<$PrismaModel>
+}
+
 export type NestedStringFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel>
   in?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
@@ -1058,6 +1194,142 @@ export type NestedEnumPublicationAuthStatusWithAggregatesFilter<$PrismaModel = n
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumPublicationAuthStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumPublicationAuthStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumSubmissionStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.SubmissionStatus | Prisma.EnumSubmissionStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.SubmissionStatus[] | Prisma.ListEnumSubmissionStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SubmissionStatus[] | Prisma.ListEnumSubmissionStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSubmissionStatusFilter<$PrismaModel> | $Enums.SubmissionStatus
+}
+
+export type NestedEnumSubmissionStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.SubmissionStatus | Prisma.EnumSubmissionStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.SubmissionStatus[] | Prisma.ListEnumSubmissionStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SubmissionStatus[] | Prisma.ListEnumSubmissionStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSubmissionStatusWithAggregatesFilter<$PrismaModel> | $Enums.SubmissionStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumSubmissionStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumSubmissionStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumForumMemberStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.ForumMemberStatus | Prisma.EnumForumMemberStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ForumMemberStatus[] | Prisma.ListEnumForumMemberStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ForumMemberStatus[] | Prisma.ListEnumForumMemberStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumForumMemberStatusFilter<$PrismaModel> | $Enums.ForumMemberStatus
+}
+
+export type NestedEnumForumMemberStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ForumMemberStatus | Prisma.EnumForumMemberStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ForumMemberStatus[] | Prisma.ListEnumForumMemberStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ForumMemberStatus[] | Prisma.ListEnumForumMemberStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumForumMemberStatusWithAggregatesFilter<$PrismaModel> | $Enums.ForumMemberStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumForumMemberStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumForumMemberStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumForumPostTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.ForumPostType | Prisma.EnumForumPostTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.ForumPostType[] | Prisma.ListEnumForumPostTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ForumPostType[] | Prisma.ListEnumForumPostTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumForumPostTypeFilter<$PrismaModel> | $Enums.ForumPostType
+}
+
+export type NestedEnumForumContentStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.ForumContentStatus | Prisma.EnumForumContentStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ForumContentStatus[] | Prisma.ListEnumForumContentStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ForumContentStatus[] | Prisma.ListEnumForumContentStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumForumContentStatusFilter<$PrismaModel> | $Enums.ForumContentStatus
+}
+
+export type NestedEnumForumPostTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ForumPostType | Prisma.EnumForumPostTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.ForumPostType[] | Prisma.ListEnumForumPostTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ForumPostType[] | Prisma.ListEnumForumPostTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumForumPostTypeWithAggregatesFilter<$PrismaModel> | $Enums.ForumPostType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumForumPostTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumForumPostTypeFilter<$PrismaModel>
+}
+
+export type NestedEnumForumContentStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ForumContentStatus | Prisma.EnumForumContentStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ForumContentStatus[] | Prisma.ListEnumForumContentStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ForumContentStatus[] | Prisma.ListEnumForumContentStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumForumContentStatusWithAggregatesFilter<$PrismaModel> | $Enums.ForumContentStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumForumContentStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumForumContentStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumForumReportTargetFilter<$PrismaModel = never> = {
+  equals?: $Enums.ForumReportTarget | Prisma.EnumForumReportTargetFieldRefInput<$PrismaModel>
+  in?: $Enums.ForumReportTarget[] | Prisma.ListEnumForumReportTargetFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ForumReportTarget[] | Prisma.ListEnumForumReportTargetFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumForumReportTargetFilter<$PrismaModel> | $Enums.ForumReportTarget
+}
+
+export type NestedEnumForumReportCategoryFilter<$PrismaModel = never> = {
+  equals?: $Enums.ForumReportCategory | Prisma.EnumForumReportCategoryFieldRefInput<$PrismaModel>
+  in?: $Enums.ForumReportCategory[] | Prisma.ListEnumForumReportCategoryFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ForumReportCategory[] | Prisma.ListEnumForumReportCategoryFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumForumReportCategoryFilter<$PrismaModel> | $Enums.ForumReportCategory
+}
+
+export type NestedEnumForumReportStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.ForumReportStatus | Prisma.EnumForumReportStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ForumReportStatus[] | Prisma.ListEnumForumReportStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ForumReportStatus[] | Prisma.ListEnumForumReportStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumForumReportStatusFilter<$PrismaModel> | $Enums.ForumReportStatus
+}
+
+export type NestedEnumForumReportTargetWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ForumReportTarget | Prisma.EnumForumReportTargetFieldRefInput<$PrismaModel>
+  in?: $Enums.ForumReportTarget[] | Prisma.ListEnumForumReportTargetFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ForumReportTarget[] | Prisma.ListEnumForumReportTargetFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumForumReportTargetWithAggregatesFilter<$PrismaModel> | $Enums.ForumReportTarget
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumForumReportTargetFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumForumReportTargetFilter<$PrismaModel>
+}
+
+export type NestedEnumForumReportCategoryWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ForumReportCategory | Prisma.EnumForumReportCategoryFieldRefInput<$PrismaModel>
+  in?: $Enums.ForumReportCategory[] | Prisma.ListEnumForumReportCategoryFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ForumReportCategory[] | Prisma.ListEnumForumReportCategoryFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumForumReportCategoryWithAggregatesFilter<$PrismaModel> | $Enums.ForumReportCategory
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumForumReportCategoryFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumForumReportCategoryFilter<$PrismaModel>
+}
+
+export type NestedEnumForumReportStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ForumReportStatus | Prisma.EnumForumReportStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ForumReportStatus[] | Prisma.ListEnumForumReportStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ForumReportStatus[] | Prisma.ListEnumForumReportStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumForumReportStatusWithAggregatesFilter<$PrismaModel> | $Enums.ForumReportStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumForumReportStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumForumReportStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumDmThreadStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.DmThreadStatus | Prisma.EnumDmThreadStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.DmThreadStatus[] | Prisma.ListEnumDmThreadStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DmThreadStatus[] | Prisma.ListEnumDmThreadStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDmThreadStatusFilter<$PrismaModel> | $Enums.DmThreadStatus
+}
+
+export type NestedEnumDmThreadStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.DmThreadStatus | Prisma.EnumDmThreadStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.DmThreadStatus[] | Prisma.ListEnumDmThreadStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DmThreadStatus[] | Prisma.ListEnumDmThreadStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDmThreadStatusWithAggregatesFilter<$PrismaModel> | $Enums.DmThreadStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumDmThreadStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumDmThreadStatusFilter<$PrismaModel>
 }
 
 

@@ -29,9 +29,11 @@ export function Homepage({
   deals: initialDeals,
   initialCursor,
   initialCatalog,
+  communityEnabled = false,
 }: {
   deals: Deal[];
   initialCursor: string | null;
+  communityEnabled?: boolean;
   initialCatalog?: {
     categories: { id: string; slug: string; name: string; parentId?: string | null }[];
     merchants: { id: string; slug: string; name: string }[];
@@ -69,7 +71,7 @@ export function Homepage({
       category: filters.category,
       store: filters.store,
       view: filters.view,
-      limit: "12",
+      limit: "15",
     });
 
     fetch(`/api/v1/home-deals?${params}`, { signal: controller.signal })
@@ -115,7 +117,7 @@ export function Homepage({
         category: filters.category,
         store: filters.store,
         view: filters.view,
-        limit: "12",
+        limit: "15",
         cursor: nextCursor,
       });
       const res = await fetch(`/api/v1/home-deals?${params}`);
@@ -197,7 +199,7 @@ export function Homepage({
   const closeDialog = () => setPanel(null);
   const mainCategories = catalog.categories.filter((c) => !c.parentId);
   return <>
-    <Header categories={catalog.categories} onCategory={(cat) => { setFilters({ ...defaults, category: cat }); setQuery(""); scrollToDeals(); }} savedCount={saved.ids.filter((id) => deals.some((deal) => deal.id === id)).length} onHome={() => { setFilters(defaults); setQuery(""); window.scrollTo({ top: 0, behavior: "smooth" }); }} onPanel={(next)=>{if(next==="account")router.push("/account");else setPanel(next);}} onView={(view) => { setFilters({ ...defaults, view }); setQuery(""); scrollToDeals(); }} />
+    <Header communityEnabled={communityEnabled} categories={catalog.categories} onCategory={(cat) => { setFilters({ ...defaults, category: cat }); setQuery(""); scrollToDeals(); }} savedCount={saved.ids.filter((id) => deals.some((deal) => deal.id === id)).length} onHome={() => { setFilters(defaults); setQuery(""); window.scrollTo({ top: 0, behavior: "smooth" }); }} onPanel={(next)=>{if(next==="account")router.push("/account");else setPanel(next);}} onView={(view) => { setFilters({ ...defaults, view }); setQuery(""); scrollToDeals(); }} />
     <main id="main">
       <HeroSection query={query} onQuery={setQuery} onSearch={search} />
       <CategorySection

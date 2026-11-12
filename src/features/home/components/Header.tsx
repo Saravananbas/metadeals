@@ -9,12 +9,16 @@ import {
   Heart,
   House,
   Menu,
+  MessagesSquare,
+  PlusCircle,
   Store,
   Tag,
   UserRound,
 } from "lucide-react";
-import { useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
+import { signOut } from "next-auth/react";
+import { UserNamePrompt } from "@/features/customer/IdentityCard";
 import { BrandLogo } from "@/components/BrandLogo";
 import type { DealFilters } from "@/features/deals/types";
 
@@ -34,6 +38,7 @@ export function Header({
   onCategory,
   categories = [],
   savedCount,
+  communityEnabled = false,
 }: {
   onPanel: (panel: Panel) => void;
   onView: (view: DealFilters["view"]) => void;
@@ -41,7 +46,14 @@ export function Header({
   onCategory?: (categorySlug: string) => void;
   categories?: CategoryItem[];
   savedCount: number;
+  communityEnabled?: boolean;
 }) {
+  const [signedIn, setSignedIn] = useState(false);
+  useEffect(() => {
+    let alive = true;
+    fetch("/api/v1/customer/session", { cache: "no-store" }).then((r) => r.json()).then((s) => { if (alive) setSignedIn(Boolean(s?.user)); }).catch(() => {});
+    return () => { alive = false; };
+  }, []);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeParentId, setActiveParentId] = useState<string | null>(null);
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
@@ -255,8 +267,21 @@ export function Header({
             <BookOpen size={19} />
             Blog
           </button>
+          {communityEnabled && (
+            <Link href="/community" onClick={closeMenu}>
+              <MessagesSquare size={19} />
+              Forum
+            </Link>
+          )}
+          {signedIn && (
+            <Link href="/post-deal" onClick={closeMenu}>
+              <PlusCircle size={19} />
+              Post a Deal
+            </Link>
+          )}
         </nav>
 
+        {signedIn && <UserNamePrompt />}
         <div className="header-actions">
           <button
             className="icon-button notification-button"
@@ -274,13 +299,23 @@ export function Header({
             <Heart size={23} />
             {savedCount > 0 && <span className="saved-count">{savedCount}</span>}
           </button>
-          <button
-            className="icon-button account-button"
-            aria-label="Your account"
-            onClick={() => onPanel("account")}
-          >
-            <UserRound size={22} />
-          </button>
+          <div className="account-menu">
+            <button
+              className="icon-button account-button"
+              aria-label="Your account"
+              aria-haspopup={signedIn ? "menu" : undefined}
+              onClick={() => onPanel("account")}
+            >
+              <UserRound size={22} />
+            </button>
+            {signedIn && (
+              <div className="account-menu-panel" role="menu" aria-label="Account menu">
+                <Link href="/account" role="menuitem">Manage Profile</Link>
+                <Link href="/post-deal#my-submissions" role="menuitem">Submitted Deals</Link>
+                <button type="button" role="menuitem" onClick={() => void signOut({ callbackUrl: "/" })}>Logout</button>
+              </div>
+            )}
+          </div>
           <button
             className="icon-button menu-toggle"
             aria-label={mobileOpen ? "Close navigation" : "Open navigation"}

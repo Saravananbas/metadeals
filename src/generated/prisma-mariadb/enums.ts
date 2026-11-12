@@ -125,3 +125,82 @@ export const PublicationAuthStatus = {
 } as const
 
 export type PublicationAuthStatus = (typeof PublicationAuthStatus)[keyof typeof PublicationAuthStatus]
+
+
+export const SubmissionStatus = {
+  PENDING_REVIEW: 'PENDING_REVIEW',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type SubmissionStatus = (typeof SubmissionStatus)[keyof typeof SubmissionStatus]
+
+
+export const ForumPostType = {
+  DEAL: 'DEAL',
+  DISCUSSION: 'DISCUSSION',
+  QUESTION: 'QUESTION'
+} as const
+
+export type ForumPostType = (typeof ForumPostType)[keyof typeof ForumPostType]
+
+
+export const ForumContentStatus = {
+  PENDING_REVIEW: 'PENDING_REVIEW',
+  PUBLISHED: 'PUBLISHED',
+  REMOVED: 'REMOVED',
+  DELETED: 'DELETED'
+} as const
+
+export type ForumContentStatus = (typeof ForumContentStatus)[keyof typeof ForumContentStatus]
+
+
+export const ForumMemberStatus = {
+  ACTIVE: 'ACTIVE',
+  SUSPENDED: 'SUSPENDED'
+} as const
+
+export type ForumMemberStatus = (typeof ForumMemberStatus)[keyof typeof ForumMemberStatus]
+
+
+export const ForumReportTarget = {
+  POST: 'POST',
+  COMMENT: 'COMMENT',
+  PROFILE: 'PROFILE'
+} as const
+
+export type ForumReportTarget = (typeof ForumReportTarget)[keyof typeof ForumReportTarget]
+
+
+export const ForumReportCategory = {
+  SPAM: 'SPAM',
+  SCAM: 'SCAM',
+  HARASSMENT: 'HARASSMENT',
+  HATE: 'HATE',
+  ILLEGAL: 'ILLEGAL',
+  PRIVACY: 'PRIVACY',
+  IMPERSONATION: 'IMPERSONATION',
+  OFF_TOPIC: 'OFF_TOPIC',
+  OTHER: 'OTHER'
+} as const
+
+export type ForumReportCategory = (typeof ForumReportCategory)[keyof typeof ForumReportCategory]
+
+
+export const ForumReportStatus = {
+  OPEN: 'OPEN',
+  RESOLVED: 'RESOLVED',
+  DISMISSED: 'DISMISSED',
+  ESCALATED: 'ESCALATED'
+} as const
+
+export type ForumReportStatus = (typeof ForumReportStatus)[keyof typeof ForumReportStatus]
+
+
+export const DmThreadStatus = {
+  REQUESTED: 'REQUESTED',
+  ACCEPTED: 'ACCEPTED',
+  DECLINED: 'DECLINED'
+} as const
+
+export type DmThreadStatus = (typeof DmThreadStatus)[keyof typeof DmThreadStatus]

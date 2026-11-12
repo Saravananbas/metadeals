@@ -7,6 +7,9 @@ export type AdminActiveNav =
   | "merchants"
   | "scraper"
   | "affiliate"
+  | "analytics"
+  | "submissions"
+  | "community"
   | "account"
   | "intelligence"
   | "home";
@@ -70,6 +73,27 @@ export function AdminNav({ active }: AdminNavProps) {
           className={active === "affiliate" ? styles.navButtonActive : styles.navButtonLink}
         >
           🔗 Affiliate Dashboard
+        </Link>
+
+        <Link
+          href="/admin/analytics"
+          className={active === "analytics" ? styles.navButtonActive : styles.navButtonLink}
+        >
+          📈 Analytics
+        </Link>
+
+        <Link
+          href="/admin/submissions"
+          className={active === "submissions" ? styles.navButtonActive : styles.navButtonLink}
+        >
+          📝 Community Deals
+        </Link>
+
+        <Link
+          href="/admin/community"
+          className={active === "community" ? styles.navButtonActive : styles.navButtonLink}
+        >
+          💬 Community
         </Link>
 
         {/* 6. Account Management */}

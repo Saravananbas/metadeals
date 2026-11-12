@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { getDatabase } from "@/server/db/client";
 import { resolveDealRedirect, AffiliateError } from "@/server/affiliate/service";
+import { recordBuyClick, SESSION_COOKIE } from "@/server/analytics/collector";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -28,6 +29,9 @@ export async function GET(
       prefetch,
       channel,
     });
+    if (result.loggedClick) {
+      await recordBuyClick({ dealId: result.dealId, merchantId: result.merchantId, channel, ip, userAgent, sessionCookie: request.cookies.get(SESSION_COOKIE)?.value ?? null });
+    }
 
     return new Response(null, {
       status: 302,

@@ -290,6 +290,9 @@ export type UserWhereInput = {
   createdDeals?: Prisma.DealListRelationFilter
   updatedDeals?: Prisma.DealListRelationFilter
   uploadedMedia?: Prisma.MediaListRelationFilter
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionListRelationFilter
+  forumReportsResolved?: Prisma.ForumReportListRelationFilter
+  forumActions?: Prisma.ForumModerationActionListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -316,6 +319,9 @@ export type UserOrderByWithRelationInput = {
   createdDeals?: Prisma.DealOrderByRelationAggregateInput
   updatedDeals?: Prisma.DealOrderByRelationAggregateInput
   uploadedMedia?: Prisma.MediaOrderByRelationAggregateInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionOrderByRelationAggregateInput
+  forumReportsResolved?: Prisma.ForumReportOrderByRelationAggregateInput
+  forumActions?: Prisma.ForumModerationActionOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -345,6 +351,9 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   createdDeals?: Prisma.DealListRelationFilter
   updatedDeals?: Prisma.DealListRelationFilter
   uploadedMedia?: Prisma.MediaListRelationFilter
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionListRelationFilter
+  forumReportsResolved?: Prisma.ForumReportListRelationFilter
+  forumActions?: Prisma.ForumModerationActionListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -411,6 +420,9 @@ export type UserCreateInput = {
   createdDeals?: Prisma.DealCreateNestedManyWithoutCreatedByInput
   updatedDeals?: Prisma.DealCreateNestedManyWithoutUpdatedByInput
   uploadedMedia?: Prisma.MediaCreateNestedManyWithoutUploadedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionCreateNestedManyWithoutReviewedByInput
+  forumReportsResolved?: Prisma.ForumReportCreateNestedManyWithoutResolvedByInput
+  forumActions?: Prisma.ForumModerationActionCreateNestedManyWithoutActorInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -437,6 +449,9 @@ export type UserUncheckedCreateInput = {
   createdDeals?: Prisma.DealUncheckedCreateNestedManyWithoutCreatedByInput
   updatedDeals?: Prisma.DealUncheckedCreateNestedManyWithoutUpdatedByInput
   uploadedMedia?: Prisma.MediaUncheckedCreateNestedManyWithoutUploadedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedCreateNestedManyWithoutReviewedByInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedCreateNestedManyWithoutResolvedByInput
+  forumActions?: Prisma.ForumModerationActionUncheckedCreateNestedManyWithoutActorInput
 }
 
 export type UserUpdateInput = {
@@ -463,6 +478,9 @@ export type UserUpdateInput = {
   createdDeals?: Prisma.DealUpdateManyWithoutCreatedByNestedInput
   updatedDeals?: Prisma.DealUpdateManyWithoutUpdatedByNestedInput
   uploadedMedia?: Prisma.MediaUpdateManyWithoutUploadedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUpdateManyWithoutReviewedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUpdateManyWithoutResolvedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUpdateManyWithoutActorNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -489,6 +507,9 @@ export type UserUncheckedUpdateInput = {
   createdDeals?: Prisma.DealUncheckedUpdateManyWithoutCreatedByNestedInput
   updatedDeals?: Prisma.DealUncheckedUpdateManyWithoutUpdatedByNestedInput
   uploadedMedia?: Prisma.MediaUncheckedUpdateManyWithoutUploadedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedUpdateManyWithoutReviewedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedUpdateManyWithoutResolvedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUncheckedUpdateManyWithoutActorNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -783,6 +804,52 @@ export type UserUpdateOneRequiredWithoutUpdatedDealsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutUpdatedDealsInput, Prisma.UserUpdateWithoutUpdatedDealsInput>, Prisma.UserUncheckedUpdateWithoutUpdatedDealsInput>
 }
 
+export type UserCreateNestedOneWithoutReviewedSubmissionsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReviewedSubmissionsInput, Prisma.UserUncheckedCreateWithoutReviewedSubmissionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReviewedSubmissionsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutReviewedSubmissionsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReviewedSubmissionsInput, Prisma.UserUncheckedCreateWithoutReviewedSubmissionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReviewedSubmissionsInput
+  upsert?: Prisma.UserUpsertWithoutReviewedSubmissionsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReviewedSubmissionsInput, Prisma.UserUpdateWithoutReviewedSubmissionsInput>, Prisma.UserUncheckedUpdateWithoutReviewedSubmissionsInput>
+}
+
+export type UserCreateNestedOneWithoutForumReportsResolvedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutForumReportsResolvedInput, Prisma.UserUncheckedCreateWithoutForumReportsResolvedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutForumReportsResolvedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutForumReportsResolvedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutForumReportsResolvedInput, Prisma.UserUncheckedCreateWithoutForumReportsResolvedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutForumReportsResolvedInput
+  upsert?: Prisma.UserUpsertWithoutForumReportsResolvedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutForumReportsResolvedInput, Prisma.UserUpdateWithoutForumReportsResolvedInput>, Prisma.UserUncheckedUpdateWithoutForumReportsResolvedInput>
+}
+
+export type UserCreateNestedOneWithoutForumActionsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutForumActionsInput, Prisma.UserUncheckedCreateWithoutForumActionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutForumActionsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutForumActionsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutForumActionsInput, Prisma.UserUncheckedCreateWithoutForumActionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutForumActionsInput
+  upsert?: Prisma.UserUpsertWithoutForumActionsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutForumActionsInput, Prisma.UserUpdateWithoutForumActionsInput>, Prisma.UserUncheckedUpdateWithoutForumActionsInput>
+}
+
 export type UserCreateWithoutAccountsInput = {
   id?: string
   name?: string | null
@@ -806,6 +873,9 @@ export type UserCreateWithoutAccountsInput = {
   createdDeals?: Prisma.DealCreateNestedManyWithoutCreatedByInput
   updatedDeals?: Prisma.DealCreateNestedManyWithoutUpdatedByInput
   uploadedMedia?: Prisma.MediaCreateNestedManyWithoutUploadedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionCreateNestedManyWithoutReviewedByInput
+  forumReportsResolved?: Prisma.ForumReportCreateNestedManyWithoutResolvedByInput
+  forumActions?: Prisma.ForumModerationActionCreateNestedManyWithoutActorInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -831,6 +901,9 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   createdDeals?: Prisma.DealUncheckedCreateNestedManyWithoutCreatedByInput
   updatedDeals?: Prisma.DealUncheckedCreateNestedManyWithoutUpdatedByInput
   uploadedMedia?: Prisma.MediaUncheckedCreateNestedManyWithoutUploadedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedCreateNestedManyWithoutReviewedByInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedCreateNestedManyWithoutResolvedByInput
+  forumActions?: Prisma.ForumModerationActionUncheckedCreateNestedManyWithoutActorInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -872,6 +945,9 @@ export type UserUpdateWithoutAccountsInput = {
   createdDeals?: Prisma.DealUpdateManyWithoutCreatedByNestedInput
   updatedDeals?: Prisma.DealUpdateManyWithoutUpdatedByNestedInput
   uploadedMedia?: Prisma.MediaUpdateManyWithoutUploadedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUpdateManyWithoutReviewedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUpdateManyWithoutResolvedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUpdateManyWithoutActorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -897,6 +973,9 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   createdDeals?: Prisma.DealUncheckedUpdateManyWithoutCreatedByNestedInput
   updatedDeals?: Prisma.DealUncheckedUpdateManyWithoutUpdatedByNestedInput
   uploadedMedia?: Prisma.MediaUncheckedUpdateManyWithoutUploadedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedUpdateManyWithoutReviewedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedUpdateManyWithoutResolvedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUncheckedUpdateManyWithoutActorNestedInput
 }
 
 export type UserCreateWithoutSessionsInput = {
@@ -922,6 +1001,9 @@ export type UserCreateWithoutSessionsInput = {
   createdDeals?: Prisma.DealCreateNestedManyWithoutCreatedByInput
   updatedDeals?: Prisma.DealCreateNestedManyWithoutUpdatedByInput
   uploadedMedia?: Prisma.MediaCreateNestedManyWithoutUploadedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionCreateNestedManyWithoutReviewedByInput
+  forumReportsResolved?: Prisma.ForumReportCreateNestedManyWithoutResolvedByInput
+  forumActions?: Prisma.ForumModerationActionCreateNestedManyWithoutActorInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -947,6 +1029,9 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   createdDeals?: Prisma.DealUncheckedCreateNestedManyWithoutCreatedByInput
   updatedDeals?: Prisma.DealUncheckedCreateNestedManyWithoutUpdatedByInput
   uploadedMedia?: Prisma.MediaUncheckedCreateNestedManyWithoutUploadedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedCreateNestedManyWithoutReviewedByInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedCreateNestedManyWithoutResolvedByInput
+  forumActions?: Prisma.ForumModerationActionUncheckedCreateNestedManyWithoutActorInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -988,6 +1073,9 @@ export type UserUpdateWithoutSessionsInput = {
   createdDeals?: Prisma.DealUpdateManyWithoutCreatedByNestedInput
   updatedDeals?: Prisma.DealUpdateManyWithoutUpdatedByNestedInput
   uploadedMedia?: Prisma.MediaUpdateManyWithoutUploadedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUpdateManyWithoutReviewedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUpdateManyWithoutResolvedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUpdateManyWithoutActorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -1013,6 +1101,9 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   createdDeals?: Prisma.DealUncheckedUpdateManyWithoutCreatedByNestedInput
   updatedDeals?: Prisma.DealUncheckedUpdateManyWithoutUpdatedByNestedInput
   uploadedMedia?: Prisma.MediaUncheckedUpdateManyWithoutUploadedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedUpdateManyWithoutReviewedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedUpdateManyWithoutResolvedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUncheckedUpdateManyWithoutActorNestedInput
 }
 
 export type UserCreateWithoutAuthSessionsInput = {
@@ -1038,6 +1129,9 @@ export type UserCreateWithoutAuthSessionsInput = {
   createdDeals?: Prisma.DealCreateNestedManyWithoutCreatedByInput
   updatedDeals?: Prisma.DealCreateNestedManyWithoutUpdatedByInput
   uploadedMedia?: Prisma.MediaCreateNestedManyWithoutUploadedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionCreateNestedManyWithoutReviewedByInput
+  forumReportsResolved?: Prisma.ForumReportCreateNestedManyWithoutResolvedByInput
+  forumActions?: Prisma.ForumModerationActionCreateNestedManyWithoutActorInput
 }
 
 export type UserUncheckedCreateWithoutAuthSessionsInput = {
@@ -1063,6 +1157,9 @@ export type UserUncheckedCreateWithoutAuthSessionsInput = {
   createdDeals?: Prisma.DealUncheckedCreateNestedManyWithoutCreatedByInput
   updatedDeals?: Prisma.DealUncheckedCreateNestedManyWithoutUpdatedByInput
   uploadedMedia?: Prisma.MediaUncheckedCreateNestedManyWithoutUploadedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedCreateNestedManyWithoutReviewedByInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedCreateNestedManyWithoutResolvedByInput
+  forumActions?: Prisma.ForumModerationActionUncheckedCreateNestedManyWithoutActorInput
 }
 
 export type UserCreateOrConnectWithoutAuthSessionsInput = {
@@ -1104,6 +1201,9 @@ export type UserUpdateWithoutAuthSessionsInput = {
   createdDeals?: Prisma.DealUpdateManyWithoutCreatedByNestedInput
   updatedDeals?: Prisma.DealUpdateManyWithoutUpdatedByNestedInput
   uploadedMedia?: Prisma.MediaUpdateManyWithoutUploadedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUpdateManyWithoutReviewedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUpdateManyWithoutResolvedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUpdateManyWithoutActorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAuthSessionsInput = {
@@ -1129,6 +1229,9 @@ export type UserUncheckedUpdateWithoutAuthSessionsInput = {
   createdDeals?: Prisma.DealUncheckedUpdateManyWithoutCreatedByNestedInput
   updatedDeals?: Prisma.DealUncheckedUpdateManyWithoutUpdatedByNestedInput
   uploadedMedia?: Prisma.MediaUncheckedUpdateManyWithoutUploadedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedUpdateManyWithoutReviewedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedUpdateManyWithoutResolvedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUncheckedUpdateManyWithoutActorNestedInput
 }
 
 export type UserCreateWithoutRecoveryCodesInput = {
@@ -1154,6 +1257,9 @@ export type UserCreateWithoutRecoveryCodesInput = {
   createdDeals?: Prisma.DealCreateNestedManyWithoutCreatedByInput
   updatedDeals?: Prisma.DealCreateNestedManyWithoutUpdatedByInput
   uploadedMedia?: Prisma.MediaCreateNestedManyWithoutUploadedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionCreateNestedManyWithoutReviewedByInput
+  forumReportsResolved?: Prisma.ForumReportCreateNestedManyWithoutResolvedByInput
+  forumActions?: Prisma.ForumModerationActionCreateNestedManyWithoutActorInput
 }
 
 export type UserUncheckedCreateWithoutRecoveryCodesInput = {
@@ -1179,6 +1285,9 @@ export type UserUncheckedCreateWithoutRecoveryCodesInput = {
   createdDeals?: Prisma.DealUncheckedCreateNestedManyWithoutCreatedByInput
   updatedDeals?: Prisma.DealUncheckedCreateNestedManyWithoutUpdatedByInput
   uploadedMedia?: Prisma.MediaUncheckedCreateNestedManyWithoutUploadedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedCreateNestedManyWithoutReviewedByInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedCreateNestedManyWithoutResolvedByInput
+  forumActions?: Prisma.ForumModerationActionUncheckedCreateNestedManyWithoutActorInput
 }
 
 export type UserCreateOrConnectWithoutRecoveryCodesInput = {
@@ -1220,6 +1329,9 @@ export type UserUpdateWithoutRecoveryCodesInput = {
   createdDeals?: Prisma.DealUpdateManyWithoutCreatedByNestedInput
   updatedDeals?: Prisma.DealUpdateManyWithoutUpdatedByNestedInput
   uploadedMedia?: Prisma.MediaUpdateManyWithoutUploadedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUpdateManyWithoutReviewedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUpdateManyWithoutResolvedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUpdateManyWithoutActorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRecoveryCodesInput = {
@@ -1245,6 +1357,9 @@ export type UserUncheckedUpdateWithoutRecoveryCodesInput = {
   createdDeals?: Prisma.DealUncheckedUpdateManyWithoutCreatedByNestedInput
   updatedDeals?: Prisma.DealUncheckedUpdateManyWithoutUpdatedByNestedInput
   uploadedMedia?: Prisma.MediaUncheckedUpdateManyWithoutUploadedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedUpdateManyWithoutReviewedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedUpdateManyWithoutResolvedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUncheckedUpdateManyWithoutActorNestedInput
 }
 
 export type UserCreateWithoutTokensInput = {
@@ -1270,6 +1385,9 @@ export type UserCreateWithoutTokensInput = {
   createdDeals?: Prisma.DealCreateNestedManyWithoutCreatedByInput
   updatedDeals?: Prisma.DealCreateNestedManyWithoutUpdatedByInput
   uploadedMedia?: Prisma.MediaCreateNestedManyWithoutUploadedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionCreateNestedManyWithoutReviewedByInput
+  forumReportsResolved?: Prisma.ForumReportCreateNestedManyWithoutResolvedByInput
+  forumActions?: Prisma.ForumModerationActionCreateNestedManyWithoutActorInput
 }
 
 export type UserUncheckedCreateWithoutTokensInput = {
@@ -1295,6 +1413,9 @@ export type UserUncheckedCreateWithoutTokensInput = {
   createdDeals?: Prisma.DealUncheckedCreateNestedManyWithoutCreatedByInput
   updatedDeals?: Prisma.DealUncheckedCreateNestedManyWithoutUpdatedByInput
   uploadedMedia?: Prisma.MediaUncheckedCreateNestedManyWithoutUploadedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedCreateNestedManyWithoutReviewedByInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedCreateNestedManyWithoutResolvedByInput
+  forumActions?: Prisma.ForumModerationActionUncheckedCreateNestedManyWithoutActorInput
 }
 
 export type UserCreateOrConnectWithoutTokensInput = {
@@ -1325,6 +1446,9 @@ export type UserCreateWithoutCreatedTokensInput = {
   createdDeals?: Prisma.DealCreateNestedManyWithoutCreatedByInput
   updatedDeals?: Prisma.DealCreateNestedManyWithoutUpdatedByInput
   uploadedMedia?: Prisma.MediaCreateNestedManyWithoutUploadedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionCreateNestedManyWithoutReviewedByInput
+  forumReportsResolved?: Prisma.ForumReportCreateNestedManyWithoutResolvedByInput
+  forumActions?: Prisma.ForumModerationActionCreateNestedManyWithoutActorInput
 }
 
 export type UserUncheckedCreateWithoutCreatedTokensInput = {
@@ -1350,6 +1474,9 @@ export type UserUncheckedCreateWithoutCreatedTokensInput = {
   createdDeals?: Prisma.DealUncheckedCreateNestedManyWithoutCreatedByInput
   updatedDeals?: Prisma.DealUncheckedCreateNestedManyWithoutUpdatedByInput
   uploadedMedia?: Prisma.MediaUncheckedCreateNestedManyWithoutUploadedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedCreateNestedManyWithoutReviewedByInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedCreateNestedManyWithoutResolvedByInput
+  forumActions?: Prisma.ForumModerationActionUncheckedCreateNestedManyWithoutActorInput
 }
 
 export type UserCreateOrConnectWithoutCreatedTokensInput = {
@@ -1391,6 +1518,9 @@ export type UserUpdateWithoutTokensInput = {
   createdDeals?: Prisma.DealUpdateManyWithoutCreatedByNestedInput
   updatedDeals?: Prisma.DealUpdateManyWithoutUpdatedByNestedInput
   uploadedMedia?: Prisma.MediaUpdateManyWithoutUploadedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUpdateManyWithoutReviewedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUpdateManyWithoutResolvedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUpdateManyWithoutActorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTokensInput = {
@@ -1416,6 +1546,9 @@ export type UserUncheckedUpdateWithoutTokensInput = {
   createdDeals?: Prisma.DealUncheckedUpdateManyWithoutCreatedByNestedInput
   updatedDeals?: Prisma.DealUncheckedUpdateManyWithoutUpdatedByNestedInput
   uploadedMedia?: Prisma.MediaUncheckedUpdateManyWithoutUploadedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedUpdateManyWithoutReviewedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedUpdateManyWithoutResolvedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUncheckedUpdateManyWithoutActorNestedInput
 }
 
 export type UserUpsertWithoutCreatedTokensInput = {
@@ -1452,6 +1585,9 @@ export type UserUpdateWithoutCreatedTokensInput = {
   createdDeals?: Prisma.DealUpdateManyWithoutCreatedByNestedInput
   updatedDeals?: Prisma.DealUpdateManyWithoutUpdatedByNestedInput
   uploadedMedia?: Prisma.MediaUpdateManyWithoutUploadedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUpdateManyWithoutReviewedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUpdateManyWithoutResolvedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUpdateManyWithoutActorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedTokensInput = {
@@ -1477,6 +1613,9 @@ export type UserUncheckedUpdateWithoutCreatedTokensInput = {
   createdDeals?: Prisma.DealUncheckedUpdateManyWithoutCreatedByNestedInput
   updatedDeals?: Prisma.DealUncheckedUpdateManyWithoutUpdatedByNestedInput
   uploadedMedia?: Prisma.MediaUncheckedUpdateManyWithoutUploadedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedUpdateManyWithoutReviewedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedUpdateManyWithoutResolvedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUncheckedUpdateManyWithoutActorNestedInput
 }
 
 export type UserCreateWithoutAuditAsActorInput = {
@@ -1502,6 +1641,9 @@ export type UserCreateWithoutAuditAsActorInput = {
   createdDeals?: Prisma.DealCreateNestedManyWithoutCreatedByInput
   updatedDeals?: Prisma.DealCreateNestedManyWithoutUpdatedByInput
   uploadedMedia?: Prisma.MediaCreateNestedManyWithoutUploadedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionCreateNestedManyWithoutReviewedByInput
+  forumReportsResolved?: Prisma.ForumReportCreateNestedManyWithoutResolvedByInput
+  forumActions?: Prisma.ForumModerationActionCreateNestedManyWithoutActorInput
 }
 
 export type UserUncheckedCreateWithoutAuditAsActorInput = {
@@ -1527,6 +1669,9 @@ export type UserUncheckedCreateWithoutAuditAsActorInput = {
   createdDeals?: Prisma.DealUncheckedCreateNestedManyWithoutCreatedByInput
   updatedDeals?: Prisma.DealUncheckedCreateNestedManyWithoutUpdatedByInput
   uploadedMedia?: Prisma.MediaUncheckedCreateNestedManyWithoutUploadedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedCreateNestedManyWithoutReviewedByInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedCreateNestedManyWithoutResolvedByInput
+  forumActions?: Prisma.ForumModerationActionUncheckedCreateNestedManyWithoutActorInput
 }
 
 export type UserCreateOrConnectWithoutAuditAsActorInput = {
@@ -1568,6 +1713,9 @@ export type UserUpdateWithoutAuditAsActorInput = {
   createdDeals?: Prisma.DealUpdateManyWithoutCreatedByNestedInput
   updatedDeals?: Prisma.DealUpdateManyWithoutUpdatedByNestedInput
   uploadedMedia?: Prisma.MediaUpdateManyWithoutUploadedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUpdateManyWithoutReviewedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUpdateManyWithoutResolvedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUpdateManyWithoutActorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAuditAsActorInput = {
@@ -1593,6 +1741,9 @@ export type UserUncheckedUpdateWithoutAuditAsActorInput = {
   createdDeals?: Prisma.DealUncheckedUpdateManyWithoutCreatedByNestedInput
   updatedDeals?: Prisma.DealUncheckedUpdateManyWithoutUpdatedByNestedInput
   uploadedMedia?: Prisma.MediaUncheckedUpdateManyWithoutUploadedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedUpdateManyWithoutReviewedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedUpdateManyWithoutResolvedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUncheckedUpdateManyWithoutActorNestedInput
 }
 
 export type UserCreateWithoutUploadedMediaInput = {
@@ -1618,6 +1769,9 @@ export type UserCreateWithoutUploadedMediaInput = {
   auditAsActor?: Prisma.AuditEventCreateNestedManyWithoutActorInput
   createdDeals?: Prisma.DealCreateNestedManyWithoutCreatedByInput
   updatedDeals?: Prisma.DealCreateNestedManyWithoutUpdatedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionCreateNestedManyWithoutReviewedByInput
+  forumReportsResolved?: Prisma.ForumReportCreateNestedManyWithoutResolvedByInput
+  forumActions?: Prisma.ForumModerationActionCreateNestedManyWithoutActorInput
 }
 
 export type UserUncheckedCreateWithoutUploadedMediaInput = {
@@ -1643,6 +1797,9 @@ export type UserUncheckedCreateWithoutUploadedMediaInput = {
   auditAsActor?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
   createdDeals?: Prisma.DealUncheckedCreateNestedManyWithoutCreatedByInput
   updatedDeals?: Prisma.DealUncheckedCreateNestedManyWithoutUpdatedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedCreateNestedManyWithoutReviewedByInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedCreateNestedManyWithoutResolvedByInput
+  forumActions?: Prisma.ForumModerationActionUncheckedCreateNestedManyWithoutActorInput
 }
 
 export type UserCreateOrConnectWithoutUploadedMediaInput = {
@@ -1684,6 +1841,9 @@ export type UserUpdateWithoutUploadedMediaInput = {
   auditAsActor?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
   createdDeals?: Prisma.DealUpdateManyWithoutCreatedByNestedInput
   updatedDeals?: Prisma.DealUpdateManyWithoutUpdatedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUpdateManyWithoutReviewedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUpdateManyWithoutResolvedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUpdateManyWithoutActorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutUploadedMediaInput = {
@@ -1709,6 +1869,9 @@ export type UserUncheckedUpdateWithoutUploadedMediaInput = {
   auditAsActor?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
   createdDeals?: Prisma.DealUncheckedUpdateManyWithoutCreatedByNestedInput
   updatedDeals?: Prisma.DealUncheckedUpdateManyWithoutUpdatedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedUpdateManyWithoutReviewedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedUpdateManyWithoutResolvedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUncheckedUpdateManyWithoutActorNestedInput
 }
 
 export type UserCreateWithoutCreatedDealsInput = {
@@ -1734,6 +1897,9 @@ export type UserCreateWithoutCreatedDealsInput = {
   auditAsActor?: Prisma.AuditEventCreateNestedManyWithoutActorInput
   updatedDeals?: Prisma.DealCreateNestedManyWithoutUpdatedByInput
   uploadedMedia?: Prisma.MediaCreateNestedManyWithoutUploadedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionCreateNestedManyWithoutReviewedByInput
+  forumReportsResolved?: Prisma.ForumReportCreateNestedManyWithoutResolvedByInput
+  forumActions?: Prisma.ForumModerationActionCreateNestedManyWithoutActorInput
 }
 
 export type UserUncheckedCreateWithoutCreatedDealsInput = {
@@ -1759,6 +1925,9 @@ export type UserUncheckedCreateWithoutCreatedDealsInput = {
   auditAsActor?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
   updatedDeals?: Prisma.DealUncheckedCreateNestedManyWithoutUpdatedByInput
   uploadedMedia?: Prisma.MediaUncheckedCreateNestedManyWithoutUploadedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedCreateNestedManyWithoutReviewedByInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedCreateNestedManyWithoutResolvedByInput
+  forumActions?: Prisma.ForumModerationActionUncheckedCreateNestedManyWithoutActorInput
 }
 
 export type UserCreateOrConnectWithoutCreatedDealsInput = {
@@ -1789,6 +1958,9 @@ export type UserCreateWithoutUpdatedDealsInput = {
   auditAsActor?: Prisma.AuditEventCreateNestedManyWithoutActorInput
   createdDeals?: Prisma.DealCreateNestedManyWithoutCreatedByInput
   uploadedMedia?: Prisma.MediaCreateNestedManyWithoutUploadedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionCreateNestedManyWithoutReviewedByInput
+  forumReportsResolved?: Prisma.ForumReportCreateNestedManyWithoutResolvedByInput
+  forumActions?: Prisma.ForumModerationActionCreateNestedManyWithoutActorInput
 }
 
 export type UserUncheckedCreateWithoutUpdatedDealsInput = {
@@ -1814,6 +1986,9 @@ export type UserUncheckedCreateWithoutUpdatedDealsInput = {
   auditAsActor?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
   createdDeals?: Prisma.DealUncheckedCreateNestedManyWithoutCreatedByInput
   uploadedMedia?: Prisma.MediaUncheckedCreateNestedManyWithoutUploadedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedCreateNestedManyWithoutReviewedByInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedCreateNestedManyWithoutResolvedByInput
+  forumActions?: Prisma.ForumModerationActionUncheckedCreateNestedManyWithoutActorInput
 }
 
 export type UserCreateOrConnectWithoutUpdatedDealsInput = {
@@ -1855,6 +2030,9 @@ export type UserUpdateWithoutCreatedDealsInput = {
   auditAsActor?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
   updatedDeals?: Prisma.DealUpdateManyWithoutUpdatedByNestedInput
   uploadedMedia?: Prisma.MediaUpdateManyWithoutUploadedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUpdateManyWithoutReviewedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUpdateManyWithoutResolvedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUpdateManyWithoutActorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedDealsInput = {
@@ -1880,6 +2058,9 @@ export type UserUncheckedUpdateWithoutCreatedDealsInput = {
   auditAsActor?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
   updatedDeals?: Prisma.DealUncheckedUpdateManyWithoutUpdatedByNestedInput
   uploadedMedia?: Prisma.MediaUncheckedUpdateManyWithoutUploadedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedUpdateManyWithoutReviewedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedUpdateManyWithoutResolvedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUncheckedUpdateManyWithoutActorNestedInput
 }
 
 export type UserUpsertWithoutUpdatedDealsInput = {
@@ -1916,6 +2097,9 @@ export type UserUpdateWithoutUpdatedDealsInput = {
   auditAsActor?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
   createdDeals?: Prisma.DealUpdateManyWithoutCreatedByNestedInput
   uploadedMedia?: Prisma.MediaUpdateManyWithoutUploadedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUpdateManyWithoutReviewedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUpdateManyWithoutResolvedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUpdateManyWithoutActorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutUpdatedDealsInput = {
@@ -1941,6 +2125,393 @@ export type UserUncheckedUpdateWithoutUpdatedDealsInput = {
   auditAsActor?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
   createdDeals?: Prisma.DealUncheckedUpdateManyWithoutCreatedByNestedInput
   uploadedMedia?: Prisma.MediaUncheckedUpdateManyWithoutUploadedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedUpdateManyWithoutReviewedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedUpdateManyWithoutResolvedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUncheckedUpdateManyWithoutActorNestedInput
+}
+
+export type UserCreateWithoutReviewedSubmissionsInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  passwordHash?: string | null
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  lastTotpStep?: bigint | number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  authSessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  recoveryCodes?: Prisma.RecoveryCodeCreateNestedManyWithoutUserInput
+  tokens?: Prisma.AuthTokenCreateNestedManyWithoutUserInput
+  createdTokens?: Prisma.AuthTokenCreateNestedManyWithoutCreatedByInput
+  auditAsActor?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  createdDeals?: Prisma.DealCreateNestedManyWithoutCreatedByInput
+  updatedDeals?: Prisma.DealCreateNestedManyWithoutUpdatedByInput
+  uploadedMedia?: Prisma.MediaCreateNestedManyWithoutUploadedByInput
+  forumReportsResolved?: Prisma.ForumReportCreateNestedManyWithoutResolvedByInput
+  forumActions?: Prisma.ForumModerationActionCreateNestedManyWithoutActorInput
+}
+
+export type UserUncheckedCreateWithoutReviewedSubmissionsInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  passwordHash?: string | null
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  lastTotpStep?: bigint | number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  authSessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  recoveryCodes?: Prisma.RecoveryCodeUncheckedCreateNestedManyWithoutUserInput
+  tokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutUserInput
+  createdTokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutCreatedByInput
+  auditAsActor?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  createdDeals?: Prisma.DealUncheckedCreateNestedManyWithoutCreatedByInput
+  updatedDeals?: Prisma.DealUncheckedCreateNestedManyWithoutUpdatedByInput
+  uploadedMedia?: Prisma.MediaUncheckedCreateNestedManyWithoutUploadedByInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedCreateNestedManyWithoutResolvedByInput
+  forumActions?: Prisma.ForumModerationActionUncheckedCreateNestedManyWithoutActorInput
+}
+
+export type UserCreateOrConnectWithoutReviewedSubmissionsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutReviewedSubmissionsInput, Prisma.UserUncheckedCreateWithoutReviewedSubmissionsInput>
+}
+
+export type UserUpsertWithoutReviewedSubmissionsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutReviewedSubmissionsInput, Prisma.UserUncheckedUpdateWithoutReviewedSubmissionsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutReviewedSubmissionsInput, Prisma.UserUncheckedCreateWithoutReviewedSubmissionsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutReviewedSubmissionsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutReviewedSubmissionsInput, Prisma.UserUncheckedUpdateWithoutReviewedSubmissionsInput>
+}
+
+export type UserUpdateWithoutReviewedSubmissionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  authSessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  recoveryCodes?: Prisma.RecoveryCodeUpdateManyWithoutUserNestedInput
+  tokens?: Prisma.AuthTokenUpdateManyWithoutUserNestedInput
+  createdTokens?: Prisma.AuthTokenUpdateManyWithoutCreatedByNestedInput
+  auditAsActor?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  createdDeals?: Prisma.DealUpdateManyWithoutCreatedByNestedInput
+  updatedDeals?: Prisma.DealUpdateManyWithoutUpdatedByNestedInput
+  uploadedMedia?: Prisma.MediaUpdateManyWithoutUploadedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUpdateManyWithoutResolvedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUpdateManyWithoutActorNestedInput
+}
+
+export type UserUncheckedUpdateWithoutReviewedSubmissionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  authSessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  recoveryCodes?: Prisma.RecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
+  tokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutUserNestedInput
+  createdTokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutCreatedByNestedInput
+  auditAsActor?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  createdDeals?: Prisma.DealUncheckedUpdateManyWithoutCreatedByNestedInput
+  updatedDeals?: Prisma.DealUncheckedUpdateManyWithoutUpdatedByNestedInput
+  uploadedMedia?: Prisma.MediaUncheckedUpdateManyWithoutUploadedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedUpdateManyWithoutResolvedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUncheckedUpdateManyWithoutActorNestedInput
+}
+
+export type UserCreateWithoutForumReportsResolvedInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  passwordHash?: string | null
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  lastTotpStep?: bigint | number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  authSessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  recoveryCodes?: Prisma.RecoveryCodeCreateNestedManyWithoutUserInput
+  tokens?: Prisma.AuthTokenCreateNestedManyWithoutUserInput
+  createdTokens?: Prisma.AuthTokenCreateNestedManyWithoutCreatedByInput
+  auditAsActor?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  createdDeals?: Prisma.DealCreateNestedManyWithoutCreatedByInput
+  updatedDeals?: Prisma.DealCreateNestedManyWithoutUpdatedByInput
+  uploadedMedia?: Prisma.MediaCreateNestedManyWithoutUploadedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionCreateNestedManyWithoutReviewedByInput
+  forumActions?: Prisma.ForumModerationActionCreateNestedManyWithoutActorInput
+}
+
+export type UserUncheckedCreateWithoutForumReportsResolvedInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  passwordHash?: string | null
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  lastTotpStep?: bigint | number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  authSessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  recoveryCodes?: Prisma.RecoveryCodeUncheckedCreateNestedManyWithoutUserInput
+  tokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutUserInput
+  createdTokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutCreatedByInput
+  auditAsActor?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  createdDeals?: Prisma.DealUncheckedCreateNestedManyWithoutCreatedByInput
+  updatedDeals?: Prisma.DealUncheckedCreateNestedManyWithoutUpdatedByInput
+  uploadedMedia?: Prisma.MediaUncheckedCreateNestedManyWithoutUploadedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedCreateNestedManyWithoutReviewedByInput
+  forumActions?: Prisma.ForumModerationActionUncheckedCreateNestedManyWithoutActorInput
+}
+
+export type UserCreateOrConnectWithoutForumReportsResolvedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutForumReportsResolvedInput, Prisma.UserUncheckedCreateWithoutForumReportsResolvedInput>
+}
+
+export type UserUpsertWithoutForumReportsResolvedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutForumReportsResolvedInput, Prisma.UserUncheckedUpdateWithoutForumReportsResolvedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutForumReportsResolvedInput, Prisma.UserUncheckedCreateWithoutForumReportsResolvedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutForumReportsResolvedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutForumReportsResolvedInput, Prisma.UserUncheckedUpdateWithoutForumReportsResolvedInput>
+}
+
+export type UserUpdateWithoutForumReportsResolvedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  authSessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  recoveryCodes?: Prisma.RecoveryCodeUpdateManyWithoutUserNestedInput
+  tokens?: Prisma.AuthTokenUpdateManyWithoutUserNestedInput
+  createdTokens?: Prisma.AuthTokenUpdateManyWithoutCreatedByNestedInput
+  auditAsActor?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  createdDeals?: Prisma.DealUpdateManyWithoutCreatedByNestedInput
+  updatedDeals?: Prisma.DealUpdateManyWithoutUpdatedByNestedInput
+  uploadedMedia?: Prisma.MediaUpdateManyWithoutUploadedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUpdateManyWithoutReviewedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUpdateManyWithoutActorNestedInput
+}
+
+export type UserUncheckedUpdateWithoutForumReportsResolvedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  authSessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  recoveryCodes?: Prisma.RecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
+  tokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutUserNestedInput
+  createdTokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutCreatedByNestedInput
+  auditAsActor?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  createdDeals?: Prisma.DealUncheckedUpdateManyWithoutCreatedByNestedInput
+  updatedDeals?: Prisma.DealUncheckedUpdateManyWithoutUpdatedByNestedInput
+  uploadedMedia?: Prisma.MediaUncheckedUpdateManyWithoutUploadedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedUpdateManyWithoutReviewedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUncheckedUpdateManyWithoutActorNestedInput
+}
+
+export type UserCreateWithoutForumActionsInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  passwordHash?: string | null
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  lastTotpStep?: bigint | number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  authSessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  recoveryCodes?: Prisma.RecoveryCodeCreateNestedManyWithoutUserInput
+  tokens?: Prisma.AuthTokenCreateNestedManyWithoutUserInput
+  createdTokens?: Prisma.AuthTokenCreateNestedManyWithoutCreatedByInput
+  auditAsActor?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  createdDeals?: Prisma.DealCreateNestedManyWithoutCreatedByInput
+  updatedDeals?: Prisma.DealCreateNestedManyWithoutUpdatedByInput
+  uploadedMedia?: Prisma.MediaCreateNestedManyWithoutUploadedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionCreateNestedManyWithoutReviewedByInput
+  forumReportsResolved?: Prisma.ForumReportCreateNestedManyWithoutResolvedByInput
+}
+
+export type UserUncheckedCreateWithoutForumActionsInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  passwordHash?: string | null
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  lastTotpStep?: bigint | number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  authSessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  recoveryCodes?: Prisma.RecoveryCodeUncheckedCreateNestedManyWithoutUserInput
+  tokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutUserInput
+  createdTokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutCreatedByInput
+  auditAsActor?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  createdDeals?: Prisma.DealUncheckedCreateNestedManyWithoutCreatedByInput
+  updatedDeals?: Prisma.DealUncheckedCreateNestedManyWithoutUpdatedByInput
+  uploadedMedia?: Prisma.MediaUncheckedCreateNestedManyWithoutUploadedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedCreateNestedManyWithoutReviewedByInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedCreateNestedManyWithoutResolvedByInput
+}
+
+export type UserCreateOrConnectWithoutForumActionsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutForumActionsInput, Prisma.UserUncheckedCreateWithoutForumActionsInput>
+}
+
+export type UserUpsertWithoutForumActionsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutForumActionsInput, Prisma.UserUncheckedUpdateWithoutForumActionsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutForumActionsInput, Prisma.UserUncheckedCreateWithoutForumActionsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutForumActionsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutForumActionsInput, Prisma.UserUncheckedUpdateWithoutForumActionsInput>
+}
+
+export type UserUpdateWithoutForumActionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  authSessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  recoveryCodes?: Prisma.RecoveryCodeUpdateManyWithoutUserNestedInput
+  tokens?: Prisma.AuthTokenUpdateManyWithoutUserNestedInput
+  createdTokens?: Prisma.AuthTokenUpdateManyWithoutCreatedByNestedInput
+  auditAsActor?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  createdDeals?: Prisma.DealUpdateManyWithoutCreatedByNestedInput
+  updatedDeals?: Prisma.DealUpdateManyWithoutUpdatedByNestedInput
+  uploadedMedia?: Prisma.MediaUpdateManyWithoutUploadedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUpdateManyWithoutReviewedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUpdateManyWithoutResolvedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutForumActionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  authSessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  recoveryCodes?: Prisma.RecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
+  tokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutUserNestedInput
+  createdTokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutCreatedByNestedInput
+  auditAsActor?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  createdDeals?: Prisma.DealUncheckedUpdateManyWithoutCreatedByNestedInput
+  updatedDeals?: Prisma.DealUncheckedUpdateManyWithoutUpdatedByNestedInput
+  uploadedMedia?: Prisma.MediaUncheckedUpdateManyWithoutUploadedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedUpdateManyWithoutReviewedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedUpdateManyWithoutResolvedByNestedInput
 }
 
 
@@ -1959,6 +2530,9 @@ export type UserCountOutputType = {
   createdDeals: number
   updatedDeals: number
   uploadedMedia: number
+  reviewedSubmissions: number
+  forumReportsResolved: number
+  forumActions: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1972,6 +2546,9 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   createdDeals?: boolean | UserCountOutputTypeCountCreatedDealsArgs
   updatedDeals?: boolean | UserCountOutputTypeCountUpdatedDealsArgs
   uploadedMedia?: boolean | UserCountOutputTypeCountUploadedMediaArgs
+  reviewedSubmissions?: boolean | UserCountOutputTypeCountReviewedSubmissionsArgs
+  forumReportsResolved?: boolean | UserCountOutputTypeCountForumReportsResolvedArgs
+  forumActions?: boolean | UserCountOutputTypeCountForumActionsArgs
 }
 
 /**
@@ -2054,6 +2631,27 @@ export type UserCountOutputTypeCountUploadedMediaArgs<ExtArgs extends runtime.Ty
   where?: Prisma.MediaWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountReviewedSubmissionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CommunityDealSubmissionWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountForumReportsResolvedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ForumReportWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountForumActionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ForumModerationActionWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2079,6 +2677,9 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   createdDeals?: boolean | Prisma.User$createdDealsArgs<ExtArgs>
   updatedDeals?: boolean | Prisma.User$updatedDealsArgs<ExtArgs>
   uploadedMedia?: boolean | Prisma.User$uploadedMediaArgs<ExtArgs>
+  reviewedSubmissions?: boolean | Prisma.User$reviewedSubmissionsArgs<ExtArgs>
+  forumReportsResolved?: boolean | Prisma.User$forumReportsResolvedArgs<ExtArgs>
+  forumActions?: boolean | Prisma.User$forumActionsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -2142,6 +2743,9 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   createdDeals?: boolean | Prisma.User$createdDealsArgs<ExtArgs>
   updatedDeals?: boolean | Prisma.User$updatedDealsArgs<ExtArgs>
   uploadedMedia?: boolean | Prisma.User$uploadedMediaArgs<ExtArgs>
+  reviewedSubmissions?: boolean | Prisma.User$reviewedSubmissionsArgs<ExtArgs>
+  forumReportsResolved?: boolean | Prisma.User$forumReportsResolvedArgs<ExtArgs>
+  forumActions?: boolean | Prisma.User$forumActionsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -2160,6 +2764,9 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     createdDeals: Prisma.$DealPayload<ExtArgs>[]
     updatedDeals: Prisma.$DealPayload<ExtArgs>[]
     uploadedMedia: Prisma.$MediaPayload<ExtArgs>[]
+    reviewedSubmissions: Prisma.$CommunityDealSubmissionPayload<ExtArgs>[]
+    forumReportsResolved: Prisma.$ForumReportPayload<ExtArgs>[]
+    forumActions: Prisma.$ForumModerationActionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2579,6 +3186,9 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   createdDeals<T extends Prisma.User$createdDealsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$createdDealsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DealPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   updatedDeals<T extends Prisma.User$updatedDealsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$updatedDealsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DealPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   uploadedMedia<T extends Prisma.User$uploadedMediaArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$uploadedMediaArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MediaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  reviewedSubmissions<T extends Prisma.User$reviewedSubmissionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reviewedSubmissionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommunityDealSubmissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  forumReportsResolved<T extends Prisma.User$forumReportsResolvedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$forumReportsResolvedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ForumReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  forumActions<T extends Prisma.User$forumActionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$forumActionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ForumModerationActionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3251,6 +3861,78 @@ export type User$uploadedMediaArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.MediaScalarFieldEnum | Prisma.MediaScalarFieldEnum[]
+}
+
+/**
+ * User.reviewedSubmissions
+ */
+export type User$reviewedSubmissionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CommunityDealSubmission
+   */
+  select?: Prisma.CommunityDealSubmissionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CommunityDealSubmission
+   */
+  omit?: Prisma.CommunityDealSubmissionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CommunityDealSubmissionInclude<ExtArgs> | null
+  where?: Prisma.CommunityDealSubmissionWhereInput
+  orderBy?: Prisma.CommunityDealSubmissionOrderByWithRelationInput | Prisma.CommunityDealSubmissionOrderByWithRelationInput[]
+  cursor?: Prisma.CommunityDealSubmissionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CommunityDealSubmissionScalarFieldEnum | Prisma.CommunityDealSubmissionScalarFieldEnum[]
+}
+
+/**
+ * User.forumReportsResolved
+ */
+export type User$forumReportsResolvedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ForumReport
+   */
+  select?: Prisma.ForumReportSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ForumReport
+   */
+  omit?: Prisma.ForumReportOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ForumReportInclude<ExtArgs> | null
+  where?: Prisma.ForumReportWhereInput
+  orderBy?: Prisma.ForumReportOrderByWithRelationInput | Prisma.ForumReportOrderByWithRelationInput[]
+  cursor?: Prisma.ForumReportWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ForumReportScalarFieldEnum | Prisma.ForumReportScalarFieldEnum[]
+}
+
+/**
+ * User.forumActions
+ */
+export type User$forumActionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ForumModerationAction
+   */
+  select?: Prisma.ForumModerationActionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ForumModerationAction
+   */
+  omit?: Prisma.ForumModerationActionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ForumModerationActionInclude<ExtArgs> | null
+  where?: Prisma.ForumModerationActionWhereInput
+  orderBy?: Prisma.ForumModerationActionOrderByWithRelationInput | Prisma.ForumModerationActionOrderByWithRelationInput[]
+  cursor?: Prisma.ForumModerationActionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ForumModerationActionScalarFieldEnum | Prisma.ForumModerationActionScalarFieldEnum[]
 }
 
 /**

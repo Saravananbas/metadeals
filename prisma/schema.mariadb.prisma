@@ -48,6 +48,9 @@ model User {
   createdDeals        Deal[]         @relation("DealCreator")
   updatedDeals        Deal[]         @relation("DealUpdater")
   uploadedMedia       Media[]
+  reviewedSubmissions CommunityDealSubmission[] @relation("SubmissionReviewer")
+  forumReportsResolved ForumReport[] @relation("ForumReportResolver")
+  forumActions ForumModerationAction[] @relation("ForumModerator")
   createdAt           DateTime       @default(now())
   updatedAt           DateTime       @updatedAt
 
@@ -299,6 +302,7 @@ model Deal {
   priceObservations PriceObservation[]
   comments       DealComment[]
   videoReviews   DealVideoReview[]
+  communitySubmission CommunityDealSubmission?
   youtubeReviewStatus String   @default("NOT_REQUESTED") @db.VarChar(50)
   youtubeLastSearchedAt DateTime?
 
@@ -344,6 +348,11 @@ model Customer {
   email           String             @unique
   image           String?            @db.VarChar(1024)
   passwordHash    String?            @db.VarChar(255)
+  sex             String?            @db.VarChar(20)
+  dateOfBirth     DateTime?          @db.Date
+  location        String?            @db.VarChar(100)
+  submissions     CommunityDealSubmission[]
+  forumProfile    ForumProfile?
   emailVerifiedAt DateTime?
   disabledAt      DateTime?
   identities      CustomerIdentity[]
@@ -794,3 +803,434 @@ model DealComment {
 }
 
 
+
+model AnalyticsSession {
+  id            String   @id @default(cuid())
+  startedAt     DateTime @default(now())
+  lastSeenAt    DateTime @default(now())
+  activeSeconds Int      @default(0)
+  pageCount     Int      @default(0)
+  entryPath     String   @db.VarChar(300)
+  exitPath      String   @db.VarChar(300)
+  referrerHost  String?  @db.VarChar(150)
+  utmSource     String?  @db.VarChar(100)
+  utmMedium     String?  @db.VarChar(100)
+  utmCampaign   String?  @db.VarChar(100)
+  channel       String?  @db.VarChar(30)
+  deviceType    String   @db.VarChar(20)
+  browser       String   @db.VarChar(30)
+  os            String   @db.VarChar(30)
+  returning     Boolean  @default(false)
+  customerId    String?  @db.VarChar(191)
+  events        AnalyticsEvent[]
+
+  @@index([startedAt])
+  @@index([lastSeenAt])
+  @@index([customerId])
+}
+
+model AnalyticsEvent {
+  id           String   @id @default(cuid())
+  sessionId    String?
+  visitorHash  String   @db.VarChar(32)
+  type         String   @db.VarChar(30)
+  path         String   @db.VarChar(300)
+  pageType     String   @db.VarChar(20)
+  dealId       String?  @db.VarChar(191)
+  merchantId   String?  @db.VarChar(191)
+  categoryId   String?  @db.VarChar(191)
+  referrerHost String?  @db.VarChar(150)
+  channel      String?  @db.VarChar(30)
+  deviceType   String?  @db.VarChar(20)
+  durationSec  Int      @default(0)
+  createdAt    DateTime @default(now())
+  session      AnalyticsSession? @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([createdAt])
+  @@index([type, createdAt])
+  @@index([dealId, createdAt])
+  @@index([merchantId, createdAt])
+  @@index([sessionId, createdAt])
+  @@index([pageType, createdAt])
+}
+
+model AnalyticsDaily {
+  id            String   @id @default(cuid())
+  date          DateTime @db.Date
+  dimension     String   @db.VarChar(20)
+  key           String   @db.VarChar(191)
+  views         Int      @default(0)
+  visitors      Int      @default(0)
+  sessions      Int      @default(0)
+  clicks        Int      @default(0)
+  activeSeconds Int      @default(0)
+
+  @@unique([date, dimension, key])
+  @@index([dimension, date])
+}
+
+enum SubmissionStatus {
+  PENDING_REVIEW
+  APPROVED
+  REJECTED
+}
+
+model CommunityDealSubmission {
+  id              String           @id @default(cuid())
+  customerId      String
+  customer        Customer         @relation(fields: [customerId], references: [id], onDelete: Restrict)
+  status          SubmissionStatus @default(PENDING_REVIEW)
+  title           String           @db.VarChar(200)
+  brand           String?          @db.VarChar(100)
+  description     String           @db.VarChar(2000)
+  productUrl      String           @db.VarChar(2048)
+  urlHash         String           @db.Char(64)
+  merchantName    String?          @db.VarChar(100)
+  categoryHint    String?          @db.VarChar(100)
+  priceMinor      Int
+  mrpMinor        Int?
+  couponCode      String?          @db.VarChar(50)
+  imageKey        String           @db.VarChar(160)
+  imageProvider   String           @db.VarChar(10)
+  imageMime       String           @db.VarChar(40)
+  imageBytes      Int
+  imageWidth      Int
+  imageHeight     Int
+  version         Int              @default(1)
+  resubmissions   Int              @default(0)
+  submittedAt     DateTime         @default(now())
+  reviewedById    String?
+  reviewedBy      User?            @relation("SubmissionReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+  reviewedAt      DateTime?
+  rejectionReason String?          @db.VarChar(500)
+  dealId          String?          @unique
+  deal            Deal?            @relation(fields: [dealId], references: [id], onDelete: SetNull)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@unique([customerId, urlHash])
+  @@index([status, submittedAt])
+  @@index([customerId, status])
+}
+
+enum ForumPostType {
+  DEAL
+  DISCUSSION
+  QUESTION
+}
+
+enum ForumContentStatus {
+  PENDING_REVIEW
+  PUBLISHED
+  REMOVED
+  DELETED
+}
+
+enum ForumMemberStatus {
+  ACTIVE
+  SUSPENDED
+}
+
+enum ForumReportTarget {
+  POST
+  COMMENT
+  PROFILE
+}
+
+enum ForumReportCategory {
+  SPAM
+  SCAM
+  HARASSMENT
+  HATE
+  ILLEGAL
+  PRIVACY
+  IMPERSONATION
+  OFF_TOPIC
+  OTHER
+}
+
+enum ForumReportStatus {
+  OPEN
+  RESOLVED
+  DISMISSED
+  ESCALATED
+}
+
+model ForumCommunity {
+  id             String   @id @default(cuid())
+  slug           String   @unique @db.VarChar(40)
+  name           String   @db.VarChar(60)
+  description    String   @db.VarChar(300)
+  sortOrder      Int      @default(0)
+  isActive       Boolean  @default(true)
+  requiresReview Boolean  @default(false)
+  posts          ForumPost[]
+  follows        ForumFollow[]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model ForumProfile {
+  id               String            @id @default(cuid())
+  customerId       String            @unique
+  customer         Customer          @relation(fields: [customerId], references: [id], onDelete: Restrict)
+  handle           String            @unique @db.VarChar(30)
+  bio              String?           @db.VarChar(280)
+  status           ForumMemberStatus @default(ACTIVE)
+  suspendedUntil   DateTime?
+  suspensionReason String?           @db.VarChar(300)
+  avatarKey        String?           @db.VarChar(160)
+  avatarProvider   String?           @db.VarChar(10)
+  dmThreadsLow     DmThread[]        @relation("DmThreadLow")
+  dmThreadsHigh    DmThread[]        @relation("DmThreadHigh")
+  dmMessages       DmMessage[]       @relation("DmSender")
+  dmBlocksMade     DmBlock[]         @relation("DmBlocker")
+  dmBlocksReceived DmBlock[]         @relation("DmBlocked")
+  posts            ForumPost[]
+  comments         ForumComment[]
+  postVotes        ForumPostVote[]
+  commentVotes     ForumCommentVote[]
+  saves            ForumSave[]
+  follows          ForumFollow[]
+  reportsMade      ForumReport[]     @relation("ForumReporter")
+  reportsAgainst   ForumReport[]     @relation("ForumReportedProfile")
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+}
+
+model ForumPost {
+  id            String             @id @default(cuid())
+  slug          String             @unique @db.VarChar(120)
+  communityId   String
+  community     ForumCommunity     @relation(fields: [communityId], references: [id], onDelete: Restrict)
+  authorId      String
+  author        ForumProfile       @relation(fields: [authorId], references: [id], onDelete: Restrict)
+  type          ForumPostType
+  title         String             @db.VarChar(200)
+  body          String             @db.Text
+  url           String?            @db.VarChar(2048)
+  urlHash       String?            @db.Char(64)
+  merchantName  String?            @db.VarChar(100)
+  priceMinor    Int?
+  mrpMinor      Int?
+  couponCode    String?            @db.VarChar(50)
+  contentHash   String             @db.Char(64)
+  status        ForumContentStatus @default(PUBLISHED)
+  locked        Boolean            @default(false)
+  score         Int                @default(0)
+  commentCount  Int                @default(0)
+  removalReason String?            @db.VarChar(300)
+  version       Int                @default(1)
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  publishedAt   DateTime?
+  editedAt      DateTime?
+  comments      ForumComment[]
+  votes         ForumPostVote[]
+  saves         ForumSave[]
+  reports       ForumReport[]
+
+  @@index([status, publishedAt, id])
+  @@index([communityId, status, publishedAt])
+  @@index([status, score, publishedAt])
+  @@index([authorId, createdAt])
+  @@index([urlHash])
+  @@index([authorId, contentHash])
+}
+
+model ForumComment {
+  id            String             @id @default(cuid())
+  postId        String
+  post          ForumPost          @relation(fields: [postId], references: [id], onDelete: Cascade)
+  authorId      String
+  author        ForumProfile       @relation(fields: [authorId], references: [id], onDelete: Restrict)
+  parentId      String?
+  parent        ForumComment?      @relation("ForumCommentTree", fields: [parentId], references: [id], onDelete: Restrict)
+  replies       ForumComment[]     @relation("ForumCommentTree")
+  depth         Int                @default(0)
+  body          String             @db.Text
+  status        ForumContentStatus @default(PUBLISHED)
+  score         Int                @default(0)
+  removalReason String?            @db.VarChar(300)
+  version       Int                @default(1)
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  editedAt      DateTime?
+  votes         ForumCommentVote[]
+  reports       ForumReport[]
+
+  @@index([postId, parentId, createdAt])
+  @@index([parentId, createdAt])
+  @@index([authorId, createdAt])
+}
+
+model ForumPostVote {
+  id        String       @id @default(cuid())
+  postId    String
+  post      ForumPost    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  profileId String
+  profile   ForumProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  value     Int
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  @@unique([postId, profileId])
+  @@index([profileId])
+}
+
+model ForumCommentVote {
+  id        String       @id @default(cuid())
+  commentId String
+  comment   ForumComment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  profileId String
+  profile   ForumProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  value     Int
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  @@unique([commentId, profileId])
+  @@index([profileId])
+}
+
+model ForumSave {
+  id        String       @id @default(cuid())
+  postId    String
+  post      ForumPost    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  profileId String
+  profile   ForumProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  createdAt DateTime     @default(now())
+
+  @@unique([postId, profileId])
+  @@index([profileId, createdAt])
+}
+
+model ForumFollow {
+  id          String         @id @default(cuid())
+  communityId String
+  community   ForumCommunity @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  profileId   String
+  profile     ForumProfile   @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  createdAt   DateTime       @default(now())
+
+  @@unique([communityId, profileId])
+  @@index([profileId])
+}
+
+model ForumReport {
+  id              String              @id @default(cuid())
+  reporterId      String
+  reporter        ForumProfile        @relation("ForumReporter", fields: [reporterId], references: [id], onDelete: Restrict)
+  targetType      ForumReportTarget
+  postId          String?
+  post            ForumPost?          @relation(fields: [postId], references: [id], onDelete: Restrict)
+  commentId       String?
+  comment         ForumComment?       @relation(fields: [commentId], references: [id], onDelete: Restrict)
+  targetProfileId String?
+  targetProfile   ForumProfile?       @relation("ForumReportedProfile", fields: [targetProfileId], references: [id], onDelete: Restrict)
+  category        ForumReportCategory
+  details         String?             @db.VarChar(500)
+  status          ForumReportStatus   @default(OPEN)
+  version         Int                 @default(1)
+  resolvedById    String?
+  resolvedBy      User?               @relation("ForumReportResolver", fields: [resolvedById], references: [id], onDelete: SetNull)
+  resolvedAt      DateTime?
+  resolution      String?             @db.VarChar(300)
+  createdAt       DateTime            @default(now())
+
+  @@unique([reporterId, postId])
+  @@unique([reporterId, commentId])
+  @@unique([reporterId, targetProfileId])
+  @@index([status, createdAt])
+  @@index([postId])
+  @@index([commentId])
+}
+
+/// Append-only moderation history. Target ids are plain strings on purpose so evidence outlives the content it refers to.
+model ForumModerationAction {
+  id            String   @id @default(cuid())
+  actorId       String
+  actor         User     @relation("ForumModerator", fields: [actorId], references: [id], onDelete: Restrict)
+  action        String   @db.VarChar(40)
+  targetType    String   @db.VarChar(12)
+  postId        String?
+  commentId     String?
+  profileId     String?
+  reason        String   @db.VarChar(500)
+  correlationId String   @db.VarChar(36)
+  createdAt     DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([postId])
+  @@index([profileId])
+}
+
+enum DmThreadStatus {
+  REQUESTED
+  ACCEPTED
+  DECLINED
+}
+
+model DmThread {
+  id            String          @id @default(cuid())
+  profileLowId  String
+  profileLow    ForumProfile    @relation("DmThreadLow", fields: [profileLowId], references: [id], onDelete: Cascade)
+  profileHighId String
+  profileHigh   ForumProfile    @relation("DmThreadHigh", fields: [profileHighId], references: [id], onDelete: Cascade)
+  requestedById String
+  status        DmThreadStatus  @default(REQUESTED)
+  lastMessageAt DateTime        @default(now())
+  lowReadAt     DateTime?
+  highReadAt    DateTime?
+  createdAt     DateTime        @default(now())
+  messages      DmMessage[]
+
+  @@unique([profileLowId, profileHighId])
+  @@index([profileLowId, lastMessageAt])
+  @@index([profileHighId, lastMessageAt])
+}
+
+model DmMessage {
+  id        String       @id @default(cuid())
+  threadId  String
+  thread    DmThread     @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  senderId  String
+  sender    ForumProfile @relation("DmSender", fields: [senderId], references: [id], onDelete: Cascade)
+  body      String       @db.Text
+  deleted   Boolean      @default(false)
+  createdAt DateTime     @default(now())
+
+  @@index([threadId, createdAt])
+}
+
+model DmBlock {
+  id        String       @id @default(cuid())
+  blockerId String
+  blocker   ForumProfile @relation("DmBlocker", fields: [blockerId], references: [id], onDelete: Cascade)
+  blockedId String
+  blocked   ForumProfile @relation("DmBlocked", fields: [blockedId], references: [id], onDelete: Cascade)
+  createdAt DateTime     @default(now())
+
+  @@unique([blockerId, blockedId])
+  @@index([blockedId])
+}
+
+/// Staff see a message only when a participant reports it; the text is copied here at that moment.
+model DmReport {
+  id                String              @id @default(cuid())
+  reporterId        String
+  reportedProfileId String
+  threadId          String
+  messageId         String
+  category          ForumReportCategory
+  details           String?             @db.VarChar(500)
+  snapshot          String              @db.VarChar(2000)
+  status            ForumReportStatus   @default(OPEN)
+  version           Int                 @default(1)
+  resolvedById      String?
+  resolvedAt        DateTime?
+  resolution        String?             @db.VarChar(300)
+  createdAt         DateTime            @default(now())
+
+  @@unique([reporterId, messageId])
+  @@index([status, createdAt])
+}

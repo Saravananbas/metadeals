@@ -17,7 +17,9 @@ export type Permission =
   | "merchant:manage"
   | "category:manage"
   | "affiliate:manage"
-  | "operations:read";
+  | "operations:read"
+  | "forum:moderate"
+  | "forum:manage";
 
 const rolePermissions: Record<AdminRole, ReadonlySet<Permission>> = {
   SUPER_ADMIN: new Set([
@@ -25,18 +27,18 @@ const rolePermissions: Record<AdminRole, ReadonlySet<Permission>> = {
     "account:role:update", "account:suspend", "account:reactivate", "account:read",
     "audit:read", "security:manage", "deal:create", "deal:edit", "deal:publish",
     "deal:archive", "merchant:manage", "category:manage", "affiliate:manage",
-    "operations:read",
+    "operations:read", "forum:moderate", "forum:manage",
   ]),
   ADMIN: new Set([
     "account:create:editor", "account:suspend", "account:reactivate", "account:read",
     "deal:create", "deal:edit", "deal:publish", "deal:archive", "merchant:manage",
-    "category:manage", "affiliate:manage", "operations:read",
+    "category:manage", "affiliate:manage", "operations:read", "forum:moderate", "forum:manage",
   ]),
   EDITOR: new Set(["deal:create", "deal:edit", "deal:publish"]),
 };
 
 export function roleCan(role: AdminRole, permission: Permission): boolean {
-  return rolePermissions[role].has(permission);
+  return rolePermissions[role]?.has(permission) ?? false; // unknown roles get nothing
 }
 
 export function canAssignRole(actor: AdminRole, target: AdminRole): boolean {

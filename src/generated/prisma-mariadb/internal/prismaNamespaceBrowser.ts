@@ -90,7 +90,25 @@ export const ModelName = {
   PublicationAuthorization: 'PublicationAuthorization',
   ShadowCandidate: 'ShadowCandidate',
   DealLifecycleEvent: 'DealLifecycleEvent',
-  DealComment: 'DealComment'
+  DealComment: 'DealComment',
+  AnalyticsSession: 'AnalyticsSession',
+  AnalyticsEvent: 'AnalyticsEvent',
+  AnalyticsDaily: 'AnalyticsDaily',
+  CommunityDealSubmission: 'CommunityDealSubmission',
+  ForumCommunity: 'ForumCommunity',
+  ForumProfile: 'ForumProfile',
+  ForumPost: 'ForumPost',
+  ForumComment: 'ForumComment',
+  ForumPostVote: 'ForumPostVote',
+  ForumCommentVote: 'ForumCommentVote',
+  ForumSave: 'ForumSave',
+  ForumFollow: 'ForumFollow',
+  ForumReport: 'ForumReport',
+  ForumModerationAction: 'ForumModerationAction',
+  DmThread: 'DmThread',
+  DmMessage: 'DmMessage',
+  DmBlock: 'DmBlock',
+  DmReport: 'DmReport'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -388,6 +406,9 @@ export const CustomerScalarFieldEnum = {
   email: 'email',
   image: 'image',
   passwordHash: 'passwordHash',
+  sex: 'sex',
+  dateOfBirth: 'dateOfBirth',
+  location: 'location',
   emailVerifiedAt: 'emailVerifiedAt',
   disabledAt: 'disabledAt',
   createdAt: 'createdAt',
@@ -759,6 +780,316 @@ export const DealCommentScalarFieldEnum = {
 export type DealCommentScalarFieldEnum = (typeof DealCommentScalarFieldEnum)[keyof typeof DealCommentScalarFieldEnum]
 
 
+export const AnalyticsSessionScalarFieldEnum = {
+  id: 'id',
+  startedAt: 'startedAt',
+  lastSeenAt: 'lastSeenAt',
+  activeSeconds: 'activeSeconds',
+  pageCount: 'pageCount',
+  entryPath: 'entryPath',
+  exitPath: 'exitPath',
+  referrerHost: 'referrerHost',
+  utmSource: 'utmSource',
+  utmMedium: 'utmMedium',
+  utmCampaign: 'utmCampaign',
+  channel: 'channel',
+  deviceType: 'deviceType',
+  browser: 'browser',
+  os: 'os',
+  returning: 'returning',
+  customerId: 'customerId'
+} as const
+
+export type AnalyticsSessionScalarFieldEnum = (typeof AnalyticsSessionScalarFieldEnum)[keyof typeof AnalyticsSessionScalarFieldEnum]
+
+
+export const AnalyticsEventScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  visitorHash: 'visitorHash',
+  type: 'type',
+  path: 'path',
+  pageType: 'pageType',
+  dealId: 'dealId',
+  merchantId: 'merchantId',
+  categoryId: 'categoryId',
+  referrerHost: 'referrerHost',
+  channel: 'channel',
+  deviceType: 'deviceType',
+  durationSec: 'durationSec',
+  createdAt: 'createdAt'
+} as const
+
+export type AnalyticsEventScalarFieldEnum = (typeof AnalyticsEventScalarFieldEnum)[keyof typeof AnalyticsEventScalarFieldEnum]
+
+
+export const AnalyticsDailyScalarFieldEnum = {
+  id: 'id',
+  date: 'date',
+  dimension: 'dimension',
+  key: 'key',
+  views: 'views',
+  visitors: 'visitors',
+  sessions: 'sessions',
+  clicks: 'clicks',
+  activeSeconds: 'activeSeconds'
+} as const
+
+export type AnalyticsDailyScalarFieldEnum = (typeof AnalyticsDailyScalarFieldEnum)[keyof typeof AnalyticsDailyScalarFieldEnum]
+
+
+export const CommunityDealSubmissionScalarFieldEnum = {
+  id: 'id',
+  customerId: 'customerId',
+  status: 'status',
+  title: 'title',
+  brand: 'brand',
+  description: 'description',
+  productUrl: 'productUrl',
+  urlHash: 'urlHash',
+  merchantName: 'merchantName',
+  categoryHint: 'categoryHint',
+  priceMinor: 'priceMinor',
+  mrpMinor: 'mrpMinor',
+  couponCode: 'couponCode',
+  imageKey: 'imageKey',
+  imageProvider: 'imageProvider',
+  imageMime: 'imageMime',
+  imageBytes: 'imageBytes',
+  imageWidth: 'imageWidth',
+  imageHeight: 'imageHeight',
+  version: 'version',
+  resubmissions: 'resubmissions',
+  submittedAt: 'submittedAt',
+  reviewedById: 'reviewedById',
+  reviewedAt: 'reviewedAt',
+  rejectionReason: 'rejectionReason',
+  dealId: 'dealId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CommunityDealSubmissionScalarFieldEnum = (typeof CommunityDealSubmissionScalarFieldEnum)[keyof typeof CommunityDealSubmissionScalarFieldEnum]
+
+
+export const ForumCommunityScalarFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  name: 'name',
+  description: 'description',
+  sortOrder: 'sortOrder',
+  isActive: 'isActive',
+  requiresReview: 'requiresReview',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ForumCommunityScalarFieldEnum = (typeof ForumCommunityScalarFieldEnum)[keyof typeof ForumCommunityScalarFieldEnum]
+
+
+export const ForumProfileScalarFieldEnum = {
+  id: 'id',
+  customerId: 'customerId',
+  handle: 'handle',
+  bio: 'bio',
+  status: 'status',
+  suspendedUntil: 'suspendedUntil',
+  suspensionReason: 'suspensionReason',
+  avatarKey: 'avatarKey',
+  avatarProvider: 'avatarProvider',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ForumProfileScalarFieldEnum = (typeof ForumProfileScalarFieldEnum)[keyof typeof ForumProfileScalarFieldEnum]
+
+
+export const ForumPostScalarFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  communityId: 'communityId',
+  authorId: 'authorId',
+  type: 'type',
+  title: 'title',
+  body: 'body',
+  url: 'url',
+  urlHash: 'urlHash',
+  merchantName: 'merchantName',
+  priceMinor: 'priceMinor',
+  mrpMinor: 'mrpMinor',
+  couponCode: 'couponCode',
+  contentHash: 'contentHash',
+  status: 'status',
+  locked: 'locked',
+  score: 'score',
+  commentCount: 'commentCount',
+  removalReason: 'removalReason',
+  version: 'version',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  publishedAt: 'publishedAt',
+  editedAt: 'editedAt'
+} as const
+
+export type ForumPostScalarFieldEnum = (typeof ForumPostScalarFieldEnum)[keyof typeof ForumPostScalarFieldEnum]
+
+
+export const ForumCommentScalarFieldEnum = {
+  id: 'id',
+  postId: 'postId',
+  authorId: 'authorId',
+  parentId: 'parentId',
+  depth: 'depth',
+  body: 'body',
+  status: 'status',
+  score: 'score',
+  removalReason: 'removalReason',
+  version: 'version',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  editedAt: 'editedAt'
+} as const
+
+export type ForumCommentScalarFieldEnum = (typeof ForumCommentScalarFieldEnum)[keyof typeof ForumCommentScalarFieldEnum]
+
+
+export const ForumPostVoteScalarFieldEnum = {
+  id: 'id',
+  postId: 'postId',
+  profileId: 'profileId',
+  value: 'value',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ForumPostVoteScalarFieldEnum = (typeof ForumPostVoteScalarFieldEnum)[keyof typeof ForumPostVoteScalarFieldEnum]
+
+
+export const ForumCommentVoteScalarFieldEnum = {
+  id: 'id',
+  commentId: 'commentId',
+  profileId: 'profileId',
+  value: 'value',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ForumCommentVoteScalarFieldEnum = (typeof ForumCommentVoteScalarFieldEnum)[keyof typeof ForumCommentVoteScalarFieldEnum]
+
+
+export const ForumSaveScalarFieldEnum = {
+  id: 'id',
+  postId: 'postId',
+  profileId: 'profileId',
+  createdAt: 'createdAt'
+} as const
+
+export type ForumSaveScalarFieldEnum = (typeof ForumSaveScalarFieldEnum)[keyof typeof ForumSaveScalarFieldEnum]
+
+
+export const ForumFollowScalarFieldEnum = {
+  id: 'id',
+  communityId: 'communityId',
+  profileId: 'profileId',
+  createdAt: 'createdAt'
+} as const
+
+export type ForumFollowScalarFieldEnum = (typeof ForumFollowScalarFieldEnum)[keyof typeof ForumFollowScalarFieldEnum]
+
+
+export const ForumReportScalarFieldEnum = {
+  id: 'id',
+  reporterId: 'reporterId',
+  targetType: 'targetType',
+  postId: 'postId',
+  commentId: 'commentId',
+  targetProfileId: 'targetProfileId',
+  category: 'category',
+  details: 'details',
+  status: 'status',
+  version: 'version',
+  resolvedById: 'resolvedById',
+  resolvedAt: 'resolvedAt',
+  resolution: 'resolution',
+  createdAt: 'createdAt'
+} as const
+
+export type ForumReportScalarFieldEnum = (typeof ForumReportScalarFieldEnum)[keyof typeof ForumReportScalarFieldEnum]
+
+
+export const ForumModerationActionScalarFieldEnum = {
+  id: 'id',
+  actorId: 'actorId',
+  action: 'action',
+  targetType: 'targetType',
+  postId: 'postId',
+  commentId: 'commentId',
+  profileId: 'profileId',
+  reason: 'reason',
+  correlationId: 'correlationId',
+  createdAt: 'createdAt'
+} as const
+
+export type ForumModerationActionScalarFieldEnum = (typeof ForumModerationActionScalarFieldEnum)[keyof typeof ForumModerationActionScalarFieldEnum]
+
+
+export const DmThreadScalarFieldEnum = {
+  id: 'id',
+  profileLowId: 'profileLowId',
+  profileHighId: 'profileHighId',
+  requestedById: 'requestedById',
+  status: 'status',
+  lastMessageAt: 'lastMessageAt',
+  lowReadAt: 'lowReadAt',
+  highReadAt: 'highReadAt',
+  createdAt: 'createdAt'
+} as const
+
+export type DmThreadScalarFieldEnum = (typeof DmThreadScalarFieldEnum)[keyof typeof DmThreadScalarFieldEnum]
+
+
+export const DmMessageScalarFieldEnum = {
+  id: 'id',
+  threadId: 'threadId',
+  senderId: 'senderId',
+  body: 'body',
+  deleted: 'deleted',
+  createdAt: 'createdAt'
+} as const
+
+export type DmMessageScalarFieldEnum = (typeof DmMessageScalarFieldEnum)[keyof typeof DmMessageScalarFieldEnum]
+
+
+export const DmBlockScalarFieldEnum = {
+  id: 'id',
+  blockerId: 'blockerId',
+  blockedId: 'blockedId',
+  createdAt: 'createdAt'
+} as const
+
+export type DmBlockScalarFieldEnum = (typeof DmBlockScalarFieldEnum)[keyof typeof DmBlockScalarFieldEnum]
+
+
+export const DmReportScalarFieldEnum = {
+  id: 'id',
+  reporterId: 'reporterId',
+  reportedProfileId: 'reportedProfileId',
+  threadId: 'threadId',
+  messageId: 'messageId',
+  category: 'category',
+  details: 'details',
+  snapshot: 'snapshot',
+  status: 'status',
+  version: 'version',
+  resolvedById: 'resolvedById',
+  resolvedAt: 'resolvedAt',
+  resolution: 'resolution',
+  createdAt: 'createdAt'
+} as const
+
+export type DmReportScalarFieldEnum = (typeof DmReportScalarFieldEnum)[keyof typeof DmReportScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -1010,7 +1341,9 @@ export const CustomerOrderByRelevanceFieldEnum = {
   name: 'name',
   email: 'email',
   image: 'image',
-  passwordHash: 'passwordHash'
+  passwordHash: 'passwordHash',
+  sex: 'sex',
+  location: 'location'
 } as const
 
 export type CustomerOrderByRelevanceFieldEnum = (typeof CustomerOrderByRelevanceFieldEnum)[keyof typeof CustomerOrderByRelevanceFieldEnum]
@@ -1278,4 +1611,233 @@ export const DealCommentOrderByRelevanceFieldEnum = {
 } as const
 
 export type DealCommentOrderByRelevanceFieldEnum = (typeof DealCommentOrderByRelevanceFieldEnum)[keyof typeof DealCommentOrderByRelevanceFieldEnum]
+
+
+export const AnalyticsSessionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  entryPath: 'entryPath',
+  exitPath: 'exitPath',
+  referrerHost: 'referrerHost',
+  utmSource: 'utmSource',
+  utmMedium: 'utmMedium',
+  utmCampaign: 'utmCampaign',
+  channel: 'channel',
+  deviceType: 'deviceType',
+  browser: 'browser',
+  os: 'os',
+  customerId: 'customerId'
+} as const
+
+export type AnalyticsSessionOrderByRelevanceFieldEnum = (typeof AnalyticsSessionOrderByRelevanceFieldEnum)[keyof typeof AnalyticsSessionOrderByRelevanceFieldEnum]
+
+
+export const AnalyticsEventOrderByRelevanceFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  visitorHash: 'visitorHash',
+  type: 'type',
+  path: 'path',
+  pageType: 'pageType',
+  dealId: 'dealId',
+  merchantId: 'merchantId',
+  categoryId: 'categoryId',
+  referrerHost: 'referrerHost',
+  channel: 'channel',
+  deviceType: 'deviceType'
+} as const
+
+export type AnalyticsEventOrderByRelevanceFieldEnum = (typeof AnalyticsEventOrderByRelevanceFieldEnum)[keyof typeof AnalyticsEventOrderByRelevanceFieldEnum]
+
+
+export const AnalyticsDailyOrderByRelevanceFieldEnum = {
+  id: 'id',
+  dimension: 'dimension',
+  key: 'key'
+} as const
+
+export type AnalyticsDailyOrderByRelevanceFieldEnum = (typeof AnalyticsDailyOrderByRelevanceFieldEnum)[keyof typeof AnalyticsDailyOrderByRelevanceFieldEnum]
+
+
+export const CommunityDealSubmissionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  customerId: 'customerId',
+  title: 'title',
+  brand: 'brand',
+  description: 'description',
+  productUrl: 'productUrl',
+  urlHash: 'urlHash',
+  merchantName: 'merchantName',
+  categoryHint: 'categoryHint',
+  couponCode: 'couponCode',
+  imageKey: 'imageKey',
+  imageProvider: 'imageProvider',
+  imageMime: 'imageMime',
+  reviewedById: 'reviewedById',
+  rejectionReason: 'rejectionReason',
+  dealId: 'dealId'
+} as const
+
+export type CommunityDealSubmissionOrderByRelevanceFieldEnum = (typeof CommunityDealSubmissionOrderByRelevanceFieldEnum)[keyof typeof CommunityDealSubmissionOrderByRelevanceFieldEnum]
+
+
+export const ForumCommunityOrderByRelevanceFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  name: 'name',
+  description: 'description'
+} as const
+
+export type ForumCommunityOrderByRelevanceFieldEnum = (typeof ForumCommunityOrderByRelevanceFieldEnum)[keyof typeof ForumCommunityOrderByRelevanceFieldEnum]
+
+
+export const ForumProfileOrderByRelevanceFieldEnum = {
+  id: 'id',
+  customerId: 'customerId',
+  handle: 'handle',
+  bio: 'bio',
+  suspensionReason: 'suspensionReason',
+  avatarKey: 'avatarKey',
+  avatarProvider: 'avatarProvider'
+} as const
+
+export type ForumProfileOrderByRelevanceFieldEnum = (typeof ForumProfileOrderByRelevanceFieldEnum)[keyof typeof ForumProfileOrderByRelevanceFieldEnum]
+
+
+export const ForumPostOrderByRelevanceFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  communityId: 'communityId',
+  authorId: 'authorId',
+  title: 'title',
+  body: 'body',
+  url: 'url',
+  urlHash: 'urlHash',
+  merchantName: 'merchantName',
+  couponCode: 'couponCode',
+  contentHash: 'contentHash',
+  removalReason: 'removalReason'
+} as const
+
+export type ForumPostOrderByRelevanceFieldEnum = (typeof ForumPostOrderByRelevanceFieldEnum)[keyof typeof ForumPostOrderByRelevanceFieldEnum]
+
+
+export const ForumCommentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  postId: 'postId',
+  authorId: 'authorId',
+  parentId: 'parentId',
+  body: 'body',
+  removalReason: 'removalReason'
+} as const
+
+export type ForumCommentOrderByRelevanceFieldEnum = (typeof ForumCommentOrderByRelevanceFieldEnum)[keyof typeof ForumCommentOrderByRelevanceFieldEnum]
+
+
+export const ForumPostVoteOrderByRelevanceFieldEnum = {
+  id: 'id',
+  postId: 'postId',
+  profileId: 'profileId'
+} as const
+
+export type ForumPostVoteOrderByRelevanceFieldEnum = (typeof ForumPostVoteOrderByRelevanceFieldEnum)[keyof typeof ForumPostVoteOrderByRelevanceFieldEnum]
+
+
+export const ForumCommentVoteOrderByRelevanceFieldEnum = {
+  id: 'id',
+  commentId: 'commentId',
+  profileId: 'profileId'
+} as const
+
+export type ForumCommentVoteOrderByRelevanceFieldEnum = (typeof ForumCommentVoteOrderByRelevanceFieldEnum)[keyof typeof ForumCommentVoteOrderByRelevanceFieldEnum]
+
+
+export const ForumSaveOrderByRelevanceFieldEnum = {
+  id: 'id',
+  postId: 'postId',
+  profileId: 'profileId'
+} as const
+
+export type ForumSaveOrderByRelevanceFieldEnum = (typeof ForumSaveOrderByRelevanceFieldEnum)[keyof typeof ForumSaveOrderByRelevanceFieldEnum]
+
+
+export const ForumFollowOrderByRelevanceFieldEnum = {
+  id: 'id',
+  communityId: 'communityId',
+  profileId: 'profileId'
+} as const
+
+export type ForumFollowOrderByRelevanceFieldEnum = (typeof ForumFollowOrderByRelevanceFieldEnum)[keyof typeof ForumFollowOrderByRelevanceFieldEnum]
+
+
+export const ForumReportOrderByRelevanceFieldEnum = {
+  id: 'id',
+  reporterId: 'reporterId',
+  postId: 'postId',
+  commentId: 'commentId',
+  targetProfileId: 'targetProfileId',
+  details: 'details',
+  resolvedById: 'resolvedById',
+  resolution: 'resolution'
+} as const
+
+export type ForumReportOrderByRelevanceFieldEnum = (typeof ForumReportOrderByRelevanceFieldEnum)[keyof typeof ForumReportOrderByRelevanceFieldEnum]
+
+
+export const ForumModerationActionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  actorId: 'actorId',
+  action: 'action',
+  targetType: 'targetType',
+  postId: 'postId',
+  commentId: 'commentId',
+  profileId: 'profileId',
+  reason: 'reason',
+  correlationId: 'correlationId'
+} as const
+
+export type ForumModerationActionOrderByRelevanceFieldEnum = (typeof ForumModerationActionOrderByRelevanceFieldEnum)[keyof typeof ForumModerationActionOrderByRelevanceFieldEnum]
+
+
+export const DmThreadOrderByRelevanceFieldEnum = {
+  id: 'id',
+  profileLowId: 'profileLowId',
+  profileHighId: 'profileHighId',
+  requestedById: 'requestedById'
+} as const
+
+export type DmThreadOrderByRelevanceFieldEnum = (typeof DmThreadOrderByRelevanceFieldEnum)[keyof typeof DmThreadOrderByRelevanceFieldEnum]
+
+
+export const DmMessageOrderByRelevanceFieldEnum = {
+  id: 'id',
+  threadId: 'threadId',
+  senderId: 'senderId',
+  body: 'body'
+} as const
+
+export type DmMessageOrderByRelevanceFieldEnum = (typeof DmMessageOrderByRelevanceFieldEnum)[keyof typeof DmMessageOrderByRelevanceFieldEnum]
+
+
+export const DmBlockOrderByRelevanceFieldEnum = {
+  id: 'id',
+  blockerId: 'blockerId',
+  blockedId: 'blockedId'
+} as const
+
+export type DmBlockOrderByRelevanceFieldEnum = (typeof DmBlockOrderByRelevanceFieldEnum)[keyof typeof DmBlockOrderByRelevanceFieldEnum]
+
+
+export const DmReportOrderByRelevanceFieldEnum = {
+  id: 'id',
+  reporterId: 'reporterId',
+  reportedProfileId: 'reportedProfileId',
+  threadId: 'threadId',
+  messageId: 'messageId',
+  details: 'details',
+  snapshot: 'snapshot',
+  resolvedById: 'resolvedById',
+  resolution: 'resolution'
+} as const
+
+export type DmReportOrderByRelevanceFieldEnum = (typeof DmReportOrderByRelevanceFieldEnum)[keyof typeof DmReportOrderByRelevanceFieldEnum]
 
