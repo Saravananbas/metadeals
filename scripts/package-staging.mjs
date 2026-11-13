@@ -1,5 +1,5 @@
 // Builds the clean upload folder for Hostinger (no secrets, no personal files) next to the repo: ../Metadeals-staging-pkg
-import { cpSync, existsSync, mkdirSync, readdirSync, rmSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 
 const out = resolve("..", "Metadeals-staging-pkg");
@@ -17,3 +17,8 @@ if (existsSync(".local/media")) {
   for (const f of readdirSync(".local/media").filter((n) => n.endsWith(".webp"))) cpSync(join(".local/media", f), join(out, "seed-media", f));
 }
 console.log(`Staging package ready: ${out}`);
+// Staging runs the enforcing Content Security Policy so every page is tested under it. A one-line csp-mode.txt (non-secret) is read by next.config.ts. Env files are skipped by the upload tool. A file with only this non-secret setting is added to the package; set STAGING_CSP=report to skip it.
+if (process.env.STAGING_CSP !== "report") {
+  writeFileSync(join(out, "csp-mode.txt"), "enforce\n");
+  console.log("enforce written to the package (csp-mode.txt)");
+}

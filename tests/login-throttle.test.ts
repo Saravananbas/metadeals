@@ -81,3 +81,22 @@ test("repeated failures from one address slow down (progressive delay)", { skip 
     assert.ok(timings[5] - timings[0] > 300, `later attempts are slower (${timings.join(", ")} ms)`);
   } finally { await db.customerRateLimit.deleteMany({}); await db.customer.deleteMany({ where: { email: EMAIL } }); }
 });
+
+test("a remembered address is stored for 30 days, expires, and is only ever created by a correct password", { skip }, async () => {
+  const { db, loginCustomer } = await setup();
+  try {
+    const home = "198.51.100.31";
+    assert.equal(await loginCustomer({ email: EMAIL, password: "wrong-first" }, home), null);
+    assert.equal(await db.customerRateLimit.count({ where: { expiresAt: { gt: new Date(Date.now() + 20 * 86_400_000) } } }), 0, "a failed attempt never creates a remembered address");
+    assert.equal((await loginCustomer({ email: EMAIL, password: PASSWORD }, home))?.email, EMAIL);
+    const longLived = await db.customerRateLimit.findMany({ where: { expiresAt: { gt: new Date(Date.now() + 20 * 86_400_000) } }, select: { expiresAt: true, key: true } });
+    assert.equal(longLived.length, 1, "exactly one remembered address");
+    const days = (longLived[0].expiresAt.getTime() - Date.now()) / 86_400_000;
+    assert.ok(days > 29.9 && days <= 30.01, `expires in 30 days (${days.toFixed(2)})`);
+    assert.ok(!/198\.51\.100\.31|@example\.test/.test(longLived[0].key), "the stored key is a keyed hash, not the address or email");
+    // The 30 days pass: the address is forgotten, so during an attack it is held back like any other new address.
+    await db.customerRateLimit.updateMany({ where: { key: longLived[0].key }, data: { expiresAt: new Date(Date.now() - 1000) } });
+    for (let i = 0; i < 40; i++) await loginCustomer({ email: EMAIL, password: "botnet-" + i }, `203.0.113.${150 + i}`);
+    assert.equal(await loginCustomer({ email: EMAIL, password: PASSWORD }, home), null, "after expiry the address is no longer trusted during an attack");
+  } finally { await db.customerRateLimit.deleteMany({}); await db.customer.deleteMany({ where: { email: EMAIL } }); }
+});

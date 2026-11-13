@@ -1,5 +1,7 @@
 # Approval list (updated after the second remediation round)
 
+> The 12-item launch status is in `PRODUCTION_LAUNCH_TRACKER.md`; this file lists the owner decisions.
+
 Classes: **A** fixed and independently verified. **B** implemented locally, waiting for staging validation. **C** prepared, waiting for the owner. **D** needs a business or legal decision. **E** needs more technical investigation.
 
 Evidence labels: *local test* = automated test on this PC. *review* = a fresh read-only reviewer agent, never the author. *not verified* = nothing was observed on the real host.

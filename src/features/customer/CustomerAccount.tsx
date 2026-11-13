@@ -71,6 +71,9 @@ export function CustomerAccount({providers,delivery,oauthError}:Props){
                 type="button"
                 className={styles.socialBtn}
                 disabled={busy || !providers.google}
+                // Google blocks sign-in inside an app's embedded browser; the MetaDeals4U app marks itself in the user agent, so hide that button there.
+                suppressHydrationWarning
+                style={typeof navigator !== "undefined" && navigator.userAgent.includes("MetaDeals4UApp") ? { display: "none" } : undefined}
                 onClick={() => void signIn("google", { callbackUrl: "/" })}
                 title={providers.google ? "Sign in with Google" : "Google sign-in awaiting provider credentials"}
               >

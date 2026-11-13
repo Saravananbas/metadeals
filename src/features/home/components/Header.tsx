@@ -2,7 +2,6 @@
 
 import {
   Bell,
-  BookOpen,
   ChevronDown,
   ChevronRight,
   Grid2X2,
@@ -257,15 +256,6 @@ export function Header({
           >
             <Store size={19} />
             Stores
-          </button>
-          <button
-            onClick={() => {
-              onPanel("blog");
-              closeMenu();
-            }}
-          >
-            <BookOpen size={19} />
-            Blog
           </button>
           {communityEnabled && (
             <Link href="/community" onClick={closeMenu}>

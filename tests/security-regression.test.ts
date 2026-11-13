@@ -220,3 +220,26 @@ test("an IPv6 visitor's /64 shares one rate-limit bucket", async () => {
   assert.equal(addressBucket("203.0.113.7"), "203.0.113.7");
   assert.equal(addressBucket(null), null);
 });
+
+test("hosting proxy probe: secret-guarded, never returns secrets, and rejects forged-looking addresses", async () => {
+  process.env.ANALYTICS_CRON_SECRET = "x".repeat(40);
+  process.env.ADMIN_ALLOWED_IPS = "203.0.113.7,2406:b400:3a:1a46::/64";
+  const { GET } = await import("../src/app/api/health/network/route");
+  const call = (headers: Record<string, string>, query = "") => GET(new Request("http://x/api/health/network" + query, { headers }));
+  assert.equal((await call({})).status, 401, "no secret");
+  assert.equal((await call({ "x-cron-secret": "y".repeat(40) })).status, 401, "wrong secret");
+  const secret = { "x-cron-secret": "x".repeat(40) };
+  const mine = await (await call({ ...secret, "x-forwarded-for": "6.6.6.6, 203.0.113.7", "x-forwarded-proto": "https" })).json();
+  assert.equal(mine.clientIpUsed, "203.0.113.7", "the forged first entry is ignored");
+  assert.equal(mine.adminRuleForThisClient, "allowed");
+  assert.equal(mine.protocolSeenByProxy, "https");
+  const stranger = await (await call({ ...secret, "x-forwarded-for": "198.51.100.9" }, "?as=2406:b400:3a:1a46:1:2:3:4")).json();
+  assert.equal(stranger.adminRuleForThisClient, "blocked");
+  assert.equal(stranger.adminRuleForHypotheticalAddress.decision, "allowed", "an address inside the /64");
+  const garbage = await (await call({ ...secret, "x-forwarded-for": "not-an-ip" })).json();
+  assert.equal(garbage.clientIpUsed, null);
+  assert.equal(garbage.adminRuleForThisClient, "unknown-address", "missing or malformed headers never count as allowed");
+  const text = JSON.stringify(mine);
+  assert.ok(!text.includes("xxxxxxxx") && !text.includes("203.0.113.0/24"), "no secret and no allow-list in the answer");
+  delete process.env.ADMIN_ALLOWED_IPS;
+});

@@ -21,3 +21,23 @@ Email-code sign-up (6 digits, 10 minutes, 5 tries, hashed), password hashing as 
 
 ## Known gaps
 Customer JWTs cannot be revoked before expiry except by disabling the account. Customer password sign-in is limited per address (IPv6 /64), per email and address, and per email; a distributed attacker (about four or more addresses) can still lock one customer out for 15 minutes and guess about 30 times per 15 minutes. Row-level security is not available on MariaDB.
+
+## Customer sign-in protection: validation (13 Nov 2026)
+Implementation: `src/server/customer/service.ts` (`loginCustomer`), `src/server/client-ip.ts`. Tests: `tests/login-throttle.test.ts`, **7 database tests, all passing** (also run as a DML-only database user).
+
+| Question | Answer and evidence |
+|---|---|
+| Are successful devices recognised securely? | What is remembered is a **network address (an IPv6 /64 or an IPv4 address), not a device**. After a correct password the app stores a keyed hash (`HMAC` with `AUTH_SESSION_SECRET`) of `email + address` in the existing counter table. The stored key contains neither the address nor the email (test: key does not match the address or email text). |
+| Can trust be trivially spoofed? | A visitor cannot choose their own address through headers (proxy behaviour verified on staging: `HOSTINGER_PROXY_VALIDATION.md`). Trust is only created inside `loginCustomer` after a correct password (`grep login-known` finds that single writer; test: a failed attempt creates none). Residual: anyone who shares the customer's address (same home network, same mobile-carrier address) is treated as "known" during an attack, but still needs the password and is limited to 8 tries per 15 minutes. |
+| Do trust records expire after 30 days? | Yes: the row expires 30 days after the last successful sign-in (test: `29.9 < days <= 30`) and the address stops counting after that (test: expired address is held back during an attack). |
+| Can a device identifier be used as a credential? | No device identifier exists. Nothing is stored in the browser and nothing can be presented instead of a password. |
+| Do progressive delays work? | Failures 4 to 8 from one address wait 0.2, 0.4, 0.8, 1.5 and 1.5 s; the 9th is refused (test: later attempts measurably slower). |
+| Can a distributed attack bypass protection? | 40 attempts from 40 different addresses put the account in attack mode; the attackers get nowhere and an unknown address is held back even with the right password (test). Guessing is limited to about 30 attempts per 15 minutes in total across all unknown addresses. |
+| Can legitimate customers still sign in? | Yes: normal sign-in, sign-in from a second address while another address is failing, sign-in from the usual address during an attack, and the same generic failure for unknown emails and wrong passwords (tests). |
+| Does session theft grant trusted status? | No. A stolen session cookie is never used by `loginCustomer`, and trust is written only after a password check. A thief with a session does not need to sign in, which is a separate risk (JWT cannot be revoked early; see Known gaps). |
+
+### Known limitation: new-device waiting period
+While an account is under a distributed attack (more than 30 attempts in 15 minutes from different addresses), the customer **cannot sign in from a NEW network until the attack stops** (up to 15 minutes after it ends). The usual phone or computer keeps working. This is accepted for launch.
+
+### Email one-time code and trusted-device cookie: AWAITING_OWNER_APPROVAL
+An emailed code for sign-ins from new networks (and optionally a trusted-device cookie) would remove the waiting period. It changes the sign-in experience and sends more email, so **no change is made until the owner approves**. Customer password reset does not exist (customers re-register or contact support); staff password reset is operator-issued and staff sign-in requires an authenticator code.

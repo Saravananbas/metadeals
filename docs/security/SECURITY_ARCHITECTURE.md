@@ -18,3 +18,10 @@ The Report-Only policy allows self, inline scripts (needed by Next today), YouTu
 
 ## Single points of trust
 `AUTH_SESSION_SECRET`, `AUTH_TOTP_ENCRYPTION_KEY`, `NEXTAUTH_SECRET` (distinct, enforced in `src/config/env.ts`), the database user, the Hostinger account.
+
+## CSP status (13 Nov 2026)
+- **Staging: enforcing.** The policy in `next.config.ts` is sent as `Content-Security-Policy` (checked on `staging.metadeals4u.in`). It lists only `self`, `www.youtube.com`, `s.ytimg.com`, `www.youtube-nocookie.com` and `https:` for images, with no wildcard script source.
+- **Inline scripts are still allowed** (`script-src ... 'unsafe-inline'`) because Next.js needs them for page start-up. The policy therefore limits where resources load from; it does **not** stop an injected inline script. `unsafe-eval` is not allowed.
+- **Production: not enforcing yet** (default is report-only until `CSP_MODE=enforce` or the staging package file is used). Not verified on staging: completed Google/Apple sign-in, YouTube embeds, signed-in screens.
+- **Nonce-based CSP: deferred, a future improvement, not a completed control.** It needs every page rendered dynamically per request (a forced migration) and a full re-test; it would remove `'unsafe-inline'`.
+- The host adds its own `Content-Security-Policy: upgrade-insecure-requests` header on staging; both headers apply.

@@ -49,3 +49,15 @@ Not fixed (held or needs the owner): see `HOLD_FOR_OWNER_APPROVAL.md`.
 
 ## Final regression (this PC, disposable MariaDB, DML-only user, all test flags on)
 204 passed, 7 failed, 1 skipped, of 212. The 7 failures are the queue/worker/scheduler tests (`Missing or invalid environment variables: REDIS_URL`; Redis is not installed here); the skipped test needs Docker Postgres/Redis. **These 8 are UNVERIFIED on this machine.** Lint, type check and production build pass. The client bundle contains none of the 35 secret-sized values checked from `.env`, `staging/env` and the local test password, and no source maps.
+
+## Round 3 (launch hardening)
+| Item | What was done | Evidence |
+|---|---|---|
+| Login | Attack mode keeps addresses that signed in during the last 30 days working; progressive delay; security log lines for attack mode and sign-in after many failures | 7 database tests (`tests/login-throttle.test.ts`) |
+| Proxy | Secret-guarded probe `/api/health/network`; shared admin address rule moved to `src/server/ip-allow.ts` | Real staging responses in `HOSTINGER_PROXY_VALIDATION.md`; unit tests |
+| CSP | Enforcing policy deployed to staging through a packaged `csp-mode.txt` (upload tools skip env files) | Staging response header; 7 pages clean; Google and Apple sign-in start |
+| Roles | Route-level tests with real sessions for EDITOR, ADMIN, SUPER_ADMIN | `tests/admin-roles-routes.test.ts` (3 pass; needs `--experimental-test-module-mocks`, self-skips otherwise) |
+| Backup | Real dump and restore into an isolated database, 12 checks | `BACKUP_RESTORE_PROCEDURE.md` |
+| Forum and web | Blog link removed from the header; Google button hidden inside the mobile app's web view (Google blocks embedded sign-in); avatars, OP badge, collapse and share on comments | lint, type check, community tests |
+
+Final run: 211 passed, 7 failed (need Redis), 1 skipped, of 219.

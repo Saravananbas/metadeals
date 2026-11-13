@@ -1,3 +1,4 @@
+import { existsSync, readFileSync } from "node:fs";
 import type { NextConfig } from "next";
 
 // Content Security Policy. CSP_MODE=enforce blocks anything outside the list; any other value (default) only REPORTS what would be blocked, in the browser console.
@@ -16,10 +17,12 @@ const CSP_POLICY = [
   "form-action 'self'",
   "frame-ancestors 'none'",
 ].join("; ");
+// CSP_MODE comes from the environment, or from a one-line `csp-mode.txt` next to this file (the staging package writes it, because upload tools skip env files).
+const cspMode = () => process.env.CSP_MODE ?? (existsSync("csp-mode.txt") ? readFileSync("csp-mode.txt", "utf8").trim() : "");
 function cspHeaders() {
   // No upgrade-insecure-requests: HSTS already forces https in production, and the directive breaks plain-http local runs.
   const policy = CSP_POLICY;
-  if (process.env.CSP_MODE === "enforce") return [{ key: "Content-Security-Policy", value: policy }];
+  if (cspMode() === "enforce") return [{ key: "Content-Security-Policy", value: policy }];
   return [
     { key: "Content-Security-Policy", value: "frame-ancestors 'none'; object-src 'none'; base-uri 'self'" },
     { key: "Content-Security-Policy-Report-Only", value: policy },
