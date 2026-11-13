@@ -69,3 +69,20 @@ export function ReportButton({ targetType, targetId }: { targetType: "POST" | "C
 }
 
 export function ReportedNote() { return null; }
+
+/** Copies the link, or opens the phone's share sheet. */
+export function ShareButton({ path, title }: { path: string; title: string }) {
+  const [say, setSay] = useState("");
+  return (
+    <>
+      <button className={styles.btn} onClick={async () => {
+        const url = new URL(path, window.location.origin).href;
+        try {
+          if (navigator.share) await navigator.share({ title, url });
+          else { await navigator.clipboard.writeText(url); setSay("Link copied"); setTimeout(() => setSay(""), 2000); }
+        } catch { /* the member closed the share sheet */ }
+      }}>Share</button>
+      {say && <span className={styles.notice} role="status">{say}</span>}
+    </>
+  );
+}

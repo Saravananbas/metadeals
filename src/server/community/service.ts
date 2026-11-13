@@ -19,7 +19,7 @@ const slugify = (title: string) => title.toLowerCase().normalize("NFKD").replace
 const postSelect = {
   id: true, slug: true, type: true, title: true, body: true, url: true, merchantName: true, priceMinor: true, mrpMinor: true, couponCode: true,
   status: true, locked: true, score: true, commentCount: true, createdAt: true, publishedAt: true, editedAt: true, version: true, removalReason: true,
-  community: { select: { slug: true, name: true } }, author: { select: { id: true, handle: true } },
+  community: { select: { slug: true, name: true } }, author: { select: { id: true, handle: true, avatarKey: true } },
 } as const;
 type PostRow = Prisma.ForumPostGetPayload<{ select: typeof postSelect }>;
 
@@ -29,7 +29,7 @@ function postDto(row: PostRow, viewer?: { vote: number; saved: boolean; mine: bo
     id: row.id, slug: row.slug, type: row.type, title: row.title, body: row.body, url: row.url, merchantName: row.merchantName,
     priceMinor: row.priceMinor, mrpMinor: row.mrpMinor, couponCode: row.couponCode, locked: row.locked, score: row.score, commentCount: row.commentCount,
     createdAt: row.createdAt.toISOString(), publishedAt: row.publishedAt?.toISOString() ?? null, editedAt: row.editedAt?.toISOString() ?? null,
-    community: row.community, author: { handle: row.author.handle },
+    community: row.community, author: { handle: row.author.handle, avatarUrl: row.author.avatarKey ? `/api/v1/avatars/${row.author.handle}` : null },
     // Always user-reported content; the price and link are not verified by MetaDeals4U.
     userReported: true,
     ...(viewer ? { viewer: { vote: viewer.vote, saved: viewer.saved, mine: viewer.mine, version: row.version, status: row.status, removalReason: viewer.mine ? row.removalReason : null } } : {}),
@@ -38,7 +38,7 @@ function postDto(row: PostRow, viewer?: { vote: number; saved: boolean; mine: bo
 
 const commentSelect = {
   id: true, postId: true, parentId: true, depth: true, body: true, status: true, score: true, createdAt: true, editedAt: true, version: true,
-  author: { select: { id: true, handle: true } },
+  author: { select: { id: true, handle: true, avatarKey: true } },
 } as const;
 type CommentRow = Prisma.ForumCommentGetPayload<{ select: typeof commentSelect }>;
 function commentDto(row: CommentRow, viewerId?: string, vote = 0) {
@@ -46,7 +46,7 @@ function commentDto(row: CommentRow, viewerId?: string, vote = 0) {
   return {
     id: row.id, parentId: row.parentId, depth: row.depth, createdAt: row.createdAt.toISOString(), editedAt: row.editedAt?.toISOString() ?? null, score: row.score,
     status: row.status === "PUBLISHED" ? "PUBLISHED" : row.status === "DELETED" ? "DELETED" : "REMOVED",
-    body: hidden ? null : row.body, author: hidden ? null : { handle: row.author.handle },
+    body: hidden ? null : row.body, author: hidden ? null : { handle: row.author.handle, avatarUrl: row.author.avatarKey ? `/api/v1/avatars/${row.author.handle}` : null },
     viewer: viewerId ? { mine: row.author.id === viewerId, vote, version: row.version } : undefined,
   };
 }

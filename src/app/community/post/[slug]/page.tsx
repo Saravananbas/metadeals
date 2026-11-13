@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CommunityShell } from "@/features/community/components/Shell";
 import { CommentSection } from "@/features/community/components/CommentSection";
-import { ReportButton, SaveButton } from "@/features/community/components/PostActions";
+import { ReportButton, SaveButton, ShareButton } from "@/features/community/components/PostActions";
 import { DealBox, PostMeta, RichText } from "@/features/community/components/parts";
 import { VoteControl } from "@/features/community/components/VoteControl";
 import { CustomerError } from "@/server/customer/service";
@@ -32,6 +32,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           {post.body && <RichText text={post.body} className={styles.body} />}
           {post.url && post.type !== "DEAL" && <p><a href={post.url} target="_blank" rel="nofollow ugc noopener noreferrer">{post.url}</a></p>}
           <div className={styles.actions}>
+            <ShareButton path={`/community/post/${post.slug}`} title={post.title} />
             {!post.viewer?.mine && <SaveButton id={post.id} saved={post.viewer?.saved ?? false} />}
             {!post.viewer?.mine && <ReportButton targetType="POST" targetId={post.id} />}
             <Link className={styles.btn} href={`/community/c/${post.community.slug}`}>More in {post.community.name}</Link>
@@ -39,7 +40,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         </div>
       </article>
       {post.viewer?.status !== "PENDING_REVIEW" && (
-        <div className={styles.card}><CommentSection postId={post.id} initial={comments.items as never} locked={post.locked} /></div>
+        <div className={styles.card}><CommentSection postId={post.id} initial={comments.items as never} locked={post.locked} op={post.author.handle} slug={post.slug} /></div>
       )}
     </CommunityShell>
   );

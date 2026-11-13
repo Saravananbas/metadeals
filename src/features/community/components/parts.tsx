@@ -16,6 +16,14 @@ export function RichText({ text, className }: { text: string; className?: string
   );
 }
 
+/** Round profile picture, or the first letter of the user name when there is none. */
+export function Avatar({ handle, url, size = 22 }: { handle: string; url?: string | null; size?: number }) {
+  return url
+    // eslint-disable-next-line @next/next/no-img-element
+    ? <img className={styles.avatar} src={url} alt="" width={size} height={size} loading="lazy" />
+    : <span className={styles.avatar} aria-hidden style={{ width: size, height: size, fontSize: Math.round(size * 0.5) }}>{handle.slice(0, 1).toUpperCase()}</span>;
+}
+
 export const TYPE_LABEL = { DEAL: "Deal", DISCUSSION: "Discussion", QUESTION: "Question" } as const;
 export const rupees = (minor: number) => `₹${(minor / 100).toLocaleString("en-IN")}`;
 export const ago = (iso: string | null) => {
@@ -29,7 +37,7 @@ export function PostMeta({ post }: { post: PostDto }) {
     <div className={styles.meta}>
       <span className={`${styles.badge} ${styles[post.type]}`}>{TYPE_LABEL[post.type]}</span>
       <Link href={`/community/c/${post.community.slug}`}>{post.community.name}</Link>
-      <span>by <Link href={`/community/u/${post.author.handle}`}>{post.author.handle}</Link></span>
+      <span className={styles.byline}>by <Avatar handle={post.author.handle} url={post.author.avatarUrl} size={20} /><Link href={`/community/u/${post.author.handle}`}>{post.author.handle}</Link></span>
       <span>{ago(post.publishedAt ?? post.createdAt)}</span>
       {post.viewer?.status === "PENDING_REVIEW" && <span className={`${styles.badge} ${styles.pending}`}>Awaiting review</span>}
     </div>
