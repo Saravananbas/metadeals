@@ -60,3 +60,24 @@ test("one address cannot push the victim's overall counter past what it is allow
     assert.equal(real?.email, EMAIL, "the real customer still signs in after 60 attempts from one address");
   } finally { await db.customerRateLimit.deleteMany({}); await db.customer.deleteMany({ where: { email: EMAIL } }); }
 });
+
+test("distributed attack: the customer's usual address keeps working, a new address waits, attackers get nowhere", { skip }, async () => {
+  const { db, loginCustomer } = await setup();
+  try {
+    const home = "198.51.100.21";
+    assert.equal((await loginCustomer({ email: EMAIL, password: PASSWORD }, home))?.email, EMAIL, "first successful sign-in remembers the address");
+    for (let i = 0; i < 40; i++) assert.equal(await loginCustomer({ email: EMAIL, password: "botnet-" + i }, `203.0.113.${100 + i}`), null);
+    assert.equal(await loginCustomer({ email: EMAIL, password: PASSWORD }, "203.0.113.200"), null, "an unknown address is held back during the attack, even with the right password");
+    assert.equal((await loginCustomer({ email: EMAIL, password: PASSWORD }, home))?.email, EMAIL, "the customer's usual address still signs in");
+    assert.equal(await loginCustomer({ email: EMAIL, password: "wrong" }, home), null, "wrong passwords from a known address are still refused");
+  } finally { await db.customerRateLimit.deleteMany({}); await db.customer.deleteMany({ where: { email: EMAIL } }); }
+});
+
+test("repeated failures from one address slow down (progressive delay)", { skip }, async () => {
+  const { db, loginCustomer } = await setup();
+  try {
+    const timings: number[] = [];
+    for (let i = 0; i < 6; i++) { const t = Date.now(); await loginCustomer({ email: EMAIL, password: "x" + i }, "203.0.113.90"); timings.push(Date.now() - t); }
+    assert.ok(timings[5] - timings[0] > 300, `later attempts are slower (${timings.join(", ")} ms)`);
+  } finally { await db.customerRateLimit.deleteMany({}); await db.customer.deleteMany({ where: { email: EMAIL } }); }
+});

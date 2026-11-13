@@ -6,6 +6,7 @@ import { hashPassword, verifyPassword, validatePassword, hashOpaqueToken } from 
 import { signupSchema, loginSchema } from "@/features/customer/validation";
 import { emailMode, sendSignupCode } from "./email";
 import { addressBucket } from "@/server/client-ip";
+import { logger } from "@/server/logging/logger";
 
 export class CustomerError extends Error { constructor(message: string, public status = 400) { super(message); } }
 const digest = (value: string) => hashOpaqueToken("customer:" + value, getAuthEnv().AUTH_SESSION_SECRET);
@@ -87,26 +88,43 @@ export async function verifyCustomer(id: string, code: string) {
   });
 }
 /**
- * Password sign-in with limits that a stranger cannot use to lock a real customer out from another address:
- * - per address (an IPv6 /64 counts as one address): total attempts, so a flood from one address stops and others are unaffected;
- * - per email AND address: attempts are counted BEFORE the password is checked (so a parallel burst cannot slip past) and the counter is cleared on a correct password;
- * - per email overall: attempts from many addresses, cleared on a correct password. This one can be reached by a distributed attacker (about 30 per 15 minutes), the price of
- *   keeping online guessing slow; a stronger answer needs device trust or a challenge (see docs/security).
- * A blocked attempt gets the same "invalid" answer as a wrong password, so nothing reveals whether the account exists.
+ * Password sign-in. Design goals: slow guessing down, never let a stranger lock the real customer out, reveal nothing about which emails exist.
+ * - Per address (an IPv6 /64 is one address): total attempts. A flood from one address stops; other addresses are unaffected.
+ * - Per email AND address: counted BEFORE the password is checked (a parallel burst cannot slip past), cleared on a correct password, and each failure after the third adds a growing delay.
+ * - Per email overall: "attack mode" when attempts for one email arrive from many addresses (more than 30 in 15 minutes). In attack mode only addresses that this customer has
+ *   successfully signed in from in the last 30 days are still tried, so the customer's usual phone or computer keeps working while a distributed attacker is shut out.
+ *   Residual risk: during an attack the customer cannot sign in from a NEW device until it ends (an emailed one-time code would fix that: see docs/security, needs approval).
+ * - A blocked attempt gets the same "invalid" answer as a wrong password, so nothing reveals whether the account exists. Attack mode and success-after-failures are logged.
  */
 export async function loginCustomer(raw:unknown, address?: string | null) {
   const input=loginSchema.safeParse(raw);if(!input.success)return null;
   const where = addressBucket(address ?? null) ?? "unknown", email = input.data.email;
   if ((await bumpCustomerCounter("login-ip:" + where)) > (address ? 60 : 600)) return null;
-  const pairKey = `login-pair:${email}:${where}`, emailKey = "login-email:" + email;
+  const pairKey = `login-pair:${email}:${where}`, emailKey = "login-email:" + email, knownKey = `login-known:${email}:${where}`;
   // Pair first: once one address is over its limit it stops adding to the victim's overall counter (one address can add at most 8 to it).
-  if ((await bumpCustomerCounter(pairKey)) > 8) return null;
-  if ((await bumpCustomerCounter(emailKey)) > 30) return null;
+  const pairCount = await bumpCustomerCounter(pairKey);
+  if (pairCount > 8) return null;
+  const emailCount = await bumpCustomerCounter(emailKey);
+  const known = await hasCustomerCounter(knownKey);
+  if (emailCount > 30 && !known) {
+    if (emailCount === 31) logger.warn({ event: "customer.login.attack_mode", target: digest(email).slice(0, 12), attemptsInWindow: emailCount }, "many sign-in attempts for one account from different addresses");
+    return null;
+  }
+  // Progressive delay: the 4th failed try from one address waits 0.2 s, then 0.4, 0.8 and 1.5 s (capped).
+  if (pairCount > 3) await new Promise((resolve) => setTimeout(resolve, Math.min(100 * 2 ** (pairCount - 3), 1500)));
   const customer=await getDatabase().customer.findUnique({where:{email}});
   const valid=await verifyPassword(customer?.passwordHash ?? await dummyHash,input.data.password);
   if(!customer || customer.disabledAt || !valid || !customer.passwordHash)return null;
+  if (emailCount > 10 && !known) logger.warn({ event: "customer.login.success_after_failures", target: digest(email).slice(0, 12), attemptsInWindow: emailCount }, "sign-in from a new address after many failed attempts");
   await Promise.all([clearCustomerCounter(pairKey), clearCustomerCounter(emailKey)]);
+  await clearCustomerCounter(knownKey);
+  await bumpCustomerCounter(knownKey, 30 * 86_400); // remember this address for 30 days
   return {id:customer.id,name:customer.name,email:customer.email};
+}
+/** True when a counter row exists and has not expired. */
+export async function hasCustomerCounter(subject: string): Promise<boolean> {
+  const row = await getDatabase().customerRateLimit.findUnique({ where: { key: digest(subject) }, select: { expiresAt: true } });
+  return Boolean(row && row.expiresAt > new Date());
 }
 /** Forgets a counter (used after a correct password). */
 export async function clearCustomerCounter(subject: string) {
