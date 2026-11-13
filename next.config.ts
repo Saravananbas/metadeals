@@ -1,5 +1,31 @@
 import type { NextConfig } from "next";
 
+// Content Security Policy. CSP_MODE=enforce blocks anything outside the list; any other value (default) only REPORTS what would be blocked, in the browser console.
+// Inline scripts stay allowed because Next.js needs them for its page bootstrap; moving to nonces is a later step.
+const CSP_POLICY = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline' https://www.youtube.com https://s.ytimg.com",
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: blob: https:",
+  "font-src 'self' data:",
+  "connect-src 'self'",
+  "frame-src https://www.youtube.com https://www.youtube-nocookie.com",
+  "media-src 'self' https:",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "frame-ancestors 'none'",
+].join("; ");
+function cspHeaders() {
+  // No upgrade-insecure-requests: HSTS already forces https in production, and the directive breaks plain-http local runs.
+  const policy = CSP_POLICY;
+  if (process.env.CSP_MODE === "enforce") return [{ key: "Content-Security-Policy", value: policy }];
+  return [
+    { key: "Content-Security-Policy", value: "frame-ancestors 'none'; object-src 'none'; base-uri 'self'" },
+    { key: "Content-Security-Policy-Report-Only", value: policy },
+  ];
+}
+
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   // The Hostinger build server reports 64 CPUs but allows few threads; fewer build workers avoids "can't spawn worker thread".
@@ -19,10 +45,7 @@ const nextConfig: NextConfig = {
         { key: "X-Frame-Options", value: "DENY" },
         { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
         { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
-        { key: "Content-Security-Policy", value: "frame-ancestors 'none'; object-src 'none'; base-uri 'self'" },
-        // Trial run of a full policy: browsers report what it WOULD block without blocking anything.
-        // Next step is to watch the browser console on staging, fix any legitimate violation, then enforce it (see docs/security/SECURITY_ARCHITECTURE.md).
-        { key: "Content-Security-Policy-Report-Only", value: "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.youtube.com https://s.ytimg.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self'; frame-src https://www.youtube.com https://www.youtube-nocookie.com; media-src 'self' https:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'" },
+        ...cspHeaders(),
         ...(isProd ? [{ key: "Strict-Transport-Security", value: "max-age=31536000; includeSubDomains; preload" }] : []),
       ],
     }];

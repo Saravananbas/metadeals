@@ -7,6 +7,7 @@ import { hashRateLimitSubject } from "@/server/auth/crypto";
 import { readJson, RequestBodyError } from "@/server/auth/request";
 import { publicWhere } from "@/server/deals/repository";
 import { clientIpFromHeaders } from "@/server/client-ip";
+import { looksLikeStaffName } from "@/features/community/validation";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -58,6 +59,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ slu
   try {
     const { slug } = await params;
     const payload = inputSchema.parse(await readJson(request));
+    if (looksLikeStaffName(payload.authorName)) return reply({ ok: false, error: { message: "Please choose a different name." } }, 400);
     if (payload.website) return reply({ ok: true, data: { comment: null, count: null } });
     const deal = await findPublicDeal(slug);
     if (!deal) return reply({ ok: false, error: { message: "Deal unavailable." } }, 404);

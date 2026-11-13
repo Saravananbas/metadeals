@@ -14,5 +14,6 @@ export default defineConfig([
     "tests/**",
     "node-sec-extractor/**",
     ".agents/**",
+    "mobile/**",
   ]),
 ]);

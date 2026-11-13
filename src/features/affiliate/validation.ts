@@ -19,6 +19,16 @@ export const importBatchSchema = z.object({
 
 export type ImportBatchInput = z.infer<typeof importBatchSchema>;
 
+// Affiliate networks that forward to the store address given in a query parameter. Their own host is allowed, but the address they forward to must be allowed too,
+// otherwise a /go link on our domain could be pointed anywhere through them.
+const NETWORK_REDIRECTORS = ["cuelinks.com", "clnk.in", "linksredirect.com"];
+// Parameter names that carry a forwarding target. Their value must itself be an allowed https address (a bare "evil.example" would be completed by the network).
+const FORWARD_NAMES = new Set(["url", "u", "dest", "destination", "redirect", "redirect_url", "redirect_to", "link", "to", "target", "r", "ulp", "murl", "next", "goto", "dl"]);
+const INNER_URL = /https?:\/\/[^\s&?#"'<>]+/gi;
+
+const hostMatches = (host: string, allowedHost: string) =>
+  host === allowedHost || host.endsWith("." + allowedHost) || (allowedHost.startsWith("www.") && host === allowedHost.slice(4));
+
 export function validateDestinationHost(
   destinationUrl: string,
   merchantWebsiteUrl: string,
@@ -28,6 +38,7 @@ export function validateDestinationHost(
   try {
     const dest = new URL(destinationUrl);
     if (dest.protocol !== "https:") return false;
+    if (dest.username || dest.password) return false;
 
     const destHost = dest.hostname.toLowerCase();
     const merchantHost = new URL(merchantWebsiteUrl).hostname.toLowerCase();
@@ -40,12 +51,34 @@ export function validateDestinationHost(
       ...permittedHosts.map((h) => h.trim().toLowerCase()),
     ].filter(Boolean);
 
-    return allowed.some(
-      (allowedHost) =>
-        destHost === allowedHost ||
-        destHost.endsWith("." + allowedHost) ||
-        (allowedHost.startsWith("www.") && destHost === allowedHost.slice(4))
-    );
+    if (!allowed.some((allowedHost) => hostMatches(destHost, allowedHost))) return false;
+
+    if (NETWORK_REDIRECTORS.some((network) => hostMatches(destHost, network))) {
+      // The store the network forwards to: allowed list without the networks themselves (no chaining through another redirector).
+      const stores = allowed.filter((h) => !NETWORK_REDIRECTORS.some((network) => hostMatches(h, network)));
+      for (const [name, value] of dest.searchParams) {
+        if (FORWARD_NAMES.has(name.toLowerCase()) && !/^https:\/\//i.test(value)) return false;
+        if (/^(https?:(?!\/\/)|\/\/|\\)/i.test(value)) return false; // "https:/evil", "//evil", backslash forms under any name
+      }
+      // Every address inside the link (any parameter name, any case, or in the path) must also be an allowed store.
+      // The check runs on the text as written and after one and two rounds of decoding, so double encoding cannot hide a different address.
+      const raw = dest.pathname + "?" + dest.search.slice(1);
+      const layers = [raw];
+      for (let i = 0; i < 2; i += 1) { try { layers.push(decodeURIComponent(layers[layers.length - 1])); } catch { break; } }
+      for (const text of layers) {
+        if (/[\u0000-\u001f\u007f]/.test(text)) return false; // tabs and line breaks are ignored by URL parsers and can hide a second host
+        const inner = text.match(INNER_URL) ?? [];
+        if (/(^|[?&=/])\/\//.test(text.replace(INNER_URL, ""))) return false; // scheme-less //host forwarding
+        for (const value of inner) {
+          let target: URL;
+          try { target = new URL(value); } catch { return false; }
+          if (target.protocol !== "https:" || target.username || target.password) return false;
+          const innerHost = target.hostname.toLowerCase();
+          if (!stores.some((h) => hostMatches(innerHost, h))) return false;
+        }
+      }
+    }
+    return true;
   } catch {
     return false;
   }

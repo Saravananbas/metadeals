@@ -3056,7 +3056,7 @@ export function DealManager({ role }: { role: AdminRole }) {
                   ✏️ Edit
                 </button>
                 {roleCan(role, "deal:archive") && (
-                  <button type="button" className={styles.dealCardEdit} style={{ background: "#b91c1c" }} disabled={busy} onClick={() => removeDeal(row)} aria-label={`Delete ${row.title}`}>
+                  <button type="button" className={styles.dealCardEdit} style={{ background: "var(--md-red-700)" }} disabled={busy} onClick={() => removeDeal(row)} aria-label={`Delete ${row.title}`}>
                     🗑 Delete
                   </button>
                 )}

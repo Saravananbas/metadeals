@@ -22,3 +22,13 @@ export function clientIpFromHeaders(headers: Pick<Headers, "get">): string | nul
   const cleaned = normalise(candidate);
   return cleaned && cleaned.length <= 45 && (IPV4.test(cleaned) || IPV6.test(cleaned)) ? cleaned : null;
 }
+
+/** Key for per-visitor limits: an IPv6 visitor controls a whole /64, so all addresses in it share one bucket. */
+export function addressBucket(ip: string | null): string | null {
+  if (!ip || !ip.includes(":")) return ip;
+  const [head, tail] = ip.split("::");
+  const left = head ? head.split(":") : [];
+  const right = tail ? tail.split(":") : [];
+  const groups = [...left, ...Array(Math.max(0, 8 - left.length - right.length)).fill("0"), ...right].slice(0, 8);
+  return groups.slice(0, 4).map((g) => g.padStart(4, "0")).join(":") + "::/64";
+}

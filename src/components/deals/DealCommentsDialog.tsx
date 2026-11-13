@@ -134,7 +134,7 @@ export function DealCommentsDialog({ dealIdOrSlug, dealTitle, onClose }: DealCom
           {comments.map((comment) => (
             <article className={styles.comment} key={comment.id}>
               <div className={styles.commentMeta}>
-                <strong>{comment.authorName}</strong>
+                <strong>{comment.authorName}</strong> <span className={styles.guestTag}>Guest</span>
                 <time dateTime={comment.createdAt}>{new Date(comment.createdAt).toLocaleString()}</time>
               </div>
               <p>{comment.content}</p>

@@ -31,3 +31,21 @@ Not fixed (held or needs the owner): see `HOLD_FOR_OWNER_APPROVAL.md`.
 - Full existing suite run serially: the same 18 failures as before this work (17 need `DATABASE_URL`/`REDIS_URL` that this machine's test environment lacks; 1 is the brand-colour test that fails because new CSS uses plain colour codes). No new failure was introduced (one new failure caused by a CSS variable was found and fixed during this work).
 - Route-level authorization is checked only by source-pattern tests plus reviewer reading. **No automated test logs in as an EDITOR and calls the routes.** That needs a database; see the checklist.
 - The Cloudflare skill's JSON validators could not run on Windows (they need no-follow file opening that this platform lacks). `findings.json` was checked against the schema's required and allowed fields with a small script instead.
+
+## Round 2 (items 1 to 11 of the approval list)
+
+| Item | Fix | Evidence | Independent review |
+|---|---|---|---|
+| Login lockout | Per-address (IPv6 /64) total limit; per email+address and per-email counters bumped before the check and cleared on a correct password; global counters and sign-up global cap removed; expired counter rows cleaned | `tests/login-throttle.test.ts` (4 database tests, also run as a DML-only database user) | Two reviews; fixed: counter order, IPv6 /64, row growth |
+| Guest names | `looksLikeStaffName` (homoglyphs, digits, zero-width, accents, spaced letters, whole-word); "Guest" tag on every web comment | Security regression test | Two reviews; fixed: "Admin1", accents, zero-width |
+| Click throttle | `normalizeClickChannel`, `shouldRecordClick`; redirect unaffected; subId carries the normalised channel | Security regression test; `tests/affiliate.test.ts` passes | Review OK |
+| Telegram | `TELEGRAM_CALLBACK_SECRET`, stored pending record, conditional update, REJECT/HOLD/REVERIFY close the offer, no reopening of used records, future timestamps refused | `tests/telegram-approval-hardening.test.ts` (5), existing Agent 1 tests (12) | Two reviews; fixed: reopen race, rejection |
+| Image deadline | 30 s total (lookup, redirects, body) | Security regression test | Review OK |
+| Redirect allowlist | Forwarded addresses in any parameter/path/encoding layer must be allowed stores; control characters and odd schemes refused | Security regression test (20 assertions) | Two reviews; fixed: tab, double-encoding, unknown parameter names |
+| CSP | `CSP_MODE=enforce` | Local production build, 3 pages, 0 violations; unit test | Review OK; found `upgrade-insecure-requests` breaks plain-http runs (removed) |
+| Network check | Staff-only `/api/admin/network-check` (ADMIN and above) | Source-check test | Review OK |
+| Brand-colour rule | 15 files moved to official colour tokens (automatic nearest-colour mapping), small muted text darkened one step | `tests/design-tokens.test.ts` passes; build and lint pass | Review OK (minor contrast note applied) |
+| Existing test updated | `tests/community-submissions.test.ts` now expects a pasted `http://` link to be upgraded to https (an earlier requested behaviour), not refused | Passes | n/a |
+
+## Final regression (this PC, disposable MariaDB, DML-only user, all test flags on)
+204 passed, 7 failed, 1 skipped, of 212. The 7 failures are the queue/worker/scheduler tests (`Missing or invalid environment variables: REDIS_URL`; Redis is not installed here); the skipped test needs Docker Postgres/Redis. **These 8 are UNVERIFIED on this machine.** Lint, type check and production build pass. The client bundle contains none of the 35 secret-sized values checked from `.env`, `staging/env` and the local test password, and no source maps.

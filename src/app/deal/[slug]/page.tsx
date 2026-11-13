@@ -197,11 +197,11 @@ export default async function DealDetailPage({
         </nav>
 
         {sharer && (
-          <p style={{ display: "flex", alignItems: "center", gap: 8, margin: "0 0 12px", fontSize: 14, color: "#4b4b63" }}>
+          <p style={{ display: "flex", alignItems: "center", gap: 8, margin: "0 0 12px", fontSize: 14, color: "var(--md-neutral-700)" }}>
             {sharer.avatarKey
               // eslint-disable-next-line @next/next/no-img-element
               ? <img src={`/api/v1/avatars/${sharer.handle}`} alt="" width={28} height={28} style={{ borderRadius: "50%", objectFit: "cover" }} />
-              : <span aria-hidden style={{ width: 28, height: 28, borderRadius: "50%", background: "#ede9fe", color: "#5b21d6", display: "inline-grid", placeItems: "center", fontWeight: 800 }}>{sharer.handle.slice(0, 1).toUpperCase()}</span>}
+              : <span aria-hidden style={{ width: 28, height: 28, borderRadius: "50%", background: "var(--md-purple-100)", color: "var(--md-purple-600)", display: "inline-grid", placeItems: "center", fontWeight: 800 }}>{sharer.handle.slice(0, 1).toUpperCase()}</span>}
             <span>Shared by <strong>@{sharer.handle}</strong></span>
           </p>
         )}

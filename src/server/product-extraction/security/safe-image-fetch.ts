@@ -5,6 +5,8 @@ import type { IncomingMessage } from "node:http";
 
 const MAX_REDIRECTS = 3;
 const TIMEOUT_MS = 6000;
+/** The whole download (lookups, redirects and body) must finish in this time, so a server that trickles bytes cannot hold a request open. */
+const TOTAL_TIMEOUT_MS = 30_000;
 const IMAGE_CONTENT_TYPE = /^image\/(?:jpeg|png|webp|avif|gif)$/i;
 
 export type PublicAddress = { address: string; family: 4 | 6 };
@@ -95,6 +97,7 @@ export interface PublicFetchOptions {
   contentTypePattern?: RegExp;
   accept?: string;
   timeoutMs?: number;
+  totalTimeoutMs?: number;
   userAgent?: string;
 }
 
@@ -149,12 +152,23 @@ export async function fetchPublicResponseBytes(
   const accept = options.accept ?? "image/avif,image/webp,image/png,image/jpeg,image/gif";
   const timeoutMs = options.timeoutMs ?? TIMEOUT_MS;
   const userAgent = options.userAgent ?? "MetaDeals4U-ImageFetcher/1.0";
+  const deadlineAt = Date.now() + (options.totalTimeoutMs ?? TOTAL_TIMEOUT_MS);
+  const remaining = () => {
+    const left = deadlineAt - Date.now();
+    if (left <= 0) throw new Error("Upstream request took too long.");
+    return left;
+  };
 
   for (let redirect = 0; redirect <= MAX_REDIRECTS; redirect += 1) {
     const host = currentUrl.hostname.replace(/^\[|\]$/g, "");
-    const pinnedAddress = await resolveHost(host);
-    const response = await requestResponse(currentUrl, pinnedAddress, accept, timeoutMs, userAgent);
-    response.setTimeout(timeoutMs, () => response.destroy(new Error("Upstream response timed out.")));
+    let lookupTimer: ReturnType<typeof setTimeout> | undefined;
+    const pinnedAddress = await Promise.race([
+      resolveHost(host),
+      new Promise<never>((_, reject) => { lookupTimer = setTimeout(() => reject(new Error("Upstream request took too long.")), remaining()); }),
+    ]).finally(() => clearTimeout(lookupTimer));
+    const stepTimeout = Math.min(timeoutMs, remaining());
+    const response = await requestResponse(currentUrl, pinnedAddress, accept, stepTimeout, userAgent);
+    response.setTimeout(stepTimeout, () => response.destroy(new Error("Upstream response timed out.")));
 
     if ([301, 302, 303, 307, 308].includes(response.statusCode || 0)) {
       const location = response.headers.location;
@@ -176,14 +190,20 @@ export async function fetchPublicResponseBytes(
 
     const chunks: Buffer[] = [];
     let totalBytes = 0;
-    for await (const chunk of response) {
-      const bytes = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
-      totalBytes += bytes.length;
-      if (totalBytes > maxBytes) {
-        response.destroy();
-        throw new Error("Image exceeds the maximum allowed size.");
+    // A stalled or trickling body is cut off when the overall deadline passes.
+    const bodyTimer = setTimeout(() => response.destroy(new Error("Upstream request took too long.")), remaining());
+    try {
+      for await (const chunk of response) {
+        const bytes = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
+        totalBytes += bytes.length;
+        if (totalBytes > maxBytes) {
+          response.destroy();
+          throw new Error("Image exceeds the maximum allowed size.");
+        }
+        chunks.push(bytes);
       }
-      chunks.push(bytes);
+    } finally {
+      clearTimeout(bodyTimer);
     }
     if (!totalBytes) throw new Error("Image source returned an empty response.");
     return { bytes: Buffer.concat(chunks), contentType, finalUrl: currentUrl.href };

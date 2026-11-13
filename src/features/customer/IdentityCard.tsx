@@ -35,7 +35,7 @@ export function UserNamePrompt() {
   }, []);
   if (!identity?.needsUserName || dismissed) return null;
   return (
-    <div role="dialog" aria-modal="true" aria-label="Choose your user name" style={{ position: "fixed", inset: 0, background: "rgba(20,10,60,.45)", display: "grid", placeItems: "center", zIndex: 2000, padding: 16 }}>
+    <div role="dialog" aria-modal="true" aria-label="Choose your user name" style={{ position: "fixed", inset: 0, background: "color-mix(in srgb, var(--md-neutral-900) 45%, transparent)", display: "grid", placeItems: "center", zIndex: 2000, padding: 16 }}>
       <form className={`${styles.card} ${styles.form}`} style={{ maxWidth: 420, width: "100%" }} onSubmit={async (e) => {
         e.preventDefault();
         setBusy(true); setSay("");
@@ -77,7 +77,7 @@ export function IdentityCard() {
         {identity.avatarUrl
           // eslint-disable-next-line @next/next/no-img-element
           ? <img src={`${identity.avatarUrl}?v=${bust}`} alt="Your profile picture" width={72} height={72} style={{ borderRadius: "50%", objectFit: "cover" }} />
-          : <div aria-hidden style={{ width: 72, height: 72, borderRadius: "50%", background: "#ede9fe", color: "#5b21d6", display: "grid", placeItems: "center", fontWeight: 800, fontSize: 28 }}>{identity.handle.slice(0, 1).toUpperCase()}</div>}
+          : <div aria-hidden style={{ width: 72, height: 72, borderRadius: "50%", background: "var(--md-purple-100)", color: "var(--md-purple-600)", display: "grid", placeItems: "center", fontWeight: 800, fontSize: 28 }}>{identity.handle.slice(0, 1).toUpperCase()}</div>}
         <div className={styles.actions}>
           <label className={styles.secondary} style={{ cursor: "pointer" }}>
             Upload picture

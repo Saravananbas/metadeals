@@ -5,14 +5,15 @@ import { getAuthEnv } from "@/config/env";
 import { hashPassword, verifyPassword, validatePassword, hashOpaqueToken } from "@/server/auth/crypto";
 import { signupSchema, loginSchema } from "@/features/customer/validation";
 import { emailMode, sendSignupCode } from "./email";
+import { addressBucket } from "@/server/client-ip";
 
 export class CustomerError extends Error { constructor(message: string, public status = 400) { super(message); } }
 const digest = (value: string) => hashOpaqueToken("customer:" + value, getAuthEnv().AUTH_SESSION_SECRET);
 const dummyHash = hashPassword(randomUUID());
-export async function limitCustomerRequests(subject: string, maximum: number, seconds = 900) {
+/** Counts one event in a rolling window and returns the new count. Portable (PostgreSQL and MariaDB): atomic increment while the window is open, otherwise start a new window. */
+export async function bumpCustomerCounter(subject: string, seconds = 900): Promise<number> {
   const db = getDatabase(), now = new Date(), expiresAt = new Date(Date.now() + seconds * 1000);
   const key = digest(subject);
-  // Portable (PostgreSQL and MariaDB): atomic increment while the window is open, otherwise start a new window.
   const attempt = () => db.$transaction(async (tx) => {
     const open = await tx.customerRateLimit.updateMany({ where: { key, expiresAt: { gt: now } }, data: { count: { increment: 1 } } });
     if (open.count === 0) {
@@ -22,9 +23,10 @@ export async function limitCustomerRequests(subject: string, maximum: number, se
     return (await tx.customerRateLimit.findUniqueOrThrow({ where: { key }, select: { count: true } })).count;
   });
   // Parallel requests from one person hit the same counter row; retry the harmless conflicts (unique race, deadlock, MariaDB "record changed" 1020).
-  let count = 0;
+  // Expired counters are removed now and then so the table does not grow without limit.
+  if (Math.random() < 0.02) void db.customerRateLimit.deleteMany({ where: { expiresAt: { lt: now } } }).catch(() => {});
   for (let tries = 1; ; tries++) {
-    try { count = await attempt(); break; }
+    try { return await attempt(); }
     catch (error) {
       const text = error instanceof Error ? error.message : "";
       const code = (error as { code?: string })?.code ?? "";
@@ -32,7 +34,9 @@ export async function limitCustomerRequests(subject: string, maximum: number, se
       await new Promise((resolve) => setTimeout(resolve, 10 * tries + Math.floor(Math.random() * 20)));
     }
   }
-  if (count > maximum) throw new CustomerError("Too many attempts. Please try again later.", 429);
+}
+export async function limitCustomerRequests(subject: string, maximum: number, seconds = 900) {
+  if ((await bumpCustomerCounter(subject, seconds)) > maximum) throw new CustomerError("Too many attempts. Please try again later.", 429);
 }
 export async function registerCustomer(raw: unknown) {
   const input = signupSchema.parse(raw);
@@ -82,11 +86,29 @@ export async function verifyCustomer(id: string, code: string) {
     return {id:customer.id};
   });
 }
-export async function loginCustomer(raw:unknown) {
+/**
+ * Password sign-in with limits that a stranger cannot use to lock a real customer out from another address:
+ * - per address (an IPv6 /64 counts as one address): total attempts, so a flood from one address stops and others are unaffected;
+ * - per email AND address: attempts are counted BEFORE the password is checked (so a parallel burst cannot slip past) and the counter is cleared on a correct password;
+ * - per email overall: attempts from many addresses, cleared on a correct password. This one can be reached by a distributed attacker (about 30 per 15 minutes), the price of
+ *   keeping online guessing slow; a stronger answer needs device trust or a challenge (see docs/security).
+ * A blocked attempt gets the same "invalid" answer as a wrong password, so nothing reveals whether the account exists.
+ */
+export async function loginCustomer(raw:unknown, address?: string | null) {
   const input=loginSchema.safeParse(raw);if(!input.success)return null;
-  await limitCustomerRequests("login:"+input.data.email,10);
-  const customer=await getDatabase().customer.findUnique({where:{email:input.data.email}});
+  const where = addressBucket(address ?? null) ?? "unknown", email = input.data.email;
+  if ((await bumpCustomerCounter("login-ip:" + where)) > (address ? 60 : 600)) return null;
+  const pairKey = `login-pair:${email}:${where}`, emailKey = "login-email:" + email;
+  // Pair first: once one address is over its limit it stops adding to the victim's overall counter (one address can add at most 8 to it).
+  if ((await bumpCustomerCounter(pairKey)) > 8) return null;
+  if ((await bumpCustomerCounter(emailKey)) > 30) return null;
+  const customer=await getDatabase().customer.findUnique({where:{email}});
   const valid=await verifyPassword(customer?.passwordHash ?? await dummyHash,input.data.password);
   if(!customer || customer.disabledAt || !valid || !customer.passwordHash)return null;
+  await Promise.all([clearCustomerCounter(pairKey), clearCustomerCounter(emailKey)]);
   return {id:customer.id,name:customer.name,email:customer.email};
+}
+/** Forgets a counter (used after a correct password). */
+export async function clearCustomerCounter(subject: string) {
+  await getDatabase().customerRateLimit.deleteMany({ where: { key: digest(subject) } });
 }

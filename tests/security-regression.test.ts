@@ -117,3 +117,106 @@ test("client address parsing handles ports, brackets and rejects out-of-range va
   assert.equal(clientIpFromHeaders(headers({ "x-forwarded-for": "999.1.1.1" })), null);
   assert.equal(clientIpFromHeaders(headers({ "x-forwarded-for": "a" })), null);
 });
+
+test("guest comment names cannot pose as staff", async () => {
+  const { looksLikeStaffName } = await import("../src/features/community/validation");
+  for (const bad of ["Admin", "MetaDeals4U Staff", "m3tadeals team", "0fficial", "Moderator_Ravi", "SUPP0RT", "A d m i n", "Аdmin", "Admln", "Administrator", "metadeals", "Admin1", "Admin!", "Admin2024", "Ádmin", "Ad​min", "Rahul (admin)"]) assert.equal(looksLikeStaffName(bad), true, bad);
+  for (const ok of ["Ravi", "Priya K", "Modi fan", "Deal Hunter", "Guest", "Tad Minnow", "Stafford", "Supporter", "Ecosystem", "Systems Guy", "रवि कुमार", "ரவி"]) assert.equal(looksLikeStaffName(ok), false, ok);
+});
+
+test("click statistics: approved channels only, repeats are not recorded, redirect is never blocked by the throttle", async () => {
+  const { normalizeClickChannel, shouldRecordClick } = await import("../src/server/affiliate/service");
+  assert.equal(normalizeClickChannel("telegram"), "telegram");
+  assert.equal(normalizeClickChannel("MOBILE"), "mobile");
+  assert.equal(normalizeClickChannel("<script>"), "web");
+  assert.equal(normalizeClickChannel(null), "web");
+  assert.equal(normalizeClickChannel("a".repeat(500)), "web");
+  const t = 1_000_000;
+  assert.equal(shouldRecordClick("visitor-A", "deal-1", null, t), true);
+  assert.equal(shouldRecordClick("visitor-A", "deal-1", null, t + 3000), false, "rapid repeat is not recorded");
+  assert.equal(shouldRecordClick("visitor-A", "deal-1", null, t + 11_000), true, "after 10 seconds it counts again");
+  assert.equal(shouldRecordClick("visitor-B", "deal-1", null, t + 3000), true, "another visitor is unaffected");
+  let recorded = 0;
+  for (let i = 0; i < 100; i++) if (shouldRecordClick("flooder", "deal-" + i, null, t + 20_000)) recorded++;
+  assert.equal(recorded, 30, "a flood is capped per minute");
+});
+
+test("affiliate network links cannot forward to arbitrary sites", async () => {
+  const { validateDestinationHost } = await import("../src/features/affiliate/validation");
+  const { PERMITTED_RETAILER_HOSTS } = await import("../src/server/affiliate/service");
+  const ok = (url: string) => validateDestinationHost(url, "https://www.flipkart.com", [], PERMITTED_RETAILER_HOSTS);
+  assert.equal(ok("https://www.flipkart.com/phone/p/itm123"), true, "the store itself");
+  assert.equal(ok("https://linksredirect.com/?cl=abc&subid=telegram"), true, "network link with no forward parameter");
+  assert.equal(ok("https://linksredirect.com/?cl=abc&url=" + encodeURIComponent("https://www.flipkart.com/phone/p/itm123")), true, "forwards to an allowed store");
+  assert.equal(ok("https://linksredirect.com/?url=" + encodeURIComponent("https://evil.example/phish")), false, "forwards to a stranger");
+  assert.equal(ok("https://clnk.in/r?dest=" + encodeURIComponent("http://www.flipkart.com/")), false, "forwards to plain http");
+  assert.equal(ok("https://clnk.in/r?u=" + encodeURIComponent("https://linksredirect.com/?url=https://evil.example")), false, "chained through another network");
+  assert.equal(ok("https://cuelinks.com/x?url=not-a-url"), false, "unparseable target");
+  assert.equal(ok("https://user:pass@www.flipkart.com/"), false, "credentials in the address");
+  assert.equal(ok("http://www.flipkart.com/"), false);
+  assert.equal(ok("https://evil-flipkart.com/"), false);
+});
+
+test("a download that trickles bytes is cut off by the overall deadline", async () => {
+  const { PassThrough } = await import("node:stream");
+  const { fetchPublicResponseBytes } = await import("../src/server/product-extraction/security/safe-image-fetch");
+  const started = Date.now();
+  const trickle = () => {
+    const stream = new PassThrough() as unknown as import("node:http").IncomingMessage;
+    Object.assign(stream, { statusCode: 200, headers: { "content-type": "image/png" }, setTimeout: () => stream });
+    const timer = setInterval(() => (stream as unknown as import("node:stream").PassThrough).write(Buffer.from([1])), 50);
+    stream.on("close", () => clearInterval(timer));
+    return stream;
+  };
+  await assert.rejects(
+    fetchPublicResponseBytes("https://images.example.com/a.png", 5_000_000, { totalTimeoutMs: 400, allowedDomains: ["example.com"] }, {
+      resolvePublicHost: async () => ({ address: "93.184.216.34", family: 4 }),
+      requestPublicResponse: async () => trickle(),
+    }),
+    /took too long|too long/,
+  );
+  assert.ok(Date.now() - started < 3000, "stopped promptly");
+});
+
+test("CSP enforce mode switches the header on (and report-only is the default)", async () => {
+  const config = (await import("../next.config")).default;
+  const pick = async () => Object.fromEntries((await config.headers!())[0].headers.map((h) => [h.key, h.value]));
+  delete process.env.CSP_MODE;
+  assert.ok((await pick())["Content-Security-Policy-Report-Only"], "default is report-only");
+  process.env.CSP_MODE = "enforce";
+  try {
+    const enforced = await pick();
+    assert.match(enforced["Content-Security-Policy"], /default-src 'self'; script-src/);
+    assert.equal(enforced["Content-Security-Policy-Report-Only"], undefined);
+    assert.ok(!/upgrade-insecure-requests/.test(enforced["Content-Security-Policy"]), "breaks plain-http local runs; HSTS covers production");
+  } finally { delete process.env.CSP_MODE; }
+});
+
+test("the network-check route is staff-only and returns no secrets", () => {
+  const src = readFileSync("src/app/api/admin/network-check/route.ts", "utf8");
+  assert.match(src, /getCurrentAuthContext/);
+  assert.ok(!/SECRET|PASSWORD|TOKEN|DATABASE_URL/.test(src.replace(/no secrets are returned/i, "")), "no secret names are read");
+});
+
+test("affiliate links: addresses hidden in any parameter or the path must also be allowed stores", async () => {
+  const { validateDestinationHost } = await import("../src/features/affiliate/validation");
+  const { PERMITTED_RETAILER_HOSTS } = await import("../src/server/affiliate/service");
+  const ok = (url: string) => validateDestinationHost(url, "https://www.flipkart.com", [], PERMITTED_RETAILER_HOSTS);
+  const evil = encodeURIComponent("https://evil.example/x");
+  for (const name of ["redirect_to", "next", "goto", "dl", "URL", "Ulp", "x"]) assert.equal(ok(`https://linksredirect.com/?${name}=${evil}`), false, name);
+  assert.equal(ok(`https://clnk.in/r/${evil}`), false, "path forwarding");
+  assert.equal(ok("https://clnk.in/r?to=%2F%2Fevil.example%2Fx"), false, "scheme-less forwarding");
+  assert.equal(ok(`https://linksredirect.com/?url=${encodeURIComponent(encodeURIComponent("https://evil.example"))}`), false, "double encoded");
+  assert.equal(ok("https://linksredirect.com/?url=https://www.flipkart.com%09.evil.example/x"), false, "tab hides a second host");
+  assert.equal(ok("https://linksredirect.com/?url=https://www.flipkart.com%252f@evil.example/x"), false, "double-encoded userinfo trick");
+  assert.equal(ok("https://linksredirect.com/?out=https:/evil.example/x"), false, "single slash under an unknown parameter name");
+  assert.equal(ok(`https://linksredirect.com/?pub_id=1&url=${encodeURIComponent("https://www.flipkart.com/p/x?pid=1")}&subid=telegram`), true, "a normal wrapped link still works");
+});
+
+test("an IPv6 visitor's /64 shares one rate-limit bucket", async () => {
+  const { addressBucket } = await import("../src/server/client-ip");
+  assert.equal(addressBucket("2406:b400:3a:1a46:14cb:e398:b3d5:2098"), addressBucket("2406:b400:3a:1a46:7d3c:bdbd:aad4:de10"));
+  assert.notEqual(addressBucket("2406:b400:3a:1a46::1"), addressBucket("2406:b400:3a:1a47::1"));
+  assert.equal(addressBucket("203.0.113.7"), "203.0.113.7");
+  assert.equal(addressBucket(null), null);
+});

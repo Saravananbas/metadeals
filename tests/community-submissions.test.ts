@@ -76,9 +76,12 @@ test("submitting requires an active, verified customer and valid data", { skip }
     assert.equal(await status(f.m.createSubmission("no-such-customer", f.fields("a"), f.png)), 403);
     assert.equal(await status(f.m.createSubmission(ok.id, f.fields("b"), null)), 400, "an image is required");
     assert.equal(await status(f.m.createSubmission(ok.id, f.fields("b"), Buffer.from("not an image"))), 400, "the image must be a real image");
-    for (const bad of [{ productUrl: "http://insecure.example.in/x" }, { productUrl: "https://localhost/x" }, { productUrl: "javascript:alert(1)" }, { priceMinor: 5 }, { priceMinor: 200000, mrpMinor: 100000 }, { title: "ab" }, { customerId: "someone-else" }]) {
+    for (const bad of [{ productUrl: "https://localhost/x" }, { productUrl: "javascript:alert(1)" }, { priceMinor: 5 }, { priceMinor: 200000, mrpMinor: 100000 }, { title: "ab" }, { customerId: "someone-else" }]) {
       await assert.rejects(f.m.createSubmission(ok.id, f.fields("c", bad), f.png), (e: unknown) => (e as Error).name === "ZodError" || (e as { status?: number }).status === 400);
     }
+    // A pasted http:// link is upgraded to https (stores serve https), not refused.
+    const upgraded = await f.m.createSubmission(ok.id, f.fields("up", { productUrl: "http://insecure.example.in/up" }), f.png);
+    assert.equal((await f.db.communityDealSubmission.findUniqueOrThrow({ where: { id: upgraded.id } })).productUrl, "https://insecure.example.in/up");
     const good = await f.m.createSubmission(ok.id, f.fields("d"), f.png);
     assert.equal(good.stage, "PENDING_REVIEW");
     assert.equal((await f.db.communityDealSubmission.findUniqueOrThrow({ where: { id: good.id } })).customerId, ok.id, "the owner is the session customer");

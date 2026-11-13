@@ -99,6 +99,31 @@ export class Agent1DealHunter {
   }
 
   /**
+   * Stores what was offered for approval (price-error flag and scores) BEFORE the approval buttons are sent.
+   * handleTelegramApproval trusts only this stored record. shortcut: nothing calls this yet because no Telegram button sender exists; call it where buttons are created.
+   */
+  public static async registerPendingApproval(candidateId: string, assessment: Pick<QualityAssessment, "isPriceErrorSuspected" | "authenticityScore" | "attractivenessScore">): Promise<void> {
+    const db = getDatabase();
+    const data = {
+      status: "PENDING_APPROVAL" as const,
+      isPriceErrorSuspected: assessment.isPriceErrorSuspected,
+      confidenceScore: assessment.authenticityScore,
+      attractivenessScore: assessment.attractivenessScore,
+      expiresAt: new Date(Date.now() + 2 * 3600 * 1000),
+    };
+    // One conditional update: only a pending, rejected or expired record may be (re)offered. An approved, claimed or published one is never reopened,
+    // and an approval that lands at the same moment cannot be overwritten.
+    const reopened = await db.publicationAuthorization.updateMany({ where: { candidateId, status: { in: ["PENDING_APPROVAL", "REJECTED", "EXPIRED"] } }, data });
+    if (reopened.count > 0) return;
+    if (await db.publicationAuthorization.findUnique({ where: { candidateId }, select: { id: true } })) return;
+    try {
+      await db.publicationAuthorization.create({ data: { candidateId, approvalToken: crypto.randomBytes(32).toString("hex"), ...data } });
+    } catch (error) {
+      if ((error as { code?: string })?.code !== "P2002") throw error;
+    }
+  }
+
+  /**
    * Validates Telegram callback action and creates persisted PublicationAuthorization.
    * Strictly verifies allowlisted Telegram User IDs, cryptographic signatures, and replay protection.
    */
@@ -114,23 +139,28 @@ export class Agent1DealHunter {
       return { success: false, error: "UNAUTHORIZED_ADMIN: Telegram User ID not in authorized allowlist" };
     }
 
-    // 2. Freshness check: Callbacks older than 15 minutes rejected
+    // 2. Freshness check: callbacks older than 15 minutes, or dated more than a minute in the future, are rejected
     const now = Date.now();
-    if (Math.abs(now - action.timestamp) > 15 * 60 * 1000) {
+    if (now - action.timestamp > 15 * 60 * 1000 || action.timestamp - now > 60 * 1000) {
       return { success: false, error: "STALE_CALLBACK: Telegram callback timestamp has expired" };
     }
 
-    // 3. Suspected Price Error Policy: cannot be approved via automated callback
+    // 3. Suspected Price Error Policy: cannot be approved via automated callback.
+    // The request's own assessment can only BLOCK an approval; what allows one is the stored record checked in step 7.
     if (assessment.isPriceErrorSuspected && action.action === "APPROVE") {
       return { success: false, error: "PRICE_ERROR_POLICY: Suspected price errors cannot receive automated Telegram approval" };
     }
 
     // 4. Webhook authenticity signature check (if webhook secret configured)
-    const effectiveSecret = webhookSecret || process.env.TELEGRAM_WEBHOOK_SECRET;
-    if (effectiveSecret && !action.signature) {
+    // Signing key: the dedicated callback secret (TELEGRAM_CALLBACK_SECRET), passed in by the route. No key means no approvals.
+    const effectiveSecret = webhookSecret || process.env.TELEGRAM_CALLBACK_SECRET;
+    if (!effectiveSecret) {
+      return { success: false, error: "CALLBACK_SECRET_NOT_CONFIGURED: Telegram callback signing key is not set" };
+    }
+    if (!action.signature) {
       return { success: false, error: "INVALID_SIGNATURE: Telegram callback signature is required" };
     }
-    if (effectiveSecret && action.signature) {
+    if (action.signature) {
       const isValidSig = this.verifyTelegramSignature(candidateId, action, effectiveSecret);
       if (!isValidSig) {
         return { success: false, error: "INVALID_SIGNATURE: Telegram callback signature verification failed" };
@@ -139,7 +169,7 @@ export class Agent1DealHunter {
 
     // 5. One-time callback consumption & distributed replay protection via Redis
     if (action.signature) {
-      const isFirstConsumption = await SharedSecurityStore.claimTelegramCallback(action.signature, 900);
+      const isFirstConsumption = await SharedSecurityStore.claimTelegramCallback(action.signature, 2000);
       if (!isFirstConsumption) {
         return { success: false, error: "REPLAYED_CALLBACK: This Telegram action has already been consumed" };
       }
@@ -163,6 +193,8 @@ export class Agent1DealHunter {
       } catch {
         // Non-blocking audit recording
       }
+      // A decision other than APPROVE ends the offer, so a later APPROVE callback cannot approve it.
+      await db.publicationAuthorization.updateMany({ where: { candidateId, status: "PENDING_APPROVAL" }, data: { status: "REJECTED" } });
       return { success: true };
     }
 
@@ -175,34 +207,24 @@ export class Agent1DealHunter {
       return { success: false, error: "CANDIDATE_NOT_FOUND: Deal candidate record does not exist." };
     }
 
-    // 8. Generate persisted PublicationAuthorization
+    // 8. Approval is allowed only for a record the pipeline itself stored (registerPendingApproval): its price-error flag and scores come from the
+    // database, never from the callback, and the update is conditional so two callbacks cannot both approve.
+    const pending = await db.publicationAuthorization.findUnique({ where: { candidateId } });
+    if (!pending || pending.status !== "PENDING_APPROVAL" || pending.expiresAt <= new Date()) {
+      return { success: false, error: "NO_PENDING_AUTHORIZATION: This candidate was not offered for approval or the offer expired" };
+    }
+    if (pending.isPriceErrorSuspected) {
+      return { success: false, error: "PRICE_ERROR_POLICY: Suspected price errors cannot receive automated Telegram approval" };
+    }
     const token = crypto.randomBytes(32).toString("hex");
     const expiresAt = new Date(Date.now() + 2 * 3600 * 1000); // 2 hour valid publishing window
-
-    const record = await db.publicationAuthorization.upsert({
-      where: { candidateId },
-      create: {
-        candidateId,
-        authorizedByAdmin: `telegram:${action.telegramUserId}`,
-        approvalToken: token,
-        status: "APPROVED",
-        isPriceErrorSuspected: false,
-        confidenceScore: assessment.authenticityScore,
-        attractivenessScore: assessment.attractivenessScore,
-        approvedAt: new Date(),
-        expiresAt,
-      },
-      update: {
-        authorizedByAdmin: `telegram:${action.telegramUserId}`,
-        approvalToken: token,
-        status: "APPROVED",
-        isPriceErrorSuspected: false,
-        confidenceScore: assessment.authenticityScore,
-        attractivenessScore: assessment.attractivenessScore,
-        approvedAt: new Date(),
-        expiresAt,
-      },
+    const claimed = await db.publicationAuthorization.updateMany({
+      where: { id: pending.id, status: "PENDING_APPROVAL" },
+      data: { authorizedByAdmin: `telegram:${action.telegramUserId}`, approvalToken: token, status: "APPROVED", approvedAt: new Date(), expiresAt },
     });
+    if (claimed.count !== 1) return { success: false, error: "ALREADY_HANDLED: This approval was already handled" };
+    const record = { id: pending.id };
+    assessment = { ...assessment, authenticityScore: pending.confidenceScore, attractivenessScore: pending.attractivenessScore };
 
     // 9. Write audit log for approval
     try {

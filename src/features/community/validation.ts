@@ -8,6 +8,32 @@ export const REPORT_LABELS: Record<(typeof REPORT_CATEGORIES)[number], string> =
   SPAM: "Spam or advertising", SCAM: "Scam or phishing", HARASSMENT: "Harassment or threats", HATE: "Hate or abuse", ILLEGAL: "Illegal goods or activity",
   PRIVACY: "Shares personal details", IMPERSONATION: "Impersonation", OFF_TOPIC: "Off topic", OTHER: "Something else",
 };
+// Digits and symbols people swap for letters, plus Cyrillic and Greek letters that look like Latin ones.
+const LOOKALIKES: Record<string, string> = {
+  "0": "o", "1": "i", "3": "e", "4": "a", "5": "s", "7": "t", "@": "a", "$": "s", "!": "i",
+  "а": "a", "е": "e", "о": "o", "р": "p", "с": "c", "х": "x", "і": "i", "ѕ": "s", "у": "y", "н": "h", "м": "m", "т": "t", "к": "k",
+  "ο": "o", "α": "a", "ε": "e", "ι": "i", "ν": "v", "ρ": "p", "κ": "k", "τ": "t", "υ": "u", "η": "n",
+};
+const STAFF_WORDS = ["admin", "admins", "administrator", "moderator", "moderators", "staff", "official", "support", "system"];
+const fold = (text: string, symbolsAsLetters = true) => {
+  const base = text.normalize("NFKD").toLowerCase().replace(/[\p{M}\p{Cf}]/gu, "").replace(/[^\p{L}\p{N}@$! ]/gu, " ");
+  return base.replace(/./gu, (c) => (LOOKALIKES[c] !== undefined && (symbolsAsLetters || !/[0-9@$!]/.test(c)) ? LOOKALIKES[c] : /[0-9@$!]/.test(c) && !symbolsAsLetters ? " " : c)).replace(/l/g, "i");
+};
+const STAFF_FOLDED = STAFF_WORDS.map((w) => fold(w));
+/**
+ * True when a free-text display name tries to look like staff. Case, symbols, spacing, look-alike digits and common Cyrillic/Greek look-alikes are ignored.
+ * Matching is by whole word (so "Stafford" or "Supporter" are fine); the brand name is matched anywhere, and letters spaced out ("A d m i n") are joined.
+ */
+export function looksLikeStaffName(name: string): boolean {
+  // Two readings: "Adm1n" (digits are letters) and "Admin1" (digits are decoration).
+  return [true, false].some((symbolsAsLetters) => {
+    const folded = fold(name, symbolsAsLetters);
+    const words = folded.split(" ").filter(Boolean);
+    const joined = words.length > 1 && words.every((w) => w.length === 1) ? words.join("") : "";
+    if (folded.replace(/ /g, "").includes(fold("metadeals"))) return true;
+    return [...words, joined].some((w) => w && STAFF_FOLDED.includes(w));
+  });
+}
 export const RESERVED_HANDLES = new Set(["admin", "administrator", "moderator", "mod", "metadeals", "metadeals4u", "support", "staff", "official", "system", "help", "deleted", "removed", "anonymous", "guest", "null"]);
 
 /** Text is stored and rendered as plain text (React escapes it); only control characters are removed. */

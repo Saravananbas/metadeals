@@ -21,7 +21,7 @@ No critical or high-severity vulnerability was confirmed. Seventeen medium and l
 | Medium | Rate limits keyed on a forgeable address header | Fixed |
 | Medium | Editors could rewrite the merchant directory and push merchants live | Fixed |
 | Medium | Editors could delete categories and silently re-point deals | Fixed |
-| Medium | Content Security Policy does not restrict scripts | Report-Only policy added; enforcing held |
+| Medium | Content Security Policy does not restrict scripts | Enforce mode implemented and checked locally; staging validation pending |
 | Low | Editors could ingest/scan in the scraper | Fixed |
 | Low | Editors could read affiliate earnings | Fixed |
 | Low | Publishing kill switch lacked origin check; editors could switch it off | Fixed |
@@ -29,14 +29,14 @@ No critical or high-severity vulnerability was confirmed. Seventeen medium and l
 | Low | View/share counters on unpublished deals, unlimited shares | Fixed |
 | Low | Suspended members could change name and picture | Fixed |
 | Low | Upload size check skipped for chunked bodies | Fixed |
-| Low | `affiliateHosts` accepted any text | Fixed (network `url=` validation held) |
+| Low | `affiliateHosts` accepted any text; affiliate network links could forward anywhere | Fixed; wrap-mode check on staging pending |
 | Low | Shallow log redaction | Fixed |
 | Low | Weak default password in an import script | Fixed |
-| Low | Customer login lockout by anyone | Held |
-| Low | Guest comment name spoofing | Held |
-| Low | `/go` click rows have no throttle | Held |
-| Low | Telegram approval callback trusts unsigned fields | Held (feature unused) |
-| Low | Image download has no total deadline | Held |
+| Low | Customer login lockout by anyone | Fixed (distributed residual risk documented) |
+| Low | Guest comment name spoofing | Fixed |
+| Low | `/go` click rows have no throttle | Fixed; staging attribution check pending |
+| Low | Telegram approval callback trusts unsigned fields | Fixed (feature unused today) |
+| Low | Image download has no total deadline | Fixed |
 
 ## Needs validation (no severity)
 Hostinger forwarding of `x-forwarded-for`; Python extractor DNS rebinding (not deployed on Hostinger); SVG handling in the image library; submission image route headers; whether `ADMIN_ALLOWED_IPS` is set in production.
@@ -45,4 +45,4 @@ Hostinger forwarding of `x-forwarded-for`; Python extractor DNS rebinding (not d
 Tracked files and the 36-commit history were scanned for key patterns and secret-like file names: none found. `.env`, `.env.*`, `staging/`, `.local/` and key files are ignored. `.env.example` contains only placeholders. `NEXT_PUBLIC_` variables are `APP_URL` and `APP_ENV` only. The local production build's client bundle (`.next/static`, 145 files, no source maps) was checked for 35 secret-sized values from `.env` and `staging/env`: none appeared except a public Cuelinks API base URL, which is not a secret. A bundle built on Hostinger was not checked. Dependency check: `npm audit` reported 0 vulnerabilities at all severities.
 
 ## Production blockers
-Not production-ready until: the held items marked Medium in `HOLD_FOR_OWNER_APPROVAL.md` are decided (least-privilege database user, `ADMIN_ALLOWED_IPS`, CSP enforcement trial, Remote MySQL rules removed, staging password changed); the admin lock and an avatar upload are tested on staging; EDITOR/ADMIN/customer isolation is tested with real sessions against a disposable database; and backup restore is verified. Deployment is not approved by this report.
+Not production-ready until: the owner items in `HOLD_FOR_OWNER_APPROVAL.md` are done (least-privilege database user, `ADMIN_ALLOWED_IPS`, Remote MySQL rules removed, staging password changed, deletion and retention decided) and the staging checks (CSP enforcement, proxy behaviour, wrap-mode affiliate links) pass; the admin lock and an avatar upload are tested on staging; EDITOR/ADMIN/customer isolation is tested with real sessions against a disposable database; and backup restore is verified. Deployment is not approved by this report.

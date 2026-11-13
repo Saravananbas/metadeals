@@ -63,7 +63,7 @@ export function MyActivity() {
       <section className={styles.card}>
         <h2>Your posts</h2>
         {data.posts.map((p) => (
-          <div key={p.id} style={{ padding: "8px 0", borderBottom: "1px solid #f0ecfb" }}>
+          <div key={p.id} style={{ padding: "8px 0", borderBottom: "1px solid var(--md-neutral-100)" }}>
             <Link href={`/community/post/${p.slug}`}>{p.title}</Link>
             <div className={styles.meta}><span>{TYPE_LABEL[p.type]}</span><span>{p.viewer?.status.replace("_", " ").toLowerCase()}</span><span>{ago(p.createdAt)}</span><span>{p.score} points · {p.commentCount} comments</span></div>
             {p.viewer?.removalReason && <p className={styles.notice}>Why it was removed: {p.viewer.removalReason}</p>}

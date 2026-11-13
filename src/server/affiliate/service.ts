@@ -133,7 +133,7 @@ export async function resolveDealRedirect(
       const parsed = new URL(candidateProductUrl);
       const converted = convertMerchantUrl(candidateProductUrl, parsed.hostname, {
         dealId: deal.slug || deal.id,
-        subId: requestMeta.channel || "web",
+        subId: normalizeClickChannel(requestMeta.channel),
       });
       if (converted.isAffiliate && converted.url && isUrlAllowed(converted.url)) {
         targetUrl = converted.url;
@@ -169,7 +169,11 @@ export async function resolveDealRedirect(
   }
 
   const actorHash = createActorHash(requestMeta.ip, requestMeta.userAgent, now);
-  const channel = (requestMeta.channel || "web").slice(0, 30);
+  const channel = normalizeClickChannel(requestMeta.channel);
+  // The redirect always happens; only the statistics row is skipped for rapid repeats from one visitor.
+  if (!shouldRecordClick(actorHash, deal.id, selectedOptionId)) {
+    return { destinationUrl: targetUrl, dealId: deal.id, merchantId: targetMerchant.id, optionId: selectedOptionId, loggedClick: false };
+  }
 
   try {
     await db.affiliateClick.create({
@@ -193,6 +197,32 @@ export async function resolveDealRedirect(
     optionId: selectedOptionId,
     loggedClick: true,
   };
+}
+
+/** Channels that appear in links we publish. Anything else is counted as "web", so statistics cannot be polluted with free text. Add a channel here before using it in a campaign link. */
+export const CLICK_CHANNELS = ["web", "telegram", "whatsapp", "mobile", "email", "facebook", "instagram", "x", "youtube"] as const;
+export function normalizeClickChannel(value: string | null | undefined): string {
+  const channel = (value ?? "").trim().toLowerCase();
+  return (CLICK_CHANNELS as readonly string[]).includes(channel) ? channel : "web";
+}
+
+// shortcut: per-process memory (resets on restart, not shared between instances); fine for one Node instance, move to the database or Redis if the app is scaled out.
+const recentClicks = new Map<string, number>();
+const visitorWindow = new Map<string, { count: number; resetAt: number }>();
+/** One statistics row per visitor and deal every 10 seconds, and at most 30 rows a minute per visitor. */
+export function shouldRecordClick(actorHash: string, dealId: string, optionId: string | null | undefined, now = Date.now()): boolean {
+  const key = `${actorHash}:${dealId}:${optionId ?? ""}`;
+  const last = recentClicks.get(key);
+  if (last !== undefined && now - last < 10_000) return false;
+  const window = visitorWindow.get(actorHash);
+  const entry = window && window.resetAt > now ? window : { count: 0, resetAt: now + 60_000 };
+  if (entry.count >= 30) return false;
+  entry.count += 1;
+  visitorWindow.set(actorHash, entry);
+  recentClicks.set(key, now);
+  if (recentClicks.size > 5000) for (const [k, t] of recentClicks) if (now - t > 10_000) recentClicks.delete(k);
+  if (visitorWindow.size > 5000) for (const [k, v] of visitorWindow) if (v.resetAt <= now) visitorWindow.delete(k);
+  return true;
 }
 
 export async function importAffiliateTransactions(

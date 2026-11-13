@@ -211,7 +211,7 @@ export function CustomerProfile({ section = "profile" }: { section?: "profile" |
           <label>Coupon code (optional)<input value={form.couponCode} onChange={set("couponCode")} maxLength={50} /></label>
           <label className={styles.wide}>Description<textarea rows={4} value={form.description} onChange={set("description")} required minLength={10} maxLength={2000} /></label>
           {fetched && (
-            <div className={`${styles.wide} ${styles.card}`} style={{ background: "#faf8ff" }} aria-label="Fetched details">
+            <div className={`${styles.wide} ${styles.card}`} style={{ background: "var(--md-neutral-blue-50)" }} aria-label="Fetched details">
               <strong style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 {fetched.logoUrl && <img src={fetched.logoUrl} alt="" height={24} style={{ maxHeight: 24, maxWidth: 90, objectFit: "contain" }} />}
@@ -222,7 +222,7 @@ export function CustomerProfile({ section = "profile" }: { section?: "profile" |
                   <div className={styles.hint}>Choose the product picture (or upload your own below):</div>
                   <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 6 }}>
                     {fetched.images.map((src) => (
-                      <button type="button" key={src} onClick={() => setPickedImage(src)} aria-pressed={pickedImage === src} style={{ border: pickedImage === src ? "2px solid #5b21d6" : "1px solid #d8d2f1", borderRadius: 8, padding: 2, background: "#fff", cursor: "pointer" }}>
+                      <button type="button" key={src} onClick={() => setPickedImage(src)} aria-pressed={pickedImage === src} style={{ border: pickedImage === src ? "2px solid var(--md-purple-600)" : "1px solid var(--md-purple-200)", borderRadius: 8, padding: 2, background: "var(--md-white)", cursor: "pointer" }}>
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={src} alt="Product option" width={72} height={72} referrerPolicy="no-referrer" style={{ objectFit: "contain" }} />
                       </button>

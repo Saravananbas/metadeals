@@ -20,4 +20,4 @@ The admin API is one router gated on `deal:edit`; individual branches add finer 
 Email-code sign-up (6 digits, 10 minutes, 5 tries, hashed), password hashing as above, Google/Apple linking only with a provider-verified email. JWT session 24 hours; disabled accounts are rejected on every session read. Customer identity comes only from the session, never from the request body. State-changing routes check the request origin.
 
 ## Known gaps
-Customer JWTs cannot be revoked before expiry except by disabling the account. Customer login lockout can be triggered by anyone (held). Row-level security is not available on MariaDB.
+Customer JWTs cannot be revoked before expiry except by disabling the account. Customer password sign-in is limited per address (IPv6 /64), per email and address, and per email; a distributed attacker (about four or more addresses) can still lock one customer out for 15 minutes and guess about 30 times per 15 minutes. Row-level security is not available on MariaDB.

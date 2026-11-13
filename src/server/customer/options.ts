@@ -9,6 +9,7 @@ import { getDatabase } from "@/server/db/client";
 import { hashOpaqueToken } from "@/server/auth/crypto";
 import { verifiedProviderEmail } from "@/features/customer/validation";
 import { loginCustomer } from "./service";
+import { clientIpFromHeaders } from "@/server/client-ip";
 
 export function customerProviders() {
   return {
@@ -22,9 +23,10 @@ export function getCustomerAuthOptions(): NextAuthOptions {
     Credentials({
       name: "Email and password",
       credentials: { email: { type: "email" }, password: { type: "password" } },
-      async authorize(credentials) {
+      async authorize(credentials, request) {
         try {
-          return await loginCustomer(credentials);
+          const first = (name: string) => { const v = request?.headers?.[name]; return Array.isArray(v) ? v[0] : v ?? null; };
+          return await loginCustomer(credentials, clientIpFromHeaders({ get: first }));
         } catch {
           return null;
         }

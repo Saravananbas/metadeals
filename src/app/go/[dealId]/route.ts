@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { getDatabase } from "@/server/db/client";
-import { resolveDealRedirect, AffiliateError } from "@/server/affiliate/service";
+import { resolveDealRedirect, AffiliateError, normalizeClickChannel } from "@/server/affiliate/service";
 import { recordBuyClick, SESSION_COOKIE } from "@/server/analytics/collector";
 import { clientIpFromHeaders } from "@/server/client-ip";
 
@@ -27,10 +27,10 @@ export async function GET(
       ip,
       userAgent,
       prefetch,
-      channel,
+      channel: normalizeClickChannel(channel),
     });
     if (result.loggedClick) {
-      await recordBuyClick({ dealId: result.dealId, merchantId: result.merchantId, channel, ip, userAgent, sessionCookie: request.cookies.get(SESSION_COOKIE)?.value ?? null });
+      await recordBuyClick({ dealId: result.dealId, merchantId: result.merchantId, channel: normalizeClickChannel(channel), ip, userAgent, sessionCookie: request.cookies.get(SESSION_COOKIE)?.value ?? null });
     }
 
     return new Response(null, {

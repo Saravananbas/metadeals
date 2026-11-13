@@ -71,18 +71,18 @@ function TrendChart({ data }: { data: Dashboard["series"] }) {
   return (
     <>
       <div className={styles.legend}>
-        <span><i className={styles.dot} style={{ background: "#5b21d6" }} />Page views</span>
-        <span><i className={styles.dot} style={{ background: "#0ea5e9" }} />Visitors</span>
-        <span><i className={styles.dot} style={{ background: "#f97316" }} />Buy Now clicks</span>
+        <span><i className={styles.dot} style={{ background: "var(--md-purple-600)" }} />Page views</span>
+        <span><i className={styles.dot} style={{ background: "var(--md-promo-flipkart-start)" }} />Visitors</span>
+        <span><i className={styles.dot} style={{ background: "var(--md-orange-500)" }} />Buy Now clicks</span>
       </div>
       <svg viewBox={`0 0 ${w} ${h}`} width="100%" role="img" aria-label="Daily page views, visitors and clicks">
-        {[0, 0.5, 1].map((t) => <line key={t} x1={pad} x2={w - pad} y1={y(max * t)} y2={y(max * t)} stroke="#eee9fb" />)}
-        <text x={4} y={y(max) + 4} fontSize="10" fill="#6b6b85">{fmt(max)}</text>
-        <path d={line("views")} fill="none" stroke="#5b21d6" strokeWidth="2" />
-        <path d={line("visitors")} fill="none" stroke="#0ea5e9" strokeWidth="2" />
-        <path d={line("clicks")} fill="none" stroke="#f97316" strokeWidth="2" />
-        <text x={pad} y={h - 6} fontSize="10" fill="#6b6b85">{data[0]?.date}</text>
-        <text x={w - pad} y={h - 6} fontSize="10" fill="#6b6b85" textAnchor="end">{data[data.length - 1]?.date}</text>
+        {[0, 0.5, 1].map((t) => <line key={t} x1={pad} x2={w - pad} y1={y(max * t)} y2={y(max * t)} stroke="var(--md-purple-100)" />)}
+        <text x={4} y={y(max) + 4} fontSize="10" fill="var(--md-neutral-500)">{fmt(max)}</text>
+        <path d={line("views")} fill="none" stroke="var(--md-purple-600)" strokeWidth="2" />
+        <path d={line("visitors")} fill="none" stroke="var(--md-promo-flipkart-start)" strokeWidth="2" />
+        <path d={line("clicks")} fill="none" stroke="var(--md-orange-500)" strokeWidth="2" />
+        <text x={pad} y={h - 6} fontSize="10" fill="var(--md-neutral-500)">{data[0]?.date}</text>
+        <text x={w - pad} y={h - 6} fontSize="10" fill="var(--md-neutral-500)" textAnchor="end">{data[data.length - 1]?.date}</text>
       </svg>
     </>
   );
@@ -217,7 +217,7 @@ export function AnalyticsDashboard() {
                   {data.heatmap.map((row, d) => (
                     <Fragment key={d}>
                       <span>{DAYS[d]}</span>
-                      {row.map((n, h) => <span key={h} className={styles.heatCell} title={`${DAYS[d]} ${h}:00 · ${n} views`} style={{ background: `rgba(91,33,214,${n ? 0.12 + (n / heatMax) * 0.88 : 0.05})` }} />)}
+                      {row.map((n, h) => <span key={h} className={styles.heatCell} title={`${DAYS[d]} ${h}:00 · ${n} views`} style={{ background: `color-mix(in srgb, var(--md-purple-600) ${Math.round((n ? 0.12 + (n / heatMax) * 0.88 : 0.05)*100)}%, transparent)` }} />)}
                     </Fragment>
                   ))}
                 </div>

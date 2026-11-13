@@ -96,6 +96,13 @@ export async function POST(request: Request) {
     }
     const actionPayload = parsedAction.data;
 
+    // The callback signing key must be its own secret, not the one Telegram sends in the header; without it approvals are refused.
+    const callbackSecret = process.env.TELEGRAM_CALLBACK_SECRET || "";
+    if (process.env.NODE_ENV === "production" && (!callbackSecret || callbackSecret === configuredSecret)) {
+      logger.error({}, "TELEGRAM_CALLBACK_SECRET is missing or equals TELEGRAM_WEBHOOK_SECRET; approvals refused");
+      return Response.json({ error: "CALLBACK_SECRET_NOT_CONFIGURED" }, { status: 503 });
+    }
+
     const allowedAdmins = (process.env.TELEGRAM_ADMIN_USER_IDS || "").split(",").map((s) => s.trim()).filter(Boolean);
 
     // Forward to Agent1 handler
@@ -108,13 +115,10 @@ export async function POST(request: Request) {
         signature: actionPayload.signature || "",
         rejectionReason: actionPayload.rejectionReason,
       },
-      actionPayload.assessment ?? {
-        authenticityScore: 0,
-        attractivenessScore: 0,
-        isPriceErrorSuspected: true,
-      },
+      // Untrusted: it can only block an approval. The decision uses the record stored by the pipeline.
+      actionPayload.assessment ?? { authenticityScore: 0, attractivenessScore: 0, isPriceErrorSuspected: false },
       allowedAdmins,
-      configuredSecret
+      callbackSecret
     );
 
     await writeAudit({
