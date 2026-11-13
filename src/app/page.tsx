@@ -1,4 +1,6 @@
+import type { Metadata } from "next";
 import { unstable_cache } from "next/cache";
+import { serializeJsonLd } from "@/lib/json-ld";
 import { Homepage } from "@/features/home/Homepage";
 import { getHomepageDeals } from "@/features/deals/service";
 import { getDatabase } from "@/server/db/client";
@@ -17,14 +19,26 @@ const getHomeData = unstable_cache(async () => {
   return { deals, nextCursor, categories, merchants };
 }, ["home-data"], { revalidate: 30, tags: ["public-deals"] });
 
+// Filtered views (/?category=...) all point back to the one homepage address.
+export const metadata: Metadata = { alternates: { canonical: "/" } };
+
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://metadeals4u.in";
+const siteJsonLd = [
+  { "@context": "https://schema.org", "@type": "WebSite", name: "MetaDeals4U", url: baseUrl },
+  { "@context": "https://schema.org", "@type": "Organization", name: "MetaDeals4U", url: baseUrl },
+];
+
 export default async function Home() {
   const { deals, nextCursor, categories, merchants } = await getHomeData();
   return (
+    <>
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(siteJsonLd) }} />
     <Homepage
       deals={deals}
       initialCursor={nextCursor}
       initialCatalog={{ categories, merchants }}
       communityEnabled={process.env.COMMUNITY_ENABLED === "true"}
     />
+    </>
   );
 }

@@ -17,9 +17,15 @@ const manrope = Manrope({
   variable: "--font-manrope",
 });
 
+const title = "MetaDeals4U: Best Online Deals, Offers & Discounts in India";
+const description = "Verified deals and price drops from Amazon, Flipkart, Myntra and more Indian stores, updated every day on MetaDeals4U.";
+
 export const metadata: Metadata = {
-  title: "MetaDeals4U",
-  description: "MetaDeals4U — India's smart shopping hub.",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://metadeals4u.in"),
+  title,
+  description,
+  openGraph: { title, description, siteName: "MetaDeals4U", locale: "en_IN", type: "website" },
+  twitter: { card: "summary", title, description },
   robots: { index: allowIndexing, follow: allowIndexing },
   referrer: "strict-origin-when-cross-origin",
   other: {

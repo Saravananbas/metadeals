@@ -45,12 +45,13 @@ export async function generateMetadata({
     title,
     description,
     alternates: {
-      canonical: `${baseUrl}/deal/${slug}`,
+      // Always the slug address, even when the page was opened by id.
+      canonical: `${baseUrl}/deal/${deal.slug}`,
     },
     openGraph: {
       title,
       description,
-      url: `${baseUrl}/deal/${slug}`,
+      url: `${baseUrl}/deal/${deal.slug}`,
       siteName: "MetaDeals4U",
       images: [
         {
@@ -152,15 +153,26 @@ export default async function DealDetailPage({
         name: deal.merchant.name,
       },
     },
-    ...(deal.rating !== null
+    // No rating markup without a real review count: an invented count breaks Google's rules.
+    ...(deal.rating !== null && deal.reviewCount
       ? {
           aggregateRating: {
             "@type": "AggregateRating",
             ratingValue: deal.rating,
-            reviewCount: deal.reviewCount || 1,
+            reviewCount: deal.reviewCount,
           },
         }
       : {}),
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { name: "Home", item: `${baseUrl}/` },
+      { name: deal.category.name, item: `${baseUrl}/?category=${deal.category.slug}` },
+      { name: deal.title, item: `${baseUrl}/deal/${deal.slug}` },
+    ].map((entry, index) => ({ "@type": "ListItem", position: index + 1, ...entry })),
   };
 
   // Deals that came from a member's submission show who shared them (their chosen user name, never their real name or email).
@@ -174,7 +186,7 @@ export default async function DealDetailPage({
       <DealViewTracker slug={slug} />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd([jsonLd, breadcrumbJsonLd]) }}
       />
 
       {/* Header and Purple Category Navigation Bar */}
