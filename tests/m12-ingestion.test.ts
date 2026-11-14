@@ -35,7 +35,9 @@ class MockTestRetailerConnector implements RetailerConnector {
 const mockConnector = new MockTestRetailerConnector();
 connectorRegistry.register(mockConnector);
 
-test("M12 Ingestion: Successfully processes retailer feed into DealCandidates and PriceObservations", async () => {
+// These tests create real deals, candidates and accounts. They only run against a disposable database whose name contains "test", never against the development or staging database.
+const skip = /\/[^/?]*test[^/?]*(\?|$)/i.test(process.env.DATABASE_URL ?? "") ? false : "needs a disposable DATABASE_URL (name contains 'test')";
+test("M12 Ingestion: Successfully processes retailer feed into DealCandidates and PriceObservations", { skip }, async () => {
   mockConnector.shouldFail = false;
   mockConnector.mockListings = [
     {
@@ -60,7 +62,7 @@ test("M12 Ingestion: Successfully processes retailer feed into DealCandidates an
   assert.equal(result.errors.length, 0);
 });
 
-test("M12 Ingestion: Prevents duplicate DealCandidate creation on re-ingesting identical product", async () => {
+test("M12 Ingestion: Prevents duplicate DealCandidate creation on re-ingesting identical product", { skip }, async () => {
   // Run identical ingestion second time
   const result2 = await IngestionService.runConnectorIngestion(mockConnector.code);
   assert.equal(result2.totalDiscovered, 1);
@@ -69,7 +71,7 @@ test("M12 Ingestion: Prevents duplicate DealCandidate creation on re-ingesting i
   assert.equal(result2.priceObservationsRecorded, 1, "New price observation must be recorded append-only");
 });
 
-test("M12 Ingestion: Rejects invalid or suspicious non-discount prices without crashing batch", async () => {
+test("M12 Ingestion: Rejects invalid or suspicious non-discount prices without crashing batch", { skip }, async () => {
   mockConnector.mockListings = [
     {
       sourceUrl: "https://mockretailer.com/p/invalid-price",

@@ -29,6 +29,9 @@ export type DmMessageMinAggregateOutputType = {
   threadId: string | null
   senderId: string | null
   body: string | null
+  kind: string | null
+  refId: string | null
+  clientId: string | null
   deleted: boolean | null
   createdAt: Date | null
 }
@@ -38,6 +41,9 @@ export type DmMessageMaxAggregateOutputType = {
   threadId: string | null
   senderId: string | null
   body: string | null
+  kind: string | null
+  refId: string | null
+  clientId: string | null
   deleted: boolean | null
   createdAt: Date | null
 }
@@ -47,6 +53,9 @@ export type DmMessageCountAggregateOutputType = {
   threadId: number
   senderId: number
   body: number
+  kind: number
+  refId: number
+  clientId: number
   deleted: number
   createdAt: number
   _all: number
@@ -58,6 +67,9 @@ export type DmMessageMinAggregateInputType = {
   threadId?: true
   senderId?: true
   body?: true
+  kind?: true
+  refId?: true
+  clientId?: true
   deleted?: true
   createdAt?: true
 }
@@ -67,6 +79,9 @@ export type DmMessageMaxAggregateInputType = {
   threadId?: true
   senderId?: true
   body?: true
+  kind?: true
+  refId?: true
+  clientId?: true
   deleted?: true
   createdAt?: true
 }
@@ -76,6 +91,9 @@ export type DmMessageCountAggregateInputType = {
   threadId?: true
   senderId?: true
   body?: true
+  kind?: true
+  refId?: true
+  clientId?: true
   deleted?: true
   createdAt?: true
   _all?: true
@@ -158,6 +176,9 @@ export type DmMessageGroupByOutputType = {
   threadId: string
   senderId: string
   body: string
+  kind: string
+  refId: string | null
+  clientId: string | null
   deleted: boolean
   createdAt: Date
   _count: DmMessageCountAggregateOutputType | null
@@ -188,6 +209,9 @@ export type DmMessageWhereInput = {
   threadId?: Prisma.StringFilter<"DmMessage"> | string
   senderId?: Prisma.StringFilter<"DmMessage"> | string
   body?: Prisma.StringFilter<"DmMessage"> | string
+  kind?: Prisma.StringFilter<"DmMessage"> | string
+  refId?: Prisma.StringNullableFilter<"DmMessage"> | string | null
+  clientId?: Prisma.StringNullableFilter<"DmMessage"> | string | null
   deleted?: Prisma.BoolFilter<"DmMessage"> | boolean
   createdAt?: Prisma.DateTimeFilter<"DmMessage"> | Date | string
   thread?: Prisma.XOR<Prisma.DmThreadScalarRelationFilter, Prisma.DmThreadWhereInput>
@@ -199,6 +223,9 @@ export type DmMessageOrderByWithRelationInput = {
   threadId?: Prisma.SortOrder
   senderId?: Prisma.SortOrder
   body?: Prisma.SortOrder
+  kind?: Prisma.SortOrder
+  refId?: Prisma.SortOrderInput | Prisma.SortOrder
+  clientId?: Prisma.SortOrderInput | Prisma.SortOrder
   deleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   thread?: Prisma.DmThreadOrderByWithRelationInput
@@ -208,23 +235,30 @@ export type DmMessageOrderByWithRelationInput = {
 
 export type DmMessageWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  senderId_clientId?: Prisma.DmMessageSenderIdClientIdCompoundUniqueInput
   AND?: Prisma.DmMessageWhereInput | Prisma.DmMessageWhereInput[]
   OR?: Prisma.DmMessageWhereInput[]
   NOT?: Prisma.DmMessageWhereInput | Prisma.DmMessageWhereInput[]
   threadId?: Prisma.StringFilter<"DmMessage"> | string
   senderId?: Prisma.StringFilter<"DmMessage"> | string
   body?: Prisma.StringFilter<"DmMessage"> | string
+  kind?: Prisma.StringFilter<"DmMessage"> | string
+  refId?: Prisma.StringNullableFilter<"DmMessage"> | string | null
+  clientId?: Prisma.StringNullableFilter<"DmMessage"> | string | null
   deleted?: Prisma.BoolFilter<"DmMessage"> | boolean
   createdAt?: Prisma.DateTimeFilter<"DmMessage"> | Date | string
   thread?: Prisma.XOR<Prisma.DmThreadScalarRelationFilter, Prisma.DmThreadWhereInput>
   sender?: Prisma.XOR<Prisma.ForumProfileScalarRelationFilter, Prisma.ForumProfileWhereInput>
-}, "id">
+}, "id" | "senderId_clientId">
 
 export type DmMessageOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   threadId?: Prisma.SortOrder
   senderId?: Prisma.SortOrder
   body?: Prisma.SortOrder
+  kind?: Prisma.SortOrder
+  refId?: Prisma.SortOrderInput | Prisma.SortOrder
+  clientId?: Prisma.SortOrderInput | Prisma.SortOrder
   deleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.DmMessageCountOrderByAggregateInput
@@ -240,6 +274,9 @@ export type DmMessageScalarWhereWithAggregatesInput = {
   threadId?: Prisma.StringWithAggregatesFilter<"DmMessage"> | string
   senderId?: Prisma.StringWithAggregatesFilter<"DmMessage"> | string
   body?: Prisma.StringWithAggregatesFilter<"DmMessage"> | string
+  kind?: Prisma.StringWithAggregatesFilter<"DmMessage"> | string
+  refId?: Prisma.StringNullableWithAggregatesFilter<"DmMessage"> | string | null
+  clientId?: Prisma.StringNullableWithAggregatesFilter<"DmMessage"> | string | null
   deleted?: Prisma.BoolWithAggregatesFilter<"DmMessage"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"DmMessage"> | Date | string
 }
@@ -247,6 +284,9 @@ export type DmMessageScalarWhereWithAggregatesInput = {
 export type DmMessageCreateInput = {
   id?: string
   body: string
+  kind?: string
+  refId?: string | null
+  clientId?: string | null
   deleted?: boolean
   createdAt?: Date | string
   thread: Prisma.DmThreadCreateNestedOneWithoutMessagesInput
@@ -258,6 +298,9 @@ export type DmMessageUncheckedCreateInput = {
   threadId: string
   senderId: string
   body: string
+  kind?: string
+  refId?: string | null
+  clientId?: string | null
   deleted?: boolean
   createdAt?: Date | string
 }
@@ -265,6 +308,9 @@ export type DmMessageUncheckedCreateInput = {
 export type DmMessageUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  refId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   thread?: Prisma.DmThreadUpdateOneRequiredWithoutMessagesNestedInput
@@ -276,6 +322,9 @@ export type DmMessageUncheckedUpdateInput = {
   threadId?: Prisma.StringFieldUpdateOperationsInput | string
   senderId?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  refId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -285,6 +334,9 @@ export type DmMessageCreateManyInput = {
   threadId: string
   senderId: string
   body: string
+  kind?: string
+  refId?: string | null
+  clientId?: string | null
   deleted?: boolean
   createdAt?: Date | string
 }
@@ -292,6 +344,9 @@ export type DmMessageCreateManyInput = {
 export type DmMessageUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  refId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -301,6 +356,9 @@ export type DmMessageUncheckedUpdateManyInput = {
   threadId?: Prisma.StringFieldUpdateOperationsInput | string
   senderId?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  refId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -321,11 +379,19 @@ export type DmMessageOrderByRelevanceInput = {
   search: string
 }
 
+export type DmMessageSenderIdClientIdCompoundUniqueInput = {
+  senderId: string
+  clientId: string
+}
+
 export type DmMessageCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   threadId?: Prisma.SortOrder
   senderId?: Prisma.SortOrder
   body?: Prisma.SortOrder
+  kind?: Prisma.SortOrder
+  refId?: Prisma.SortOrder
+  clientId?: Prisma.SortOrder
   deleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -335,6 +401,9 @@ export type DmMessageMaxOrderByAggregateInput = {
   threadId?: Prisma.SortOrder
   senderId?: Prisma.SortOrder
   body?: Prisma.SortOrder
+  kind?: Prisma.SortOrder
+  refId?: Prisma.SortOrder
+  clientId?: Prisma.SortOrder
   deleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -344,6 +413,9 @@ export type DmMessageMinOrderByAggregateInput = {
   threadId?: Prisma.SortOrder
   senderId?: Prisma.SortOrder
   body?: Prisma.SortOrder
+  kind?: Prisma.SortOrder
+  refId?: Prisma.SortOrder
+  clientId?: Prisma.SortOrder
   deleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -435,6 +507,9 @@ export type DmMessageUncheckedUpdateManyWithoutThreadNestedInput = {
 export type DmMessageCreateWithoutSenderInput = {
   id?: string
   body: string
+  kind?: string
+  refId?: string | null
+  clientId?: string | null
   deleted?: boolean
   createdAt?: Date | string
   thread: Prisma.DmThreadCreateNestedOneWithoutMessagesInput
@@ -444,6 +519,9 @@ export type DmMessageUncheckedCreateWithoutSenderInput = {
   id?: string
   threadId: string
   body: string
+  kind?: string
+  refId?: string | null
+  clientId?: string | null
   deleted?: boolean
   createdAt?: Date | string
 }
@@ -482,6 +560,9 @@ export type DmMessageScalarWhereInput = {
   threadId?: Prisma.StringFilter<"DmMessage"> | string
   senderId?: Prisma.StringFilter<"DmMessage"> | string
   body?: Prisma.StringFilter<"DmMessage"> | string
+  kind?: Prisma.StringFilter<"DmMessage"> | string
+  refId?: Prisma.StringNullableFilter<"DmMessage"> | string | null
+  clientId?: Prisma.StringNullableFilter<"DmMessage"> | string | null
   deleted?: Prisma.BoolFilter<"DmMessage"> | boolean
   createdAt?: Prisma.DateTimeFilter<"DmMessage"> | Date | string
 }
@@ -489,6 +570,9 @@ export type DmMessageScalarWhereInput = {
 export type DmMessageCreateWithoutThreadInput = {
   id?: string
   body: string
+  kind?: string
+  refId?: string | null
+  clientId?: string | null
   deleted?: boolean
   createdAt?: Date | string
   sender: Prisma.ForumProfileCreateNestedOneWithoutDmMessagesInput
@@ -498,6 +582,9 @@ export type DmMessageUncheckedCreateWithoutThreadInput = {
   id?: string
   senderId: string
   body: string
+  kind?: string
+  refId?: string | null
+  clientId?: string | null
   deleted?: boolean
   createdAt?: Date | string
 }
@@ -532,6 +619,9 @@ export type DmMessageCreateManySenderInput = {
   id?: string
   threadId: string
   body: string
+  kind?: string
+  refId?: string | null
+  clientId?: string | null
   deleted?: boolean
   createdAt?: Date | string
 }
@@ -539,6 +629,9 @@ export type DmMessageCreateManySenderInput = {
 export type DmMessageUpdateWithoutSenderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  refId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   thread?: Prisma.DmThreadUpdateOneRequiredWithoutMessagesNestedInput
@@ -548,6 +641,9 @@ export type DmMessageUncheckedUpdateWithoutSenderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   threadId?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  refId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -556,6 +652,9 @@ export type DmMessageUncheckedUpdateManyWithoutSenderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   threadId?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  refId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -564,6 +663,9 @@ export type DmMessageCreateManyThreadInput = {
   id?: string
   senderId: string
   body: string
+  kind?: string
+  refId?: string | null
+  clientId?: string | null
   deleted?: boolean
   createdAt?: Date | string
 }
@@ -571,6 +673,9 @@ export type DmMessageCreateManyThreadInput = {
 export type DmMessageUpdateWithoutThreadInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  refId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sender?: Prisma.ForumProfileUpdateOneRequiredWithoutDmMessagesNestedInput
@@ -580,6 +685,9 @@ export type DmMessageUncheckedUpdateWithoutThreadInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   senderId?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  refId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -588,6 +696,9 @@ export type DmMessageUncheckedUpdateManyWithoutThreadInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   senderId?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  refId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -599,6 +710,9 @@ export type DmMessageSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   threadId?: boolean
   senderId?: boolean
   body?: boolean
+  kind?: boolean
+  refId?: boolean
+  clientId?: boolean
   deleted?: boolean
   createdAt?: boolean
   thread?: boolean | Prisma.DmThreadDefaultArgs<ExtArgs>
@@ -612,11 +726,14 @@ export type DmMessageSelectScalar = {
   threadId?: boolean
   senderId?: boolean
   body?: boolean
+  kind?: boolean
+  refId?: boolean
+  clientId?: boolean
   deleted?: boolean
   createdAt?: boolean
 }
 
-export type DmMessageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "threadId" | "senderId" | "body" | "deleted" | "createdAt", ExtArgs["result"]["dmMessage"]>
+export type DmMessageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "threadId" | "senderId" | "body" | "kind" | "refId" | "clientId" | "deleted" | "createdAt", ExtArgs["result"]["dmMessage"]>
 export type DmMessageInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   thread?: boolean | Prisma.DmThreadDefaultArgs<ExtArgs>
   sender?: boolean | Prisma.ForumProfileDefaultArgs<ExtArgs>
@@ -633,6 +750,15 @@ export type $DmMessagePayload<ExtArgs extends runtime.Types.Extensions.InternalA
     threadId: string
     senderId: string
     body: string
+    /**
+     * TEXT, DEAL or DISCUSSION. For a share, refId is the deal or discussion id and the card is built from the live record.
+     */
+    kind: string
+    refId: string | null
+    /**
+     * Chosen by the sending device so a retried send is stored only once.
+     */
+    clientId: string | null
     deleted: boolean
     createdAt: Date
   }, ExtArgs["result"]["dmMessage"]>
@@ -1010,6 +1136,9 @@ export interface DmMessageFieldRefs {
   readonly threadId: Prisma.FieldRef<"DmMessage", 'String'>
   readonly senderId: Prisma.FieldRef<"DmMessage", 'String'>
   readonly body: Prisma.FieldRef<"DmMessage", 'String'>
+  readonly kind: Prisma.FieldRef<"DmMessage", 'String'>
+  readonly refId: Prisma.FieldRef<"DmMessage", 'String'>
+  readonly clientId: Prisma.FieldRef<"DmMessage", 'String'>
   readonly deleted: Prisma.FieldRef<"DmMessage", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"DmMessage", 'DateTime'>
 }

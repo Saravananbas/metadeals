@@ -46,6 +46,7 @@ export type UserMinAggregateOutputType = {
   totpSecretEncrypted: string | null
   totpEnabledAt: Date | null
   lastTotpStep: bigint | null
+  linkedCustomerId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -62,6 +63,7 @@ export type UserMaxAggregateOutputType = {
   totpSecretEncrypted: string | null
   totpEnabledAt: Date | null
   lastTotpStep: bigint | null
+  linkedCustomerId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -78,6 +80,7 @@ export type UserCountAggregateOutputType = {
   totpSecretEncrypted: number
   totpEnabledAt: number
   lastTotpStep: number
+  linkedCustomerId: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -104,6 +107,7 @@ export type UserMinAggregateInputType = {
   totpSecretEncrypted?: true
   totpEnabledAt?: true
   lastTotpStep?: true
+  linkedCustomerId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -120,6 +124,7 @@ export type UserMaxAggregateInputType = {
   totpSecretEncrypted?: true
   totpEnabledAt?: true
   lastTotpStep?: true
+  linkedCustomerId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -136,6 +141,7 @@ export type UserCountAggregateInputType = {
   totpSecretEncrypted?: true
   totpEnabledAt?: true
   lastTotpStep?: true
+  linkedCustomerId?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -239,6 +245,7 @@ export type UserGroupByOutputType = {
   totpSecretEncrypted: string | null
   totpEnabledAt: Date | null
   lastTotpStep: bigint
+  linkedCustomerId: string | null
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
@@ -278,6 +285,7 @@ export type UserWhereInput = {
   totpSecretEncrypted?: Prisma.StringNullableFilter<"User"> | string | null
   totpEnabledAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   lastTotpStep?: Prisma.BigIntFilter<"User"> | bigint | number
+  linkedCustomerId?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   accounts?: Prisma.AccountListRelationFilter
@@ -293,6 +301,15 @@ export type UserWhereInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionListRelationFilter
   forumReportsResolved?: Prisma.ForumReportListRelationFilter
   forumActions?: Prisma.ForumModerationActionListRelationFilter
+  announcementsCreated?: Prisma.ForumAnnouncementListRelationFilter
+  announcementsPublished?: Prisma.ForumAnnouncementListRelationFilter
+  permissionGrants?: Prisma.StaffPermissionGrantListRelationFilter
+  permissionGrantsMade?: Prisma.StaffPermissionGrantListRelationFilter
+  linkedCustomer?: Prisma.XOR<Prisma.CustomerNullableScalarRelationFilter, Prisma.CustomerWhereInput> | null
+  moderatorAppointment?: Prisma.XOR<Prisma.ModeratorAppointmentNullableScalarRelationFilter, Prisma.ModeratorAppointmentWhereInput> | null
+  appointmentsInvited?: Prisma.ModeratorAppointmentListRelationFilter
+  warningsIssued?: Prisma.MemberWarningListRelationFilter
+  restrictionsIssued?: Prisma.MemberRestrictionListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -307,6 +324,7 @@ export type UserOrderByWithRelationInput = {
   totpSecretEncrypted?: Prisma.SortOrderInput | Prisma.SortOrder
   totpEnabledAt?: Prisma.SortOrderInput | Prisma.SortOrder
   lastTotpStep?: Prisma.SortOrder
+  linkedCustomerId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   accounts?: Prisma.AccountOrderByRelationAggregateInput
@@ -322,12 +340,22 @@ export type UserOrderByWithRelationInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionOrderByRelationAggregateInput
   forumReportsResolved?: Prisma.ForumReportOrderByRelationAggregateInput
   forumActions?: Prisma.ForumModerationActionOrderByRelationAggregateInput
+  announcementsCreated?: Prisma.ForumAnnouncementOrderByRelationAggregateInput
+  announcementsPublished?: Prisma.ForumAnnouncementOrderByRelationAggregateInput
+  permissionGrants?: Prisma.StaffPermissionGrantOrderByRelationAggregateInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantOrderByRelationAggregateInput
+  linkedCustomer?: Prisma.CustomerOrderByWithRelationInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentOrderByWithRelationInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentOrderByRelationAggregateInput
+  warningsIssued?: Prisma.MemberWarningOrderByRelationAggregateInput
+  restrictionsIssued?: Prisma.MemberRestrictionOrderByRelationAggregateInput
   _relevance?: Prisma.UserOrderByRelevanceInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   email?: string
+  linkedCustomerId?: string
   AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
@@ -355,7 +383,16 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   reviewedSubmissions?: Prisma.CommunityDealSubmissionListRelationFilter
   forumReportsResolved?: Prisma.ForumReportListRelationFilter
   forumActions?: Prisma.ForumModerationActionListRelationFilter
-}, "id" | "email">
+  announcementsCreated?: Prisma.ForumAnnouncementListRelationFilter
+  announcementsPublished?: Prisma.ForumAnnouncementListRelationFilter
+  permissionGrants?: Prisma.StaffPermissionGrantListRelationFilter
+  permissionGrantsMade?: Prisma.StaffPermissionGrantListRelationFilter
+  linkedCustomer?: Prisma.XOR<Prisma.CustomerNullableScalarRelationFilter, Prisma.CustomerWhereInput> | null
+  moderatorAppointment?: Prisma.XOR<Prisma.ModeratorAppointmentNullableScalarRelationFilter, Prisma.ModeratorAppointmentWhereInput> | null
+  appointmentsInvited?: Prisma.ModeratorAppointmentListRelationFilter
+  warningsIssued?: Prisma.MemberWarningListRelationFilter
+  restrictionsIssued?: Prisma.MemberRestrictionListRelationFilter
+}, "id" | "email" | "linkedCustomerId">
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -369,6 +406,7 @@ export type UserOrderByWithAggregationInput = {
   totpSecretEncrypted?: Prisma.SortOrderInput | Prisma.SortOrder
   totpEnabledAt?: Prisma.SortOrderInput | Prisma.SortOrder
   lastTotpStep?: Prisma.SortOrder
+  linkedCustomerId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -393,6 +431,7 @@ export type UserScalarWhereWithAggregatesInput = {
   totpSecretEncrypted?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   totpEnabledAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   lastTotpStep?: Prisma.BigIntWithAggregatesFilter<"User"> | bigint | number
+  linkedCustomerId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
@@ -424,6 +463,15 @@ export type UserCreateInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionCreateNestedManyWithoutReviewedByInput
   forumReportsResolved?: Prisma.ForumReportCreateNestedManyWithoutResolvedByInput
   forumActions?: Prisma.ForumModerationActionCreateNestedManyWithoutActorInput
+  announcementsCreated?: Prisma.ForumAnnouncementCreateNestedManyWithoutCreatedByInput
+  announcementsPublished?: Prisma.ForumAnnouncementCreateNestedManyWithoutPublishedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantCreateNestedManyWithoutUserInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantCreateNestedManyWithoutGrantedByInput
+  linkedCustomer?: Prisma.CustomerCreateNestedOneWithoutLinkedStaffInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentCreateNestedOneWithoutStaffUserInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentCreateNestedManyWithoutInvitedByInput
+  warningsIssued?: Prisma.MemberWarningCreateNestedManyWithoutIssuedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionCreateNestedManyWithoutIssuedByInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -438,6 +486,7 @@ export type UserUncheckedCreateInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   lastTotpStep?: bigint | number
+  linkedCustomerId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -453,6 +502,14 @@ export type UserUncheckedCreateInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedCreateNestedManyWithoutReviewedByInput
   forumReportsResolved?: Prisma.ForumReportUncheckedCreateNestedManyWithoutResolvedByInput
   forumActions?: Prisma.ForumModerationActionUncheckedCreateNestedManyWithoutActorInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutPublishedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutUserInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutGrantedByInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedCreateNestedOneWithoutStaffUserInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedCreateNestedManyWithoutInvitedByInput
+  warningsIssued?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutIssuedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutIssuedByInput
 }
 
 export type UserUpdateInput = {
@@ -482,6 +539,15 @@ export type UserUpdateInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionUpdateManyWithoutReviewedByNestedInput
   forumReportsResolved?: Prisma.ForumReportUpdateManyWithoutResolvedByNestedInput
   forumActions?: Prisma.ForumModerationActionUpdateManyWithoutActorNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUpdateManyWithoutCreatedByNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUpdateManyWithoutPublishedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUpdateManyWithoutUserNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUpdateManyWithoutGrantedByNestedInput
+  linkedCustomer?: Prisma.CustomerUpdateOneWithoutLinkedStaffNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUpdateOneWithoutStaffUserNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUpdateManyWithoutInvitedByNestedInput
+  warningsIssued?: Prisma.MemberWarningUpdateManyWithoutIssuedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUpdateManyWithoutIssuedByNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -496,6 +562,7 @@ export type UserUncheckedUpdateInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -511,6 +578,14 @@ export type UserUncheckedUpdateInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedUpdateManyWithoutReviewedByNestedInput
   forumReportsResolved?: Prisma.ForumReportUncheckedUpdateManyWithoutResolvedByNestedInput
   forumActions?: Prisma.ForumModerationActionUncheckedUpdateManyWithoutActorNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutPublishedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutUserNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutGrantedByNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedUpdateOneWithoutStaffUserNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedUpdateManyWithoutInvitedByNestedInput
+  warningsIssued?: Prisma.MemberWarningUncheckedUpdateManyWithoutIssuedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutIssuedByNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -525,6 +600,7 @@ export type UserCreateManyInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   lastTotpStep?: bigint | number
+  linkedCustomerId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -557,6 +633,7 @@ export type UserUncheckedUpdateManyInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -579,6 +656,7 @@ export type UserCountOrderByAggregateInput = {
   totpSecretEncrypted?: Prisma.SortOrder
   totpEnabledAt?: Prisma.SortOrder
   lastTotpStep?: Prisma.SortOrder
+  linkedCustomerId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -599,6 +677,7 @@ export type UserMaxOrderByAggregateInput = {
   totpSecretEncrypted?: Prisma.SortOrder
   totpEnabledAt?: Prisma.SortOrder
   lastTotpStep?: Prisma.SortOrder
+  linkedCustomerId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -615,6 +694,7 @@ export type UserMinOrderByAggregateInput = {
   totpSecretEncrypted?: Prisma.SortOrder
   totpEnabledAt?: Prisma.SortOrder
   lastTotpStep?: Prisma.SortOrder
+  linkedCustomerId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -811,6 +891,38 @@ export type UserUpdateOneRequiredWithoutUpdatedDealsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutUpdatedDealsInput, Prisma.UserUpdateWithoutUpdatedDealsInput>, Prisma.UserUncheckedUpdateWithoutUpdatedDealsInput>
 }
 
+export type UserCreateNestedOneWithoutLinkedCustomerInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutLinkedCustomerInput, Prisma.UserUncheckedCreateWithoutLinkedCustomerInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutLinkedCustomerInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUncheckedCreateNestedOneWithoutLinkedCustomerInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutLinkedCustomerInput, Prisma.UserUncheckedCreateWithoutLinkedCustomerInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutLinkedCustomerInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutLinkedCustomerNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutLinkedCustomerInput, Prisma.UserUncheckedCreateWithoutLinkedCustomerInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutLinkedCustomerInput
+  upsert?: Prisma.UserUpsertWithoutLinkedCustomerInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutLinkedCustomerInput, Prisma.UserUpdateWithoutLinkedCustomerInput>, Prisma.UserUncheckedUpdateWithoutLinkedCustomerInput>
+}
+
+export type UserUncheckedUpdateOneWithoutLinkedCustomerNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutLinkedCustomerInput, Prisma.UserUncheckedCreateWithoutLinkedCustomerInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutLinkedCustomerInput
+  upsert?: Prisma.UserUpsertWithoutLinkedCustomerInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutLinkedCustomerInput, Prisma.UserUpdateWithoutLinkedCustomerInput>, Prisma.UserUncheckedUpdateWithoutLinkedCustomerInput>
+}
+
 export type UserCreateNestedOneWithoutReviewedSubmissionsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutReviewedSubmissionsInput, Prisma.UserUncheckedCreateWithoutReviewedSubmissionsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutReviewedSubmissionsInput
@@ -825,6 +937,66 @@ export type UserUpdateOneWithoutReviewedSubmissionsNestedInput = {
   delete?: Prisma.UserWhereInput | boolean
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReviewedSubmissionsInput, Prisma.UserUpdateWithoutReviewedSubmissionsInput>, Prisma.UserUncheckedUpdateWithoutReviewedSubmissionsInput>
+}
+
+export type UserCreateNestedOneWithoutAnnouncementsCreatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAnnouncementsCreatedInput, Prisma.UserUncheckedCreateWithoutAnnouncementsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAnnouncementsCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutAnnouncementsPublishedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAnnouncementsPublishedInput, Prisma.UserUncheckedCreateWithoutAnnouncementsPublishedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAnnouncementsPublishedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutAnnouncementsCreatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAnnouncementsCreatedInput, Prisma.UserUncheckedCreateWithoutAnnouncementsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAnnouncementsCreatedInput
+  upsert?: Prisma.UserUpsertWithoutAnnouncementsCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAnnouncementsCreatedInput, Prisma.UserUpdateWithoutAnnouncementsCreatedInput>, Prisma.UserUncheckedUpdateWithoutAnnouncementsCreatedInput>
+}
+
+export type UserUpdateOneWithoutAnnouncementsPublishedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAnnouncementsPublishedInput, Prisma.UserUncheckedCreateWithoutAnnouncementsPublishedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAnnouncementsPublishedInput
+  upsert?: Prisma.UserUpsertWithoutAnnouncementsPublishedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAnnouncementsPublishedInput, Prisma.UserUpdateWithoutAnnouncementsPublishedInput>, Prisma.UserUncheckedUpdateWithoutAnnouncementsPublishedInput>
+}
+
+export type UserCreateNestedOneWithoutPermissionGrantsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPermissionGrantsInput, Prisma.UserUncheckedCreateWithoutPermissionGrantsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPermissionGrantsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutPermissionGrantsMadeInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPermissionGrantsMadeInput, Prisma.UserUncheckedCreateWithoutPermissionGrantsMadeInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPermissionGrantsMadeInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutPermissionGrantsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPermissionGrantsInput, Prisma.UserUncheckedCreateWithoutPermissionGrantsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPermissionGrantsInput
+  upsert?: Prisma.UserUpsertWithoutPermissionGrantsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPermissionGrantsInput, Prisma.UserUpdateWithoutPermissionGrantsInput>, Prisma.UserUncheckedUpdateWithoutPermissionGrantsInput>
+}
+
+export type UserUpdateOneWithoutPermissionGrantsMadeNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPermissionGrantsMadeInput, Prisma.UserUncheckedCreateWithoutPermissionGrantsMadeInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPermissionGrantsMadeInput
+  upsert?: Prisma.UserUpsertWithoutPermissionGrantsMadeInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPermissionGrantsMadeInput, Prisma.UserUpdateWithoutPermissionGrantsMadeInput>, Prisma.UserUncheckedUpdateWithoutPermissionGrantsMadeInput>
 }
 
 export type UserCreateNestedOneWithoutForumReportsResolvedInput = {
@@ -857,6 +1029,64 @@ export type UserUpdateOneRequiredWithoutForumActionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutForumActionsInput, Prisma.UserUpdateWithoutForumActionsInput>, Prisma.UserUncheckedUpdateWithoutForumActionsInput>
 }
 
+export type UserCreateNestedOneWithoutAppointmentsInvitedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAppointmentsInvitedInput, Prisma.UserUncheckedCreateWithoutAppointmentsInvitedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAppointmentsInvitedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutModeratorAppointmentInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutModeratorAppointmentInput, Prisma.UserUncheckedCreateWithoutModeratorAppointmentInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutModeratorAppointmentInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutAppointmentsInvitedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAppointmentsInvitedInput, Prisma.UserUncheckedCreateWithoutAppointmentsInvitedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAppointmentsInvitedInput
+  upsert?: Prisma.UserUpsertWithoutAppointmentsInvitedInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAppointmentsInvitedInput, Prisma.UserUpdateWithoutAppointmentsInvitedInput>, Prisma.UserUncheckedUpdateWithoutAppointmentsInvitedInput>
+}
+
+export type UserUpdateOneWithoutModeratorAppointmentNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutModeratorAppointmentInput, Prisma.UserUncheckedCreateWithoutModeratorAppointmentInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutModeratorAppointmentInput
+  upsert?: Prisma.UserUpsertWithoutModeratorAppointmentInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutModeratorAppointmentInput, Prisma.UserUpdateWithoutModeratorAppointmentInput>, Prisma.UserUncheckedUpdateWithoutModeratorAppointmentInput>
+}
+
+export type UserCreateNestedOneWithoutWarningsIssuedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutWarningsIssuedInput, Prisma.UserUncheckedCreateWithoutWarningsIssuedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutWarningsIssuedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutWarningsIssuedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutWarningsIssuedInput, Prisma.UserUncheckedCreateWithoutWarningsIssuedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutWarningsIssuedInput
+  upsert?: Prisma.UserUpsertWithoutWarningsIssuedInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutWarningsIssuedInput, Prisma.UserUpdateWithoutWarningsIssuedInput>, Prisma.UserUncheckedUpdateWithoutWarningsIssuedInput>
+}
+
+export type UserCreateNestedOneWithoutRestrictionsIssuedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRestrictionsIssuedInput, Prisma.UserUncheckedCreateWithoutRestrictionsIssuedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRestrictionsIssuedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutRestrictionsIssuedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRestrictionsIssuedInput, Prisma.UserUncheckedCreateWithoutRestrictionsIssuedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRestrictionsIssuedInput
+  upsert?: Prisma.UserUpsertWithoutRestrictionsIssuedInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutRestrictionsIssuedInput, Prisma.UserUpdateWithoutRestrictionsIssuedInput>, Prisma.UserUncheckedUpdateWithoutRestrictionsIssuedInput>
+}
+
 export type UserCreateWithoutAccountsInput = {
   id?: string
   name?: string | null
@@ -883,6 +1113,15 @@ export type UserCreateWithoutAccountsInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionCreateNestedManyWithoutReviewedByInput
   forumReportsResolved?: Prisma.ForumReportCreateNestedManyWithoutResolvedByInput
   forumActions?: Prisma.ForumModerationActionCreateNestedManyWithoutActorInput
+  announcementsCreated?: Prisma.ForumAnnouncementCreateNestedManyWithoutCreatedByInput
+  announcementsPublished?: Prisma.ForumAnnouncementCreateNestedManyWithoutPublishedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantCreateNestedManyWithoutUserInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantCreateNestedManyWithoutGrantedByInput
+  linkedCustomer?: Prisma.CustomerCreateNestedOneWithoutLinkedStaffInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentCreateNestedOneWithoutStaffUserInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentCreateNestedManyWithoutInvitedByInput
+  warningsIssued?: Prisma.MemberWarningCreateNestedManyWithoutIssuedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionCreateNestedManyWithoutIssuedByInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -897,6 +1136,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   lastTotpStep?: bigint | number
+  linkedCustomerId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -911,6 +1151,14 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedCreateNestedManyWithoutReviewedByInput
   forumReportsResolved?: Prisma.ForumReportUncheckedCreateNestedManyWithoutResolvedByInput
   forumActions?: Prisma.ForumModerationActionUncheckedCreateNestedManyWithoutActorInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutPublishedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutUserInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutGrantedByInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedCreateNestedOneWithoutStaffUserInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedCreateNestedManyWithoutInvitedByInput
+  warningsIssued?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutIssuedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutIssuedByInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -955,6 +1203,15 @@ export type UserUpdateWithoutAccountsInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionUpdateManyWithoutReviewedByNestedInput
   forumReportsResolved?: Prisma.ForumReportUpdateManyWithoutResolvedByNestedInput
   forumActions?: Prisma.ForumModerationActionUpdateManyWithoutActorNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUpdateManyWithoutCreatedByNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUpdateManyWithoutPublishedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUpdateManyWithoutUserNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUpdateManyWithoutGrantedByNestedInput
+  linkedCustomer?: Prisma.CustomerUpdateOneWithoutLinkedStaffNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUpdateOneWithoutStaffUserNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUpdateManyWithoutInvitedByNestedInput
+  warningsIssued?: Prisma.MemberWarningUpdateManyWithoutIssuedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUpdateManyWithoutIssuedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -969,6 +1226,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -983,6 +1241,14 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedUpdateManyWithoutReviewedByNestedInput
   forumReportsResolved?: Prisma.ForumReportUncheckedUpdateManyWithoutResolvedByNestedInput
   forumActions?: Prisma.ForumModerationActionUncheckedUpdateManyWithoutActorNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutPublishedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutUserNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutGrantedByNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedUpdateOneWithoutStaffUserNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedUpdateManyWithoutInvitedByNestedInput
+  warningsIssued?: Prisma.MemberWarningUncheckedUpdateManyWithoutIssuedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutIssuedByNestedInput
 }
 
 export type UserCreateWithoutSessionsInput = {
@@ -1011,6 +1277,15 @@ export type UserCreateWithoutSessionsInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionCreateNestedManyWithoutReviewedByInput
   forumReportsResolved?: Prisma.ForumReportCreateNestedManyWithoutResolvedByInput
   forumActions?: Prisma.ForumModerationActionCreateNestedManyWithoutActorInput
+  announcementsCreated?: Prisma.ForumAnnouncementCreateNestedManyWithoutCreatedByInput
+  announcementsPublished?: Prisma.ForumAnnouncementCreateNestedManyWithoutPublishedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantCreateNestedManyWithoutUserInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantCreateNestedManyWithoutGrantedByInput
+  linkedCustomer?: Prisma.CustomerCreateNestedOneWithoutLinkedStaffInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentCreateNestedOneWithoutStaffUserInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentCreateNestedManyWithoutInvitedByInput
+  warningsIssued?: Prisma.MemberWarningCreateNestedManyWithoutIssuedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionCreateNestedManyWithoutIssuedByInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -1025,6 +1300,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   lastTotpStep?: bigint | number
+  linkedCustomerId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -1039,6 +1315,14 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedCreateNestedManyWithoutReviewedByInput
   forumReportsResolved?: Prisma.ForumReportUncheckedCreateNestedManyWithoutResolvedByInput
   forumActions?: Prisma.ForumModerationActionUncheckedCreateNestedManyWithoutActorInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutPublishedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutUserInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutGrantedByInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedCreateNestedOneWithoutStaffUserInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedCreateNestedManyWithoutInvitedByInput
+  warningsIssued?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutIssuedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutIssuedByInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -1083,6 +1367,15 @@ export type UserUpdateWithoutSessionsInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionUpdateManyWithoutReviewedByNestedInput
   forumReportsResolved?: Prisma.ForumReportUpdateManyWithoutResolvedByNestedInput
   forumActions?: Prisma.ForumModerationActionUpdateManyWithoutActorNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUpdateManyWithoutCreatedByNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUpdateManyWithoutPublishedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUpdateManyWithoutUserNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUpdateManyWithoutGrantedByNestedInput
+  linkedCustomer?: Prisma.CustomerUpdateOneWithoutLinkedStaffNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUpdateOneWithoutStaffUserNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUpdateManyWithoutInvitedByNestedInput
+  warningsIssued?: Prisma.MemberWarningUpdateManyWithoutIssuedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUpdateManyWithoutIssuedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -1097,6 +1390,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -1111,6 +1405,14 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedUpdateManyWithoutReviewedByNestedInput
   forumReportsResolved?: Prisma.ForumReportUncheckedUpdateManyWithoutResolvedByNestedInput
   forumActions?: Prisma.ForumModerationActionUncheckedUpdateManyWithoutActorNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutPublishedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutUserNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutGrantedByNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedUpdateOneWithoutStaffUserNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedUpdateManyWithoutInvitedByNestedInput
+  warningsIssued?: Prisma.MemberWarningUncheckedUpdateManyWithoutIssuedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutIssuedByNestedInput
 }
 
 export type UserCreateWithoutAuthSessionsInput = {
@@ -1139,6 +1441,15 @@ export type UserCreateWithoutAuthSessionsInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionCreateNestedManyWithoutReviewedByInput
   forumReportsResolved?: Prisma.ForumReportCreateNestedManyWithoutResolvedByInput
   forumActions?: Prisma.ForumModerationActionCreateNestedManyWithoutActorInput
+  announcementsCreated?: Prisma.ForumAnnouncementCreateNestedManyWithoutCreatedByInput
+  announcementsPublished?: Prisma.ForumAnnouncementCreateNestedManyWithoutPublishedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantCreateNestedManyWithoutUserInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantCreateNestedManyWithoutGrantedByInput
+  linkedCustomer?: Prisma.CustomerCreateNestedOneWithoutLinkedStaffInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentCreateNestedOneWithoutStaffUserInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentCreateNestedManyWithoutInvitedByInput
+  warningsIssued?: Prisma.MemberWarningCreateNestedManyWithoutIssuedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionCreateNestedManyWithoutIssuedByInput
 }
 
 export type UserUncheckedCreateWithoutAuthSessionsInput = {
@@ -1153,6 +1464,7 @@ export type UserUncheckedCreateWithoutAuthSessionsInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   lastTotpStep?: bigint | number
+  linkedCustomerId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -1167,6 +1479,14 @@ export type UserUncheckedCreateWithoutAuthSessionsInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedCreateNestedManyWithoutReviewedByInput
   forumReportsResolved?: Prisma.ForumReportUncheckedCreateNestedManyWithoutResolvedByInput
   forumActions?: Prisma.ForumModerationActionUncheckedCreateNestedManyWithoutActorInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutPublishedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutUserInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutGrantedByInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedCreateNestedOneWithoutStaffUserInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedCreateNestedManyWithoutInvitedByInput
+  warningsIssued?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutIssuedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutIssuedByInput
 }
 
 export type UserCreateOrConnectWithoutAuthSessionsInput = {
@@ -1211,6 +1531,15 @@ export type UserUpdateWithoutAuthSessionsInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionUpdateManyWithoutReviewedByNestedInput
   forumReportsResolved?: Prisma.ForumReportUpdateManyWithoutResolvedByNestedInput
   forumActions?: Prisma.ForumModerationActionUpdateManyWithoutActorNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUpdateManyWithoutCreatedByNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUpdateManyWithoutPublishedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUpdateManyWithoutUserNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUpdateManyWithoutGrantedByNestedInput
+  linkedCustomer?: Prisma.CustomerUpdateOneWithoutLinkedStaffNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUpdateOneWithoutStaffUserNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUpdateManyWithoutInvitedByNestedInput
+  warningsIssued?: Prisma.MemberWarningUpdateManyWithoutIssuedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUpdateManyWithoutIssuedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAuthSessionsInput = {
@@ -1225,6 +1554,7 @@ export type UserUncheckedUpdateWithoutAuthSessionsInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -1239,6 +1569,14 @@ export type UserUncheckedUpdateWithoutAuthSessionsInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedUpdateManyWithoutReviewedByNestedInput
   forumReportsResolved?: Prisma.ForumReportUncheckedUpdateManyWithoutResolvedByNestedInput
   forumActions?: Prisma.ForumModerationActionUncheckedUpdateManyWithoutActorNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutPublishedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutUserNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutGrantedByNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedUpdateOneWithoutStaffUserNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedUpdateManyWithoutInvitedByNestedInput
+  warningsIssued?: Prisma.MemberWarningUncheckedUpdateManyWithoutIssuedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutIssuedByNestedInput
 }
 
 export type UserCreateWithoutRecoveryCodesInput = {
@@ -1267,6 +1605,15 @@ export type UserCreateWithoutRecoveryCodesInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionCreateNestedManyWithoutReviewedByInput
   forumReportsResolved?: Prisma.ForumReportCreateNestedManyWithoutResolvedByInput
   forumActions?: Prisma.ForumModerationActionCreateNestedManyWithoutActorInput
+  announcementsCreated?: Prisma.ForumAnnouncementCreateNestedManyWithoutCreatedByInput
+  announcementsPublished?: Prisma.ForumAnnouncementCreateNestedManyWithoutPublishedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantCreateNestedManyWithoutUserInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantCreateNestedManyWithoutGrantedByInput
+  linkedCustomer?: Prisma.CustomerCreateNestedOneWithoutLinkedStaffInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentCreateNestedOneWithoutStaffUserInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentCreateNestedManyWithoutInvitedByInput
+  warningsIssued?: Prisma.MemberWarningCreateNestedManyWithoutIssuedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionCreateNestedManyWithoutIssuedByInput
 }
 
 export type UserUncheckedCreateWithoutRecoveryCodesInput = {
@@ -1281,6 +1628,7 @@ export type UserUncheckedCreateWithoutRecoveryCodesInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   lastTotpStep?: bigint | number
+  linkedCustomerId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -1295,6 +1643,14 @@ export type UserUncheckedCreateWithoutRecoveryCodesInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedCreateNestedManyWithoutReviewedByInput
   forumReportsResolved?: Prisma.ForumReportUncheckedCreateNestedManyWithoutResolvedByInput
   forumActions?: Prisma.ForumModerationActionUncheckedCreateNestedManyWithoutActorInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutPublishedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutUserInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutGrantedByInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedCreateNestedOneWithoutStaffUserInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedCreateNestedManyWithoutInvitedByInput
+  warningsIssued?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutIssuedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutIssuedByInput
 }
 
 export type UserCreateOrConnectWithoutRecoveryCodesInput = {
@@ -1339,6 +1695,15 @@ export type UserUpdateWithoutRecoveryCodesInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionUpdateManyWithoutReviewedByNestedInput
   forumReportsResolved?: Prisma.ForumReportUpdateManyWithoutResolvedByNestedInput
   forumActions?: Prisma.ForumModerationActionUpdateManyWithoutActorNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUpdateManyWithoutCreatedByNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUpdateManyWithoutPublishedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUpdateManyWithoutUserNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUpdateManyWithoutGrantedByNestedInput
+  linkedCustomer?: Prisma.CustomerUpdateOneWithoutLinkedStaffNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUpdateOneWithoutStaffUserNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUpdateManyWithoutInvitedByNestedInput
+  warningsIssued?: Prisma.MemberWarningUpdateManyWithoutIssuedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUpdateManyWithoutIssuedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRecoveryCodesInput = {
@@ -1353,6 +1718,7 @@ export type UserUncheckedUpdateWithoutRecoveryCodesInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -1367,6 +1733,14 @@ export type UserUncheckedUpdateWithoutRecoveryCodesInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedUpdateManyWithoutReviewedByNestedInput
   forumReportsResolved?: Prisma.ForumReportUncheckedUpdateManyWithoutResolvedByNestedInput
   forumActions?: Prisma.ForumModerationActionUncheckedUpdateManyWithoutActorNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutPublishedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutUserNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutGrantedByNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedUpdateOneWithoutStaffUserNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedUpdateManyWithoutInvitedByNestedInput
+  warningsIssued?: Prisma.MemberWarningUncheckedUpdateManyWithoutIssuedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutIssuedByNestedInput
 }
 
 export type UserCreateWithoutTokensInput = {
@@ -1395,6 +1769,15 @@ export type UserCreateWithoutTokensInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionCreateNestedManyWithoutReviewedByInput
   forumReportsResolved?: Prisma.ForumReportCreateNestedManyWithoutResolvedByInput
   forumActions?: Prisma.ForumModerationActionCreateNestedManyWithoutActorInput
+  announcementsCreated?: Prisma.ForumAnnouncementCreateNestedManyWithoutCreatedByInput
+  announcementsPublished?: Prisma.ForumAnnouncementCreateNestedManyWithoutPublishedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantCreateNestedManyWithoutUserInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantCreateNestedManyWithoutGrantedByInput
+  linkedCustomer?: Prisma.CustomerCreateNestedOneWithoutLinkedStaffInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentCreateNestedOneWithoutStaffUserInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentCreateNestedManyWithoutInvitedByInput
+  warningsIssued?: Prisma.MemberWarningCreateNestedManyWithoutIssuedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionCreateNestedManyWithoutIssuedByInput
 }
 
 export type UserUncheckedCreateWithoutTokensInput = {
@@ -1409,6 +1792,7 @@ export type UserUncheckedCreateWithoutTokensInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   lastTotpStep?: bigint | number
+  linkedCustomerId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -1423,6 +1807,14 @@ export type UserUncheckedCreateWithoutTokensInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedCreateNestedManyWithoutReviewedByInput
   forumReportsResolved?: Prisma.ForumReportUncheckedCreateNestedManyWithoutResolvedByInput
   forumActions?: Prisma.ForumModerationActionUncheckedCreateNestedManyWithoutActorInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutPublishedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutUserInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutGrantedByInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedCreateNestedOneWithoutStaffUserInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedCreateNestedManyWithoutInvitedByInput
+  warningsIssued?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutIssuedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutIssuedByInput
 }
 
 export type UserCreateOrConnectWithoutTokensInput = {
@@ -1456,6 +1848,15 @@ export type UserCreateWithoutCreatedTokensInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionCreateNestedManyWithoutReviewedByInput
   forumReportsResolved?: Prisma.ForumReportCreateNestedManyWithoutResolvedByInput
   forumActions?: Prisma.ForumModerationActionCreateNestedManyWithoutActorInput
+  announcementsCreated?: Prisma.ForumAnnouncementCreateNestedManyWithoutCreatedByInput
+  announcementsPublished?: Prisma.ForumAnnouncementCreateNestedManyWithoutPublishedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantCreateNestedManyWithoutUserInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantCreateNestedManyWithoutGrantedByInput
+  linkedCustomer?: Prisma.CustomerCreateNestedOneWithoutLinkedStaffInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentCreateNestedOneWithoutStaffUserInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentCreateNestedManyWithoutInvitedByInput
+  warningsIssued?: Prisma.MemberWarningCreateNestedManyWithoutIssuedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionCreateNestedManyWithoutIssuedByInput
 }
 
 export type UserUncheckedCreateWithoutCreatedTokensInput = {
@@ -1470,6 +1871,7 @@ export type UserUncheckedCreateWithoutCreatedTokensInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   lastTotpStep?: bigint | number
+  linkedCustomerId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -1484,6 +1886,14 @@ export type UserUncheckedCreateWithoutCreatedTokensInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedCreateNestedManyWithoutReviewedByInput
   forumReportsResolved?: Prisma.ForumReportUncheckedCreateNestedManyWithoutResolvedByInput
   forumActions?: Prisma.ForumModerationActionUncheckedCreateNestedManyWithoutActorInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutPublishedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutUserInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutGrantedByInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedCreateNestedOneWithoutStaffUserInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedCreateNestedManyWithoutInvitedByInput
+  warningsIssued?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutIssuedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutIssuedByInput
 }
 
 export type UserCreateOrConnectWithoutCreatedTokensInput = {
@@ -1528,6 +1938,15 @@ export type UserUpdateWithoutTokensInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionUpdateManyWithoutReviewedByNestedInput
   forumReportsResolved?: Prisma.ForumReportUpdateManyWithoutResolvedByNestedInput
   forumActions?: Prisma.ForumModerationActionUpdateManyWithoutActorNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUpdateManyWithoutCreatedByNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUpdateManyWithoutPublishedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUpdateManyWithoutUserNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUpdateManyWithoutGrantedByNestedInput
+  linkedCustomer?: Prisma.CustomerUpdateOneWithoutLinkedStaffNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUpdateOneWithoutStaffUserNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUpdateManyWithoutInvitedByNestedInput
+  warningsIssued?: Prisma.MemberWarningUpdateManyWithoutIssuedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUpdateManyWithoutIssuedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTokensInput = {
@@ -1542,6 +1961,7 @@ export type UserUncheckedUpdateWithoutTokensInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -1556,6 +1976,14 @@ export type UserUncheckedUpdateWithoutTokensInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedUpdateManyWithoutReviewedByNestedInput
   forumReportsResolved?: Prisma.ForumReportUncheckedUpdateManyWithoutResolvedByNestedInput
   forumActions?: Prisma.ForumModerationActionUncheckedUpdateManyWithoutActorNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutPublishedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutUserNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutGrantedByNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedUpdateOneWithoutStaffUserNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedUpdateManyWithoutInvitedByNestedInput
+  warningsIssued?: Prisma.MemberWarningUncheckedUpdateManyWithoutIssuedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutIssuedByNestedInput
 }
 
 export type UserUpsertWithoutCreatedTokensInput = {
@@ -1595,6 +2023,15 @@ export type UserUpdateWithoutCreatedTokensInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionUpdateManyWithoutReviewedByNestedInput
   forumReportsResolved?: Prisma.ForumReportUpdateManyWithoutResolvedByNestedInput
   forumActions?: Prisma.ForumModerationActionUpdateManyWithoutActorNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUpdateManyWithoutCreatedByNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUpdateManyWithoutPublishedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUpdateManyWithoutUserNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUpdateManyWithoutGrantedByNestedInput
+  linkedCustomer?: Prisma.CustomerUpdateOneWithoutLinkedStaffNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUpdateOneWithoutStaffUserNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUpdateManyWithoutInvitedByNestedInput
+  warningsIssued?: Prisma.MemberWarningUpdateManyWithoutIssuedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUpdateManyWithoutIssuedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedTokensInput = {
@@ -1609,6 +2046,7 @@ export type UserUncheckedUpdateWithoutCreatedTokensInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -1623,6 +2061,14 @@ export type UserUncheckedUpdateWithoutCreatedTokensInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedUpdateManyWithoutReviewedByNestedInput
   forumReportsResolved?: Prisma.ForumReportUncheckedUpdateManyWithoutResolvedByNestedInput
   forumActions?: Prisma.ForumModerationActionUncheckedUpdateManyWithoutActorNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutPublishedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutUserNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutGrantedByNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedUpdateOneWithoutStaffUserNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedUpdateManyWithoutInvitedByNestedInput
+  warningsIssued?: Prisma.MemberWarningUncheckedUpdateManyWithoutIssuedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutIssuedByNestedInput
 }
 
 export type UserCreateWithoutAuditAsActorInput = {
@@ -1651,6 +2097,15 @@ export type UserCreateWithoutAuditAsActorInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionCreateNestedManyWithoutReviewedByInput
   forumReportsResolved?: Prisma.ForumReportCreateNestedManyWithoutResolvedByInput
   forumActions?: Prisma.ForumModerationActionCreateNestedManyWithoutActorInput
+  announcementsCreated?: Prisma.ForumAnnouncementCreateNestedManyWithoutCreatedByInput
+  announcementsPublished?: Prisma.ForumAnnouncementCreateNestedManyWithoutPublishedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantCreateNestedManyWithoutUserInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantCreateNestedManyWithoutGrantedByInput
+  linkedCustomer?: Prisma.CustomerCreateNestedOneWithoutLinkedStaffInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentCreateNestedOneWithoutStaffUserInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentCreateNestedManyWithoutInvitedByInput
+  warningsIssued?: Prisma.MemberWarningCreateNestedManyWithoutIssuedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionCreateNestedManyWithoutIssuedByInput
 }
 
 export type UserUncheckedCreateWithoutAuditAsActorInput = {
@@ -1665,6 +2120,7 @@ export type UserUncheckedCreateWithoutAuditAsActorInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   lastTotpStep?: bigint | number
+  linkedCustomerId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -1679,6 +2135,14 @@ export type UserUncheckedCreateWithoutAuditAsActorInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedCreateNestedManyWithoutReviewedByInput
   forumReportsResolved?: Prisma.ForumReportUncheckedCreateNestedManyWithoutResolvedByInput
   forumActions?: Prisma.ForumModerationActionUncheckedCreateNestedManyWithoutActorInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutPublishedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutUserInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutGrantedByInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedCreateNestedOneWithoutStaffUserInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedCreateNestedManyWithoutInvitedByInput
+  warningsIssued?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutIssuedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutIssuedByInput
 }
 
 export type UserCreateOrConnectWithoutAuditAsActorInput = {
@@ -1723,6 +2187,15 @@ export type UserUpdateWithoutAuditAsActorInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionUpdateManyWithoutReviewedByNestedInput
   forumReportsResolved?: Prisma.ForumReportUpdateManyWithoutResolvedByNestedInput
   forumActions?: Prisma.ForumModerationActionUpdateManyWithoutActorNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUpdateManyWithoutCreatedByNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUpdateManyWithoutPublishedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUpdateManyWithoutUserNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUpdateManyWithoutGrantedByNestedInput
+  linkedCustomer?: Prisma.CustomerUpdateOneWithoutLinkedStaffNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUpdateOneWithoutStaffUserNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUpdateManyWithoutInvitedByNestedInput
+  warningsIssued?: Prisma.MemberWarningUpdateManyWithoutIssuedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUpdateManyWithoutIssuedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAuditAsActorInput = {
@@ -1737,6 +2210,7 @@ export type UserUncheckedUpdateWithoutAuditAsActorInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -1751,6 +2225,14 @@ export type UserUncheckedUpdateWithoutAuditAsActorInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedUpdateManyWithoutReviewedByNestedInput
   forumReportsResolved?: Prisma.ForumReportUncheckedUpdateManyWithoutResolvedByNestedInput
   forumActions?: Prisma.ForumModerationActionUncheckedUpdateManyWithoutActorNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutPublishedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutUserNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutGrantedByNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedUpdateOneWithoutStaffUserNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedUpdateManyWithoutInvitedByNestedInput
+  warningsIssued?: Prisma.MemberWarningUncheckedUpdateManyWithoutIssuedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutIssuedByNestedInput
 }
 
 export type UserCreateWithoutUploadedMediaInput = {
@@ -1779,6 +2261,15 @@ export type UserCreateWithoutUploadedMediaInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionCreateNestedManyWithoutReviewedByInput
   forumReportsResolved?: Prisma.ForumReportCreateNestedManyWithoutResolvedByInput
   forumActions?: Prisma.ForumModerationActionCreateNestedManyWithoutActorInput
+  announcementsCreated?: Prisma.ForumAnnouncementCreateNestedManyWithoutCreatedByInput
+  announcementsPublished?: Prisma.ForumAnnouncementCreateNestedManyWithoutPublishedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantCreateNestedManyWithoutUserInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantCreateNestedManyWithoutGrantedByInput
+  linkedCustomer?: Prisma.CustomerCreateNestedOneWithoutLinkedStaffInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentCreateNestedOneWithoutStaffUserInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentCreateNestedManyWithoutInvitedByInput
+  warningsIssued?: Prisma.MemberWarningCreateNestedManyWithoutIssuedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionCreateNestedManyWithoutIssuedByInput
 }
 
 export type UserUncheckedCreateWithoutUploadedMediaInput = {
@@ -1793,6 +2284,7 @@ export type UserUncheckedCreateWithoutUploadedMediaInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   lastTotpStep?: bigint | number
+  linkedCustomerId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -1807,6 +2299,14 @@ export type UserUncheckedCreateWithoutUploadedMediaInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedCreateNestedManyWithoutReviewedByInput
   forumReportsResolved?: Prisma.ForumReportUncheckedCreateNestedManyWithoutResolvedByInput
   forumActions?: Prisma.ForumModerationActionUncheckedCreateNestedManyWithoutActorInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutPublishedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutUserInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutGrantedByInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedCreateNestedOneWithoutStaffUserInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedCreateNestedManyWithoutInvitedByInput
+  warningsIssued?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutIssuedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutIssuedByInput
 }
 
 export type UserCreateOrConnectWithoutUploadedMediaInput = {
@@ -1851,6 +2351,15 @@ export type UserUpdateWithoutUploadedMediaInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionUpdateManyWithoutReviewedByNestedInput
   forumReportsResolved?: Prisma.ForumReportUpdateManyWithoutResolvedByNestedInput
   forumActions?: Prisma.ForumModerationActionUpdateManyWithoutActorNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUpdateManyWithoutCreatedByNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUpdateManyWithoutPublishedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUpdateManyWithoutUserNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUpdateManyWithoutGrantedByNestedInput
+  linkedCustomer?: Prisma.CustomerUpdateOneWithoutLinkedStaffNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUpdateOneWithoutStaffUserNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUpdateManyWithoutInvitedByNestedInput
+  warningsIssued?: Prisma.MemberWarningUpdateManyWithoutIssuedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUpdateManyWithoutIssuedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutUploadedMediaInput = {
@@ -1865,6 +2374,7 @@ export type UserUncheckedUpdateWithoutUploadedMediaInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -1879,6 +2389,14 @@ export type UserUncheckedUpdateWithoutUploadedMediaInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedUpdateManyWithoutReviewedByNestedInput
   forumReportsResolved?: Prisma.ForumReportUncheckedUpdateManyWithoutResolvedByNestedInput
   forumActions?: Prisma.ForumModerationActionUncheckedUpdateManyWithoutActorNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutPublishedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutUserNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutGrantedByNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedUpdateOneWithoutStaffUserNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedUpdateManyWithoutInvitedByNestedInput
+  warningsIssued?: Prisma.MemberWarningUncheckedUpdateManyWithoutIssuedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutIssuedByNestedInput
 }
 
 export type UserCreateWithoutCreatedDealsInput = {
@@ -1907,6 +2425,15 @@ export type UserCreateWithoutCreatedDealsInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionCreateNestedManyWithoutReviewedByInput
   forumReportsResolved?: Prisma.ForumReportCreateNestedManyWithoutResolvedByInput
   forumActions?: Prisma.ForumModerationActionCreateNestedManyWithoutActorInput
+  announcementsCreated?: Prisma.ForumAnnouncementCreateNestedManyWithoutCreatedByInput
+  announcementsPublished?: Prisma.ForumAnnouncementCreateNestedManyWithoutPublishedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantCreateNestedManyWithoutUserInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantCreateNestedManyWithoutGrantedByInput
+  linkedCustomer?: Prisma.CustomerCreateNestedOneWithoutLinkedStaffInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentCreateNestedOneWithoutStaffUserInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentCreateNestedManyWithoutInvitedByInput
+  warningsIssued?: Prisma.MemberWarningCreateNestedManyWithoutIssuedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionCreateNestedManyWithoutIssuedByInput
 }
 
 export type UserUncheckedCreateWithoutCreatedDealsInput = {
@@ -1921,6 +2448,7 @@ export type UserUncheckedCreateWithoutCreatedDealsInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   lastTotpStep?: bigint | number
+  linkedCustomerId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -1935,6 +2463,14 @@ export type UserUncheckedCreateWithoutCreatedDealsInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedCreateNestedManyWithoutReviewedByInput
   forumReportsResolved?: Prisma.ForumReportUncheckedCreateNestedManyWithoutResolvedByInput
   forumActions?: Prisma.ForumModerationActionUncheckedCreateNestedManyWithoutActorInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutPublishedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutUserInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutGrantedByInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedCreateNestedOneWithoutStaffUserInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedCreateNestedManyWithoutInvitedByInput
+  warningsIssued?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutIssuedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutIssuedByInput
 }
 
 export type UserCreateOrConnectWithoutCreatedDealsInput = {
@@ -1968,6 +2504,15 @@ export type UserCreateWithoutUpdatedDealsInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionCreateNestedManyWithoutReviewedByInput
   forumReportsResolved?: Prisma.ForumReportCreateNestedManyWithoutResolvedByInput
   forumActions?: Prisma.ForumModerationActionCreateNestedManyWithoutActorInput
+  announcementsCreated?: Prisma.ForumAnnouncementCreateNestedManyWithoutCreatedByInput
+  announcementsPublished?: Prisma.ForumAnnouncementCreateNestedManyWithoutPublishedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantCreateNestedManyWithoutUserInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantCreateNestedManyWithoutGrantedByInput
+  linkedCustomer?: Prisma.CustomerCreateNestedOneWithoutLinkedStaffInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentCreateNestedOneWithoutStaffUserInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentCreateNestedManyWithoutInvitedByInput
+  warningsIssued?: Prisma.MemberWarningCreateNestedManyWithoutIssuedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionCreateNestedManyWithoutIssuedByInput
 }
 
 export type UserUncheckedCreateWithoutUpdatedDealsInput = {
@@ -1982,6 +2527,7 @@ export type UserUncheckedCreateWithoutUpdatedDealsInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   lastTotpStep?: bigint | number
+  linkedCustomerId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -1996,6 +2542,14 @@ export type UserUncheckedCreateWithoutUpdatedDealsInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedCreateNestedManyWithoutReviewedByInput
   forumReportsResolved?: Prisma.ForumReportUncheckedCreateNestedManyWithoutResolvedByInput
   forumActions?: Prisma.ForumModerationActionUncheckedCreateNestedManyWithoutActorInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutPublishedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutUserInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutGrantedByInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedCreateNestedOneWithoutStaffUserInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedCreateNestedManyWithoutInvitedByInput
+  warningsIssued?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutIssuedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutIssuedByInput
 }
 
 export type UserCreateOrConnectWithoutUpdatedDealsInput = {
@@ -2040,6 +2594,15 @@ export type UserUpdateWithoutCreatedDealsInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionUpdateManyWithoutReviewedByNestedInput
   forumReportsResolved?: Prisma.ForumReportUpdateManyWithoutResolvedByNestedInput
   forumActions?: Prisma.ForumModerationActionUpdateManyWithoutActorNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUpdateManyWithoutCreatedByNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUpdateManyWithoutPublishedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUpdateManyWithoutUserNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUpdateManyWithoutGrantedByNestedInput
+  linkedCustomer?: Prisma.CustomerUpdateOneWithoutLinkedStaffNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUpdateOneWithoutStaffUserNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUpdateManyWithoutInvitedByNestedInput
+  warningsIssued?: Prisma.MemberWarningUpdateManyWithoutIssuedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUpdateManyWithoutIssuedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedDealsInput = {
@@ -2054,6 +2617,7 @@ export type UserUncheckedUpdateWithoutCreatedDealsInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -2068,6 +2632,14 @@ export type UserUncheckedUpdateWithoutCreatedDealsInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedUpdateManyWithoutReviewedByNestedInput
   forumReportsResolved?: Prisma.ForumReportUncheckedUpdateManyWithoutResolvedByNestedInput
   forumActions?: Prisma.ForumModerationActionUncheckedUpdateManyWithoutActorNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutPublishedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutUserNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutGrantedByNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedUpdateOneWithoutStaffUserNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedUpdateManyWithoutInvitedByNestedInput
+  warningsIssued?: Prisma.MemberWarningUncheckedUpdateManyWithoutIssuedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutIssuedByNestedInput
 }
 
 export type UserUpsertWithoutUpdatedDealsInput = {
@@ -2107,9 +2679,182 @@ export type UserUpdateWithoutUpdatedDealsInput = {
   reviewedSubmissions?: Prisma.CommunityDealSubmissionUpdateManyWithoutReviewedByNestedInput
   forumReportsResolved?: Prisma.ForumReportUpdateManyWithoutResolvedByNestedInput
   forumActions?: Prisma.ForumModerationActionUpdateManyWithoutActorNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUpdateManyWithoutCreatedByNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUpdateManyWithoutPublishedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUpdateManyWithoutUserNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUpdateManyWithoutGrantedByNestedInput
+  linkedCustomer?: Prisma.CustomerUpdateOneWithoutLinkedStaffNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUpdateOneWithoutStaffUserNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUpdateManyWithoutInvitedByNestedInput
+  warningsIssued?: Prisma.MemberWarningUpdateManyWithoutIssuedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUpdateManyWithoutIssuedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutUpdatedDealsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  authSessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  recoveryCodes?: Prisma.RecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
+  tokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutUserNestedInput
+  createdTokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutCreatedByNestedInput
+  auditAsActor?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  createdDeals?: Prisma.DealUncheckedUpdateManyWithoutCreatedByNestedInput
+  uploadedMedia?: Prisma.MediaUncheckedUpdateManyWithoutUploadedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedUpdateManyWithoutReviewedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedUpdateManyWithoutResolvedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUncheckedUpdateManyWithoutActorNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutPublishedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutUserNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutGrantedByNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedUpdateOneWithoutStaffUserNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedUpdateManyWithoutInvitedByNestedInput
+  warningsIssued?: Prisma.MemberWarningUncheckedUpdateManyWithoutIssuedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutIssuedByNestedInput
+}
+
+export type UserCreateWithoutLinkedCustomerInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  passwordHash?: string | null
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  lastTotpStep?: bigint | number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  authSessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  recoveryCodes?: Prisma.RecoveryCodeCreateNestedManyWithoutUserInput
+  tokens?: Prisma.AuthTokenCreateNestedManyWithoutUserInput
+  createdTokens?: Prisma.AuthTokenCreateNestedManyWithoutCreatedByInput
+  auditAsActor?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  createdDeals?: Prisma.DealCreateNestedManyWithoutCreatedByInput
+  updatedDeals?: Prisma.DealCreateNestedManyWithoutUpdatedByInput
+  uploadedMedia?: Prisma.MediaCreateNestedManyWithoutUploadedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionCreateNestedManyWithoutReviewedByInput
+  forumReportsResolved?: Prisma.ForumReportCreateNestedManyWithoutResolvedByInput
+  forumActions?: Prisma.ForumModerationActionCreateNestedManyWithoutActorInput
+  announcementsCreated?: Prisma.ForumAnnouncementCreateNestedManyWithoutCreatedByInput
+  announcementsPublished?: Prisma.ForumAnnouncementCreateNestedManyWithoutPublishedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantCreateNestedManyWithoutUserInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantCreateNestedManyWithoutGrantedByInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentCreateNestedOneWithoutStaffUserInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentCreateNestedManyWithoutInvitedByInput
+  warningsIssued?: Prisma.MemberWarningCreateNestedManyWithoutIssuedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionCreateNestedManyWithoutIssuedByInput
+}
+
+export type UserUncheckedCreateWithoutLinkedCustomerInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  passwordHash?: string | null
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  lastTotpStep?: bigint | number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  authSessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  recoveryCodes?: Prisma.RecoveryCodeUncheckedCreateNestedManyWithoutUserInput
+  tokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutUserInput
+  createdTokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutCreatedByInput
+  auditAsActor?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  createdDeals?: Prisma.DealUncheckedCreateNestedManyWithoutCreatedByInput
+  updatedDeals?: Prisma.DealUncheckedCreateNestedManyWithoutUpdatedByInput
+  uploadedMedia?: Prisma.MediaUncheckedCreateNestedManyWithoutUploadedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedCreateNestedManyWithoutReviewedByInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedCreateNestedManyWithoutResolvedByInput
+  forumActions?: Prisma.ForumModerationActionUncheckedCreateNestedManyWithoutActorInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutPublishedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutUserInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutGrantedByInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedCreateNestedOneWithoutStaffUserInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedCreateNestedManyWithoutInvitedByInput
+  warningsIssued?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutIssuedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutIssuedByInput
+}
+
+export type UserCreateOrConnectWithoutLinkedCustomerInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutLinkedCustomerInput, Prisma.UserUncheckedCreateWithoutLinkedCustomerInput>
+}
+
+export type UserUpsertWithoutLinkedCustomerInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutLinkedCustomerInput, Prisma.UserUncheckedUpdateWithoutLinkedCustomerInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutLinkedCustomerInput, Prisma.UserUncheckedCreateWithoutLinkedCustomerInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutLinkedCustomerInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutLinkedCustomerInput, Prisma.UserUncheckedUpdateWithoutLinkedCustomerInput>
+}
+
+export type UserUpdateWithoutLinkedCustomerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  authSessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  recoveryCodes?: Prisma.RecoveryCodeUpdateManyWithoutUserNestedInput
+  tokens?: Prisma.AuthTokenUpdateManyWithoutUserNestedInput
+  createdTokens?: Prisma.AuthTokenUpdateManyWithoutCreatedByNestedInput
+  auditAsActor?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  createdDeals?: Prisma.DealUpdateManyWithoutCreatedByNestedInput
+  updatedDeals?: Prisma.DealUpdateManyWithoutUpdatedByNestedInput
+  uploadedMedia?: Prisma.MediaUpdateManyWithoutUploadedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUpdateManyWithoutReviewedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUpdateManyWithoutResolvedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUpdateManyWithoutActorNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUpdateManyWithoutCreatedByNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUpdateManyWithoutPublishedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUpdateManyWithoutUserNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUpdateManyWithoutGrantedByNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUpdateOneWithoutStaffUserNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUpdateManyWithoutInvitedByNestedInput
+  warningsIssued?: Prisma.MemberWarningUpdateManyWithoutIssuedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUpdateManyWithoutIssuedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutLinkedCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2131,10 +2876,19 @@ export type UserUncheckedUpdateWithoutUpdatedDealsInput = {
   createdTokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutCreatedByNestedInput
   auditAsActor?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
   createdDeals?: Prisma.DealUncheckedUpdateManyWithoutCreatedByNestedInput
+  updatedDeals?: Prisma.DealUncheckedUpdateManyWithoutUpdatedByNestedInput
   uploadedMedia?: Prisma.MediaUncheckedUpdateManyWithoutUploadedByNestedInput
   reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedUpdateManyWithoutReviewedByNestedInput
   forumReportsResolved?: Prisma.ForumReportUncheckedUpdateManyWithoutResolvedByNestedInput
   forumActions?: Prisma.ForumModerationActionUncheckedUpdateManyWithoutActorNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutPublishedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutUserNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutGrantedByNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedUpdateOneWithoutStaffUserNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedUpdateManyWithoutInvitedByNestedInput
+  warningsIssued?: Prisma.MemberWarningUncheckedUpdateManyWithoutIssuedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutIssuedByNestedInput
 }
 
 export type UserCreateWithoutReviewedSubmissionsInput = {
@@ -2163,6 +2917,15 @@ export type UserCreateWithoutReviewedSubmissionsInput = {
   uploadedMedia?: Prisma.MediaCreateNestedManyWithoutUploadedByInput
   forumReportsResolved?: Prisma.ForumReportCreateNestedManyWithoutResolvedByInput
   forumActions?: Prisma.ForumModerationActionCreateNestedManyWithoutActorInput
+  announcementsCreated?: Prisma.ForumAnnouncementCreateNestedManyWithoutCreatedByInput
+  announcementsPublished?: Prisma.ForumAnnouncementCreateNestedManyWithoutPublishedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantCreateNestedManyWithoutUserInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantCreateNestedManyWithoutGrantedByInput
+  linkedCustomer?: Prisma.CustomerCreateNestedOneWithoutLinkedStaffInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentCreateNestedOneWithoutStaffUserInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentCreateNestedManyWithoutInvitedByInput
+  warningsIssued?: Prisma.MemberWarningCreateNestedManyWithoutIssuedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionCreateNestedManyWithoutIssuedByInput
 }
 
 export type UserUncheckedCreateWithoutReviewedSubmissionsInput = {
@@ -2177,6 +2940,7 @@ export type UserUncheckedCreateWithoutReviewedSubmissionsInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   lastTotpStep?: bigint | number
+  linkedCustomerId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -2191,6 +2955,14 @@ export type UserUncheckedCreateWithoutReviewedSubmissionsInput = {
   uploadedMedia?: Prisma.MediaUncheckedCreateNestedManyWithoutUploadedByInput
   forumReportsResolved?: Prisma.ForumReportUncheckedCreateNestedManyWithoutResolvedByInput
   forumActions?: Prisma.ForumModerationActionUncheckedCreateNestedManyWithoutActorInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutPublishedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutUserInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutGrantedByInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedCreateNestedOneWithoutStaffUserInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedCreateNestedManyWithoutInvitedByInput
+  warningsIssued?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutIssuedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutIssuedByInput
 }
 
 export type UserCreateOrConnectWithoutReviewedSubmissionsInput = {
@@ -2235,6 +3007,15 @@ export type UserUpdateWithoutReviewedSubmissionsInput = {
   uploadedMedia?: Prisma.MediaUpdateManyWithoutUploadedByNestedInput
   forumReportsResolved?: Prisma.ForumReportUpdateManyWithoutResolvedByNestedInput
   forumActions?: Prisma.ForumModerationActionUpdateManyWithoutActorNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUpdateManyWithoutCreatedByNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUpdateManyWithoutPublishedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUpdateManyWithoutUserNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUpdateManyWithoutGrantedByNestedInput
+  linkedCustomer?: Prisma.CustomerUpdateOneWithoutLinkedStaffNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUpdateOneWithoutStaffUserNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUpdateManyWithoutInvitedByNestedInput
+  warningsIssued?: Prisma.MemberWarningUpdateManyWithoutIssuedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUpdateManyWithoutIssuedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReviewedSubmissionsInput = {
@@ -2249,6 +3030,7 @@ export type UserUncheckedUpdateWithoutReviewedSubmissionsInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -2263,6 +3045,670 @@ export type UserUncheckedUpdateWithoutReviewedSubmissionsInput = {
   uploadedMedia?: Prisma.MediaUncheckedUpdateManyWithoutUploadedByNestedInput
   forumReportsResolved?: Prisma.ForumReportUncheckedUpdateManyWithoutResolvedByNestedInput
   forumActions?: Prisma.ForumModerationActionUncheckedUpdateManyWithoutActorNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutPublishedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutUserNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutGrantedByNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedUpdateOneWithoutStaffUserNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedUpdateManyWithoutInvitedByNestedInput
+  warningsIssued?: Prisma.MemberWarningUncheckedUpdateManyWithoutIssuedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutIssuedByNestedInput
+}
+
+export type UserCreateWithoutAnnouncementsCreatedInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  passwordHash?: string | null
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  lastTotpStep?: bigint | number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  authSessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  recoveryCodes?: Prisma.RecoveryCodeCreateNestedManyWithoutUserInput
+  tokens?: Prisma.AuthTokenCreateNestedManyWithoutUserInput
+  createdTokens?: Prisma.AuthTokenCreateNestedManyWithoutCreatedByInput
+  auditAsActor?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  createdDeals?: Prisma.DealCreateNestedManyWithoutCreatedByInput
+  updatedDeals?: Prisma.DealCreateNestedManyWithoutUpdatedByInput
+  uploadedMedia?: Prisma.MediaCreateNestedManyWithoutUploadedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionCreateNestedManyWithoutReviewedByInput
+  forumReportsResolved?: Prisma.ForumReportCreateNestedManyWithoutResolvedByInput
+  forumActions?: Prisma.ForumModerationActionCreateNestedManyWithoutActorInput
+  announcementsPublished?: Prisma.ForumAnnouncementCreateNestedManyWithoutPublishedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantCreateNestedManyWithoutUserInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantCreateNestedManyWithoutGrantedByInput
+  linkedCustomer?: Prisma.CustomerCreateNestedOneWithoutLinkedStaffInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentCreateNestedOneWithoutStaffUserInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentCreateNestedManyWithoutInvitedByInput
+  warningsIssued?: Prisma.MemberWarningCreateNestedManyWithoutIssuedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionCreateNestedManyWithoutIssuedByInput
+}
+
+export type UserUncheckedCreateWithoutAnnouncementsCreatedInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  passwordHash?: string | null
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  lastTotpStep?: bigint | number
+  linkedCustomerId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  authSessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  recoveryCodes?: Prisma.RecoveryCodeUncheckedCreateNestedManyWithoutUserInput
+  tokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutUserInput
+  createdTokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutCreatedByInput
+  auditAsActor?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  createdDeals?: Prisma.DealUncheckedCreateNestedManyWithoutCreatedByInput
+  updatedDeals?: Prisma.DealUncheckedCreateNestedManyWithoutUpdatedByInput
+  uploadedMedia?: Prisma.MediaUncheckedCreateNestedManyWithoutUploadedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedCreateNestedManyWithoutReviewedByInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedCreateNestedManyWithoutResolvedByInput
+  forumActions?: Prisma.ForumModerationActionUncheckedCreateNestedManyWithoutActorInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutPublishedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutUserInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutGrantedByInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedCreateNestedOneWithoutStaffUserInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedCreateNestedManyWithoutInvitedByInput
+  warningsIssued?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutIssuedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutIssuedByInput
+}
+
+export type UserCreateOrConnectWithoutAnnouncementsCreatedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutAnnouncementsCreatedInput, Prisma.UserUncheckedCreateWithoutAnnouncementsCreatedInput>
+}
+
+export type UserCreateWithoutAnnouncementsPublishedInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  passwordHash?: string | null
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  lastTotpStep?: bigint | number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  authSessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  recoveryCodes?: Prisma.RecoveryCodeCreateNestedManyWithoutUserInput
+  tokens?: Prisma.AuthTokenCreateNestedManyWithoutUserInput
+  createdTokens?: Prisma.AuthTokenCreateNestedManyWithoutCreatedByInput
+  auditAsActor?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  createdDeals?: Prisma.DealCreateNestedManyWithoutCreatedByInput
+  updatedDeals?: Prisma.DealCreateNestedManyWithoutUpdatedByInput
+  uploadedMedia?: Prisma.MediaCreateNestedManyWithoutUploadedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionCreateNestedManyWithoutReviewedByInput
+  forumReportsResolved?: Prisma.ForumReportCreateNestedManyWithoutResolvedByInput
+  forumActions?: Prisma.ForumModerationActionCreateNestedManyWithoutActorInput
+  announcementsCreated?: Prisma.ForumAnnouncementCreateNestedManyWithoutCreatedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantCreateNestedManyWithoutUserInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantCreateNestedManyWithoutGrantedByInput
+  linkedCustomer?: Prisma.CustomerCreateNestedOneWithoutLinkedStaffInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentCreateNestedOneWithoutStaffUserInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentCreateNestedManyWithoutInvitedByInput
+  warningsIssued?: Prisma.MemberWarningCreateNestedManyWithoutIssuedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionCreateNestedManyWithoutIssuedByInput
+}
+
+export type UserUncheckedCreateWithoutAnnouncementsPublishedInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  passwordHash?: string | null
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  lastTotpStep?: bigint | number
+  linkedCustomerId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  authSessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  recoveryCodes?: Prisma.RecoveryCodeUncheckedCreateNestedManyWithoutUserInput
+  tokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutUserInput
+  createdTokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutCreatedByInput
+  auditAsActor?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  createdDeals?: Prisma.DealUncheckedCreateNestedManyWithoutCreatedByInput
+  updatedDeals?: Prisma.DealUncheckedCreateNestedManyWithoutUpdatedByInput
+  uploadedMedia?: Prisma.MediaUncheckedCreateNestedManyWithoutUploadedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedCreateNestedManyWithoutReviewedByInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedCreateNestedManyWithoutResolvedByInput
+  forumActions?: Prisma.ForumModerationActionUncheckedCreateNestedManyWithoutActorInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutUserInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutGrantedByInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedCreateNestedOneWithoutStaffUserInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedCreateNestedManyWithoutInvitedByInput
+  warningsIssued?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutIssuedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutIssuedByInput
+}
+
+export type UserCreateOrConnectWithoutAnnouncementsPublishedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutAnnouncementsPublishedInput, Prisma.UserUncheckedCreateWithoutAnnouncementsPublishedInput>
+}
+
+export type UserUpsertWithoutAnnouncementsCreatedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutAnnouncementsCreatedInput, Prisma.UserUncheckedUpdateWithoutAnnouncementsCreatedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutAnnouncementsCreatedInput, Prisma.UserUncheckedCreateWithoutAnnouncementsCreatedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutAnnouncementsCreatedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutAnnouncementsCreatedInput, Prisma.UserUncheckedUpdateWithoutAnnouncementsCreatedInput>
+}
+
+export type UserUpdateWithoutAnnouncementsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  authSessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  recoveryCodes?: Prisma.RecoveryCodeUpdateManyWithoutUserNestedInput
+  tokens?: Prisma.AuthTokenUpdateManyWithoutUserNestedInput
+  createdTokens?: Prisma.AuthTokenUpdateManyWithoutCreatedByNestedInput
+  auditAsActor?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  createdDeals?: Prisma.DealUpdateManyWithoutCreatedByNestedInput
+  updatedDeals?: Prisma.DealUpdateManyWithoutUpdatedByNestedInput
+  uploadedMedia?: Prisma.MediaUpdateManyWithoutUploadedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUpdateManyWithoutReviewedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUpdateManyWithoutResolvedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUpdateManyWithoutActorNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUpdateManyWithoutPublishedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUpdateManyWithoutUserNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUpdateManyWithoutGrantedByNestedInput
+  linkedCustomer?: Prisma.CustomerUpdateOneWithoutLinkedStaffNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUpdateOneWithoutStaffUserNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUpdateManyWithoutInvitedByNestedInput
+  warningsIssued?: Prisma.MemberWarningUpdateManyWithoutIssuedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUpdateManyWithoutIssuedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutAnnouncementsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  authSessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  recoveryCodes?: Prisma.RecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
+  tokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutUserNestedInput
+  createdTokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutCreatedByNestedInput
+  auditAsActor?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  createdDeals?: Prisma.DealUncheckedUpdateManyWithoutCreatedByNestedInput
+  updatedDeals?: Prisma.DealUncheckedUpdateManyWithoutUpdatedByNestedInput
+  uploadedMedia?: Prisma.MediaUncheckedUpdateManyWithoutUploadedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedUpdateManyWithoutReviewedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedUpdateManyWithoutResolvedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUncheckedUpdateManyWithoutActorNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutPublishedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutUserNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutGrantedByNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedUpdateOneWithoutStaffUserNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedUpdateManyWithoutInvitedByNestedInput
+  warningsIssued?: Prisma.MemberWarningUncheckedUpdateManyWithoutIssuedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutIssuedByNestedInput
+}
+
+export type UserUpsertWithoutAnnouncementsPublishedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutAnnouncementsPublishedInput, Prisma.UserUncheckedUpdateWithoutAnnouncementsPublishedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutAnnouncementsPublishedInput, Prisma.UserUncheckedCreateWithoutAnnouncementsPublishedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutAnnouncementsPublishedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutAnnouncementsPublishedInput, Prisma.UserUncheckedUpdateWithoutAnnouncementsPublishedInput>
+}
+
+export type UserUpdateWithoutAnnouncementsPublishedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  authSessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  recoveryCodes?: Prisma.RecoveryCodeUpdateManyWithoutUserNestedInput
+  tokens?: Prisma.AuthTokenUpdateManyWithoutUserNestedInput
+  createdTokens?: Prisma.AuthTokenUpdateManyWithoutCreatedByNestedInput
+  auditAsActor?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  createdDeals?: Prisma.DealUpdateManyWithoutCreatedByNestedInput
+  updatedDeals?: Prisma.DealUpdateManyWithoutUpdatedByNestedInput
+  uploadedMedia?: Prisma.MediaUpdateManyWithoutUploadedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUpdateManyWithoutReviewedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUpdateManyWithoutResolvedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUpdateManyWithoutActorNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUpdateManyWithoutCreatedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUpdateManyWithoutUserNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUpdateManyWithoutGrantedByNestedInput
+  linkedCustomer?: Prisma.CustomerUpdateOneWithoutLinkedStaffNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUpdateOneWithoutStaffUserNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUpdateManyWithoutInvitedByNestedInput
+  warningsIssued?: Prisma.MemberWarningUpdateManyWithoutIssuedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUpdateManyWithoutIssuedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutAnnouncementsPublishedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  authSessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  recoveryCodes?: Prisma.RecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
+  tokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutUserNestedInput
+  createdTokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutCreatedByNestedInput
+  auditAsActor?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  createdDeals?: Prisma.DealUncheckedUpdateManyWithoutCreatedByNestedInput
+  updatedDeals?: Prisma.DealUncheckedUpdateManyWithoutUpdatedByNestedInput
+  uploadedMedia?: Prisma.MediaUncheckedUpdateManyWithoutUploadedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedUpdateManyWithoutReviewedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedUpdateManyWithoutResolvedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUncheckedUpdateManyWithoutActorNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutUserNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutGrantedByNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedUpdateOneWithoutStaffUserNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedUpdateManyWithoutInvitedByNestedInput
+  warningsIssued?: Prisma.MemberWarningUncheckedUpdateManyWithoutIssuedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutIssuedByNestedInput
+}
+
+export type UserCreateWithoutPermissionGrantsInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  passwordHash?: string | null
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  lastTotpStep?: bigint | number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  authSessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  recoveryCodes?: Prisma.RecoveryCodeCreateNestedManyWithoutUserInput
+  tokens?: Prisma.AuthTokenCreateNestedManyWithoutUserInput
+  createdTokens?: Prisma.AuthTokenCreateNestedManyWithoutCreatedByInput
+  auditAsActor?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  createdDeals?: Prisma.DealCreateNestedManyWithoutCreatedByInput
+  updatedDeals?: Prisma.DealCreateNestedManyWithoutUpdatedByInput
+  uploadedMedia?: Prisma.MediaCreateNestedManyWithoutUploadedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionCreateNestedManyWithoutReviewedByInput
+  forumReportsResolved?: Prisma.ForumReportCreateNestedManyWithoutResolvedByInput
+  forumActions?: Prisma.ForumModerationActionCreateNestedManyWithoutActorInput
+  announcementsCreated?: Prisma.ForumAnnouncementCreateNestedManyWithoutCreatedByInput
+  announcementsPublished?: Prisma.ForumAnnouncementCreateNestedManyWithoutPublishedByInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantCreateNestedManyWithoutGrantedByInput
+  linkedCustomer?: Prisma.CustomerCreateNestedOneWithoutLinkedStaffInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentCreateNestedOneWithoutStaffUserInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentCreateNestedManyWithoutInvitedByInput
+  warningsIssued?: Prisma.MemberWarningCreateNestedManyWithoutIssuedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionCreateNestedManyWithoutIssuedByInput
+}
+
+export type UserUncheckedCreateWithoutPermissionGrantsInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  passwordHash?: string | null
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  lastTotpStep?: bigint | number
+  linkedCustomerId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  authSessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  recoveryCodes?: Prisma.RecoveryCodeUncheckedCreateNestedManyWithoutUserInput
+  tokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutUserInput
+  createdTokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutCreatedByInput
+  auditAsActor?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  createdDeals?: Prisma.DealUncheckedCreateNestedManyWithoutCreatedByInput
+  updatedDeals?: Prisma.DealUncheckedCreateNestedManyWithoutUpdatedByInput
+  uploadedMedia?: Prisma.MediaUncheckedCreateNestedManyWithoutUploadedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedCreateNestedManyWithoutReviewedByInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedCreateNestedManyWithoutResolvedByInput
+  forumActions?: Prisma.ForumModerationActionUncheckedCreateNestedManyWithoutActorInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutPublishedByInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutGrantedByInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedCreateNestedOneWithoutStaffUserInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedCreateNestedManyWithoutInvitedByInput
+  warningsIssued?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutIssuedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutIssuedByInput
+}
+
+export type UserCreateOrConnectWithoutPermissionGrantsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutPermissionGrantsInput, Prisma.UserUncheckedCreateWithoutPermissionGrantsInput>
+}
+
+export type UserCreateWithoutPermissionGrantsMadeInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  passwordHash?: string | null
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  lastTotpStep?: bigint | number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  authSessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  recoveryCodes?: Prisma.RecoveryCodeCreateNestedManyWithoutUserInput
+  tokens?: Prisma.AuthTokenCreateNestedManyWithoutUserInput
+  createdTokens?: Prisma.AuthTokenCreateNestedManyWithoutCreatedByInput
+  auditAsActor?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  createdDeals?: Prisma.DealCreateNestedManyWithoutCreatedByInput
+  updatedDeals?: Prisma.DealCreateNestedManyWithoutUpdatedByInput
+  uploadedMedia?: Prisma.MediaCreateNestedManyWithoutUploadedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionCreateNestedManyWithoutReviewedByInput
+  forumReportsResolved?: Prisma.ForumReportCreateNestedManyWithoutResolvedByInput
+  forumActions?: Prisma.ForumModerationActionCreateNestedManyWithoutActorInput
+  announcementsCreated?: Prisma.ForumAnnouncementCreateNestedManyWithoutCreatedByInput
+  announcementsPublished?: Prisma.ForumAnnouncementCreateNestedManyWithoutPublishedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantCreateNestedManyWithoutUserInput
+  linkedCustomer?: Prisma.CustomerCreateNestedOneWithoutLinkedStaffInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentCreateNestedOneWithoutStaffUserInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentCreateNestedManyWithoutInvitedByInput
+  warningsIssued?: Prisma.MemberWarningCreateNestedManyWithoutIssuedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionCreateNestedManyWithoutIssuedByInput
+}
+
+export type UserUncheckedCreateWithoutPermissionGrantsMadeInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  passwordHash?: string | null
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  lastTotpStep?: bigint | number
+  linkedCustomerId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  authSessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  recoveryCodes?: Prisma.RecoveryCodeUncheckedCreateNestedManyWithoutUserInput
+  tokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutUserInput
+  createdTokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutCreatedByInput
+  auditAsActor?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  createdDeals?: Prisma.DealUncheckedCreateNestedManyWithoutCreatedByInput
+  updatedDeals?: Prisma.DealUncheckedCreateNestedManyWithoutUpdatedByInput
+  uploadedMedia?: Prisma.MediaUncheckedCreateNestedManyWithoutUploadedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedCreateNestedManyWithoutReviewedByInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedCreateNestedManyWithoutResolvedByInput
+  forumActions?: Prisma.ForumModerationActionUncheckedCreateNestedManyWithoutActorInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutPublishedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutUserInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedCreateNestedOneWithoutStaffUserInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedCreateNestedManyWithoutInvitedByInput
+  warningsIssued?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutIssuedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutIssuedByInput
+}
+
+export type UserCreateOrConnectWithoutPermissionGrantsMadeInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutPermissionGrantsMadeInput, Prisma.UserUncheckedCreateWithoutPermissionGrantsMadeInput>
+}
+
+export type UserUpsertWithoutPermissionGrantsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutPermissionGrantsInput, Prisma.UserUncheckedUpdateWithoutPermissionGrantsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutPermissionGrantsInput, Prisma.UserUncheckedCreateWithoutPermissionGrantsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutPermissionGrantsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutPermissionGrantsInput, Prisma.UserUncheckedUpdateWithoutPermissionGrantsInput>
+}
+
+export type UserUpdateWithoutPermissionGrantsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  authSessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  recoveryCodes?: Prisma.RecoveryCodeUpdateManyWithoutUserNestedInput
+  tokens?: Prisma.AuthTokenUpdateManyWithoutUserNestedInput
+  createdTokens?: Prisma.AuthTokenUpdateManyWithoutCreatedByNestedInput
+  auditAsActor?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  createdDeals?: Prisma.DealUpdateManyWithoutCreatedByNestedInput
+  updatedDeals?: Prisma.DealUpdateManyWithoutUpdatedByNestedInput
+  uploadedMedia?: Prisma.MediaUpdateManyWithoutUploadedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUpdateManyWithoutReviewedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUpdateManyWithoutResolvedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUpdateManyWithoutActorNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUpdateManyWithoutCreatedByNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUpdateManyWithoutPublishedByNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUpdateManyWithoutGrantedByNestedInput
+  linkedCustomer?: Prisma.CustomerUpdateOneWithoutLinkedStaffNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUpdateOneWithoutStaffUserNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUpdateManyWithoutInvitedByNestedInput
+  warningsIssued?: Prisma.MemberWarningUpdateManyWithoutIssuedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUpdateManyWithoutIssuedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutPermissionGrantsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  authSessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  recoveryCodes?: Prisma.RecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
+  tokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutUserNestedInput
+  createdTokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutCreatedByNestedInput
+  auditAsActor?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  createdDeals?: Prisma.DealUncheckedUpdateManyWithoutCreatedByNestedInput
+  updatedDeals?: Prisma.DealUncheckedUpdateManyWithoutUpdatedByNestedInput
+  uploadedMedia?: Prisma.MediaUncheckedUpdateManyWithoutUploadedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedUpdateManyWithoutReviewedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedUpdateManyWithoutResolvedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUncheckedUpdateManyWithoutActorNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutPublishedByNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutGrantedByNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedUpdateOneWithoutStaffUserNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedUpdateManyWithoutInvitedByNestedInput
+  warningsIssued?: Prisma.MemberWarningUncheckedUpdateManyWithoutIssuedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutIssuedByNestedInput
+}
+
+export type UserUpsertWithoutPermissionGrantsMadeInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutPermissionGrantsMadeInput, Prisma.UserUncheckedUpdateWithoutPermissionGrantsMadeInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutPermissionGrantsMadeInput, Prisma.UserUncheckedCreateWithoutPermissionGrantsMadeInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutPermissionGrantsMadeInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutPermissionGrantsMadeInput, Prisma.UserUncheckedUpdateWithoutPermissionGrantsMadeInput>
+}
+
+export type UserUpdateWithoutPermissionGrantsMadeInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  authSessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  recoveryCodes?: Prisma.RecoveryCodeUpdateManyWithoutUserNestedInput
+  tokens?: Prisma.AuthTokenUpdateManyWithoutUserNestedInput
+  createdTokens?: Prisma.AuthTokenUpdateManyWithoutCreatedByNestedInput
+  auditAsActor?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  createdDeals?: Prisma.DealUpdateManyWithoutCreatedByNestedInput
+  updatedDeals?: Prisma.DealUpdateManyWithoutUpdatedByNestedInput
+  uploadedMedia?: Prisma.MediaUpdateManyWithoutUploadedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUpdateManyWithoutReviewedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUpdateManyWithoutResolvedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUpdateManyWithoutActorNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUpdateManyWithoutCreatedByNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUpdateManyWithoutPublishedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUpdateManyWithoutUserNestedInput
+  linkedCustomer?: Prisma.CustomerUpdateOneWithoutLinkedStaffNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUpdateOneWithoutStaffUserNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUpdateManyWithoutInvitedByNestedInput
+  warningsIssued?: Prisma.MemberWarningUpdateManyWithoutIssuedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUpdateManyWithoutIssuedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutPermissionGrantsMadeInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  authSessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  recoveryCodes?: Prisma.RecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
+  tokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutUserNestedInput
+  createdTokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutCreatedByNestedInput
+  auditAsActor?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  createdDeals?: Prisma.DealUncheckedUpdateManyWithoutCreatedByNestedInput
+  updatedDeals?: Prisma.DealUncheckedUpdateManyWithoutUpdatedByNestedInput
+  uploadedMedia?: Prisma.MediaUncheckedUpdateManyWithoutUploadedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedUpdateManyWithoutReviewedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedUpdateManyWithoutResolvedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUncheckedUpdateManyWithoutActorNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutPublishedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutUserNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedUpdateOneWithoutStaffUserNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedUpdateManyWithoutInvitedByNestedInput
+  warningsIssued?: Prisma.MemberWarningUncheckedUpdateManyWithoutIssuedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutIssuedByNestedInput
 }
 
 export type UserCreateWithoutForumReportsResolvedInput = {
@@ -2291,6 +3737,15 @@ export type UserCreateWithoutForumReportsResolvedInput = {
   uploadedMedia?: Prisma.MediaCreateNestedManyWithoutUploadedByInput
   reviewedSubmissions?: Prisma.CommunityDealSubmissionCreateNestedManyWithoutReviewedByInput
   forumActions?: Prisma.ForumModerationActionCreateNestedManyWithoutActorInput
+  announcementsCreated?: Prisma.ForumAnnouncementCreateNestedManyWithoutCreatedByInput
+  announcementsPublished?: Prisma.ForumAnnouncementCreateNestedManyWithoutPublishedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantCreateNestedManyWithoutUserInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantCreateNestedManyWithoutGrantedByInput
+  linkedCustomer?: Prisma.CustomerCreateNestedOneWithoutLinkedStaffInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentCreateNestedOneWithoutStaffUserInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentCreateNestedManyWithoutInvitedByInput
+  warningsIssued?: Prisma.MemberWarningCreateNestedManyWithoutIssuedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionCreateNestedManyWithoutIssuedByInput
 }
 
 export type UserUncheckedCreateWithoutForumReportsResolvedInput = {
@@ -2305,6 +3760,7 @@ export type UserUncheckedCreateWithoutForumReportsResolvedInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   lastTotpStep?: bigint | number
+  linkedCustomerId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -2319,6 +3775,14 @@ export type UserUncheckedCreateWithoutForumReportsResolvedInput = {
   uploadedMedia?: Prisma.MediaUncheckedCreateNestedManyWithoutUploadedByInput
   reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedCreateNestedManyWithoutReviewedByInput
   forumActions?: Prisma.ForumModerationActionUncheckedCreateNestedManyWithoutActorInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutPublishedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutUserInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutGrantedByInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedCreateNestedOneWithoutStaffUserInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedCreateNestedManyWithoutInvitedByInput
+  warningsIssued?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutIssuedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutIssuedByInput
 }
 
 export type UserCreateOrConnectWithoutForumReportsResolvedInput = {
@@ -2363,6 +3827,15 @@ export type UserUpdateWithoutForumReportsResolvedInput = {
   uploadedMedia?: Prisma.MediaUpdateManyWithoutUploadedByNestedInput
   reviewedSubmissions?: Prisma.CommunityDealSubmissionUpdateManyWithoutReviewedByNestedInput
   forumActions?: Prisma.ForumModerationActionUpdateManyWithoutActorNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUpdateManyWithoutCreatedByNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUpdateManyWithoutPublishedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUpdateManyWithoutUserNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUpdateManyWithoutGrantedByNestedInput
+  linkedCustomer?: Prisma.CustomerUpdateOneWithoutLinkedStaffNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUpdateOneWithoutStaffUserNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUpdateManyWithoutInvitedByNestedInput
+  warningsIssued?: Prisma.MemberWarningUpdateManyWithoutIssuedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUpdateManyWithoutIssuedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutForumReportsResolvedInput = {
@@ -2377,6 +3850,7 @@ export type UserUncheckedUpdateWithoutForumReportsResolvedInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -2391,6 +3865,14 @@ export type UserUncheckedUpdateWithoutForumReportsResolvedInput = {
   uploadedMedia?: Prisma.MediaUncheckedUpdateManyWithoutUploadedByNestedInput
   reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedUpdateManyWithoutReviewedByNestedInput
   forumActions?: Prisma.ForumModerationActionUncheckedUpdateManyWithoutActorNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutPublishedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutUserNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutGrantedByNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedUpdateOneWithoutStaffUserNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedUpdateManyWithoutInvitedByNestedInput
+  warningsIssued?: Prisma.MemberWarningUncheckedUpdateManyWithoutIssuedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutIssuedByNestedInput
 }
 
 export type UserCreateWithoutForumActionsInput = {
@@ -2419,6 +3901,15 @@ export type UserCreateWithoutForumActionsInput = {
   uploadedMedia?: Prisma.MediaCreateNestedManyWithoutUploadedByInput
   reviewedSubmissions?: Prisma.CommunityDealSubmissionCreateNestedManyWithoutReviewedByInput
   forumReportsResolved?: Prisma.ForumReportCreateNestedManyWithoutResolvedByInput
+  announcementsCreated?: Prisma.ForumAnnouncementCreateNestedManyWithoutCreatedByInput
+  announcementsPublished?: Prisma.ForumAnnouncementCreateNestedManyWithoutPublishedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantCreateNestedManyWithoutUserInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantCreateNestedManyWithoutGrantedByInput
+  linkedCustomer?: Prisma.CustomerCreateNestedOneWithoutLinkedStaffInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentCreateNestedOneWithoutStaffUserInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentCreateNestedManyWithoutInvitedByInput
+  warningsIssued?: Prisma.MemberWarningCreateNestedManyWithoutIssuedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionCreateNestedManyWithoutIssuedByInput
 }
 
 export type UserUncheckedCreateWithoutForumActionsInput = {
@@ -2433,6 +3924,7 @@ export type UserUncheckedCreateWithoutForumActionsInput = {
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
   lastTotpStep?: bigint | number
+  linkedCustomerId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -2447,6 +3939,14 @@ export type UserUncheckedCreateWithoutForumActionsInput = {
   uploadedMedia?: Prisma.MediaUncheckedCreateNestedManyWithoutUploadedByInput
   reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedCreateNestedManyWithoutReviewedByInput
   forumReportsResolved?: Prisma.ForumReportUncheckedCreateNestedManyWithoutResolvedByInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutPublishedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutUserInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutGrantedByInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedCreateNestedOneWithoutStaffUserInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedCreateNestedManyWithoutInvitedByInput
+  warningsIssued?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutIssuedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutIssuedByInput
 }
 
 export type UserCreateOrConnectWithoutForumActionsInput = {
@@ -2491,6 +3991,15 @@ export type UserUpdateWithoutForumActionsInput = {
   uploadedMedia?: Prisma.MediaUpdateManyWithoutUploadedByNestedInput
   reviewedSubmissions?: Prisma.CommunityDealSubmissionUpdateManyWithoutReviewedByNestedInput
   forumReportsResolved?: Prisma.ForumReportUpdateManyWithoutResolvedByNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUpdateManyWithoutCreatedByNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUpdateManyWithoutPublishedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUpdateManyWithoutUserNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUpdateManyWithoutGrantedByNestedInput
+  linkedCustomer?: Prisma.CustomerUpdateOneWithoutLinkedStaffNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUpdateOneWithoutStaffUserNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUpdateManyWithoutInvitedByNestedInput
+  warningsIssued?: Prisma.MemberWarningUpdateManyWithoutIssuedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUpdateManyWithoutIssuedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutForumActionsInput = {
@@ -2505,6 +4014,7 @@ export type UserUncheckedUpdateWithoutForumActionsInput = {
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -2519,6 +4029,670 @@ export type UserUncheckedUpdateWithoutForumActionsInput = {
   uploadedMedia?: Prisma.MediaUncheckedUpdateManyWithoutUploadedByNestedInput
   reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedUpdateManyWithoutReviewedByNestedInput
   forumReportsResolved?: Prisma.ForumReportUncheckedUpdateManyWithoutResolvedByNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutPublishedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutUserNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutGrantedByNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedUpdateOneWithoutStaffUserNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedUpdateManyWithoutInvitedByNestedInput
+  warningsIssued?: Prisma.MemberWarningUncheckedUpdateManyWithoutIssuedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutIssuedByNestedInput
+}
+
+export type UserCreateWithoutAppointmentsInvitedInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  passwordHash?: string | null
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  lastTotpStep?: bigint | number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  authSessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  recoveryCodes?: Prisma.RecoveryCodeCreateNestedManyWithoutUserInput
+  tokens?: Prisma.AuthTokenCreateNestedManyWithoutUserInput
+  createdTokens?: Prisma.AuthTokenCreateNestedManyWithoutCreatedByInput
+  auditAsActor?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  createdDeals?: Prisma.DealCreateNestedManyWithoutCreatedByInput
+  updatedDeals?: Prisma.DealCreateNestedManyWithoutUpdatedByInput
+  uploadedMedia?: Prisma.MediaCreateNestedManyWithoutUploadedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionCreateNestedManyWithoutReviewedByInput
+  forumReportsResolved?: Prisma.ForumReportCreateNestedManyWithoutResolvedByInput
+  forumActions?: Prisma.ForumModerationActionCreateNestedManyWithoutActorInput
+  announcementsCreated?: Prisma.ForumAnnouncementCreateNestedManyWithoutCreatedByInput
+  announcementsPublished?: Prisma.ForumAnnouncementCreateNestedManyWithoutPublishedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantCreateNestedManyWithoutUserInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantCreateNestedManyWithoutGrantedByInput
+  linkedCustomer?: Prisma.CustomerCreateNestedOneWithoutLinkedStaffInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentCreateNestedOneWithoutStaffUserInput
+  warningsIssued?: Prisma.MemberWarningCreateNestedManyWithoutIssuedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionCreateNestedManyWithoutIssuedByInput
+}
+
+export type UserUncheckedCreateWithoutAppointmentsInvitedInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  passwordHash?: string | null
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  lastTotpStep?: bigint | number
+  linkedCustomerId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  authSessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  recoveryCodes?: Prisma.RecoveryCodeUncheckedCreateNestedManyWithoutUserInput
+  tokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutUserInput
+  createdTokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutCreatedByInput
+  auditAsActor?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  createdDeals?: Prisma.DealUncheckedCreateNestedManyWithoutCreatedByInput
+  updatedDeals?: Prisma.DealUncheckedCreateNestedManyWithoutUpdatedByInput
+  uploadedMedia?: Prisma.MediaUncheckedCreateNestedManyWithoutUploadedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedCreateNestedManyWithoutReviewedByInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedCreateNestedManyWithoutResolvedByInput
+  forumActions?: Prisma.ForumModerationActionUncheckedCreateNestedManyWithoutActorInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutPublishedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutUserInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutGrantedByInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedCreateNestedOneWithoutStaffUserInput
+  warningsIssued?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutIssuedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutIssuedByInput
+}
+
+export type UserCreateOrConnectWithoutAppointmentsInvitedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutAppointmentsInvitedInput, Prisma.UserUncheckedCreateWithoutAppointmentsInvitedInput>
+}
+
+export type UserCreateWithoutModeratorAppointmentInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  passwordHash?: string | null
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  lastTotpStep?: bigint | number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  authSessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  recoveryCodes?: Prisma.RecoveryCodeCreateNestedManyWithoutUserInput
+  tokens?: Prisma.AuthTokenCreateNestedManyWithoutUserInput
+  createdTokens?: Prisma.AuthTokenCreateNestedManyWithoutCreatedByInput
+  auditAsActor?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  createdDeals?: Prisma.DealCreateNestedManyWithoutCreatedByInput
+  updatedDeals?: Prisma.DealCreateNestedManyWithoutUpdatedByInput
+  uploadedMedia?: Prisma.MediaCreateNestedManyWithoutUploadedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionCreateNestedManyWithoutReviewedByInput
+  forumReportsResolved?: Prisma.ForumReportCreateNestedManyWithoutResolvedByInput
+  forumActions?: Prisma.ForumModerationActionCreateNestedManyWithoutActorInput
+  announcementsCreated?: Prisma.ForumAnnouncementCreateNestedManyWithoutCreatedByInput
+  announcementsPublished?: Prisma.ForumAnnouncementCreateNestedManyWithoutPublishedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantCreateNestedManyWithoutUserInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantCreateNestedManyWithoutGrantedByInput
+  linkedCustomer?: Prisma.CustomerCreateNestedOneWithoutLinkedStaffInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentCreateNestedManyWithoutInvitedByInput
+  warningsIssued?: Prisma.MemberWarningCreateNestedManyWithoutIssuedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionCreateNestedManyWithoutIssuedByInput
+}
+
+export type UserUncheckedCreateWithoutModeratorAppointmentInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  passwordHash?: string | null
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  lastTotpStep?: bigint | number
+  linkedCustomerId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  authSessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  recoveryCodes?: Prisma.RecoveryCodeUncheckedCreateNestedManyWithoutUserInput
+  tokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutUserInput
+  createdTokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutCreatedByInput
+  auditAsActor?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  createdDeals?: Prisma.DealUncheckedCreateNestedManyWithoutCreatedByInput
+  updatedDeals?: Prisma.DealUncheckedCreateNestedManyWithoutUpdatedByInput
+  uploadedMedia?: Prisma.MediaUncheckedCreateNestedManyWithoutUploadedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedCreateNestedManyWithoutReviewedByInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedCreateNestedManyWithoutResolvedByInput
+  forumActions?: Prisma.ForumModerationActionUncheckedCreateNestedManyWithoutActorInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutPublishedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutUserInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutGrantedByInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedCreateNestedManyWithoutInvitedByInput
+  warningsIssued?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutIssuedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutIssuedByInput
+}
+
+export type UserCreateOrConnectWithoutModeratorAppointmentInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutModeratorAppointmentInput, Prisma.UserUncheckedCreateWithoutModeratorAppointmentInput>
+}
+
+export type UserUpsertWithoutAppointmentsInvitedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutAppointmentsInvitedInput, Prisma.UserUncheckedUpdateWithoutAppointmentsInvitedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutAppointmentsInvitedInput, Prisma.UserUncheckedCreateWithoutAppointmentsInvitedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutAppointmentsInvitedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutAppointmentsInvitedInput, Prisma.UserUncheckedUpdateWithoutAppointmentsInvitedInput>
+}
+
+export type UserUpdateWithoutAppointmentsInvitedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  authSessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  recoveryCodes?: Prisma.RecoveryCodeUpdateManyWithoutUserNestedInput
+  tokens?: Prisma.AuthTokenUpdateManyWithoutUserNestedInput
+  createdTokens?: Prisma.AuthTokenUpdateManyWithoutCreatedByNestedInput
+  auditAsActor?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  createdDeals?: Prisma.DealUpdateManyWithoutCreatedByNestedInput
+  updatedDeals?: Prisma.DealUpdateManyWithoutUpdatedByNestedInput
+  uploadedMedia?: Prisma.MediaUpdateManyWithoutUploadedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUpdateManyWithoutReviewedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUpdateManyWithoutResolvedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUpdateManyWithoutActorNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUpdateManyWithoutCreatedByNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUpdateManyWithoutPublishedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUpdateManyWithoutUserNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUpdateManyWithoutGrantedByNestedInput
+  linkedCustomer?: Prisma.CustomerUpdateOneWithoutLinkedStaffNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUpdateOneWithoutStaffUserNestedInput
+  warningsIssued?: Prisma.MemberWarningUpdateManyWithoutIssuedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUpdateManyWithoutIssuedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutAppointmentsInvitedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  authSessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  recoveryCodes?: Prisma.RecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
+  tokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutUserNestedInput
+  createdTokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutCreatedByNestedInput
+  auditAsActor?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  createdDeals?: Prisma.DealUncheckedUpdateManyWithoutCreatedByNestedInput
+  updatedDeals?: Prisma.DealUncheckedUpdateManyWithoutUpdatedByNestedInput
+  uploadedMedia?: Prisma.MediaUncheckedUpdateManyWithoutUploadedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedUpdateManyWithoutReviewedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedUpdateManyWithoutResolvedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUncheckedUpdateManyWithoutActorNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutPublishedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutUserNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutGrantedByNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedUpdateOneWithoutStaffUserNestedInput
+  warningsIssued?: Prisma.MemberWarningUncheckedUpdateManyWithoutIssuedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutIssuedByNestedInput
+}
+
+export type UserUpsertWithoutModeratorAppointmentInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutModeratorAppointmentInput, Prisma.UserUncheckedUpdateWithoutModeratorAppointmentInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutModeratorAppointmentInput, Prisma.UserUncheckedCreateWithoutModeratorAppointmentInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutModeratorAppointmentInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutModeratorAppointmentInput, Prisma.UserUncheckedUpdateWithoutModeratorAppointmentInput>
+}
+
+export type UserUpdateWithoutModeratorAppointmentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  authSessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  recoveryCodes?: Prisma.RecoveryCodeUpdateManyWithoutUserNestedInput
+  tokens?: Prisma.AuthTokenUpdateManyWithoutUserNestedInput
+  createdTokens?: Prisma.AuthTokenUpdateManyWithoutCreatedByNestedInput
+  auditAsActor?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  createdDeals?: Prisma.DealUpdateManyWithoutCreatedByNestedInput
+  updatedDeals?: Prisma.DealUpdateManyWithoutUpdatedByNestedInput
+  uploadedMedia?: Prisma.MediaUpdateManyWithoutUploadedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUpdateManyWithoutReviewedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUpdateManyWithoutResolvedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUpdateManyWithoutActorNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUpdateManyWithoutCreatedByNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUpdateManyWithoutPublishedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUpdateManyWithoutUserNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUpdateManyWithoutGrantedByNestedInput
+  linkedCustomer?: Prisma.CustomerUpdateOneWithoutLinkedStaffNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUpdateManyWithoutInvitedByNestedInput
+  warningsIssued?: Prisma.MemberWarningUpdateManyWithoutIssuedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUpdateManyWithoutIssuedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutModeratorAppointmentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  authSessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  recoveryCodes?: Prisma.RecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
+  tokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutUserNestedInput
+  createdTokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutCreatedByNestedInput
+  auditAsActor?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  createdDeals?: Prisma.DealUncheckedUpdateManyWithoutCreatedByNestedInput
+  updatedDeals?: Prisma.DealUncheckedUpdateManyWithoutUpdatedByNestedInput
+  uploadedMedia?: Prisma.MediaUncheckedUpdateManyWithoutUploadedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedUpdateManyWithoutReviewedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedUpdateManyWithoutResolvedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUncheckedUpdateManyWithoutActorNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutPublishedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutUserNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutGrantedByNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedUpdateManyWithoutInvitedByNestedInput
+  warningsIssued?: Prisma.MemberWarningUncheckedUpdateManyWithoutIssuedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutIssuedByNestedInput
+}
+
+export type UserCreateWithoutWarningsIssuedInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  passwordHash?: string | null
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  lastTotpStep?: bigint | number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  authSessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  recoveryCodes?: Prisma.RecoveryCodeCreateNestedManyWithoutUserInput
+  tokens?: Prisma.AuthTokenCreateNestedManyWithoutUserInput
+  createdTokens?: Prisma.AuthTokenCreateNestedManyWithoutCreatedByInput
+  auditAsActor?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  createdDeals?: Prisma.DealCreateNestedManyWithoutCreatedByInput
+  updatedDeals?: Prisma.DealCreateNestedManyWithoutUpdatedByInput
+  uploadedMedia?: Prisma.MediaCreateNestedManyWithoutUploadedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionCreateNestedManyWithoutReviewedByInput
+  forumReportsResolved?: Prisma.ForumReportCreateNestedManyWithoutResolvedByInput
+  forumActions?: Prisma.ForumModerationActionCreateNestedManyWithoutActorInput
+  announcementsCreated?: Prisma.ForumAnnouncementCreateNestedManyWithoutCreatedByInput
+  announcementsPublished?: Prisma.ForumAnnouncementCreateNestedManyWithoutPublishedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantCreateNestedManyWithoutUserInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantCreateNestedManyWithoutGrantedByInput
+  linkedCustomer?: Prisma.CustomerCreateNestedOneWithoutLinkedStaffInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentCreateNestedOneWithoutStaffUserInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentCreateNestedManyWithoutInvitedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionCreateNestedManyWithoutIssuedByInput
+}
+
+export type UserUncheckedCreateWithoutWarningsIssuedInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  passwordHash?: string | null
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  lastTotpStep?: bigint | number
+  linkedCustomerId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  authSessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  recoveryCodes?: Prisma.RecoveryCodeUncheckedCreateNestedManyWithoutUserInput
+  tokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutUserInput
+  createdTokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutCreatedByInput
+  auditAsActor?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  createdDeals?: Prisma.DealUncheckedCreateNestedManyWithoutCreatedByInput
+  updatedDeals?: Prisma.DealUncheckedCreateNestedManyWithoutUpdatedByInput
+  uploadedMedia?: Prisma.MediaUncheckedCreateNestedManyWithoutUploadedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedCreateNestedManyWithoutReviewedByInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedCreateNestedManyWithoutResolvedByInput
+  forumActions?: Prisma.ForumModerationActionUncheckedCreateNestedManyWithoutActorInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutPublishedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutUserInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutGrantedByInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedCreateNestedOneWithoutStaffUserInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedCreateNestedManyWithoutInvitedByInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutIssuedByInput
+}
+
+export type UserCreateOrConnectWithoutWarningsIssuedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutWarningsIssuedInput, Prisma.UserUncheckedCreateWithoutWarningsIssuedInput>
+}
+
+export type UserUpsertWithoutWarningsIssuedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutWarningsIssuedInput, Prisma.UserUncheckedUpdateWithoutWarningsIssuedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutWarningsIssuedInput, Prisma.UserUncheckedCreateWithoutWarningsIssuedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutWarningsIssuedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutWarningsIssuedInput, Prisma.UserUncheckedUpdateWithoutWarningsIssuedInput>
+}
+
+export type UserUpdateWithoutWarningsIssuedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  authSessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  recoveryCodes?: Prisma.RecoveryCodeUpdateManyWithoutUserNestedInput
+  tokens?: Prisma.AuthTokenUpdateManyWithoutUserNestedInput
+  createdTokens?: Prisma.AuthTokenUpdateManyWithoutCreatedByNestedInput
+  auditAsActor?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  createdDeals?: Prisma.DealUpdateManyWithoutCreatedByNestedInput
+  updatedDeals?: Prisma.DealUpdateManyWithoutUpdatedByNestedInput
+  uploadedMedia?: Prisma.MediaUpdateManyWithoutUploadedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUpdateManyWithoutReviewedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUpdateManyWithoutResolvedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUpdateManyWithoutActorNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUpdateManyWithoutCreatedByNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUpdateManyWithoutPublishedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUpdateManyWithoutUserNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUpdateManyWithoutGrantedByNestedInput
+  linkedCustomer?: Prisma.CustomerUpdateOneWithoutLinkedStaffNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUpdateOneWithoutStaffUserNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUpdateManyWithoutInvitedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUpdateManyWithoutIssuedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutWarningsIssuedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  authSessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  recoveryCodes?: Prisma.RecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
+  tokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutUserNestedInput
+  createdTokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutCreatedByNestedInput
+  auditAsActor?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  createdDeals?: Prisma.DealUncheckedUpdateManyWithoutCreatedByNestedInput
+  updatedDeals?: Prisma.DealUncheckedUpdateManyWithoutUpdatedByNestedInput
+  uploadedMedia?: Prisma.MediaUncheckedUpdateManyWithoutUploadedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedUpdateManyWithoutReviewedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedUpdateManyWithoutResolvedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUncheckedUpdateManyWithoutActorNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutPublishedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutUserNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutGrantedByNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedUpdateOneWithoutStaffUserNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedUpdateManyWithoutInvitedByNestedInput
+  restrictionsIssued?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutIssuedByNestedInput
+}
+
+export type UserCreateWithoutRestrictionsIssuedInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  passwordHash?: string | null
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  lastTotpStep?: bigint | number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  authSessions?: Prisma.AuthSessionCreateNestedManyWithoutUserInput
+  recoveryCodes?: Prisma.RecoveryCodeCreateNestedManyWithoutUserInput
+  tokens?: Prisma.AuthTokenCreateNestedManyWithoutUserInput
+  createdTokens?: Prisma.AuthTokenCreateNestedManyWithoutCreatedByInput
+  auditAsActor?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  createdDeals?: Prisma.DealCreateNestedManyWithoutCreatedByInput
+  updatedDeals?: Prisma.DealCreateNestedManyWithoutUpdatedByInput
+  uploadedMedia?: Prisma.MediaCreateNestedManyWithoutUploadedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionCreateNestedManyWithoutReviewedByInput
+  forumReportsResolved?: Prisma.ForumReportCreateNestedManyWithoutResolvedByInput
+  forumActions?: Prisma.ForumModerationActionCreateNestedManyWithoutActorInput
+  announcementsCreated?: Prisma.ForumAnnouncementCreateNestedManyWithoutCreatedByInput
+  announcementsPublished?: Prisma.ForumAnnouncementCreateNestedManyWithoutPublishedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantCreateNestedManyWithoutUserInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantCreateNestedManyWithoutGrantedByInput
+  linkedCustomer?: Prisma.CustomerCreateNestedOneWithoutLinkedStaffInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentCreateNestedOneWithoutStaffUserInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentCreateNestedManyWithoutInvitedByInput
+  warningsIssued?: Prisma.MemberWarningCreateNestedManyWithoutIssuedByInput
+}
+
+export type UserUncheckedCreateWithoutRestrictionsIssuedInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  passwordHash?: string | null
+  totpSecretEncrypted?: string | null
+  totpEnabledAt?: Date | string | null
+  lastTotpStep?: bigint | number
+  linkedCustomerId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  authSessions?: Prisma.AuthSessionUncheckedCreateNestedManyWithoutUserInput
+  recoveryCodes?: Prisma.RecoveryCodeUncheckedCreateNestedManyWithoutUserInput
+  tokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutUserInput
+  createdTokens?: Prisma.AuthTokenUncheckedCreateNestedManyWithoutCreatedByInput
+  auditAsActor?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  createdDeals?: Prisma.DealUncheckedCreateNestedManyWithoutCreatedByInput
+  updatedDeals?: Prisma.DealUncheckedCreateNestedManyWithoutUpdatedByInput
+  uploadedMedia?: Prisma.MediaUncheckedCreateNestedManyWithoutUploadedByInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedCreateNestedManyWithoutReviewedByInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedCreateNestedManyWithoutResolvedByInput
+  forumActions?: Prisma.ForumModerationActionUncheckedCreateNestedManyWithoutActorInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedCreateNestedManyWithoutPublishedByInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutUserInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedCreateNestedManyWithoutGrantedByInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedCreateNestedOneWithoutStaffUserInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedCreateNestedManyWithoutInvitedByInput
+  warningsIssued?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutIssuedByInput
+}
+
+export type UserCreateOrConnectWithoutRestrictionsIssuedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutRestrictionsIssuedInput, Prisma.UserUncheckedCreateWithoutRestrictionsIssuedInput>
+}
+
+export type UserUpsertWithoutRestrictionsIssuedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutRestrictionsIssuedInput, Prisma.UserUncheckedUpdateWithoutRestrictionsIssuedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutRestrictionsIssuedInput, Prisma.UserUncheckedCreateWithoutRestrictionsIssuedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutRestrictionsIssuedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutRestrictionsIssuedInput, Prisma.UserUncheckedUpdateWithoutRestrictionsIssuedInput>
+}
+
+export type UserUpdateWithoutRestrictionsIssuedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  authSessions?: Prisma.AuthSessionUpdateManyWithoutUserNestedInput
+  recoveryCodes?: Prisma.RecoveryCodeUpdateManyWithoutUserNestedInput
+  tokens?: Prisma.AuthTokenUpdateManyWithoutUserNestedInput
+  createdTokens?: Prisma.AuthTokenUpdateManyWithoutCreatedByNestedInput
+  auditAsActor?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  createdDeals?: Prisma.DealUpdateManyWithoutCreatedByNestedInput
+  updatedDeals?: Prisma.DealUpdateManyWithoutUpdatedByNestedInput
+  uploadedMedia?: Prisma.MediaUpdateManyWithoutUploadedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUpdateManyWithoutReviewedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUpdateManyWithoutResolvedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUpdateManyWithoutActorNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUpdateManyWithoutCreatedByNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUpdateManyWithoutPublishedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUpdateManyWithoutUserNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUpdateManyWithoutGrantedByNestedInput
+  linkedCustomer?: Prisma.CustomerUpdateOneWithoutLinkedStaffNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUpdateOneWithoutStaffUserNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUpdateManyWithoutInvitedByNestedInput
+  warningsIssued?: Prisma.MemberWarningUpdateManyWithoutIssuedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutRestrictionsIssuedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  authSessions?: Prisma.AuthSessionUncheckedUpdateManyWithoutUserNestedInput
+  recoveryCodes?: Prisma.RecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
+  tokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutUserNestedInput
+  createdTokens?: Prisma.AuthTokenUncheckedUpdateManyWithoutCreatedByNestedInput
+  auditAsActor?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  createdDeals?: Prisma.DealUncheckedUpdateManyWithoutCreatedByNestedInput
+  updatedDeals?: Prisma.DealUncheckedUpdateManyWithoutUpdatedByNestedInput
+  uploadedMedia?: Prisma.MediaUncheckedUpdateManyWithoutUploadedByNestedInput
+  reviewedSubmissions?: Prisma.CommunityDealSubmissionUncheckedUpdateManyWithoutReviewedByNestedInput
+  forumReportsResolved?: Prisma.ForumReportUncheckedUpdateManyWithoutResolvedByNestedInput
+  forumActions?: Prisma.ForumModerationActionUncheckedUpdateManyWithoutActorNestedInput
+  announcementsCreated?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
+  announcementsPublished?: Prisma.ForumAnnouncementUncheckedUpdateManyWithoutPublishedByNestedInput
+  permissionGrants?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutUserNestedInput
+  permissionGrantsMade?: Prisma.StaffPermissionGrantUncheckedUpdateManyWithoutGrantedByNestedInput
+  moderatorAppointment?: Prisma.ModeratorAppointmentUncheckedUpdateOneWithoutStaffUserNestedInput
+  appointmentsInvited?: Prisma.ModeratorAppointmentUncheckedUpdateManyWithoutInvitedByNestedInput
+  warningsIssued?: Prisma.MemberWarningUncheckedUpdateManyWithoutIssuedByNestedInput
 }
 
 
@@ -2540,6 +4714,13 @@ export type UserCountOutputType = {
   reviewedSubmissions: number
   forumReportsResolved: number
   forumActions: number
+  announcementsCreated: number
+  announcementsPublished: number
+  permissionGrants: number
+  permissionGrantsMade: number
+  appointmentsInvited: number
+  warningsIssued: number
+  restrictionsIssued: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2556,6 +4737,13 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   reviewedSubmissions?: boolean | UserCountOutputTypeCountReviewedSubmissionsArgs
   forumReportsResolved?: boolean | UserCountOutputTypeCountForumReportsResolvedArgs
   forumActions?: boolean | UserCountOutputTypeCountForumActionsArgs
+  announcementsCreated?: boolean | UserCountOutputTypeCountAnnouncementsCreatedArgs
+  announcementsPublished?: boolean | UserCountOutputTypeCountAnnouncementsPublishedArgs
+  permissionGrants?: boolean | UserCountOutputTypeCountPermissionGrantsArgs
+  permissionGrantsMade?: boolean | UserCountOutputTypeCountPermissionGrantsMadeArgs
+  appointmentsInvited?: boolean | UserCountOutputTypeCountAppointmentsInvitedArgs
+  warningsIssued?: boolean | UserCountOutputTypeCountWarningsIssuedArgs
+  restrictionsIssued?: boolean | UserCountOutputTypeCountRestrictionsIssuedArgs
 }
 
 /**
@@ -2659,6 +4847,55 @@ export type UserCountOutputTypeCountForumActionsArgs<ExtArgs extends runtime.Typ
   where?: Prisma.ForumModerationActionWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountAnnouncementsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ForumAnnouncementWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountAnnouncementsPublishedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ForumAnnouncementWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPermissionGrantsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StaffPermissionGrantWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPermissionGrantsMadeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StaffPermissionGrantWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountAppointmentsInvitedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ModeratorAppointmentWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountWarningsIssuedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MemberWarningWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountRestrictionsIssuedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MemberRestrictionWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2672,6 +4909,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   totpSecretEncrypted?: boolean
   totpEnabledAt?: boolean
   lastTotpStep?: boolean
+  linkedCustomerId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
@@ -2687,6 +4925,15 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   reviewedSubmissions?: boolean | Prisma.User$reviewedSubmissionsArgs<ExtArgs>
   forumReportsResolved?: boolean | Prisma.User$forumReportsResolvedArgs<ExtArgs>
   forumActions?: boolean | Prisma.User$forumActionsArgs<ExtArgs>
+  announcementsCreated?: boolean | Prisma.User$announcementsCreatedArgs<ExtArgs>
+  announcementsPublished?: boolean | Prisma.User$announcementsPublishedArgs<ExtArgs>
+  permissionGrants?: boolean | Prisma.User$permissionGrantsArgs<ExtArgs>
+  permissionGrantsMade?: boolean | Prisma.User$permissionGrantsMadeArgs<ExtArgs>
+  linkedCustomer?: boolean | Prisma.User$linkedCustomerArgs<ExtArgs>
+  moderatorAppointment?: boolean | Prisma.User$moderatorAppointmentArgs<ExtArgs>
+  appointmentsInvited?: boolean | Prisma.User$appointmentsInvitedArgs<ExtArgs>
+  warningsIssued?: boolean | Prisma.User$warningsIssuedArgs<ExtArgs>
+  restrictionsIssued?: boolean | Prisma.User$restrictionsIssuedArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -2704,11 +4951,12 @@ export type UserSelectScalar = {
   totpSecretEncrypted?: boolean
   totpEnabledAt?: boolean
   lastTotpStep?: boolean
+  linkedCustomerId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "role" | "status" | "passwordHash" | "totpSecretEncrypted" | "totpEnabledAt" | "lastTotpStep" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "role" | "status" | "passwordHash" | "totpSecretEncrypted" | "totpEnabledAt" | "lastTotpStep" | "linkedCustomerId" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
@@ -2723,6 +4971,15 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   reviewedSubmissions?: boolean | Prisma.User$reviewedSubmissionsArgs<ExtArgs>
   forumReportsResolved?: boolean | Prisma.User$forumReportsResolvedArgs<ExtArgs>
   forumActions?: boolean | Prisma.User$forumActionsArgs<ExtArgs>
+  announcementsCreated?: boolean | Prisma.User$announcementsCreatedArgs<ExtArgs>
+  announcementsPublished?: boolean | Prisma.User$announcementsPublishedArgs<ExtArgs>
+  permissionGrants?: boolean | Prisma.User$permissionGrantsArgs<ExtArgs>
+  permissionGrantsMade?: boolean | Prisma.User$permissionGrantsMadeArgs<ExtArgs>
+  linkedCustomer?: boolean | Prisma.User$linkedCustomerArgs<ExtArgs>
+  moderatorAppointment?: boolean | Prisma.User$moderatorAppointmentArgs<ExtArgs>
+  appointmentsInvited?: boolean | Prisma.User$appointmentsInvitedArgs<ExtArgs>
+  warningsIssued?: boolean | Prisma.User$warningsIssuedArgs<ExtArgs>
+  restrictionsIssued?: boolean | Prisma.User$restrictionsIssuedArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -2742,6 +4999,15 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     reviewedSubmissions: Prisma.$CommunityDealSubmissionPayload<ExtArgs>[]
     forumReportsResolved: Prisma.$ForumReportPayload<ExtArgs>[]
     forumActions: Prisma.$ForumModerationActionPayload<ExtArgs>[]
+    announcementsCreated: Prisma.$ForumAnnouncementPayload<ExtArgs>[]
+    announcementsPublished: Prisma.$ForumAnnouncementPayload<ExtArgs>[]
+    permissionGrants: Prisma.$StaffPermissionGrantPayload<ExtArgs>[]
+    permissionGrantsMade: Prisma.$StaffPermissionGrantPayload<ExtArgs>[]
+    linkedCustomer: Prisma.$CustomerPayload<ExtArgs> | null
+    moderatorAppointment: Prisma.$ModeratorAppointmentPayload<ExtArgs> | null
+    appointmentsInvited: Prisma.$ModeratorAppointmentPayload<ExtArgs>[]
+    warningsIssued: Prisma.$MemberWarningPayload<ExtArgs>[]
+    restrictionsIssued: Prisma.$MemberRestrictionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2755,6 +5021,10 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     totpSecretEncrypted: string | null
     totpEnabledAt: Date | null
     lastTotpStep: bigint
+    /**
+     * Set only when a customer accepts a moderator invitation while signed in; email equality is never used as proof.
+     */
+    linkedCustomerId: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["user"]>
@@ -3110,6 +5380,15 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   reviewedSubmissions<T extends Prisma.User$reviewedSubmissionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reviewedSubmissionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommunityDealSubmissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   forumReportsResolved<T extends Prisma.User$forumReportsResolvedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$forumReportsResolvedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ForumReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   forumActions<T extends Prisma.User$forumActionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$forumActionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ForumModerationActionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  announcementsCreated<T extends Prisma.User$announcementsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$announcementsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ForumAnnouncementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  announcementsPublished<T extends Prisma.User$announcementsPublishedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$announcementsPublishedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ForumAnnouncementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  permissionGrants<T extends Prisma.User$permissionGrantsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$permissionGrantsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StaffPermissionGrantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  permissionGrantsMade<T extends Prisma.User$permissionGrantsMadeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$permissionGrantsMadeArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StaffPermissionGrantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  linkedCustomer<T extends Prisma.User$linkedCustomerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$linkedCustomerArgs<ExtArgs>>): Prisma.Prisma__CustomerClient<runtime.Types.Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  moderatorAppointment<T extends Prisma.User$moderatorAppointmentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$moderatorAppointmentArgs<ExtArgs>>): Prisma.Prisma__ModeratorAppointmentClient<runtime.Types.Result.GetResult<Prisma.$ModeratorAppointmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  appointmentsInvited<T extends Prisma.User$appointmentsInvitedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$appointmentsInvitedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ModeratorAppointmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  warningsIssued<T extends Prisma.User$warningsIssuedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$warningsIssuedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MemberWarningPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  restrictionsIssued<T extends Prisma.User$restrictionsIssuedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$restrictionsIssuedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MemberRestrictionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3150,6 +5429,7 @@ export interface UserFieldRefs {
   readonly totpSecretEncrypted: Prisma.FieldRef<"User", 'String'>
   readonly totpEnabledAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly lastTotpStep: Prisma.FieldRef<"User", 'BigInt'>
+  readonly linkedCustomerId: Prisma.FieldRef<"User", 'String'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
 }
@@ -3809,6 +6089,212 @@ export type User$forumActionsArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.ForumModerationActionScalarFieldEnum | Prisma.ForumModerationActionScalarFieldEnum[]
+}
+
+/**
+ * User.announcementsCreated
+ */
+export type User$announcementsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ForumAnnouncement
+   */
+  select?: Prisma.ForumAnnouncementSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ForumAnnouncement
+   */
+  omit?: Prisma.ForumAnnouncementOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ForumAnnouncementInclude<ExtArgs> | null
+  where?: Prisma.ForumAnnouncementWhereInput
+  orderBy?: Prisma.ForumAnnouncementOrderByWithRelationInput | Prisma.ForumAnnouncementOrderByWithRelationInput[]
+  cursor?: Prisma.ForumAnnouncementWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ForumAnnouncementScalarFieldEnum | Prisma.ForumAnnouncementScalarFieldEnum[]
+}
+
+/**
+ * User.announcementsPublished
+ */
+export type User$announcementsPublishedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ForumAnnouncement
+   */
+  select?: Prisma.ForumAnnouncementSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ForumAnnouncement
+   */
+  omit?: Prisma.ForumAnnouncementOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ForumAnnouncementInclude<ExtArgs> | null
+  where?: Prisma.ForumAnnouncementWhereInput
+  orderBy?: Prisma.ForumAnnouncementOrderByWithRelationInput | Prisma.ForumAnnouncementOrderByWithRelationInput[]
+  cursor?: Prisma.ForumAnnouncementWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ForumAnnouncementScalarFieldEnum | Prisma.ForumAnnouncementScalarFieldEnum[]
+}
+
+/**
+ * User.permissionGrants
+ */
+export type User$permissionGrantsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StaffPermissionGrant
+   */
+  select?: Prisma.StaffPermissionGrantSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StaffPermissionGrant
+   */
+  omit?: Prisma.StaffPermissionGrantOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StaffPermissionGrantInclude<ExtArgs> | null
+  where?: Prisma.StaffPermissionGrantWhereInput
+  orderBy?: Prisma.StaffPermissionGrantOrderByWithRelationInput | Prisma.StaffPermissionGrantOrderByWithRelationInput[]
+  cursor?: Prisma.StaffPermissionGrantWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StaffPermissionGrantScalarFieldEnum | Prisma.StaffPermissionGrantScalarFieldEnum[]
+}
+
+/**
+ * User.permissionGrantsMade
+ */
+export type User$permissionGrantsMadeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StaffPermissionGrant
+   */
+  select?: Prisma.StaffPermissionGrantSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StaffPermissionGrant
+   */
+  omit?: Prisma.StaffPermissionGrantOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StaffPermissionGrantInclude<ExtArgs> | null
+  where?: Prisma.StaffPermissionGrantWhereInput
+  orderBy?: Prisma.StaffPermissionGrantOrderByWithRelationInput | Prisma.StaffPermissionGrantOrderByWithRelationInput[]
+  cursor?: Prisma.StaffPermissionGrantWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StaffPermissionGrantScalarFieldEnum | Prisma.StaffPermissionGrantScalarFieldEnum[]
+}
+
+/**
+ * User.linkedCustomer
+ */
+export type User$linkedCustomerArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Customer
+   */
+  select?: Prisma.CustomerSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Customer
+   */
+  omit?: Prisma.CustomerOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CustomerInclude<ExtArgs> | null
+  where?: Prisma.CustomerWhereInput
+}
+
+/**
+ * User.moderatorAppointment
+ */
+export type User$moderatorAppointmentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ModeratorAppointment
+   */
+  select?: Prisma.ModeratorAppointmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ModeratorAppointment
+   */
+  omit?: Prisma.ModeratorAppointmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ModeratorAppointmentInclude<ExtArgs> | null
+  where?: Prisma.ModeratorAppointmentWhereInput
+}
+
+/**
+ * User.appointmentsInvited
+ */
+export type User$appointmentsInvitedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ModeratorAppointment
+   */
+  select?: Prisma.ModeratorAppointmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ModeratorAppointment
+   */
+  omit?: Prisma.ModeratorAppointmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ModeratorAppointmentInclude<ExtArgs> | null
+  where?: Prisma.ModeratorAppointmentWhereInput
+  orderBy?: Prisma.ModeratorAppointmentOrderByWithRelationInput | Prisma.ModeratorAppointmentOrderByWithRelationInput[]
+  cursor?: Prisma.ModeratorAppointmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ModeratorAppointmentScalarFieldEnum | Prisma.ModeratorAppointmentScalarFieldEnum[]
+}
+
+/**
+ * User.warningsIssued
+ */
+export type User$warningsIssuedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MemberWarning
+   */
+  select?: Prisma.MemberWarningSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MemberWarning
+   */
+  omit?: Prisma.MemberWarningOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MemberWarningInclude<ExtArgs> | null
+  where?: Prisma.MemberWarningWhereInput
+  orderBy?: Prisma.MemberWarningOrderByWithRelationInput | Prisma.MemberWarningOrderByWithRelationInput[]
+  cursor?: Prisma.MemberWarningWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MemberWarningScalarFieldEnum | Prisma.MemberWarningScalarFieldEnum[]
+}
+
+/**
+ * User.restrictionsIssued
+ */
+export type User$restrictionsIssuedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MemberRestriction
+   */
+  select?: Prisma.MemberRestrictionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MemberRestriction
+   */
+  omit?: Prisma.MemberRestrictionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MemberRestrictionInclude<ExtArgs> | null
+  where?: Prisma.MemberRestrictionWhereInput
+  orderBy?: Prisma.MemberRestrictionOrderByWithRelationInput | Prisma.MemberRestrictionOrderByWithRelationInput[]
+  cursor?: Prisma.MemberRestrictionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MemberRestrictionScalarFieldEnum | Prisma.MemberRestrictionScalarFieldEnum[]
 }
 
 /**

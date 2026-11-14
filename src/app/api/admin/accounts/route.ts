@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { UserRole } from "@/generated/prisma/client";
+import { UserRole, UserStatus } from "@/generated/prisma/client";
 import { getAuthEnv } from "@/config/env";
 import { getDatabase } from "@/server/db/client";
 import { authorize } from "@/server/auth/authorization";
@@ -14,25 +14,70 @@ const createAccountSchema = z.object({
   emailDeliveryVerified: z.literal(true),
 });
 
-export async function GET() {
+export async function GET(request: Request) {
   const authorization = await authorize("account:read");
   if (!authorization.context) {
     return Response.json({ error: "Authentication or permission required." }, { status: authorization.status });
   }
-  const users = await getDatabase().user.findMany({
-    orderBy: { createdAt: "desc" },
-    take: 100,
+  const params = new URL(request.url).searchParams;
+  const query = z.object({
+    page: z.coerce.number().int().min(1).max(10_000).default(1),
+    limit: z.coerce.number().int().min(1).max(50).default(25),
+    search: z.string().trim().max(254).default(""),
+  }).parse(Object.fromEntries(params));
+  const db = getDatabase();
+  const staffRoles = [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.EDITOR];
+  const search = query.search.trim();
+  const where = {
+    role: { in: staffRoles },
+    ...(search ? { OR: [
+      { email: { contains: search, mode: "insensitive" as const } },
+      { name: { contains: search, mode: "insensitive" as const } },
+    ] } : {}),
+  };
+  const [users, total, totalAccounts, activeAccounts, suspendedAccounts, mfaEnabled] = await Promise.all([
+    db.user.findMany({
+      where,
+      orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+      skip: (query.page - 1) * query.limit,
+      take: query.limit,
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        status: true,
+        totpEnabledAt: true,
+        createdAt: true,
+      },
+    }),
+    db.user.count({ where }),
+    db.user.count({ where: { role: { in: staffRoles } } }),
+    db.user.count({ where: { role: { in: staffRoles }, status: UserStatus.ACTIVE } }),
+    db.user.count({ where: { role: { in: staffRoles }, status: UserStatus.SUSPENDED } }),
+    db.user.count({ where: { role: { in: staffRoles }, totpEnabledAt: { not: null } } }),
+  ]);
+  const accountIds = users.map((user) => user.id);
+  const creationEvents = accountIds.length ? await db.auditEvent.findMany({
+    where: { action: "admin.account.created", targetId: { in: accountIds } },
+    orderBy: { createdAt: "asc" },
     select: {
-      id: true,
-      email: true,
-      name: true,
-      role: true,
-      status: true,
-      totpEnabledAt: true,
-      createdAt: true,
+      targetId: true,
+      actor: { select: { id: true, name: true, email: true } },
     },
+  }) : [];
+  const creatorByAccount = new Map<string, { id: string; name: string | null; email: string | null }>();
+  for (const event of creationEvents) {
+    if (event.targetId && event.actor && !creatorByAccount.has(event.targetId)) creatorByAccount.set(event.targetId, event.actor);
+  }
+  return Response.json({
+    users: users.map((user) => ({ ...user, createdBy: creatorByAccount.get(user.id) ?? null })),
+    page: query.page,
+    pageSize: query.limit,
+    total,
+    totalPages: Math.max(1, Math.ceil(total / query.limit)),
+    counts: { total: totalAccounts, active: activeAccounts, suspended: suspendedAccounts, mfaEnabled },
   });
-  return Response.json({ users });
 }
 
 export async function POST(request: Request) {
@@ -46,13 +91,14 @@ export async function POST(request: Request) {
   const parsed = await parseRequestBody(request, createAccountSchema);
   if (parsed.response) return parsed.response;
 
-  const createPermissions: Record<UserRole, Permission> = {
+  // A community moderator is never created here: it needs an invitation that the invited customer accepts while signed in (see server/community/moderators.ts).
+  const createPermissions: Partial<Record<UserRole, Permission>> = {
     [UserRole.SUPER_ADMIN]: "account:create:super-admin",
     [UserRole.ADMIN]: "account:create:admin",
     [UserRole.EDITOR]: "account:create:editor",
   };
   const createPermission = createPermissions[parsed.data.role];
-  if (!roleCan(authorization.context.user.role, createPermission) ||
+  if (!createPermission || !roleCan(authorization.context.user.role, createPermission) ||
       !canAssignRole(authorization.context.user.role, parsed.data.role)) {
     return Response.json({ error: "You are not permitted to create an account with that role." }, { status: 403 });
   }

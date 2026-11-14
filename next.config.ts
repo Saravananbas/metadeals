@@ -31,6 +31,8 @@ function cspHeaders() {
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // Only for a second local test server (own build folder); unset everywhere else.
+  ...(process.env.NEXT_DIST_DIR ? { distDir: process.env.NEXT_DIST_DIR } : {}),
   // The Hostinger build server reports 64 CPUs but allows few threads; fewer build workers avoids "can't spawn worker thread".
   experimental: { cpus: 2 },
   reactStrictMode: true,
@@ -39,6 +41,9 @@ const nextConfig: NextConfig = {
   // Images shipped with the deploy (seed-media/) must be traced into the server output.
   outputFileTracingIncludes: { "/api/v1/media/\\[id\\]": ["./seed-media/**/*"] },
   serverExternalPackages: ["pino", "pg", "bullmq", "ioredis", "mariadb"],
+  async rewrites() {
+    return [{ source: "/@:handle", destination: "/community/u/:handle" }];
+  },
   async headers() {
     const isProd = process.env.NODE_ENV === "production";
     return [{

@@ -16,6 +16,7 @@ export type Deal = {
   slug?: string;
   description?: string;
   expiresAt?: string | null;
+  status?: string;
   source?: "database" | "demo";
   store: StoreId;
   retailerUrl: string;

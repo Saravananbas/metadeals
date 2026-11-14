@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { MobileTabBar } from "@/features/messages/MobileTabBar";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Heart } from "lucide-react";
@@ -22,18 +23,22 @@ import { PopularStores } from "./components/PopularStores";
 import { MobileFeedBar } from "./components/MobileFeedBar";
 import { Dialog } from "./components/Dialog";
 import { useSavedDeals } from "./saved-store";
+import { HOME_PAGE_SIZE } from "@/features/deals/page-size";
+import { Pagination } from "./components/Pagination";
 
 const defaults: DealFilters = { query: "", category: "", store: "", view: "top" };
 const titles = { saved: "Your saved deals", stores: "Popular stores", account: "Your MetaDeals4U account", notifications: "Deal updates", blog: "The smart shopping journal", bank: "Bank offers" };
 
 export function Homepage({
   deals: initialDeals,
-  initialCursor,
+  initialPage = 1,
+  initialTotalPages = 1,
   initialCatalog,
   communityEnabled = false,
 }: {
   deals: Deal[];
-  initialCursor: string | null;
+  initialPage?: number;
+  initialTotalPages?: number;
   communityEnabled?: boolean;
   initialCatalog?: {
     categories: { id: string; slug: string; name: string; parentId?: string | null }[];
@@ -41,16 +46,16 @@ export function Homepage({
   };
 }) {
   const [deals, setDeals] = useState(initialDeals);
-  const [nextCursor, setNextCursor] = useState<string | null>(initialCursor);
+  const [page, setPage] = useState(initialPage);
+  const [totalPages, setTotalPages] = useState(initialTotalPages);
   const [isSearching, setIsSearching] = useState(false);
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [loadError, setLoadError] = useState("");
   const [catalog, setCatalog] = useState(initialCatalog ?? { categories: [], merchants: [] });
-  const sentinel = useRef<HTMLDivElement>(null);
   const [filters, setFilters] = useState(defaults);
+  // Any new search, category or store starts again from page 1.
+  const applyFilters = (next: DealFilters) => { setPage(1); setFilters(next); };
   const [query, setQuery] = useState("");
   const isInitialMount = useRef(true);
-  const isLoadingMoreRef = useRef(false);
   const [panel, setPanel] = useState<Panel>(null);
   const [notice, setNotice] = useState("");
   const saved = useSavedDeals();
@@ -72,7 +77,8 @@ export function Homepage({
       category: filters.category,
       store: filters.store,
       view: filters.view,
-      limit: "15",
+      page: String(page),
+      limit: String(HOME_PAGE_SIZE),
     });
 
     fetch(`/api/v1/home-deals?${params}`, { signal: controller.signal })
@@ -82,7 +88,7 @@ export function Homepage({
       })
       .then((result) => {
         setDeals(result.data || []);
-        setNextCursor(result.nextCursor ?? null);
+        setTotalPages(result.totalPages ?? 1);
         setIsSearching(false);
       })
       .catch((err) => {
@@ -95,7 +101,7 @@ export function Homepage({
     return () => {
       controller.abort();
     };
-  }, [filters]);
+  }, [filters, page]);
 
   useEffect(() => {
     if (!initialCatalog?.categories?.length) {
@@ -108,46 +114,6 @@ export function Homepage({
     }
   }, [initialCatalog]);
 
-  const loadMore = useCallback(async () => {
-    if (!nextCursor || isLoadingMoreRef.current || isSearching) return;
-    isLoadingMoreRef.current = true;
-    setIsLoadingMore(true);
-    try {
-      const params = new URLSearchParams({
-        q: filters.query,
-        category: filters.category,
-        store: filters.store,
-        view: filters.view,
-        limit: "15",
-        cursor: nextCursor,
-      });
-      const res = await fetch(`/api/v1/home-deals?${params}`);
-      if (!res.ok) throw new Error("Could not load more deals.");
-      const result = await res.json();
-      setDeals((prev) => [...new Map([...prev, ...(result.data || [])].map((d) => [d.id, d])).values()]);
-      setNextCursor(result.nextCursor ?? null);
-    } catch (err: unknown) {
-      setLoadError(err instanceof Error ? err.message : "Failed to load more deals.");
-    } finally {
-      isLoadingMoreRef.current = false;
-      setIsLoadingMore(false);
-    }
-  }, [filters, nextCursor, isSearching]);
-
-  useEffect(() => {
-    if (!nextCursor || isLoadingMore || isSearching || loadError || !sentinel.current) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          void loadMore();
-        }
-      },
-      { rootMargin: "150px" }
-    );
-    observer.observe(sentinel.current);
-    return () => observer.disconnect();
-  }, [nextCursor, isLoadingMore, isSearching, loadError, loadMore]);
-
   const scrollToDeals = () => {
     const el = document.getElementById("top-deals") || document.getElementById("deals-showcase");
     if (el) {
@@ -157,8 +123,17 @@ export function Homepage({
     }
   };
 
+  const goToPage = (next: number) => {
+    const target = Math.min(Math.max(1, next), totalPages);
+    if (target === page && !loadError) return;
+    setLoadError(""); setPage(target);
+    // Page 1 keeps the plain address; a shareable ?page=N is only kept while no search or filter is active.
+    if (!filters.query && !filters.category && !filters.store && filters.view === "top") window.history.replaceState(null, "", target > 1 ? `/?page=${target}` : "/");
+    scrollToDeals();
+  };
+
   const reset = () => {
-    setFilters(defaults);
+    applyFilters(defaults);
     setQuery("");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -166,12 +141,12 @@ export function Homepage({
   const search = (text: string) => {
     const trimmed = text.trim();
     setQuery(trimmed);
-    setFilters({ ...defaults, query: trimmed });
+    applyFilters({ ...defaults, query: trimmed });
     setTimeout(() => scrollToDeals(), 50);
   };
 
   const chooseStore = (store: string) => {
-    setFilters({ ...defaults, store });
+    applyFilters({ ...defaults, store });
     setQuery("");
     setPanel(null);
     scrollToDeals();
@@ -200,15 +175,15 @@ export function Homepage({
   const closeDialog = () => setPanel(null);
   const mainCategories = catalog.categories.filter((c) => !c.parentId);
   return <>
-    <Header communityEnabled={communityEnabled} categories={catalog.categories} onCategory={(cat) => { setFilters({ ...defaults, category: cat }); setQuery(""); scrollToDeals(); }} savedCount={saved.ids.filter((id) => deals.some((deal) => deal.id === id)).length} onHome={() => { setFilters(defaults); setQuery(""); window.scrollTo({ top: 0, behavior: "smooth" }); }} onPanel={(next)=>{if(next==="account")router.push("/account");else setPanel(next);}} onView={(view) => { setFilters({ ...defaults, view }); setQuery(""); scrollToDeals(); }} />
+    <Header query={query} onQuery={setQuery} onSearch={search} communityEnabled={communityEnabled} categories={catalog.categories} onCategory={(cat) => { applyFilters({ ...defaults, category: cat }); setQuery(""); scrollToDeals(); }} savedCount={saved.ids.filter((id) => deals.some((deal) => deal.id === id)).length} onHome={() => { setFilters(defaults); setQuery(""); window.scrollTo({ top: 0, behavior: "smooth" }); }} onPanel={(next)=>{if(next==="account")router.push("/account");else setPanel(next);}} onView={(view) => { setFilters({ ...defaults, view }); setQuery(""); scrollToDeals(); }} />
     <main id="main">
       <MobileFeedBar
         query={query} onQuery={setQuery} onSearch={search}
         categories={mainCategories.map((c) => ({ slug: c.slug, name: c.name }))}
         selected={filters.category}
-        onSelect={(category) => { setFilters({ ...defaults, category }); setQuery(""); scrollToDeals(); }}
+        onSelect={(category) => { applyFilters({ ...defaults, category }); setQuery(""); scrollToDeals(); }}
       />
-      <HeroSection query={query} onQuery={setQuery} onSearch={search} />
+      <HeroSection onSearch={search} />
       <CategorySection
         items={
           mainCategories.length
@@ -221,34 +196,24 @@ export function Homepage({
         }
         selected={filters.category}
         onSelect={(category) => {
-          setFilters({ ...defaults, category });
+          applyFilters({ ...defaults, category });
           setQuery("");
           scrollToDeals();
         }}
       />
       <div className="deals-showcase" id="deals-showcase">
         {filters.view === "featured" ? <FeaturedDeals {...sectionProps} /> : filters.view === "latest" ? <LatestDeals {...sectionProps} /> : <TopDealsSection {...sectionProps} />}
-        <div className="page-container" ref={sentinel} aria-live="polite">
+        <div className="page-container" aria-live="polite">
           {deals.some((d) => d.source === "demo") && <p>{deals.length} sample deals loaded</p>}
-          {isSearching ? (
-            <p>Searching deals…</p>
-          ) : isLoadingMore ? (
-            <p>Loading more deals…</p>
-          ) : loadError ? (
-            <p role="alert">
-              {loadError} <button onClick={() => void loadMore()}>Retry</button>
-            </p>
-          ) : nextCursor ? (
-            <button onClick={() => void loadMore()}>Load more deals</button>
-          ) : deals.length > 0 ? (
-            <p>All available results shown.</p>
-          ) : null}
+          {isSearching ? <p>Loading deals…</p> : loadError ? <p role="alert">{loadError} <button onClick={() => goToPage(page)}>Retry</button></p> : null}
+          <Pagination page={page} totalPages={totalPages} disabled={isSearching} onPage={goToPage} />
         </div>
         <PromotionalBanners onStore={chooseStore} onBank={() => setPanel("bank")} />
         <WhyMetaDeals />
       </div>
     </main>
     <Footer />
+    <MobileTabBar community={communityEnabled} />
     {notice && <div className="save-notice" role="status"><span>{notice}</span><button aria-label="Dismiss notification" onClick={() => setNotice("")}>×</button></div>}
     <Dialog open={Boolean(panel)} title={panel ? titles[panel] : ""} onClose={closeDialog}>
       {panel === "stores" ? <PopularStores items={catalog.merchants.length ? catalog.merchants.map(m=>({id:m.slug,name:m.name})) : stores} onStore={chooseStore} />

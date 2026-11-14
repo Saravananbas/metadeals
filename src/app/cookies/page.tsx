@@ -34,6 +34,7 @@ export default function CookiePolicyPage() {
             <tr><td><b>Admin session cookie</b></td><td>Keeps our team signed in to the admin area. Members never receive it.</td><td>Essential</td><td>Short session</td></tr>
             <tr><td><b>Security tokens</b></td><td>Protect sign-in and forms from forgery</td><td>Essential</td><td>Session</td></tr>
             <tr><td><code>md_consent</code> (browser storage)</td><td>Remembers whether you pressed Accept or Decline</td><td>Essential</td><td>Until you clear site data</td></tr>
+            <tr><td><code>md_vid</code></td><td>A random visitor code so we can count how many different people visit over several days, instead of counting the same person again every day. It is stored on our side only as a scrambled value</td><td>Analytics, only after you Accept</td><td>180 days, or until you choose Decline</td></tr>
             <tr><td><code>md_sid</code></td><td>A random visit code that links the pages you open in one visit, and how long you stay</td><td>Analytics, only after you Accept</td><td>30 minutes of inactivity</td></tr>
             <tr><td>Saved deals (browser storage)</td><td>Remembers the deals you saved with the heart button, on this device only</td><td>Functional</td><td>Until you clear site data</td></tr>
           </tbody>
@@ -51,7 +52,7 @@ export default function CookiePolicyPage() {
       <Card n={3} title="Analytics">
         <ul>
           <li><b>Before you choose,</b> we only count visits anonymously, using a code that changes every day and cannot follow you from one day to the next. No cookie is set for this.</li>
-          <li><b>If you press Accept,</b> we set <code>md_sid</code>. It shows us which pages are useful, how long visits last and which deals people click.</li>
+          <li><b>If you press Accept,</b> we set <code>md_sid</code> and <code>md_vid</code>. It shows us which pages are useful, how long visits last and which deals people click.</li>
           <li>If you are signed in, we link that visit to your account.</li>
           <li><b>If you press Decline,</b> we set no analytics cookie and you still get the whole site.</li>
         </ul>

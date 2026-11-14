@@ -2,7 +2,7 @@ import "server-only";
 import { randomBytes } from "node:crypto";
 import { z } from "zod";
 import { getDatabase } from "@/server/db/client";
-import { roleCan } from "@/server/auth/permissions";
+import { canCreateDealsDirectly, canReviewSubmissions } from "@/server/auth/permissions";
 import { DealError, saveDeal } from "@/server/deals/service";
 import { publicUrl } from "@/features/deals/validation";
 import { readImage } from "@/server/storage/media";
@@ -12,13 +12,13 @@ type Db = ReturnType<typeof getDatabase>;
 export type ReviewActor = { id: string; role: AdminRole };
 
 const assertCanReview = (actor: ReviewActor) => {
-  if (!roleCan(actor.role, "deal:publish")) throw new DealError("Permission denied.", 403);
+  if (!canReviewSubmissions(actor.role)) throw new DealError("Permission denied.", 403);
 };
 
 const listSelect = {
   id: true, status: true, title: true, brand: true, description: true, productUrl: true, merchantName: true, categoryHint: true,
   priceMinor: true, mrpMinor: true, couponCode: true, version: true, resubmissions: true, submittedAt: true, reviewedAt: true, rejectionReason: true, dealId: true,
-  customer: { select: { id: true, name: true, email: true } },
+  customer: { select: { id: true, name: true, email: true, forumProfile: { select: { handle: true } } } },
   deal: { select: { status: true, everPublished: true } },
 } as const;
 
@@ -33,7 +33,8 @@ export async function listSubmissions(actor: ReviewActor, status: "PENDING_REVIE
   ]);
   return {
     total, page, pending,
-    items: items.map((row) => ({ ...row, submittedAt: row.submittedAt.toISOString(), reviewedAt: row.reviewedAt?.toISOString() ?? null, imageUrl: `/api/v1/admin/submissions/${row.id}/image` })),
+    // Moderators see the member's public user name only, never their real name or email (administrators and editors keep what they had).
+    items: items.map(({ customer, ...row }) => ({ ...row, customer: canCreateDealsDirectly(actor.role) ? { id: customer.id, name: customer.name, email: customer.email } : { id: customer.id, name: customer.forumProfile?.handle ?? "member", email: "" }, submittedAt: row.submittedAt.toISOString(), reviewedAt: row.reviewedAt?.toISOString() ?? null, imageUrl: `${actor.role === "COMMUNITY_MODERATOR" ? "/api/v1/moderator" : "/api/v1/admin"}/submissions/${row.id}/image` })),
   };
 }
 
@@ -85,7 +86,7 @@ export async function approveSubmission(actor: ReviewActor, id: string, raw: unk
       mediaId: media.id, mrpMinor: input.mrpMinor, priceMinor: input.priceMinor, currency: "INR", rating: null, reviewCount: null, ratingSource: null,
       productUrl: input.productUrl, affiliateUrl: null, couponCode: input.couponCode || null, status: "DRAFT", publishedAt: null, startsAt: null, expiresAt: null,
       featured: false, trending: false, options: [],
-    });
+    }, undefined, undefined, { moderatorDraft: !canCreateDealsDirectly(actor.role) });
     const changed = await tx.communityDealSubmission.updateMany({
       where: { id, version: input.version, status: "PENDING_REVIEW" },
       data: { status: "APPROVED", dealId: deal.id, reviewedById: actor.id, reviewedAt: new Date(), rejectionReason: null, version: { increment: 1 } },

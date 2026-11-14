@@ -48,6 +48,8 @@ export async function updateProfile(customerId: string, raw: unknown) {
       location: input.location ? input.location : null,
     },
   });
+  // City / State is one value shown in both places: keep the public copy (80 characters at most) in step with the account copy.
+  if (input.location !== undefined) await getDatabase().forumProfile.updateMany({ where: { customerId: customer.id }, data: { location: input.location ? input.location.slice(0, 80) : null } });
   return getProfile(customer.id);
 }
 

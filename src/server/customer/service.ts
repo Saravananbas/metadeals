@@ -3,8 +3,8 @@ import { randomInt, randomUUID, timingSafeEqual } from "node:crypto";
 import { getDatabase } from "@/server/db/client";
 import { getAuthEnv } from "@/config/env";
 import { hashPassword, verifyPassword, validatePassword, hashOpaqueToken } from "@/server/auth/crypto";
-import { signupSchema, loginSchema } from "@/features/customer/validation";
-import { emailMode, sendSignupCode } from "./email";
+import { signupSchema, loginSchema, emailSchema, forgotSchema, resetSchema } from "@/features/customer/validation";
+import { emailMode, sendSignupCode, sendResetCode } from "./email";
 import { addressBucket } from "@/server/client-ip";
 import { logger } from "@/server/logging/logger";
 
@@ -98,7 +98,11 @@ export async function verifyCustomer(id: string, code: string) {
  */
 export async function loginCustomer(raw:unknown, address?: string | null) {
   const input=loginSchema.safeParse(raw);if(!input.success)return null;
-  const where = addressBucket(address ?? null) ?? "unknown", email = input.data.email;
+  const where = addressBucket(address ?? null) ?? "unknown";
+  const resolved = await resolveIdentifier(input.data.email);
+  if (!resolved) return null;
+  // Counters use one key per account however it was typed (email or user name), so switching between them does not reset the limits.
+  const email = resolved.key;
   if ((await bumpCustomerCounter("login-ip:" + where)) > (address ? 60 : 600)) return null;
   const pairKey = `login-pair:${email}:${where}`, emailKey = "login-email:" + email, knownKey = `login-known:${email}:${where}`;
   // Pair first: once one address is over its limit it stops adding to the victim's overall counter (one address can add at most 8 to it).
@@ -112,14 +116,72 @@ export async function loginCustomer(raw:unknown, address?: string | null) {
   }
   // Progressive delay: the 4th failed try from one address waits 0.2 s, then 0.4, 0.8 and 1.5 s (capped).
   if (pairCount > 3) await new Promise((resolve) => setTimeout(resolve, Math.min(100 * 2 ** (pairCount - 3), 1500)));
-  const customer=await getDatabase().customer.findUnique({where:{email}});
+  const customer=resolved.email ? await getDatabase().customer.findUnique({where:{email:resolved.email}}) : null;
   const valid=await verifyPassword(customer?.passwordHash ?? await dummyHash,input.data.password);
   if(!customer || customer.disabledAt || !valid || !customer.passwordHash)return null;
   if (emailCount > 10 && !known) logger.warn({ event: "customer.login.success_after_failures", target: digest(email).slice(0, 12), attemptsInWindow: emailCount }, "sign-in from a new address after many failed attempts");
   await Promise.all([clearCustomerCounter(pairKey), clearCustomerCounter(emailKey)]);
   await clearCustomerCounter(knownKey);
   await bumpCustomerCounter(knownKey, 30 * 86_400); // remember this address for 30 days
-  return {id:customer.id,name:customer.name,email:customer.email};
+  return {id:customer.id,name:customer.name,email:customer.email,remember:["1","true","on"].includes(String(input.data.remember))};
+}
+
+/** An email address, or a community user name (looked up to its account). Unknown names behave exactly like unknown emails. */
+async function resolveIdentifier(identifier: string): Promise<{ key: string; email: string | null } | null> {
+  if (identifier.includes("@")) return emailSchema.safeParse(identifier).success ? { key: identifier, email: identifier } : null;
+  if (!/^[a-z0-9_]{3,30}$/.test(identifier)) return null;
+  const profile = await getDatabase().forumProfile.findUnique({ where: { handle: identifier }, select: { customer: { select: { email: true } } } });
+  return { key: profile?.customer.email ?? "u:" + identifier, email: profile?.customer.email ?? null };
+}
+
+/**
+ * Forgot password. Always answers the same way (a challenge id) whether or not the account exists, so it cannot be used to find out who has an account.
+ * A six-digit code is emailed for 10 minutes and 5 tries; asking again is limited per account (3 an hour) and per address.
+ */
+export async function requestPasswordReset(raw: unknown) {
+  const { email: identifier } = forgotSchema.parse(raw);
+  const challengeId = randomUUID();
+  // Checked first so the answer never depends on whether the account exists.
+  if (emailMode() === "unavailable") throw new CustomerError("Email is not configured yet, so passwords cannot be reset right now.", 503);
+  const resolved = await resolveIdentifier(identifier);
+  if (!resolved?.email) return { challengeId, delivery: emailMode() };
+  if ((await bumpCustomerCounter("reset-ask:" + resolved.email, 3600)) > 3) return { challengeId, delivery: emailMode() };
+  const db = getDatabase();
+  const customer = await db.customer.findUnique({ where: { email: resolved.email }, select: { id: true, disabledAt: true } });
+  if (!customer || customer.disabledAt) return { challengeId, delivery: emailMode() };
+  const code = String(randomInt(0, 1_000_000)).padStart(6, "0");
+  await db.customerPasswordReset.deleteMany({ where: { customerId: customer.id } });
+  await db.customerPasswordReset.create({ data: { id: challengeId, customerId: customer.id, codeHash: digest(challengeId + ":" + code), expiresAt: new Date(Date.now() + 600_000) } });
+  try { await sendResetCode(resolved.email, code, challengeId); }
+  catch { await db.customerPasswordReset.deleteMany({ where: { id: challengeId } }); logger.warn({ event: "customer.reset.email_failed" }, "password reset email could not be sent"); }
+  return { challengeId, delivery: emailMode() };
+}
+
+export async function confirmPasswordReset(raw: unknown) {
+  const input = resetSchema.parse(raw);
+  const policy = validatePassword(input.password, "");
+  if (policy) throw new CustomerError(policy);
+  const db = getDatabase();
+  const attempted = await db.customerPasswordReset.updateMany({ where: { id: input.challengeId, consumedAt: null, expiresAt: { gt: new Date() }, attempts: { lt: 5 } }, data: { attempts: { increment: 1 } } });
+  if (!attempted.count) throw new CustomerError("Code expired or attempts exhausted. Ask for a new code.");
+  const row = await db.customerPasswordReset.findUniqueOrThrow({ where: { id: input.challengeId } });
+  if (!timingSafeEqual(Buffer.from(row.codeHash), Buffer.from(digest(input.challengeId + ":" + input.code)))) throw new CustomerError("Incorrect code.");
+  const passwordHash = await hashPassword(input.password);
+  const owner = await db.$transaction(async (tx) => {
+    const claimed = await tx.customerPasswordReset.updateMany({ where: { id: row.id, consumedAt: null, expiresAt: { gt: new Date() } }, data: { consumedAt: new Date() } });
+    if (!claimed.count) throw new CustomerError("This code is no longer valid.");
+    const current = await tx.customer.findUniqueOrThrow({ where: { id: row.customerId }, select: { email: true, emailVerifiedAt: true } });
+    // Receiving the code proves the email address, so a Google-only account can also set a password this way.
+    await tx.customer.update({ where: { id: row.customerId }, data: { passwordHash, emailVerifiedAt: current.emailVerifiedAt ?? new Date() } });
+    // A new password ends every native-app sign-in.
+    await tx.customerAppToken.updateMany({ where: { customerId: row.customerId, revokedAt: null }, data: { revokedAt: new Date() } });
+    await tx.customerPasswordReset.deleteMany({ where: { customerId: row.customerId } });
+    return current.email;
+  });
+  // The lockout counter for this account is cleared so the owner can sign in straight away with the new password.
+  await clearCustomerCounter("login-email:" + owner);
+  logger.info({ event: "customer.password.reset" }, "customer password reset");
+  return { reset: true };
 }
 /** True when a counter row exists and has not expired. */
 export async function hasCustomerCounter(subject: string): Promise<boolean> {

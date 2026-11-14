@@ -5,6 +5,8 @@ import { SharedSecurityStore, getSharedRedis } from "@/server/queue/security-sto
 import { Agent2PublishingEngine } from "@/server/scraper/agent2-publishing-engine";
 import { PublishingReconciliationWorker } from "@/server/scraper/reconciliation-worker";
 
+// These tests create real deals, candidates and accounts. They only run against a disposable database whose name contains "test", never against the development or staging database.
+const skip = /\/[^/?]*test[^/?]*(\?|$)/i.test(process.env.DATABASE_URL ?? "") ? false : "needs a disposable DATABASE_URL (name contains 'test')";
 test("M12.1 Security: Telegram Webhook Route authenticates secret-token and rejects invalid callers", async () => {
   const { POST } = await import("@/app/api/telegram/webhook/route");
 
@@ -65,7 +67,7 @@ test("M12.1 Security: Persistent Shared Kill Switch across instances blocks publ
   assert.equal(await Agent2PublishingEngine.isKillSwitchActive(), false);
 });
 
-test("M12.1 Security: Atomic Claiming prevents concurrent duplicate deal publication", async () => {
+test("M12.1 Security: Atomic Claiming prevents concurrent duplicate deal publication", { skip }, async () => {
   const db = getDatabase();
   const candidateId = `cand_concurrent_${Date.now()}`;
   const token = `token_${Date.now()}`;
@@ -136,7 +138,7 @@ test("M12.1 Security: Atomic Claiming prevents concurrent duplicate deal publica
   assert.equal(updatedAuth?.status, "PUBLISHED");
 });
 
-test("M12.1 Security: Crash Recovery Worker reconciles interrupted publishing states safely", async () => {
+test("M12.1 Security: Crash Recovery Worker reconciles interrupted publishing states safely", { skip }, async () => {
   const db = getDatabase();
   const candidateId = `cand_recovery_${Date.now()}`;
   const token = `token_rec_${Date.now()}`;

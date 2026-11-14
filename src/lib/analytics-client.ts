@@ -3,6 +3,9 @@
 export type ConsentState = "accepted" | "declined" | null;
 export const CONSENT_KEY = "md_consent";
 export const CONSENT_EVENT = "md-consent-change";
+/** Asks the banner to open again so a visitor can change their choice at any time. */
+export const CONSENT_OPEN_EVENT = "md-consent-open";
+export const openConsentChoices = () => window.dispatchEvent(new Event(CONSENT_OPEN_EVENT));
 const SEEN_KEY = "md_seen";
 
 export function getConsent(): ConsentState {

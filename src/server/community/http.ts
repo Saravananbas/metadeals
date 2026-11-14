@@ -5,6 +5,7 @@ import { customerApi, customerErrorResponse, customerJson } from "@/server/custo
 import { getCustomerAuthOptions } from "@/server/customer/options";
 import { assertCommunityEnabled, throttleRead } from "./config";
 import { clientIpFromHeaders } from "@/server/client-ip";
+import { bearerOf, customerIdFromAppToken } from "@/server/customer/app-tokens";
 
 export { customerJson as json, readJson };
 
@@ -14,7 +15,9 @@ export async function communityRead(request: Request, run: (customerId: string |
     assertCommunityEnabled();
     throttleRead(clientIpFromHeaders(request.headers) ?? "unknown");
     let customerId: string | null = null;
-    try { customerId = (await getServerSession(getCustomerAuthOptions()))?.user?.id ?? null; } catch { customerId = null; }
+    const bearer = bearerOf(request);
+    if (bearer) customerId = await customerIdFromAppToken(bearer);
+    else try { customerId = (await getServerSession(getCustomerAuthOptions()))?.user?.id ?? null; } catch { customerId = null; }
     const response = await run(customerId);
     response.headers.set("Cache-Control", customerId ? "private, no-store" : "public, max-age=15, stale-while-revalidate=30");
     return response;

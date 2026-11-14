@@ -2,6 +2,32 @@
 
 Last updated: 2026-11-11
 
+## 2026-11-14 continuation checkpoint
+
+### Exact latest completed work
+
+- Admin navigation redesign was statically validated: `npx tsc --noEmit` PASS; focused ESLint for `AdminNav.tsx` and `admin-dashboard.tsx` PASS; `git diff --check` PASS (only LF/CRLF informational warnings). Live browser verification remains NOT VERIFIED.
+- Completed and added `docs/community-forum/MODERATOR_PHASE_1_AUDIT_AND_IMPLEMENTATION_PLAN.md`, covering existing identities, MFA, role guards, moderation/report/submission flows, media routes, audit, schema parity, permission call sites, migration collision state, and an implementation sequence.
+- No moderator implementation/schema/database changes have started because disposable PostgreSQL/MariaDB test services are inaccessible from this session. This is an intentional security gate; do not widen the existing coarse `forum:moderate` permission as a workaround.
+
+### Runtime and validation state
+
+- `npm run dev` attempted using the repository launcher. It started toward the in-repository extractor, then failed: `Python extractor did not become ready: fetch failed.` Next.js did not start.
+- Local browser open of `http://localhost:4123/admin/login` timed out. The available browser surface could not select the existing Chrome tab; mark visual verification blocked, not passed.
+- Docker CLI: permission denied for `npipe:////./pipe/dockerDesktopLinuxEngine`.
+- Read-only port checks: 4123, 8765, 55432, 3306, and 6380 not listening/reachable from this session.
+- Community forum/submission focused test command completed with 14 tests skipped and 0 executed, because `FORUM_TEST_DB`/`COMMUNITY_TEST_DB` and disposable DBs are not configured. Do not count this as passing integration coverage.
+- No persistent database or migration was changed.
+
+### Immediate next actions
+
+1. Recheck working tree and all exact service/port state before resuming; do not infer that another process/container is healthy.
+2. Restore access to a disposable PostgreSQL and MariaDB test environment and the local Python extractor without disabling safety checks. Then verify startup/browser route before any further navigation edits.
+3. Finish the full moderator route, provisioning/MFA, media authorization, and query-filter audit; update the moderator audit document with any new findings.
+4. Add table-driven permission tests and schema parity/migration tests before enabling a `COMMUNITY_MODERATOR` role. Keep incomplete moderator actions server-denied.
+5. Recheck both Prisma migration trees for collisions immediately before any additive migration. Validate only on disposable databases.
+6. Preserve all staged/unstaged/untracked files; no staging, commit, push, deployment, or hosted environment access.
+
 ## Exact latest completed work
 
 - Added a read-only Deal Intelligence admin page at `/admin/intelligence`. It aggregates persisted candidates, publication authorizations, shadow candidates, source health, published deals, price observations, lifecycle events, and recent scraper runs. Database fields that are missing or unavailable render as unavailable; no sample metrics or actions were added. Agent 3 is explicitly shadow-only.
@@ -98,6 +124,14 @@ pm run typecheck) and focused ESLint (--max-warnings=0) passed after these chang
 - Managed Node hosting is not yet production-ready: the app depends on Redis for readiness/security/rate-limiting and queue infrastructure; worker handlers and scheduler inputs still have placeholders; production image storage needs a durable external backend; optional Python extraction is not available on Node-only hosting. Keep unsupported background/publishing/security paths disabled until these are addressed and rehearsed safely.
 - Immediate next steps: owner verifies `http://localhost:4123`; gather any startup/runtime error; continue local-only service compatibility work with disposable databases for tests. No persistent migration, staging, commit, push, or deployment was performed.
 
+## Reconciliation — 2026-11-14: runtime and admin navigation follow-up
+
+- The earlier sandbox-only startup failure was superseded by a local elevated check: `npm run dev` reached `EADDRINUSE` because the existing repository launcher already owned port 4123. Process inspection tied the listener and Next child to `D:\Metadeals`; the Python extractor at `127.0.0.1:8765` reported healthy, and `/admin/login` returned HTTP 200. Do not start a second copy or kill the existing process without owner direction.
+- Browser inspection loaded `/admin`; all navigation entries were present. A real horizontal overflow at 1280px was fixed with wrapping in `src/components/admin/admin-nav.module.css`. Recheck after future nav changes.
+- The moderator architecture audit is recorded in `docs/community-forum/MODERATOR_PHASE_1_AUDIT_AND_IMPLEMENTATION_PLAN.md`. No moderator implementation or schema changes have begun. DB-dependent community tests were skipped because no disposable test DB was configured; Docker CLI remained inaccessible from this session.
+- Focused `npx tsc --noEmit`, targeted ESLint for AdminNav/dashboard, and `git diff --check` passed. No app restart was needed; hot reload applied the CSS fix.
+- Owner clarified the active runtime after that check: the project has been removed from Docker and uses MariaDB, with no PostgreSQL. Repository configuration corroborates MariaDB selection: `.env` contains a `mysql:` URL for `127.0.0.1:3307`, and `prisma.config.ts` selects `prisma/schema.mariadb.prisma` and `prisma/migrations_mariadb` for that URL. This inspection did not print credentials or contact the database. Do not make Docker/PostgreSQL access a blocker; continue MariaDB-only runtime validation, and use a disposable MariaDB DB for migrations/tests. Do not delete the existing PostgreSQL schema/history without explicit direction.
+
 ## Current continuation — 2026-11-11: Python extraction engine integration
 
 - Owner asked to replace the extraction module using `D:\extraction` while leaving the existing UI unchanged.
@@ -107,3 +141,12 @@ pm run typecheck) and focused ESLint (--max-warnings=0) passed after these chang
 - `DealManager.tsx` and its CSS were not edited. `npx tsc --noEmit` passed and all 24 Python files parsed successfully. Local processes are active at Next.js `http://localhost:4123` and Python `127.0.0.1:8765`; no live retailer extraction was performed from this session.
 - Remaining: owner test a retailer URL and report the output; correct any mapping errors without touching the UI. Hostinger Node-only hosting still cannot run the Python/Playwright service, so do not deploy extraction there without an approved secured runtime. No tests, migration, stage, commit, push, or deployment were run/performed.
 
+## 2026-11-14 moderator implementation checkpoint
+### Completed
+- Moderator system built and tested (see `docs/community-forum/MODERATOR_PHASE_2_IMPLEMENTATION.md`). Files added: `src/server/community/{moderators,moderator-access,discipline,restrictions}.ts`, `src/app/moderator/*`, `src/app/admin/(protected)/moderators/*`, `src/app/community/{moderator-invite,moderation}/page.tsx`, `src/features/profile/{ModeratorInvite,MyModeration}.tsx`, `src/app/api/v1/{moderator,admin/moderation}/[...path]/route.ts`, `src/app/api/v1/customer/{moderator-invite,community/moderation}/route.ts`, migration `20261126100000_community_moderator` (both trees; PostgreSQL copy not executed), tests `tests/moderator-{permissions,system,routes}.test.ts`.
+- Files changed: `permissions.ts`, both Prisma schemas, `moderation.ts`, `review.ts`, `admin-http.ts`, `deals/service.ts` (draft-only moderator path), `auth/service.ts` (moderators excluded from generic role/status changes), `api/admin/accounts/route.ts`, `community/service.ts` and `customer/submissions.ts` (restriction enforcement), notification types and text, `AdminNav.tsx`, admin layout redirect.
+- Also fixed in passing: `admin-nav.module.css` negative top margin cut off the header; Codex CSS moved to design tokens; `next-env.d.ts`/`tsconfig.json` restored after a second test dev server rewrote them.
+### State and cautions
+- Running dev server on 4123 was not touched (it uses the persistent database, which does not have the new tables).
+- Test database `metadeals_modtest` (disposable) holds fixture rows (admin, category, merchant) for older test suites; recreate it from migrations when needed.
+- Next: owner decides on applying the migration locally/staging; browser-verify the screens with a moderator and an admin session; add an email path for invitations if wanted.

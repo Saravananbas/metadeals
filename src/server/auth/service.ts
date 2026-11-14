@@ -524,6 +524,10 @@ export async function updateAccount(input: {
       select: { id: true, role: true, status: true },
     });
     if (!target) throw new AuthenticationFailure("Account not found.");
+    // Moderators are appointed, confirmed and revoked only through the moderator appointment workflow, which keeps the invitation, probation and audit history.
+    if (input.role === UserRole.COMMUNITY_MODERATOR || target.role === UserRole.COMMUNITY_MODERATOR) {
+      throw new AuthenticationFailure("Community moderators are managed from the moderator appointments page.");
+    }
     if (input.status && input.status !== UserStatus.ACTIVE && input.status !== UserStatus.SUSPENDED) {
       throw new AuthenticationFailure("Requested account status is not allowed.");
     }

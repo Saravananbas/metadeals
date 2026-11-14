@@ -4,6 +4,7 @@ import { assertSameOrigin, RequestBodyError } from "@/server/auth/request";
 import { DealError } from "@/server/deals/service";
 import { CustomerError } from "./service";
 import { requireCustomerId } from "./session";
+import { bearerOf, customerIdFromAppToken } from "./app-tokens";
 
 const headers = { "Cache-Control": "no-store" };
 export const customerJson = (data: unknown, status = 200) => Response.json(data, { status, headers });
@@ -11,6 +12,10 @@ export const customerJson = (data: unknown, status = 200) => Response.json(data,
 /** Wraps a customer endpoint: same-origin check for writes, session-derived customer id, uniform error mapping. */
 export async function customerApi(request: Request, run: (customerId: string) => Promise<Response>): Promise<Response> {
   try {
+    // Native apps send "Authorization: Bearer <app token>" and no cookies. A browser cannot attach that header to a cross-site request
+    // (no CORS approval is given), so the same-origin check that protects cookie sessions is not needed on this path, and cookies are ignored.
+    const bearer = bearerOf(request);
+    if (bearer) return await run(await customerIdFromAppToken(bearer));
     if (request.method !== "GET" && request.method !== "HEAD" && !assertSameOrigin(request)) return customerJson({ error: "Request origin could not be verified." }, 403);
     return await run(await requireCustomerId());
   } catch (error) {

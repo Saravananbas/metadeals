@@ -34,7 +34,7 @@ export function MyActivity() {
   if (state === "off" || !data) return <div className={`${styles.card} ${styles.empty}`}>Your activity is not available right now.</div>;
 
   return (
-    <div className={styles.shell} style={{ padding: 0 }}>
+    <div className={styles.shell} style={{ padding: 0, margin: 0, width: "100%" }}>
       <section className={styles.tiles} aria-label="Your posts">
         <div className={styles.tile}><small>Live posts</small><strong>{data.counts.published}</strong></div>
         <div className={styles.tile}><small>Awaiting review</small><strong>{data.counts.awaitingReview}</strong></div>
@@ -70,6 +70,12 @@ export function MyActivity() {
           </div>
         ))}
         {!data.posts.length && <p className={styles.notice}>You have not posted yet.</p>}
+      </section>
+
+      <section className={styles.card} id="comments">
+        <h2>Your comments</h2>
+        {data.comments.map((c) => <div key={c.id} style={{ padding: "8px 0", borderBottom: "1px solid var(--md-neutral-100)" }}><Link href={`/community/post/${c.post.slug}`}>{c.post.title}</Link><p className={styles.notice} style={{ margin: "2px 0 0" }}>{c.excerpt} · {ago(c.createdAt)}</p></div>)}
+        {!data.comments.length && <p className={styles.notice}>You have not commented yet.</p>}
       </section>
 
       <section className={styles.card}>

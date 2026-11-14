@@ -11,8 +11,9 @@ type Profile = { name: string; email: string; sex: string | null; dateOfBirth: s
 type Submission = {
   id: string; title: string; brand: string | null; description: string; productUrl: string; merchantName: string | null; categoryHint: string | null;
   priceMinor: number; mrpMinor: number | null; couponCode: string | null; version: number; submittedAt: string; rejectionReason: string | null;
-  stage: "PENDING_REVIEW" | "APPROVED" | "LIVE" | "REJECTED"; dealSlug: string | null; imageUrl: string;
+  stage: "PENDING_REVIEW" | "APPROVED" | "LIVE" | "REJECTED"; dealState?: "LIVE" | "EXPIRED" | "ARCHIVED" | null; dealSlug: string | null; imageUrl: string;
 };
+type MerchantWebsite = { id: string; name: string; domain: string; logoUrl: string | null };
 const STAGE_LABEL = { PENDING_REVIEW: "Awaiting review", APPROVED: "Approved, going live soon", LIVE: "Live on MetaDeals4U", REJECTED: "Not approved" } as const;
 const emptyForm = { title: "", productUrl: "", merchantName: "", categoryHint: "", price: "", mrp: "", couponCode: "", brand: "", description: "" };
 
@@ -30,15 +31,26 @@ function guessCategory(options: string[], ...texts: string[]) {
   const words = (name: string) => name.toLowerCase().replace(/&/g, " ").split(/[^a-z0-9]+/).filter((w) => w.length > 3).map((w) => w.replace(/s$/, ""));
   return options.find((o) => words(o).some((w) => text.includes(w))) ?? "";
 }
+function websiteForUrl(raw: string, websites: MerchantWebsite[]) {
+  try {
+    const host = new URL(raw).hostname.toLowerCase().replace(/^www\./, "");
+    return [...websites].sort((a, b) => b.domain.length - a.domain.length).find((item) => {
+      const domain = item.domain.toLowerCase().replace(/^www\./, "");
+      return host === domain || host.endsWith(`.${domain}`);
+    }) ?? null;
+  } catch { return null; }
+}
 const toMinor = (value: string) => Math.round(Number(value) * 100);
 
-export function CustomerProfile({ section = "profile" }: { section?: "profile" | "deals" }) {
+export function CustomerProfile({ section = "profile", embedded = false }: { section?: "profile" | "deals"; embedded?: boolean }) {
+  const [filter, setFilter] = useState<"all" | "PENDING_REVIEW" | "APPROVED" | "LIVE" | "REJECTED" | "EXPIRED" | "ARCHIVED">("all");
   const deals = section === "deals";
   const [profile, setProfile] = useState<Profile | null>(null);
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [form, setForm] = useState(emptyForm);
   const [editing, setEditing] = useState<Submission | null>(null);
   const [image, setImage] = useState<File | null>(null);
+  const [uploadedPreview, setUploadedPreview] = useState("");
   const [fetched, setFetched] = useState<{ logoUrl?: string | null; store: string; images: string[]; notes: string[]; category: string; status: string } | null>(null);
   const [pickedImage, setPickedImage] = useState("");
   const [fetching, setFetching] = useState(false);
@@ -46,16 +58,37 @@ export function CustomerProfile({ section = "profile" }: { section?: "profile" |
   const [submitMsg, setSubmitMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [busy, setBusy] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
+  const titleInput = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (!image) return;
+    const reader = new FileReader();
+    reader.addEventListener("load", () => setUploadedPreview(typeof reader.result === "string" ? reader.result : ""), { once: true });
+    reader.readAsDataURL(image);
+    return () => reader.abort();
+  }, [image]);
   useEffect(() => {
     if (!deals) return;
-    const onPaste = (e: ClipboardEvent) => { const f = Array.from(e.clipboardData?.files ?? []).find((x) => x.type.startsWith("image/")); if (f) setImage(f); };
+    const onPaste = (e: ClipboardEvent) => {
+      const f = Array.from(e.clipboardData?.files ?? []).find((x) => x.type.startsWith("image/"));
+      if (!f) return;
+      if (!["image/jpeg", "image/png", "image/webp"].includes(f.type) || f.size > 5 * 1024 * 1024) {
+        setSubmitMsg({ ok: false, text: "Use a JPEG, PNG or WebP image up to 5 MB." });
+        return;
+      }
+      setImage(f); setPickedImage(""); setSubmitMsg(null);
+    };
     window.addEventListener("paste", onPaste);
     return () => window.removeEventListener("paste", onPaste);
   }, [deals]);
   const [categories, setCategories] = useState<{ id: string; name: string; parentId: string | null }[]>([]);
+  const [merchantWebsites, setMerchantWebsites] = useState<MerchantWebsite[]>([]);
+  const [merchantOptionsOpen, setMerchantOptionsOpen] = useState(false);
   useEffect(() => {
     if (!deals) return;
-    fetch("/api/v1/catalog").then((r) => r.json()).then((b) => setCategories(b?.data?.categories ?? b?.categories ?? [])).catch(() => {});
+    fetch("/api/v1/catalog", { cache: "no-store" }).then((r) => r.json()).then((b) => {
+      setCategories(b?.data?.categories ?? b?.categories ?? []);
+      setMerchantWebsites(b?.data?.merchantWebsites ?? b?.merchantWebsites ?? []);
+    }).catch(() => {});
   }, [deals]);
 
   const refresh = useCallback(async () => {
@@ -101,7 +134,17 @@ export function CustomerProfile({ section = "profile" }: { section?: "profile" |
 
   function resetDealForm() {
     setForm(emptyForm); setImage(null); setEditing(null); setFetched(null); setPickedImage(""); setSubmitMsg(null);
+    try { if (profile?.email) localStorage.removeItem(`metadeals:deal-draft:${profile.email.trim().toLowerCase()}`); } catch { /* storage may be disabled */ }
     if (fileInput.current) fileInput.current.value = "";
+  }
+
+  function chooseUpload(file: File | undefined) {
+    if (!file) return;
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type) || file.size > 5 * 1024 * 1024) {
+      setSubmitMsg({ ok: false, text: "Use a JPEG, PNG or WebP image up to 5 MB." });
+      return;
+    }
+    setImage(file); setPickedImage(""); setSubmitMsg(null);
   }
 
   // Same extractor as the admin "Fetch" button: fills the form from the store page; everything stays editable.
@@ -114,8 +157,12 @@ export function CustomerProfile({ section = "profile" }: { section?: "profile" |
       const body = await api<{ data: { logoUrl: string | null; status: string; store: string; productUrl: string; title: string; brand: string; description: string; priceRupees: string; mrpRupees: string; category: string; images: string[]; notes: string[] } }>(
         "/api/v1/customer/product-fetch", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ url: link }) });
       const d = body.data;
-      setForm((f) => ({ ...f, title: d.title || f.title, brand: d.brand || f.brand, description: d.description || f.description, price: d.priceRupees || f.price, mrp: d.mrpRupees || f.mrp, merchantName: d.store || f.merchantName, categoryHint: guessCategory(categories.map((c) => c.name), d.category, d.title, d.brand) || f.categoryHint, productUrl: d.productUrl || f.productUrl }));
-      setFetched({ logoUrl: d.logoUrl, store: d.store, images: d.images, notes: d.notes, category: d.category, status: d.status });
+      const matchedWebsite = websiteForUrl(d.productUrl || link, merchantWebsites)
+        ?? merchantWebsites.find((item) => item.name.toLowerCase() === d.store.toLowerCase())
+        ?? null;
+      const detectedMerchant = matchedWebsite?.name || d.store;
+      setForm((f) => ({ ...f, title: d.title || f.title, brand: d.brand || f.brand, description: d.description || f.description, price: d.priceRupees || f.price, mrp: d.mrpRupees || f.mrp, merchantName: detectedMerchant || f.merchantName, categoryHint: guessCategory(categories.map((c) => c.name), d.category, d.title, d.brand) || f.categoryHint, productUrl: d.productUrl || f.productUrl }));
+      setFetched({ logoUrl: matchedWebsite?.logoUrl || d.logoUrl, store: detectedMerchant, images: d.images, notes: d.notes, category: d.category, status: d.status });
       setPickedImage(d.images[0] ?? "");
       setSubmitMsg({ ok: true, text: d.title || d.priceRupees ? "Details fetched. Please check every field below before you submit." : "We could not read this page automatically. Please fill in the details yourself." });
     } catch (error) {
@@ -125,6 +172,10 @@ export function CustomerProfile({ section = "profile" }: { section?: "profile" |
 
   async function submitDeal(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (form.mrp && Number(form.price) > Number(form.mrp)) {
+      setSubmitMsg({ ok: false, text: "Deal price cannot be higher than the MRP." });
+      return;
+    }
     setBusy(true);
     setSubmitMsg(null);
     try {
@@ -140,6 +191,7 @@ export function CustomerProfile({ section = "profile" }: { section?: "profile" |
       if (image) body.set("image", image);
       if (editing) body.set("version", String(editing.version));
       await api(editing ? `/api/v1/customer/submissions/${editing.id}` : "/api/v1/customer/submissions", { method: editing ? "PATCH" : "POST", body });
+      try { if (profile?.email) localStorage.removeItem(`metadeals:deal-draft:${profile.email.trim().toLowerCase()}`); } catch { /* submission already succeeded */ }
       setForm(emptyForm); setImage(null); setEditing(null); setFetched(null); setPickedImage("");
       if (fileInput.current) fileInput.current.value = "";
       await refresh();
@@ -154,26 +206,56 @@ export function CustomerProfile({ section = "profile" }: { section?: "profile" |
   const mainCat = selectedCat ? (selectedCat.parentId ? categories.find((x) => x.id === selectedCat.parentId) : selectedCat) : undefined;
   const subCats = mainCat ? categories.filter((x) => x.parentId === mainCat.id) : [];
   const c = profile?.counts;
+  const merchantQuery = form.merchantName.trim().toLowerCase();
+  const matchingMerchants = merchantWebsites.filter((merchant) =>
+    !merchantQuery || merchant.name.toLowerCase().includes(merchantQuery) || merchant.domain.toLowerCase().includes(merchantQuery),
+  ).slice(0, 10);
+  const selectedMerchant = merchantWebsites.find((merchant) => merchant.name.toLowerCase() === merchantQuery) ?? null;
+  const discount = form.mrp && form.price && Number(form.mrp) > 0
+    ? Math.max(0, Math.round(((Number(form.mrp) - Number(form.price)) / Number(form.mrp)) * 100))
+    : null;
+
+  function saveLocalDraft() {
+    if (!profile?.email) return setSubmitMsg({ ok: false, text: "Your account is still loading. Try again in a moment." });
+    try {
+      localStorage.setItem(`metadeals:deal-draft:${profile.email.trim().toLowerCase()}`, JSON.stringify({ form, pickedImage, savedAt: new Date().toISOString() }));
+      setSubmitMsg({ ok: true, text: "Draft saved on this device. Uploaded files are not saved in a draft." });
+    } catch { setSubmitMsg({ ok: false, text: "This browser could not save the draft. Please keep the page open or submit it for review." }); }
+  }
+
+  function restoreLocalDraft() {
+    if (!profile?.email) return;
+    try {
+      const raw = localStorage.getItem(`metadeals:deal-draft:${profile.email.trim().toLowerCase()}`);
+      if (!raw) return setSubmitMsg({ ok: false, text: "No saved draft was found on this device." });
+      const draft = JSON.parse(raw) as { form?: typeof emptyForm; pickedImage?: string };
+      if (!draft.form || typeof draft.form.title !== "string" || typeof draft.form.productUrl !== "string") throw new Error("Invalid draft");
+      setForm({ ...emptyForm, ...draft.form });
+      setPickedImage(typeof draft.pickedImage === "string" ? draft.pickedImage : "");
+      setEditing(null);
+      setSubmitMsg({ ok: true, text: "Draft restored from this device. Please check the details and add any missing product image." });
+    } catch { setSubmitMsg({ ok: false, text: "The saved draft could not be restored." }); }
+  }
 
   return (
-    <div className={styles.wrap}>
-      <div className={styles.head}>
-        <div><h1>{deals ? "Post a Deal" : "Your profile"}</h1><p className={styles.sub}>{profile?.email}</p></div>
+    <div className={`${styles.wrap} ${deals ? styles.dealPage : ""}`} style={embedded ? { maxWidth: "none", margin: 0, padding: 0, width: "100%" } : undefined}>
+      {!embedded && <div className={deals ? styles.dealHero : styles.head}>
+        <div><h1>{deals ? "Post a Deal" : "Your profile"}</h1><p className={styles.sub}>{deals ? "Found a great offer? Share it with the MetaDeals4U community and help others save!" : profile?.email}</p></div>
         <div className={styles.actions}>
           {deals ? <Link href="/account" className={styles.secondary}>My profile</Link> : <Link href="/post-deal" className={styles.secondary}>Post a Deal</Link>}
           <Link href="/" className={styles.secondary}>Explore deals</Link>
           <button className={styles.secondary} onClick={() => void signOut({ callbackUrl: "/" })}>Sign out</button>
         </div>
-      </div>
+      </div>}
 
-      <UserNamePrompt />
+      {!embedded && <UserNamePrompt />}
       {!deals && <IdentityCard />}
 
-      <section className={styles.tiles} aria-label="Your deal submissions">
-        <div className={styles.tile}><small>Submitted</small><strong>{c?.total ?? "–"}</strong></div>
-        <div className={styles.tile}><small>Awaiting review</small><strong>{c?.pendingReview ?? "–"}</strong></div>
-        <div className={styles.tile}><small>Not approved</small><strong>{c?.rejected ?? "–"}</strong></div>
-        <div className={styles.tile}><small>Live</small><strong>{c?.live ?? "–"}</strong>{!!c?.approvedAwaitingPublication && <em>{c.approvedAwaitingPublication} approved, going live soon</em>}</div>
+      <section className={`${styles.tiles} ${deals ? styles.dealStats : ""}`} aria-label="Your deal submissions">
+        <div className={styles.tile}>{deals && <span className={styles.statIcon} aria-hidden="true">➤</span>}<span><small>Submitted</small><strong>{c?.total ?? "–"}</strong></span></div>
+        <div className={styles.tile}>{deals && <span className={styles.statIcon} aria-hidden="true">⌛</span>}<span><small>Awaiting {deals ? "Review" : "review"}</small><strong>{c?.pendingReview ?? "–"}</strong></span></div>
+        <div className={styles.tile}>{deals && <span className={styles.statIcon} aria-hidden="true">✕</span>}<span><small>{deals ? "Not Approved" : "Not approved"}</small><strong>{c?.rejected ?? "–"}</strong></span></div>
+        <div className={styles.tile}>{deals && <span className={styles.statIcon} aria-hidden="true">✓</span>}<span><small>Live</small><strong>{c?.live ?? "–"}</strong>{!!c?.approvedAwaitingPublication && <em>{c.approvedAwaitingPublication} approved, going live soon</em>}</span></div>
       </section>
 
       {!deals && <section className={styles.card}>
@@ -196,64 +278,122 @@ export function CustomerProfile({ section = "profile" }: { section?: "profile" |
         )}
       </section>}
 
-      {deals && <section className={styles.card} id="submit-deal">
-        <h2>{editing ? "Fix and resubmit your deal" : "Share a deal"}</h2>
-        {editing?.rejectionReason && <p className={styles.reason}>Why it was not approved: {editing.rejectionReason}</p>}
-        <form className={styles.form} onSubmit={submitDeal}>
-          <div className={styles.wide} style={{ display: "grid", gap: 8 }}><label >Link to the product page (https)<input type="url" value={form.productUrl} onChange={set("productUrl")} required placeholder="https://www.store.com/product" /></label><div className={styles.actions}><button type="button" className={styles.primary} disabled={busy || fetching || !form.productUrl} onClick={() => void fetchFromLink()}>{fetching ? "Fetching…" : "Fetch details"}</button><button type="button" className={styles.secondary} disabled={busy || fetching} onClick={resetDealForm}>Reset</button><span className={styles.hint}>Paste a store link and we will fill in what we can find. You can change anything.</span></div></div>
-          <label className={styles.wide}>Deal title<input value={form.title} onChange={set("title")} required minLength={3} maxLength={200} /></label>
-          <label>Deal price (₹)<input inputMode="decimal" value={form.price} onChange={set("price")} required pattern="[0-9]+(\.[0-9]{1,2})?" /></label>
-          <label>MRP (₹, optional)<input inputMode="decimal" value={form.mrp} onChange={set("mrp")} pattern="[0-9]+(\.[0-9]{1,2})?" /></label>
-          <label>Store name (optional)<input value={form.merchantName} onChange={set("merchantName")} maxLength={100} /></label>
-          <label>Main category<select value={mainCat?.name ?? ""} onChange={(e) => setForm((f) => ({ ...f, categoryHint: e.target.value }))} required><option value="">Choose a main category</option>{categories.filter((c) => !c.parentId).map((c) => <option key={c.id} value={c.name}>{c.name}</option>)}</select></label>
-          {subCats.length > 0 && <label>Sub category (optional)<select value={selectedCat?.parentId ? selectedCat.name : ""} onChange={(e) => setForm((f) => ({ ...f, categoryHint: e.target.value || mainCat?.name || "" }))}><option value="">Not sure / general</option>{subCats.map((c) => <option key={c.id} value={c.name}>{c.name}</option>)}</select></label>}
-          <label>Brand (optional)<input value={form.brand} onChange={set("brand")} maxLength={100} /></label>
-          <label>Coupon code (optional)<input value={form.couponCode} onChange={set("couponCode")} maxLength={50} /></label>
-          <label className={styles.wide}>Description<textarea rows={4} value={form.description} onChange={set("description")} required minLength={10} maxLength={2000} /></label>
-          {fetched && (
-            <div className={`${styles.wide} ${styles.card}`} style={{ background: "var(--md-neutral-blue-50)" }} aria-label="Fetched details">
-              <strong style={{ display: "flex", alignItems: "center", gap: 8 }}>
+      {deals && <div className={styles.dealLayout}>
+        <section className={`${styles.card} ${styles.dealFormCard}`} id="submit-deal">
+          <form className={styles.dealForm} onSubmit={submitDeal}>
+            <div className={styles.dealStep}>
+              <h2><span>1</span> Product Link</h2>
+              <p>Paste the product page link and we’ll fetch the details for you.</p>
+              <label className={styles.dealWide}>Product URL<input type="url" value={form.productUrl} onChange={set("productUrl")} required placeholder="https://www.store.com/product..." /></label>
+              <div className={styles.dealActions}>
+                <button type="button" className={styles.primary} disabled={busy || fetching || !form.productUrl} onClick={() => void fetchFromLink()}>{fetching ? "Fetching details…" : "↻ Fetch details"}</button>
+                <span className={styles.hint}>or</span>
+                <button type="button" className={styles.secondary} disabled={busy || fetching} onClick={() => titleInput.current?.focus()}>✎ Add details manually</button>
+                <button type="button" className={styles.secondary} disabled={busy || fetching} onClick={resetDealForm}>Reset</button>
+                {profile?.email && <button type="button" className={styles.secondary} onClick={restoreLocalDraft}>Restore draft</button>}
+              </div>
+              {submitMsg && <div className={submitMsg.ok ? styles.ok : styles.err} role="status">{submitMsg.text}</div>}
+              {fetched && <div className={styles.fetchNotice}>Fetched from {fetched.store || "the product page"}. {fetched.notes.join(" ")}</div>}
+            </div>
+            {editing?.rejectionReason && <p className={styles.reason}>Why it was not approved: {editing.rejectionReason}</p>}
+            <div className={styles.dealStep}>
+              <h2><span>2</span> Deal Details</h2>
+              <label className={styles.dealWide}>Deal title <b aria-hidden="true">*</b><input ref={titleInput} value={form.title} onChange={set("title")} required minLength={3} maxLength={200} placeholder="e.g. Wireless headphones — 60% off" /></label>
+              <div className={styles.dealGrid3}>
+                <label>Deal price (₹) <b aria-hidden="true">*</b><input inputMode="decimal" value={form.price} onChange={set("price")} required pattern="[0-9]+(\.[0-9]{1,2})?" placeholder="e.g. 1,499" /></label>
+                <label>MRP (₹, optional)<input inputMode="decimal" value={form.mrp} onChange={set("mrp")} pattern="[0-9]+(\.[0-9]{1,2})?" placeholder="e.g. 4,999" /></label>
+                <label>Discount<div className={styles.discountField}>{discount === null ? "—" : `${discount}% off`}</div></label>
+                <label className={styles.merchantLabel}>Store / Merchant
+                  <span className={styles.merchantControl}>
+                    {selectedMerchant?.logoUrl && <>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={selectedMerchant.logoUrl} alt={`${selectedMerchant.name} logo`} referrerPolicy="no-referrer" />
+                    </>}
+                    <input
+                      role="combobox"
+                      aria-autocomplete="list"
+                      aria-expanded={merchantOptionsOpen && matchingMerchants.length > 0}
+                      aria-controls="merchant-website-options"
+                      autoComplete="off"
+                      value={form.merchantName}
+                      onFocus={() => setMerchantOptionsOpen(true)}
+                      onBlur={() => window.setTimeout(() => setMerchantOptionsOpen(false), 120)}
+                      onChange={(event) => { set("merchantName")(event); setMerchantOptionsOpen(true); }}
+                      maxLength={100}
+                      placeholder="Search merchant or website"
+                    />
+                    {merchantOptionsOpen && matchingMerchants.length > 0 && <span className={styles.merchantOptions} id="merchant-website-options" role="listbox">
+                      {matchingMerchants.map((merchant) => <button
+                        type="button"
+                        key={merchant.id}
+                        role="option"
+                        aria-selected={selectedMerchant?.id === merchant.id}
+                        onMouseDown={(event) => event.preventDefault()}
+                        onClick={() => { setForm((current) => ({ ...current, merchantName: merchant.name })); setMerchantOptionsOpen(false); }}
+                      >
+                        {merchant.logoUrl ? <>
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={merchant.logoUrl} alt="" referrerPolicy="no-referrer" />
+                        </> : <span className={styles.merchantLogoFallback}>{merchant.name.slice(0, 1).toUpperCase()}</span>}
+                        <span><b>{merchant.name}</b><small>{merchant.domain}</small></span>
+                      </button>)}
+                    </span>}
+                  </span>
+                  {selectedMerchant && <small className={styles.merchantMapped}>✓ Matched to {selectedMerchant.domain}; merchant logo will be available to reviewers.</small>}
+                </label>
+                <label>Brand (optional)<input value={form.brand} onChange={set("brand")} maxLength={100} placeholder="e.g. boAt" /></label>
+                <label>Coupon code (optional)<input value={form.couponCode} onChange={set("couponCode")} maxLength={50} placeholder="e.g. BOAT20" /></label>
+              </div>
+              <div className={styles.dealGrid2}>
+                <label>Main category <b aria-hidden="true">*</b><select value={mainCat?.name ?? ""} onChange={(e) => setForm((f) => ({ ...f, categoryHint: e.target.value }))} required><option value="">Choose a category</option>{categories.filter((category) => !category.parentId).map((category) => <option key={category.id} value={category.name}>{category.name}</option>)}</select></label>
+                {subCats.length > 0 ? <label>Sub-category (optional)<select value={selectedCat?.parentId ? selectedCat.name : ""} onChange={(e) => setForm((f) => ({ ...f, categoryHint: e.target.value || mainCat?.name || "" }))}><option value="">Select sub-category</option>{subCats.map((category) => <option key={category.id} value={category.name}>{category.name}</option>)}</select></label> : <div />}
+              </div>
+            </div>
+            <div className={styles.dealStep}>
+              <h2><span>3</span> Description</h2>
+              <label className={styles.dealWide}>Deal details<textarea rows={5} value={form.description} onChange={set("description")} required minLength={10} maxLength={2000} placeholder="Add key details, offer terms, validity, or why it’s a good buy..." /><small className={styles.counter}>{form.description.length} / 2,000</small></label>
+            </div>
+            <div className={styles.dealStep}>
+              <h2><span>4</span> Product Images</h2>
+              {fetched?.images?.length ? <div className={styles.imageChoices} aria-label="Choose a fetched product image">{[...new Set(fetched.images)].slice(0, 4).map((src) => <button type="button" key={src} aria-pressed={pickedImage === src} onClick={() => { setPickedImage(src); setImage(null); }} title="Use this product image">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                {fetched.logoUrl && <img src={fetched.logoUrl} alt="" height={24} style={{ maxHeight: 24, maxWidth: 90, objectFit: "contain" }} />}
-                Fetched from {fetched.store || "the store page"}
-              </strong>
-              {fetched.images.length > 0 ? (
-                <>
-                  <div className={styles.hint}>Choose the product picture (or upload your own below):</div>
-                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 6 }}>
-                    {fetched.images.map((src) => (
-                      <button type="button" key={src} onClick={() => setPickedImage(src)} aria-pressed={pickedImage === src} style={{ border: pickedImage === src ? "2px solid var(--md-purple-600)" : "1px solid var(--md-purple-200)", borderRadius: 8, padding: 2, background: "var(--md-white)", cursor: "pointer" }}>
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={src} alt="Product option" width={72} height={72} referrerPolicy="no-referrer" style={{ objectFit: "contain" }} />
-                      </button>
-                    ))}
-                  </div>
-                </>
-              ) : <div className={styles.hint}>No picture found. Please upload one below.</div>}
-              {fetched.notes.map((n) => <div key={n} className={styles.hint}>• {n}</div>)}
+                <img src={src} alt="Fetched product option" referrerPolicy="no-referrer" />
+              </button>)}</div> : <p className={styles.hint}>Choose a product image, or upload one from your device.</p>}
+              <div className={styles.uploadRow}>
+                <button type="button" className={styles.uploadBox} onClick={() => fileInput.current?.click()} onDragOver={(e) => e.preventDefault()} onDrop={(e) => { e.preventDefault(); chooseUpload(e.dataTransfer.files[0]); }}><span aria-hidden="true">▧</span><strong>{image ? "Replace image" : "Upload image"}</strong><small>JPEG, PNG or WebP · up to 5 MB</small><small>Drag a file here or paste with Ctrl+V</small></button>
+                {(image || pickedImage) && <div className={styles.imagePreview}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={image ? uploadedPreview : pickedImage} alt="Selected product" />
+                  <button type="button" onClick={() => { setImage(null); setPickedImage(""); if (fileInput.current) fileInput.current.value = ""; }} aria-label="Remove selected image">×</button>
+                </div>}
+              </div>
+              <input ref={fileInput} type="file" accept="image/png,image/jpeg,image/webp" hidden onChange={(e) => chooseUpload(e.target.files?.[0])} />
             </div>
-          )}
-          <div className={styles.wide} style={{ display: "grid", gap: 6 }}>
-            <strong style={{ fontSize: 14 }}>Product image</strong>
-            <div className={styles.actions}>
-              <button type="button" className={styles.secondary} onClick={() => fileInput.current?.click()}>Upload picture</button>
-              <span className={styles.hint}>{image ? `Selected: ${image.name}` : editing ? "Leave empty to keep the current one." : pickedImage ? "Optional: the picture chosen above is used otherwise." : "JPEG, PNG or WebP, up to 5 MB. You can also press Ctrl+V to paste a copied image."}</span>
+            <div className={styles.dealSubmit}>
+              <button type="button" className={styles.secondary} onClick={saveLocalDraft}>▣ Save as Draft</button>
+              <div className={styles.dealActions}>
+                {editing && <button type="button" className={styles.secondary} onClick={() => { setEditing(null); setForm(emptyForm); }}>Cancel</button>}
+                <button className={styles.primary} disabled={busy}>{busy ? "Sending…" : editing ? "Submit changes for review" : "➤ Submit for Review"}</button>
+              </div>
             </div>
-            <input ref={fileInput} type="file" accept="image/png,image/jpeg,image/webp" hidden onChange={(e) => setImage(e.target.files?.[0] ?? null)} />
-          </div>
-          <div className={`${styles.wide} ${styles.hint}`}>Your deal is checked by our team before it appears. Only the details you choose to publish are shown; your email is never shown. Please share only real, current deals you have checked on the store page.</div>
-          <div className={`${styles.wide} ${styles.actions}`}>
-            <button className={styles.primary} disabled={busy}>{busy ? "Sending…" : editing ? "Resubmit for review" : "Submit for review"}</button>
-            {editing && <button type="button" className={styles.secondary} onClick={() => { setEditing(null); setForm(emptyForm); }}>Cancel</button>}
-            {submitMsg && <span className={submitMsg.ok ? styles.ok : styles.err} role="status">{submitMsg.text}</span>}
-          </div>
-        </form>
-      </section>}
+          </form>
+        </section>
+        <aside className={styles.dealSidebar}>
+          <section className={styles.sideCard}><h2>💡 Tips for a great deal</h2><ul><li>Use the product page link from the retailer.</li><li>Add a clear, concise title.</li><li>Include the deal price and MRP when available.</li><li>Mention coupon codes and offer terms.</li><li>Upload a clear product image.</li><li>Share a genuine, current offer.</li></ul></section>
+          <section className={styles.sideCard}><h2>♧ How it works</h2><ol><li><b>Post your deal</b><small>Share the link and available details.</small></li><li><b>Our team reviews it</b><small>We verify the information before publication.</small></li><li><b>Get it published</b><small>Approved deals are published by our team.</small></li></ol></section>
+          <p className={styles.privateNote}>Your submission stays private until approved. Your email is never shown publicly.</p>
+        </aside>
+      </div>}
 
       {deals && <section className={styles.card} id="my-submissions">
         <h2>My submissions</h2>
+        <div className={styles.actions} role="group" aria-label="Filter my deals" style={{ marginBottom: 12, flexWrap: "wrap" }}>
+          {([["all", "All"], ["PENDING_REVIEW", "Awaiting review"], ["APPROVED", "Approved"], ["LIVE", "Live"], ["REJECTED", "Rejected"], ["EXPIRED", "Expired"], ["ARCHIVED", "Archived"]] as const).map(([key, label]) => (
+            <button key={key} type="button" className={styles.secondary} aria-pressed={filter === key} style={filter === key ? { fontWeight: 700 } : undefined} onClick={() => setFilter(key)}>{label}</button>
+          ))}
+        </div>
         <div className={styles.list}>
-          {submissions.map((s) => (
+          {submissions.filter((s) => filter === "all" || (filter === "EXPIRED" || filter === "ARCHIVED" ? s.dealState === filter : filter === "LIVE" ? s.dealState === "LIVE" : filter === "APPROVED" ? s.stage === "APPROVED" || s.stage === "LIVE" : s.stage === filter)).map((s) => (
             <article className={styles.item} key={s.id}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={s.imageUrl} alt="" />

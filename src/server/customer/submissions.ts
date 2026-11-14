@@ -7,6 +7,7 @@ import { resubmitSchema, submissionSchema, type SubmissionInput } from "@/featur
 import { CustomerError, limitCustomerRequests } from "./service";
 import { downloadImageFromUrl } from "./product-fetch";
 import { assertActiveCustomer } from "./session";
+import { assertNotRestrictedByCustomer } from "@/server/community/restrictions";
 
 /** Same product link with tracking/affiliate parameters, fragments and trailing slashes removed. */
 export function canonicalProductUrl(raw: string): string {
@@ -34,6 +35,8 @@ function present(row: Prisma.CommunityDealSubmissionGetPayload<{ select: typeof 
     // Customers see a simple label; internal draft/publish steps stay private.
     stage: row.status === "REJECTED" ? "REJECTED" : row.status === "PENDING_REVIEW" ? "PENDING_REVIEW" : live ? "LIVE" : "APPROVED",
     dealSlug: live && deal?.status === "PUBLISHED" ? deal.slug : null,
+    // Coarse state of the deal once it has gone live, so the member can see that it expired or was taken down.
+    dealState: !live ? null : deal?.status === "PUBLISHED" ? "LIVE" : deal?.status === "EXPIRED" ? "EXPIRED" : "ARCHIVED",
     imageUrl: `/api/v1/customer/submissions/${row.id}/image`,
   };
 }
@@ -56,6 +59,7 @@ async function assertNotAlreadyListed(productUrl: string) {
 
 export async function createSubmission(customerId: string, rawFields: unknown, imageBytes: Buffer | null) {
   const customer = await assertActiveCustomer(customerId);
+  await assertNotRestrictedByCustomer(customer.id); // a moderator's posting restriction also covers community deal submissions
   const input: SubmissionInput = submissionSchema.parse(rawFields); // invalid payloads are cheap and do not use up the quota
   await limitCustomerRequests(`submit:${customer.id}`, 5, 3600);
   await limitCustomerRequests(`submit-day:${customer.id}`, 15, 86_400);
@@ -112,6 +116,7 @@ export async function getOwnSubmissionImage(customerId: string, id: string) {
 /** Only a rejected submission can be fixed and sent again; it goes back to the review queue. */
 export async function resubmit(customerId: string, id: string, rawFields: unknown, rawVersion: unknown, imageBytes: Buffer | null) {
   const customer = await assertActiveCustomer(customerId);
+  await assertNotRestrictedByCustomer(customer.id);
   const { version } = resubmitSchema.parse({ version: rawVersion });
   const input = submissionSchema.parse(rawFields);
   await limitCustomerRequests(`submit:${customer.id}`, 5, 3600);

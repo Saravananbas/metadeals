@@ -2,6 +2,34 @@
 
 Last updated: 2026-11-11
 
+## 2026-11-14 continuation validation
+
+| Check | Result | Evidence / limits |
+|---|---|---|
+| TypeScript | PASS | `npx tsc --noEmit`, exit 0. |
+| Focused admin navigation ESLint | PASS | `npx eslint src/components/admin/AdminNav.tsx src/app/admin/components/admin-dashboard.tsx`, exit 0. |
+| Focused diff whitespace | PASS | `git diff --check` on the three navigation files; only CRLF conversion notices. |
+| Community integration tests | BLOCKED / SKIPPED | `node --conditions=react-server --import tsx --test tests/community-forum.test.ts tests/community-submissions.test.ts` reported 14 skipped, 0 executed; disposable DB env flags/services absent. |
+| App startup | FAIL | `npm run dev` exited before Next.js: Python extractor health check could not reach 127.0.0.1:8765. |
+| Docker | BLOCKED | `docker ps` returned permission denied for the Docker Desktop Linux engine named pipe. |
+| Local services | NOT VERIFIED | Read-only checks show required ports 4123, 8765, 55432, 3306 and 6380 not listening/reachable from this session. |
+| Browser UI (initial attempt) | NOT VERIFIED | Sandbox browser could not reach loopback during the initial check; see 2026-11-14 reconciliation below for later elevated local verification. |
+
+## Reconciliation — 2026-11-14
+
+| Check | Result | Evidence / limits |
+|---|---|---|
+| Existing development runtime | PASS | Existing `D:\Metadeals` launcher already owns port 4123; `/admin/login` returned 200 and Python extractor health was reported healthy at 127.0.0.1:8765. No duplicate process started. |
+| Admin navigation presence | PASS | Browser rendered the admin navigation including the foundation, intelligence, deal, merchant, affiliate, analytics and community destinations. |
+| Admin navigation horizontal overflow | PASS | Fixed responsive wrapping at 1280px; live document width 1273px within 1280px viewport; More menu opened without horizontal overflow. |
+| TypeScript | PASS | `npx tsc --noEmit` exit 0. |
+| Focused lint | PASS | `npx eslint src/components/admin/AdminNav.tsx src/app/admin/components/admin-dashboard.tsx` exit 0. |
+| Diff whitespace check | PASS | `git diff --check` for navigation files exit 0. |
+| Community DB integration tests | NOT VERIFIED | Focused test command exited 0 with 14 tests skipped (no disposable `FORUM_TEST_DB` / `COMMUNITY_TEST_DB` configured); 0 tests executed. |
+| Docker / DB service control | NOT VERIFIED | Docker named-pipe access denied; no persistent or disposable database migration was run. |
+| Moderator implementation | NOT STARTED | Architecture audit and safe implementation plan only; no schema or code changes. |
+| Moderator authorization/migrations | NOT RUN | Phase 1 audit only; no moderator implementation or schema migration added. Disposable PostgreSQL/MariaDB unavailable. |
+
 ## 2026-11-11 deterministic Python extraction integration
 
 | Check | Result | Evidence / limits |
@@ -111,3 +139,9 @@ pm run typecheck: PASS after the directory-backed merchant UI and public/mobile 
 - Directory mapping/logo enrichment and carousel/gallery interaction: NOT VERIFIED end to end; Docker Desktop CLI is currently inaccessible and no persistent DB migrations were applied.
 - Multi-image model/import/API/UI implementation is present in source. Migration validation is restricted to disposable PostgreSQL/MariaDB databases.
 
+## Community moderator validation (2026-11-14, disposable MariaDB `metadeals_modtest`)
+- PASS: all migrations apply from scratch including `20261126100000_community_moderator` (additive; no DROP/DELETE/RENAME statements).
+- PASS: `moderator-permissions` (2), `moderator-system` (1 large scenario test), `moderator-routes` (1, real sessions against route handlers), `community-forum` (9), `community-submissions` (5, with fixtures seeded), `member-profile`, `messages`, `member-extras`, `design-tokens`.
+- Full suite, one file at a time with every database gate on: 228 pass, 7 fail, 1 skipped. FAIL (environment): `m11-queue-scheduler` x6 and `m12.1-security-hardening` x1 need a Redis server (REDIS_URL / BullMQ); not available here; those sources were not changed. SKIPPED: `public-comments.integration`.
+- PASS: `npx tsc --noEmit`; ESLint 0 errors on changed files.
+- NOT VERIFIED: browser rendering of /moderator, /admin/moderators, /community/moderator-invite, /community/moderation (no admin/moderator session could be driven); PostgreSQL execution of the new migration; Docker/Redis-dependent suites.

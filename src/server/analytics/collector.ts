@@ -1,5 +1,5 @@
 import "server-only";
-import { createHmac } from "node:crypto";
+import { createHmac, randomBytes } from "node:crypto";
 import { z } from "zod";
 import { getServerSession } from "next-auth";
 import { getAuthEnv } from "@/config/env";
@@ -9,6 +9,9 @@ import { getCustomerAuthOptions } from "@/server/customer/options";
 import { classifyPath, parseUserAgent, referrerHostOf } from "./ua";
 
 export const SESSION_COOKIE = "md_sid";
+/** Long-lived random visitor code, set only after the visitor accepted analytics; lets unique visitors be counted across days. */
+export const VISITOR_COOKIE = "md_vid";
+export const VISITOR_COOKIE_DAYS = 180;
 const SESSION_IDLE_MS = 30 * 60 * 1000;
 const CLIENT_EVENT_TYPES = ["PAGE_VIEW", "HEARTBEAT", "COUPON_COPY", "SHARE", "LIKE", "COMMENT", "MODAL_OPEN", "SEARCH"] as const;
 
@@ -28,7 +31,11 @@ export const collectSchema = z.object({
 }).strict();
 export type CollectInput = z.infer<typeof collectSchema>;
 
-export type RequestFacts = { ip: string; userAgent: string; host: string | null; purpose: string | null; sessionCookie: string | null };
+export type RequestFacts = { ip: string; userAgent: string; host: string | null; purpose: string | null; sessionCookie: string | null; visitorCookie?: string | null };
+
+const VISITOR_ID = /^[0-9a-f]{32}$/;
+/** The stored value is a keyed hash, so the database never holds the code that sits in the visitor's browser. */
+export const visitorKeyOf = (id: string) => createHmac("sha256", `${getAuthEnv().AUTH_SESSION_SECRET}:analytics-vid`).update(id).digest("hex").slice(0, 32);
 
 // shortcut: per-process throttle resets on restart; fine for a single Node instance.
 const hits = new Map<string, { count: number; resetAt: number }>();
@@ -68,7 +75,7 @@ async function customerIdFromSession() {
   }
 }
 
-export type CollectResult = { ok: true; skipped?: boolean; eventId?: string; sessionId?: string | null; clearCookie?: boolean };
+export type CollectResult = { ok: true; skipped?: boolean; eventId?: string; sessionId?: string | null; clearCookie?: boolean; newVisitorId?: string; clearVisitorCookie?: boolean };
 
 export async function collect(input: CollectInput, facts: RequestFacts): Promise<CollectResult> {
   if (isCrawlerOrPrefetch(facts.userAgent || null, facts.purpose) || input.path.startsWith("/admin") || input.path.startsWith("/api")) {
@@ -96,9 +103,13 @@ export async function collect(input: CollectInput, facts: RequestFacts): Promise
   const deal = dealKey ? await lookupDeal(dealKey) : null;
   const referrerHost = referrerHostOf(input.referrer, facts.host);
 
+  let newVisitorId: string | undefined;
   if (input.consent && !session) {
+    const knownId = facts.visitorCookie && VISITOR_ID.test(facts.visitorCookie) ? facts.visitorCookie : null;
+    if (!knownId) newVisitorId = randomBytes(16).toString("hex");
     session = await db.analyticsSession.create({
       data: {
+        visitorKey: visitorKeyOf(knownId ?? newVisitorId!),
         entryPath: input.path,
         exitPath: input.path,
         referrerHost,
@@ -135,7 +146,7 @@ export async function collect(input: CollectInput, facts: RequestFacts): Promise
   if (session && input.type === "PAGE_VIEW") {
     await db.analyticsSession.update({ where: { id: session.id }, data: { pageCount: { increment: 1 }, exitPath: input.path, lastSeenAt: now } });
   }
-  return { ok: true, eventId: event.id, sessionId: session?.id ?? null, clearCookie: !input.consent };
+  return { ok: true, eventId: event.id, sessionId: session?.id ?? null, clearCookie: !input.consent, newVisitorId, clearVisitorCookie: !input.consent };
 }
 
 /** Called from the /go redirect: ties the Buy Now click to the visit when the visitor accepted cookies. */

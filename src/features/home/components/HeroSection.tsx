@@ -1,18 +1,13 @@
 import Image from "next/image";
-import { CalendarCheck, HeartHandshake, Search, ShieldCheck, Zap } from "lucide-react";
+import { CalendarCheck, HeartHandshake, ShieldCheck, Zap } from "lucide-react";
 import { TrendingSearches } from "./TrendingSearches";
 
-export function HeroSection({ query, onQuery, onSearch }: { query: string; onQuery: (query: string) => void; onSearch: (query: string) => void }) {
+export function HeroSection({ onSearch }: { onSearch: (query: string) => void }) {
   return <section className="hero" aria-labelledby="hero-title"><div className="hero-inner">
     <div className="hero-copy">
       <span className="hero-eyebrow">🔥 India’s Deals Destination</span>
       <h1 id="hero-title">The Best Deals.<br />The <span>Smartest Savings.</span></h1>
       <p>Discover handpicked deals, exclusive offers and big discounts<br className="wide-break" /> from Amazon, Flipkart and top online stores.</p>
-      <form className="hero-search" role="search" onSubmit={(event) => { event.preventDefault(); onSearch(query); }}>
-        <Search size={22} aria-hidden="true" /><label className="sr-only" htmlFor="deal-search">Search deals by product or brand</label>
-        <input id="deal-search" type="search" value={query} onChange={(event) => onQuery(event.target.value)} placeholder="Search for deals, products or brands..." autoComplete="off" />
-        <button type="submit">Search</button>
-      </form>
       <TrendingSearches onSearch={onSearch} />
     </div>
     <div className="hero-art" role="img" aria-label="Laptop, smartphone, headphones, smartwatch and shopping bag">

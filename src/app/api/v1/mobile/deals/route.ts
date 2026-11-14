@@ -78,6 +78,8 @@ export async function GET(request: NextRequest) {
       rating: d.rating,
       reviewCount: d.reviewCount,
       ratingSource: d.ratingSource,
+      viewCount: d.viewCount ?? 0,
+      shareCount: d.shareCount ?? 0,
       outboundUrl: `${baseUrl}/go/${d.slug}?c=mobile`,
       expiresAt: d.expiresAt,
     })),

@@ -116,3 +116,44 @@ test("collect records anonymous and consented visits, ignores bots, and rollup s
     await disconnectDatabase();
   }
 });
+
+test("unique visitors: one long-lived code per accepting browser, stored only as a hash, none without consent", { skip: process.env.ANALYTICS_TEST_DB === "1" ? false : "set ANALYTICS_TEST_DB=1 to run against the local database" }, async () => {
+  await import("dotenv/config");
+  const { getDatabase, disconnectDatabase } = await import("../src/server/db/client");
+  const { collect, visitorKeyOf } = await import("../src/server/analytics/collector");
+  const db = getDatabase();
+  const facts = { ip: "9.9.9.8", userAgent: "Mozilla/5.0 (Windows NT 10.0) Chrome/120 Safari/537", host: "localhost:4123", purpose: null, sessionCookie: null, visitorCookie: null as string | null };
+  const ids: string[] = [];
+  try {
+    const first = await collect({ type: "PAGE_VIEW", path: "/", consent: true }, facts);
+    ids.push(first.sessionId!);
+    assert.match(first.newVisitorId ?? "", /^[0-9a-f]{32}$/, "a new accepting browser gets a visitor code");
+    const row1 = await db.analyticsSession.findUniqueOrThrow({ where: { id: first.sessionId! } });
+    assert.equal(row1.visitorKey, visitorKeyOf(first.newVisitorId!));
+    assert.notEqual(row1.visitorKey, first.newVisitorId, "the database never stores the code itself");
+
+    // A visit days later with the same code is a new session for the SAME visitor, and gets no new code.
+    const later = await collect({ type: "PAGE_VIEW", path: "/deals", consent: true }, { ...facts, visitorCookie: first.newVisitorId! });
+    ids.push(later.sessionId!);
+    assert.equal(later.newVisitorId, undefined);
+    assert.equal((await db.analyticsSession.findUniqueOrThrow({ where: { id: later.sessionId! } })).visitorKey, row1.visitorKey);
+    const distinct = await db.analyticsSession.findMany({ where: { id: { in: ids } }, select: { visitorKey: true }, distinct: ["visitorKey"] });
+    assert.equal(distinct.length, 1, "two sessions, one unique visitor");
+
+    // A forged or malformed cookie is ignored (a fresh code is issued instead).
+    const forged = await collect({ type: "PAGE_VIEW", path: "/", consent: true }, { ...facts, ip: "9.9.9.7", visitorCookie: "not-a-valid-code" });
+    ids.push(forged.sessionId!);
+    assert.match(forged.newVisitorId ?? "", /^[0-9a-f]{32}$/);
+
+    // Without consent there is no session, no code, and the old code is cleared.
+    const declined = await collect({ type: "PAGE_VIEW", path: "/", consent: false }, { ...facts, visitorCookie: first.newVisitorId! });
+    assert.equal(declined.newVisitorId, undefined);
+    assert.equal(declined.clearVisitorCookie, true);
+    assert.equal(declined.sessionId, null);
+  } finally {
+    await db.analyticsEvent.deleteMany({ where: { sessionId: { in: ids } } });
+    await db.analyticsSession.deleteMany({ where: { id: { in: ids } } });
+    await db.analyticsEvent.deleteMany({ where: { path: "/", visitorHash: { not: "" }, createdAt: { gte: new Date(Date.now() - 120_000) } } });
+    await disconnectDatabase();
+  }
+});

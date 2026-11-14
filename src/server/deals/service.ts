@@ -24,9 +24,20 @@ export async function getAdminDeal(db: DealDatabase, id: string) {
   if (!deal) throw new DealError("Deal not found.", 404);
   return deal;
 }
-export async function saveDeal(db: DealDatabase, actor: DealActor, raw: unknown, id?: string, version?: number) {
-  await assertDealPermission(db, actor, id ? "deal:edit" : "deal:create");
+/**
+ * moderatorDraft: used only when a community moderator approves a member's submission. It allows exactly one thing: creating a NEW deal as a DRAFT with
+ * no affiliate link and no purchase options. Anything else (editing, any other status, affiliate data) is refused, so this can never publish.
+ */
+export type SaveDealOptions = { moderatorDraft?: boolean };
+export async function saveDeal(db: DealDatabase, actor: DealActor, raw: unknown, id?: string, version?: number, saveOptions: SaveDealOptions = {}) {
+  if (saveOptions.moderatorDraft) {
+    if (id) throw new DealError("Moderators cannot edit deals.", 403);
+    await assertDealPermission(db, actor, "mod:submission:review");
+  } else await assertDealPermission(db, actor, id ? "deal:edit" : "deal:create");
   const input = dealInputSchema.parse(raw);
+  if (saveOptions.moderatorDraft && (input.status !== "DRAFT" || input.affiliateUrl || input.options.length || input.publishedAt || input.featured || input.trending)) {
+    throw new DealError("Moderators can only create a plain draft.", 403);
+  }
   const before = id ? await getAdminDeal(db, id) : null;
   if (before?.status === "ARCHIVED") throw new DealError("Archived deals cannot be edited.", 409);
   if (before && before.version !== version) throw new DealError("This deal changed. Reload before saving.", 409);
@@ -102,6 +113,28 @@ export async function changeDealState(db: DealDatabase, actor: DealActor, id: st
   if (result.count !== 1) throw new DealError("Concurrent edit. Reload first.", 409);
   const after = await getAdminDeal(db, id);
   await audit(db, actor, `deal.${action === "publish" ? "published" : "archived"}`, id, before, after);
+  return after;
+}
+
+export async function setDealExpired(db: DealDatabase, actor: DealActor, id: string, expired: boolean, version: number) {
+  await assertDealPermission(db, actor, "deal:publish");
+  const before = await getAdminDeal(db, id);
+  if (before.version !== version) throw new DealError("This deal changed. Reload first.", 409);
+  if (!before.everPublished || !["PUBLISHED", "EXPIRED"].includes(before.status)) {
+    throw new DealError("Only previously published deals can be marked active or expired.", 409);
+  }
+  if (!expired && before.expiresAt && before.expiresAt <= new Date()) {
+    throw new DealError("The scheduled expiry has passed. Update the expiry date before reactivating this deal.", 409);
+  }
+  const nextStatus = expired ? "EXPIRED" : "PUBLISHED";
+  if (before.status === nextStatus) return before;
+  const changed = await db.deal.updateMany({
+    where: { id, version, status: before.status },
+    data: { status: nextStatus, updatedById: actor.id, version: { increment: 1 } },
+  });
+  if (changed.count !== 1) throw new DealError("Concurrent edit. Reload first.", 409);
+  const after = await getAdminDeal(db, id);
+  await audit(db, actor, expired ? "deal.expired" : "deal.reactivated", id, before, after);
   return after;
 }
 export async function saveTaxonomy(db: DealDatabase, actor: DealActor, kind: "categories" | "merchants", raw: unknown, id?: string) {

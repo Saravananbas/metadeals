@@ -2,6 +2,7 @@ import "server-only";
 import type { Prisma } from "@/generated/prisma/client";
 import type { ListingInput } from "@/features/deals/validation";
 import { minorSavings } from "@/features/deals/validation";
+import { searchDealIdsMariaDb, usesMariaDb } from "@/server/community/like-search";
 
 export type DealDatabase = Prisma.TransactionClient;
 export const merchantSelect = { id: true, slug: true, name: true, websiteUrl: true, affiliateHosts: true, createdAt: true, updatedAt: true } as const;
@@ -34,13 +35,10 @@ const SEARCH_SYNONYMS: Record<string, string[]> = {
   television: ["tv", "television"],
 };
 
-export function buildSearchFilter(query?: string): Prisma.DealWhereInput {
-  if (!query || !query.trim()) return {};
-  const words = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
-  if (!words.length) return {};
-
-  return {
-    AND: words.map((word) => {
+/** One group per typed word: the word, its singular form and synonyms. A deal must match every group. */
+export function searchGroups(query?: string): string[][] {
+  if (!query || !query.trim()) return [];
+  return query.trim().toLowerCase().split(/\s+/).filter(Boolean).map((word) => {
       const singular = word.endsWith("ies")
         ? word.slice(0, -3) + "y"
         : word.endsWith("es")
@@ -48,10 +46,17 @@ export function buildSearchFilter(query?: string): Prisma.DealWhereInput {
         : word.endsWith("s")
         ? word.slice(0, -1)
         : word;
-      const variations = Array.from(
+      return Array.from(
         new Set([word, singular, ...(SEARCH_SYNONYMS[word] || []), ...(SEARCH_SYNONYMS[singular] || [])])
       ).filter((v) => v.length > 1);
+  }).filter((g) => g.length);
+}
 
+export function buildSearchFilter(query?: string): Prisma.DealWhereInput {
+  const groups = searchGroups(query);
+  if (!groups.length) return {};
+  return {
+    AND: groups.map((variations) => {
       return {
         OR: variations.flatMap((v) => [
           { title: { contains: v, mode: "insensitive" as const } },
@@ -68,8 +73,15 @@ export function buildSearchFilter(query?: string): Prisma.DealWhereInput {
 
 export function publicWhere(input: ListingInput, now = new Date()): Prisma.DealWhereInput {
   return {
-    status: "PUBLISHED", publishedAt: { lte: now },
-    AND: [{ OR: [{ startsAt: null }, { startsAt: { lte: now } }] }, { OR: [{ expiresAt: null }, { expiresAt: { gt: now } }] }],
+    OR: [
+      {
+        status: "PUBLISHED", publishedAt: { lte: now },
+        AND: [{ OR: [{ startsAt: null }, { startsAt: { lte: now } }] }, { OR: [{ expiresAt: null }, { expiresAt: { gt: now } }] }],
+      },
+      // Expired offers remain discoverable for transparency, but the outbound
+      // redirect service independently refuses purchases for this status.
+      { status: "EXPIRED", publishedAt: { lte: now } },
+    ],
     ...(input.category ? { category: { OR: [{ slug: input.category }, { parent: { slug: input.category } }] } } : {}),
     ...(input.store ? { merchant: { slug: input.store } } : {}),
     ...(input.view === "featured" ? { featured: true } : {}),
@@ -81,6 +93,7 @@ export function publicWhere(input: ListingInput, now = new Date()): Prisma.DealW
 export function publicDeal(record: DealRecord, merchantLogoUrl: string | null = null) {
   return {
     id: record.id, slug: record.slug, title: record.title, brand: record.brand, description: record.description,
+    status: record.status,
     category: { id: record.category.id, slug: record.category.slug, name: record.category.name },
     merchant: { id: record.merchant.id, slug: record.merchant.slug, name: record.merchant.name, logoUrl: merchantLogoUrl },
     image: { url: `/api/v1/media/${record.mediaId}`, alt: record.media.alt, width: record.media.width, height: record.media.height },
@@ -114,7 +127,10 @@ export async function publicDealsWithMerchantLogos(db: DealDatabase, records: De
   return records.map((record) => publicDeal(record, logosByDomain.get(normalizedMerchantDomain(record.merchant.websiteUrl)) ?? null));
 }
 export async function listPublicDeals(db: DealDatabase, input: ListingInput, now = new Date()) {
-  const records = await db.deal.findMany({ where: publicWhere(input, now), include: dealInclude,
-    orderBy: [{ publishedAt: "desc" }, { id: "desc" }], ...(input.cursor ? { cursor: { id: input.cursor }, skip: 1 } : { skip: (input.page - 1) * input.limit }), take: input.limit + 1 });
-  return { data: await publicDealsWithMerchantLogos(db, records.slice(0, input.limit)), page: input.page, limit: input.limit, hasMore: records.length > input.limit, nextCursor: records.length > input.limit ? records[input.limit - 1].id : null };
+  // MariaDB rejects Prisma's generated LIKE (error 1267), so on MariaDB the text match runs as raw SQL and the rest of the filter is unchanged.
+  const groups = usesMariaDb() ? searchGroups(input.q) : [];
+  const where = groups.length ? { AND: [publicWhere({ ...input, q: "" }, now), { id: { in: await searchDealIdsMariaDb(groups) } }] } : publicWhere(input, now);
+  const [records, total] = await Promise.all([db.deal.findMany({ where, include: dealInclude,
+    orderBy: [{ publishedAt: "desc" }, { id: "desc" }], ...(input.cursor ? { cursor: { id: input.cursor }, skip: 1 } : { skip: (input.page - 1) * input.limit }), take: input.limit + 1 }), db.deal.count({ where })]);
+  return { data: await publicDealsWithMerchantLogos(db, records.slice(0, input.limit)), page: input.page, limit: input.limit, total, totalPages: Math.max(1, Math.ceil(total / input.limit)), hasMore: records.length > input.limit, nextCursor: records.length > input.limit ? records[input.limit - 1].id : null };
 }

@@ -29,12 +29,14 @@ export type AggregateForumComment = {
 export type ForumCommentAvgAggregateOutputType = {
   depth: number | null
   score: number | null
+  likeCount: number | null
   version: number | null
 }
 
 export type ForumCommentSumAggregateOutputType = {
   depth: number | null
   score: number | null
+  likeCount: number | null
   version: number | null
 }
 
@@ -47,6 +49,8 @@ export type ForumCommentMinAggregateOutputType = {
   body: string | null
   status: $Enums.ForumContentStatus | null
   score: number | null
+  likeCount: number | null
+  bodyHtml: string | null
   removalReason: string | null
   version: number | null
   createdAt: Date | null
@@ -63,6 +67,8 @@ export type ForumCommentMaxAggregateOutputType = {
   body: string | null
   status: $Enums.ForumContentStatus | null
   score: number | null
+  likeCount: number | null
+  bodyHtml: string | null
   removalReason: string | null
   version: number | null
   createdAt: Date | null
@@ -79,6 +85,8 @@ export type ForumCommentCountAggregateOutputType = {
   body: number
   status: number
   score: number
+  likeCount: number
+  bodyHtml: number
   removalReason: number
   version: number
   createdAt: number
@@ -91,12 +99,14 @@ export type ForumCommentCountAggregateOutputType = {
 export type ForumCommentAvgAggregateInputType = {
   depth?: true
   score?: true
+  likeCount?: true
   version?: true
 }
 
 export type ForumCommentSumAggregateInputType = {
   depth?: true
   score?: true
+  likeCount?: true
   version?: true
 }
 
@@ -109,6 +119,8 @@ export type ForumCommentMinAggregateInputType = {
   body?: true
   status?: true
   score?: true
+  likeCount?: true
+  bodyHtml?: true
   removalReason?: true
   version?: true
   createdAt?: true
@@ -125,6 +137,8 @@ export type ForumCommentMaxAggregateInputType = {
   body?: true
   status?: true
   score?: true
+  likeCount?: true
+  bodyHtml?: true
   removalReason?: true
   version?: true
   createdAt?: true
@@ -141,6 +155,8 @@ export type ForumCommentCountAggregateInputType = {
   body?: true
   status?: true
   score?: true
+  likeCount?: true
+  bodyHtml?: true
   removalReason?: true
   version?: true
   createdAt?: true
@@ -244,6 +260,8 @@ export type ForumCommentGroupByOutputType = {
   body: string
   status: $Enums.ForumContentStatus
   score: number
+  likeCount: number
+  bodyHtml: string | null
   removalReason: string | null
   version: number
   createdAt: Date
@@ -283,6 +301,8 @@ export type ForumCommentWhereInput = {
   body?: Prisma.StringFilter<"ForumComment"> | string
   status?: Prisma.EnumForumContentStatusFilter<"ForumComment"> | $Enums.ForumContentStatus
   score?: Prisma.IntFilter<"ForumComment"> | number
+  likeCount?: Prisma.IntFilter<"ForumComment"> | number
+  bodyHtml?: Prisma.StringNullableFilter<"ForumComment"> | string | null
   removalReason?: Prisma.StringNullableFilter<"ForumComment"> | string | null
   version?: Prisma.IntFilter<"ForumComment"> | number
   createdAt?: Prisma.DateTimeFilter<"ForumComment"> | Date | string
@@ -293,6 +313,7 @@ export type ForumCommentWhereInput = {
   parent?: Prisma.XOR<Prisma.ForumCommentNullableScalarRelationFilter, Prisma.ForumCommentWhereInput> | null
   replies?: Prisma.ForumCommentListRelationFilter
   votes?: Prisma.ForumCommentVoteListRelationFilter
+  likes?: Prisma.ForumCommentLikeListRelationFilter
   reports?: Prisma.ForumReportListRelationFilter
 }
 
@@ -305,6 +326,8 @@ export type ForumCommentOrderByWithRelationInput = {
   body?: Prisma.SortOrder
   status?: Prisma.SortOrder
   score?: Prisma.SortOrder
+  likeCount?: Prisma.SortOrder
+  bodyHtml?: Prisma.SortOrderInput | Prisma.SortOrder
   removalReason?: Prisma.SortOrderInput | Prisma.SortOrder
   version?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -315,6 +338,7 @@ export type ForumCommentOrderByWithRelationInput = {
   parent?: Prisma.ForumCommentOrderByWithRelationInput
   replies?: Prisma.ForumCommentOrderByRelationAggregateInput
   votes?: Prisma.ForumCommentVoteOrderByRelationAggregateInput
+  likes?: Prisma.ForumCommentLikeOrderByRelationAggregateInput
   reports?: Prisma.ForumReportOrderByRelationAggregateInput
   _relevance?: Prisma.ForumCommentOrderByRelevanceInput
 }
@@ -331,6 +355,8 @@ export type ForumCommentWhereUniqueInput = Prisma.AtLeast<{
   body?: Prisma.StringFilter<"ForumComment"> | string
   status?: Prisma.EnumForumContentStatusFilter<"ForumComment"> | $Enums.ForumContentStatus
   score?: Prisma.IntFilter<"ForumComment"> | number
+  likeCount?: Prisma.IntFilter<"ForumComment"> | number
+  bodyHtml?: Prisma.StringNullableFilter<"ForumComment"> | string | null
   removalReason?: Prisma.StringNullableFilter<"ForumComment"> | string | null
   version?: Prisma.IntFilter<"ForumComment"> | number
   createdAt?: Prisma.DateTimeFilter<"ForumComment"> | Date | string
@@ -341,6 +367,7 @@ export type ForumCommentWhereUniqueInput = Prisma.AtLeast<{
   parent?: Prisma.XOR<Prisma.ForumCommentNullableScalarRelationFilter, Prisma.ForumCommentWhereInput> | null
   replies?: Prisma.ForumCommentListRelationFilter
   votes?: Prisma.ForumCommentVoteListRelationFilter
+  likes?: Prisma.ForumCommentLikeListRelationFilter
   reports?: Prisma.ForumReportListRelationFilter
 }, "id">
 
@@ -353,6 +380,8 @@ export type ForumCommentOrderByWithAggregationInput = {
   body?: Prisma.SortOrder
   status?: Prisma.SortOrder
   score?: Prisma.SortOrder
+  likeCount?: Prisma.SortOrder
+  bodyHtml?: Prisma.SortOrderInput | Prisma.SortOrder
   removalReason?: Prisma.SortOrderInput | Prisma.SortOrder
   version?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -377,6 +406,8 @@ export type ForumCommentScalarWhereWithAggregatesInput = {
   body?: Prisma.StringWithAggregatesFilter<"ForumComment"> | string
   status?: Prisma.EnumForumContentStatusWithAggregatesFilter<"ForumComment"> | $Enums.ForumContentStatus
   score?: Prisma.IntWithAggregatesFilter<"ForumComment"> | number
+  likeCount?: Prisma.IntWithAggregatesFilter<"ForumComment"> | number
+  bodyHtml?: Prisma.StringNullableWithAggregatesFilter<"ForumComment"> | string | null
   removalReason?: Prisma.StringNullableWithAggregatesFilter<"ForumComment"> | string | null
   version?: Prisma.IntWithAggregatesFilter<"ForumComment"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"ForumComment"> | Date | string
@@ -390,6 +421,8 @@ export type ForumCommentCreateInput = {
   body: string
   status?: $Enums.ForumContentStatus
   score?: number
+  likeCount?: number
+  bodyHtml?: string | null
   removalReason?: string | null
   version?: number
   createdAt?: Date | string
@@ -400,6 +433,7 @@ export type ForumCommentCreateInput = {
   parent?: Prisma.ForumCommentCreateNestedOneWithoutRepliesInput
   replies?: Prisma.ForumCommentCreateNestedManyWithoutParentInput
   votes?: Prisma.ForumCommentVoteCreateNestedManyWithoutCommentInput
+  likes?: Prisma.ForumCommentLikeCreateNestedManyWithoutCommentInput
   reports?: Prisma.ForumReportCreateNestedManyWithoutCommentInput
 }
 
@@ -412,6 +446,8 @@ export type ForumCommentUncheckedCreateInput = {
   body: string
   status?: $Enums.ForumContentStatus
   score?: number
+  likeCount?: number
+  bodyHtml?: string | null
   removalReason?: string | null
   version?: number
   createdAt?: Date | string
@@ -419,6 +455,7 @@ export type ForumCommentUncheckedCreateInput = {
   editedAt?: Date | string | null
   replies?: Prisma.ForumCommentUncheckedCreateNestedManyWithoutParentInput
   votes?: Prisma.ForumCommentVoteUncheckedCreateNestedManyWithoutCommentInput
+  likes?: Prisma.ForumCommentLikeUncheckedCreateNestedManyWithoutCommentInput
   reports?: Prisma.ForumReportUncheckedCreateNestedManyWithoutCommentInput
 }
 
@@ -428,6 +465,8 @@ export type ForumCommentUpdateInput = {
   body?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumForumContentStatusFieldUpdateOperationsInput | $Enums.ForumContentStatus
   score?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   removalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -438,6 +477,7 @@ export type ForumCommentUpdateInput = {
   parent?: Prisma.ForumCommentUpdateOneWithoutRepliesNestedInput
   replies?: Prisma.ForumCommentUpdateManyWithoutParentNestedInput
   votes?: Prisma.ForumCommentVoteUpdateManyWithoutCommentNestedInput
+  likes?: Prisma.ForumCommentLikeUpdateManyWithoutCommentNestedInput
   reports?: Prisma.ForumReportUpdateManyWithoutCommentNestedInput
 }
 
@@ -450,6 +490,8 @@ export type ForumCommentUncheckedUpdateInput = {
   body?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumForumContentStatusFieldUpdateOperationsInput | $Enums.ForumContentStatus
   score?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   removalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -457,6 +499,7 @@ export type ForumCommentUncheckedUpdateInput = {
   editedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   replies?: Prisma.ForumCommentUncheckedUpdateManyWithoutParentNestedInput
   votes?: Prisma.ForumCommentVoteUncheckedUpdateManyWithoutCommentNestedInput
+  likes?: Prisma.ForumCommentLikeUncheckedUpdateManyWithoutCommentNestedInput
   reports?: Prisma.ForumReportUncheckedUpdateManyWithoutCommentNestedInput
 }
 
@@ -469,6 +512,8 @@ export type ForumCommentCreateManyInput = {
   body: string
   status?: $Enums.ForumContentStatus
   score?: number
+  likeCount?: number
+  bodyHtml?: string | null
   removalReason?: string | null
   version?: number
   createdAt?: Date | string
@@ -482,6 +527,8 @@ export type ForumCommentUpdateManyMutationInput = {
   body?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumForumContentStatusFieldUpdateOperationsInput | $Enums.ForumContentStatus
   score?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   removalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -498,6 +545,8 @@ export type ForumCommentUncheckedUpdateManyInput = {
   body?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumForumContentStatusFieldUpdateOperationsInput | $Enums.ForumContentStatus
   score?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   removalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -535,6 +584,8 @@ export type ForumCommentCountOrderByAggregateInput = {
   body?: Prisma.SortOrder
   status?: Prisma.SortOrder
   score?: Prisma.SortOrder
+  likeCount?: Prisma.SortOrder
+  bodyHtml?: Prisma.SortOrder
   removalReason?: Prisma.SortOrder
   version?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -545,6 +596,7 @@ export type ForumCommentCountOrderByAggregateInput = {
 export type ForumCommentAvgOrderByAggregateInput = {
   depth?: Prisma.SortOrder
   score?: Prisma.SortOrder
+  likeCount?: Prisma.SortOrder
   version?: Prisma.SortOrder
 }
 
@@ -557,6 +609,8 @@ export type ForumCommentMaxOrderByAggregateInput = {
   body?: Prisma.SortOrder
   status?: Prisma.SortOrder
   score?: Prisma.SortOrder
+  likeCount?: Prisma.SortOrder
+  bodyHtml?: Prisma.SortOrder
   removalReason?: Prisma.SortOrder
   version?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -573,6 +627,8 @@ export type ForumCommentMinOrderByAggregateInput = {
   body?: Prisma.SortOrder
   status?: Prisma.SortOrder
   score?: Prisma.SortOrder
+  likeCount?: Prisma.SortOrder
+  bodyHtml?: Prisma.SortOrder
   removalReason?: Prisma.SortOrder
   version?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -583,6 +639,7 @@ export type ForumCommentMinOrderByAggregateInput = {
 export type ForumCommentSumOrderByAggregateInput = {
   depth?: Prisma.SortOrder
   score?: Prisma.SortOrder
+  likeCount?: Prisma.SortOrder
   version?: Prisma.SortOrder
 }
 
@@ -747,6 +804,20 @@ export type ForumCommentUpdateOneRequiredWithoutVotesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ForumCommentUpdateToOneWithWhereWithoutVotesInput, Prisma.ForumCommentUpdateWithoutVotesInput>, Prisma.ForumCommentUncheckedUpdateWithoutVotesInput>
 }
 
+export type ForumCommentCreateNestedOneWithoutLikesInput = {
+  create?: Prisma.XOR<Prisma.ForumCommentCreateWithoutLikesInput, Prisma.ForumCommentUncheckedCreateWithoutLikesInput>
+  connectOrCreate?: Prisma.ForumCommentCreateOrConnectWithoutLikesInput
+  connect?: Prisma.ForumCommentWhereUniqueInput
+}
+
+export type ForumCommentUpdateOneRequiredWithoutLikesNestedInput = {
+  create?: Prisma.XOR<Prisma.ForumCommentCreateWithoutLikesInput, Prisma.ForumCommentUncheckedCreateWithoutLikesInput>
+  connectOrCreate?: Prisma.ForumCommentCreateOrConnectWithoutLikesInput
+  upsert?: Prisma.ForumCommentUpsertWithoutLikesInput
+  connect?: Prisma.ForumCommentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ForumCommentUpdateToOneWithWhereWithoutLikesInput, Prisma.ForumCommentUpdateWithoutLikesInput>, Prisma.ForumCommentUncheckedUpdateWithoutLikesInput>
+}
+
 export type ForumCommentCreateNestedOneWithoutReportsInput = {
   create?: Prisma.XOR<Prisma.ForumCommentCreateWithoutReportsInput, Prisma.ForumCommentUncheckedCreateWithoutReportsInput>
   connectOrCreate?: Prisma.ForumCommentCreateOrConnectWithoutReportsInput
@@ -769,6 +840,8 @@ export type ForumCommentCreateWithoutAuthorInput = {
   body: string
   status?: $Enums.ForumContentStatus
   score?: number
+  likeCount?: number
+  bodyHtml?: string | null
   removalReason?: string | null
   version?: number
   createdAt?: Date | string
@@ -778,6 +851,7 @@ export type ForumCommentCreateWithoutAuthorInput = {
   parent?: Prisma.ForumCommentCreateNestedOneWithoutRepliesInput
   replies?: Prisma.ForumCommentCreateNestedManyWithoutParentInput
   votes?: Prisma.ForumCommentVoteCreateNestedManyWithoutCommentInput
+  likes?: Prisma.ForumCommentLikeCreateNestedManyWithoutCommentInput
   reports?: Prisma.ForumReportCreateNestedManyWithoutCommentInput
 }
 
@@ -789,6 +863,8 @@ export type ForumCommentUncheckedCreateWithoutAuthorInput = {
   body: string
   status?: $Enums.ForumContentStatus
   score?: number
+  likeCount?: number
+  bodyHtml?: string | null
   removalReason?: string | null
   version?: number
   createdAt?: Date | string
@@ -796,6 +872,7 @@ export type ForumCommentUncheckedCreateWithoutAuthorInput = {
   editedAt?: Date | string | null
   replies?: Prisma.ForumCommentUncheckedCreateNestedManyWithoutParentInput
   votes?: Prisma.ForumCommentVoteUncheckedCreateNestedManyWithoutCommentInput
+  likes?: Prisma.ForumCommentLikeUncheckedCreateNestedManyWithoutCommentInput
   reports?: Prisma.ForumReportUncheckedCreateNestedManyWithoutCommentInput
 }
 
@@ -837,6 +914,8 @@ export type ForumCommentScalarWhereInput = {
   body?: Prisma.StringFilter<"ForumComment"> | string
   status?: Prisma.EnumForumContentStatusFilter<"ForumComment"> | $Enums.ForumContentStatus
   score?: Prisma.IntFilter<"ForumComment"> | number
+  likeCount?: Prisma.IntFilter<"ForumComment"> | number
+  bodyHtml?: Prisma.StringNullableFilter<"ForumComment"> | string | null
   removalReason?: Prisma.StringNullableFilter<"ForumComment"> | string | null
   version?: Prisma.IntFilter<"ForumComment"> | number
   createdAt?: Prisma.DateTimeFilter<"ForumComment"> | Date | string
@@ -850,6 +929,8 @@ export type ForumCommentCreateWithoutPostInput = {
   body: string
   status?: $Enums.ForumContentStatus
   score?: number
+  likeCount?: number
+  bodyHtml?: string | null
   removalReason?: string | null
   version?: number
   createdAt?: Date | string
@@ -859,6 +940,7 @@ export type ForumCommentCreateWithoutPostInput = {
   parent?: Prisma.ForumCommentCreateNestedOneWithoutRepliesInput
   replies?: Prisma.ForumCommentCreateNestedManyWithoutParentInput
   votes?: Prisma.ForumCommentVoteCreateNestedManyWithoutCommentInput
+  likes?: Prisma.ForumCommentLikeCreateNestedManyWithoutCommentInput
   reports?: Prisma.ForumReportCreateNestedManyWithoutCommentInput
 }
 
@@ -870,6 +952,8 @@ export type ForumCommentUncheckedCreateWithoutPostInput = {
   body: string
   status?: $Enums.ForumContentStatus
   score?: number
+  likeCount?: number
+  bodyHtml?: string | null
   removalReason?: string | null
   version?: number
   createdAt?: Date | string
@@ -877,6 +961,7 @@ export type ForumCommentUncheckedCreateWithoutPostInput = {
   editedAt?: Date | string | null
   replies?: Prisma.ForumCommentUncheckedCreateNestedManyWithoutParentInput
   votes?: Prisma.ForumCommentVoteUncheckedCreateNestedManyWithoutCommentInput
+  likes?: Prisma.ForumCommentLikeUncheckedCreateNestedManyWithoutCommentInput
   reports?: Prisma.ForumReportUncheckedCreateNestedManyWithoutCommentInput
 }
 
@@ -912,6 +997,8 @@ export type ForumCommentCreateWithoutRepliesInput = {
   body: string
   status?: $Enums.ForumContentStatus
   score?: number
+  likeCount?: number
+  bodyHtml?: string | null
   removalReason?: string | null
   version?: number
   createdAt?: Date | string
@@ -921,6 +1008,7 @@ export type ForumCommentCreateWithoutRepliesInput = {
   author: Prisma.ForumProfileCreateNestedOneWithoutCommentsInput
   parent?: Prisma.ForumCommentCreateNestedOneWithoutRepliesInput
   votes?: Prisma.ForumCommentVoteCreateNestedManyWithoutCommentInput
+  likes?: Prisma.ForumCommentLikeCreateNestedManyWithoutCommentInput
   reports?: Prisma.ForumReportCreateNestedManyWithoutCommentInput
 }
 
@@ -933,12 +1021,15 @@ export type ForumCommentUncheckedCreateWithoutRepliesInput = {
   body: string
   status?: $Enums.ForumContentStatus
   score?: number
+  likeCount?: number
+  bodyHtml?: string | null
   removalReason?: string | null
   version?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   editedAt?: Date | string | null
   votes?: Prisma.ForumCommentVoteUncheckedCreateNestedManyWithoutCommentInput
+  likes?: Prisma.ForumCommentLikeUncheckedCreateNestedManyWithoutCommentInput
   reports?: Prisma.ForumReportUncheckedCreateNestedManyWithoutCommentInput
 }
 
@@ -953,6 +1044,8 @@ export type ForumCommentCreateWithoutParentInput = {
   body: string
   status?: $Enums.ForumContentStatus
   score?: number
+  likeCount?: number
+  bodyHtml?: string | null
   removalReason?: string | null
   version?: number
   createdAt?: Date | string
@@ -962,6 +1055,7 @@ export type ForumCommentCreateWithoutParentInput = {
   author: Prisma.ForumProfileCreateNestedOneWithoutCommentsInput
   replies?: Prisma.ForumCommentCreateNestedManyWithoutParentInput
   votes?: Prisma.ForumCommentVoteCreateNestedManyWithoutCommentInput
+  likes?: Prisma.ForumCommentLikeCreateNestedManyWithoutCommentInput
   reports?: Prisma.ForumReportCreateNestedManyWithoutCommentInput
 }
 
@@ -973,6 +1067,8 @@ export type ForumCommentUncheckedCreateWithoutParentInput = {
   body: string
   status?: $Enums.ForumContentStatus
   score?: number
+  likeCount?: number
+  bodyHtml?: string | null
   removalReason?: string | null
   version?: number
   createdAt?: Date | string
@@ -980,6 +1076,7 @@ export type ForumCommentUncheckedCreateWithoutParentInput = {
   editedAt?: Date | string | null
   replies?: Prisma.ForumCommentUncheckedCreateNestedManyWithoutParentInput
   votes?: Prisma.ForumCommentVoteUncheckedCreateNestedManyWithoutCommentInput
+  likes?: Prisma.ForumCommentLikeUncheckedCreateNestedManyWithoutCommentInput
   reports?: Prisma.ForumReportUncheckedCreateNestedManyWithoutCommentInput
 }
 
@@ -1010,6 +1107,8 @@ export type ForumCommentUpdateWithoutRepliesInput = {
   body?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumForumContentStatusFieldUpdateOperationsInput | $Enums.ForumContentStatus
   score?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   removalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1019,6 +1118,7 @@ export type ForumCommentUpdateWithoutRepliesInput = {
   author?: Prisma.ForumProfileUpdateOneRequiredWithoutCommentsNestedInput
   parent?: Prisma.ForumCommentUpdateOneWithoutRepliesNestedInput
   votes?: Prisma.ForumCommentVoteUpdateManyWithoutCommentNestedInput
+  likes?: Prisma.ForumCommentLikeUpdateManyWithoutCommentNestedInput
   reports?: Prisma.ForumReportUpdateManyWithoutCommentNestedInput
 }
 
@@ -1031,12 +1131,15 @@ export type ForumCommentUncheckedUpdateWithoutRepliesInput = {
   body?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumForumContentStatusFieldUpdateOperationsInput | $Enums.ForumContentStatus
   score?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   removalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   editedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   votes?: Prisma.ForumCommentVoteUncheckedUpdateManyWithoutCommentNestedInput
+  likes?: Prisma.ForumCommentLikeUncheckedUpdateManyWithoutCommentNestedInput
   reports?: Prisma.ForumReportUncheckedUpdateManyWithoutCommentNestedInput
 }
 
@@ -1062,6 +1165,8 @@ export type ForumCommentCreateWithoutVotesInput = {
   body: string
   status?: $Enums.ForumContentStatus
   score?: number
+  likeCount?: number
+  bodyHtml?: string | null
   removalReason?: string | null
   version?: number
   createdAt?: Date | string
@@ -1071,6 +1176,7 @@ export type ForumCommentCreateWithoutVotesInput = {
   author: Prisma.ForumProfileCreateNestedOneWithoutCommentsInput
   parent?: Prisma.ForumCommentCreateNestedOneWithoutRepliesInput
   replies?: Prisma.ForumCommentCreateNestedManyWithoutParentInput
+  likes?: Prisma.ForumCommentLikeCreateNestedManyWithoutCommentInput
   reports?: Prisma.ForumReportCreateNestedManyWithoutCommentInput
 }
 
@@ -1083,12 +1189,15 @@ export type ForumCommentUncheckedCreateWithoutVotesInput = {
   body: string
   status?: $Enums.ForumContentStatus
   score?: number
+  likeCount?: number
+  bodyHtml?: string | null
   removalReason?: string | null
   version?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   editedAt?: Date | string | null
   replies?: Prisma.ForumCommentUncheckedCreateNestedManyWithoutParentInput
+  likes?: Prisma.ForumCommentLikeUncheckedCreateNestedManyWithoutCommentInput
   reports?: Prisma.ForumReportUncheckedCreateNestedManyWithoutCommentInput
 }
 
@@ -1114,6 +1223,8 @@ export type ForumCommentUpdateWithoutVotesInput = {
   body?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumForumContentStatusFieldUpdateOperationsInput | $Enums.ForumContentStatus
   score?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   removalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1123,6 +1234,7 @@ export type ForumCommentUpdateWithoutVotesInput = {
   author?: Prisma.ForumProfileUpdateOneRequiredWithoutCommentsNestedInput
   parent?: Prisma.ForumCommentUpdateOneWithoutRepliesNestedInput
   replies?: Prisma.ForumCommentUpdateManyWithoutParentNestedInput
+  likes?: Prisma.ForumCommentLikeUpdateManyWithoutCommentNestedInput
   reports?: Prisma.ForumReportUpdateManyWithoutCommentNestedInput
 }
 
@@ -1135,21 +1247,26 @@ export type ForumCommentUncheckedUpdateWithoutVotesInput = {
   body?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumForumContentStatusFieldUpdateOperationsInput | $Enums.ForumContentStatus
   score?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   removalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   editedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   replies?: Prisma.ForumCommentUncheckedUpdateManyWithoutParentNestedInput
+  likes?: Prisma.ForumCommentLikeUncheckedUpdateManyWithoutCommentNestedInput
   reports?: Prisma.ForumReportUncheckedUpdateManyWithoutCommentNestedInput
 }
 
-export type ForumCommentCreateWithoutReportsInput = {
+export type ForumCommentCreateWithoutLikesInput = {
   id?: string
   depth?: number
   body: string
   status?: $Enums.ForumContentStatus
   score?: number
+  likeCount?: number
+  bodyHtml?: string | null
   removalReason?: string | null
   version?: number
   createdAt?: Date | string
@@ -1160,6 +1277,107 @@ export type ForumCommentCreateWithoutReportsInput = {
   parent?: Prisma.ForumCommentCreateNestedOneWithoutRepliesInput
   replies?: Prisma.ForumCommentCreateNestedManyWithoutParentInput
   votes?: Prisma.ForumCommentVoteCreateNestedManyWithoutCommentInput
+  reports?: Prisma.ForumReportCreateNestedManyWithoutCommentInput
+}
+
+export type ForumCommentUncheckedCreateWithoutLikesInput = {
+  id?: string
+  postId: string
+  authorId: string
+  parentId?: string | null
+  depth?: number
+  body: string
+  status?: $Enums.ForumContentStatus
+  score?: number
+  likeCount?: number
+  bodyHtml?: string | null
+  removalReason?: string | null
+  version?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  editedAt?: Date | string | null
+  replies?: Prisma.ForumCommentUncheckedCreateNestedManyWithoutParentInput
+  votes?: Prisma.ForumCommentVoteUncheckedCreateNestedManyWithoutCommentInput
+  reports?: Prisma.ForumReportUncheckedCreateNestedManyWithoutCommentInput
+}
+
+export type ForumCommentCreateOrConnectWithoutLikesInput = {
+  where: Prisma.ForumCommentWhereUniqueInput
+  create: Prisma.XOR<Prisma.ForumCommentCreateWithoutLikesInput, Prisma.ForumCommentUncheckedCreateWithoutLikesInput>
+}
+
+export type ForumCommentUpsertWithoutLikesInput = {
+  update: Prisma.XOR<Prisma.ForumCommentUpdateWithoutLikesInput, Prisma.ForumCommentUncheckedUpdateWithoutLikesInput>
+  create: Prisma.XOR<Prisma.ForumCommentCreateWithoutLikesInput, Prisma.ForumCommentUncheckedCreateWithoutLikesInput>
+  where?: Prisma.ForumCommentWhereInput
+}
+
+export type ForumCommentUpdateToOneWithWhereWithoutLikesInput = {
+  where?: Prisma.ForumCommentWhereInput
+  data: Prisma.XOR<Prisma.ForumCommentUpdateWithoutLikesInput, Prisma.ForumCommentUncheckedUpdateWithoutLikesInput>
+}
+
+export type ForumCommentUpdateWithoutLikesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  depth?: Prisma.IntFieldUpdateOperationsInput | number
+  body?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumForumContentStatusFieldUpdateOperationsInput | $Enums.ForumContentStatus
+  score?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  removalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  editedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  post?: Prisma.ForumPostUpdateOneRequiredWithoutCommentsNestedInput
+  author?: Prisma.ForumProfileUpdateOneRequiredWithoutCommentsNestedInput
+  parent?: Prisma.ForumCommentUpdateOneWithoutRepliesNestedInput
+  replies?: Prisma.ForumCommentUpdateManyWithoutParentNestedInput
+  votes?: Prisma.ForumCommentVoteUpdateManyWithoutCommentNestedInput
+  reports?: Prisma.ForumReportUpdateManyWithoutCommentNestedInput
+}
+
+export type ForumCommentUncheckedUpdateWithoutLikesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  postId?: Prisma.StringFieldUpdateOperationsInput | string
+  authorId?: Prisma.StringFieldUpdateOperationsInput | string
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  depth?: Prisma.IntFieldUpdateOperationsInput | number
+  body?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumForumContentStatusFieldUpdateOperationsInput | $Enums.ForumContentStatus
+  score?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  removalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  editedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  replies?: Prisma.ForumCommentUncheckedUpdateManyWithoutParentNestedInput
+  votes?: Prisma.ForumCommentVoteUncheckedUpdateManyWithoutCommentNestedInput
+  reports?: Prisma.ForumReportUncheckedUpdateManyWithoutCommentNestedInput
+}
+
+export type ForumCommentCreateWithoutReportsInput = {
+  id?: string
+  depth?: number
+  body: string
+  status?: $Enums.ForumContentStatus
+  score?: number
+  likeCount?: number
+  bodyHtml?: string | null
+  removalReason?: string | null
+  version?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  editedAt?: Date | string | null
+  post: Prisma.ForumPostCreateNestedOneWithoutCommentsInput
+  author: Prisma.ForumProfileCreateNestedOneWithoutCommentsInput
+  parent?: Prisma.ForumCommentCreateNestedOneWithoutRepliesInput
+  replies?: Prisma.ForumCommentCreateNestedManyWithoutParentInput
+  votes?: Prisma.ForumCommentVoteCreateNestedManyWithoutCommentInput
+  likes?: Prisma.ForumCommentLikeCreateNestedManyWithoutCommentInput
 }
 
 export type ForumCommentUncheckedCreateWithoutReportsInput = {
@@ -1171,6 +1389,8 @@ export type ForumCommentUncheckedCreateWithoutReportsInput = {
   body: string
   status?: $Enums.ForumContentStatus
   score?: number
+  likeCount?: number
+  bodyHtml?: string | null
   removalReason?: string | null
   version?: number
   createdAt?: Date | string
@@ -1178,6 +1398,7 @@ export type ForumCommentUncheckedCreateWithoutReportsInput = {
   editedAt?: Date | string | null
   replies?: Prisma.ForumCommentUncheckedCreateNestedManyWithoutParentInput
   votes?: Prisma.ForumCommentVoteUncheckedCreateNestedManyWithoutCommentInput
+  likes?: Prisma.ForumCommentLikeUncheckedCreateNestedManyWithoutCommentInput
 }
 
 export type ForumCommentCreateOrConnectWithoutReportsInput = {
@@ -1202,6 +1423,8 @@ export type ForumCommentUpdateWithoutReportsInput = {
   body?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumForumContentStatusFieldUpdateOperationsInput | $Enums.ForumContentStatus
   score?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   removalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1212,6 +1435,7 @@ export type ForumCommentUpdateWithoutReportsInput = {
   parent?: Prisma.ForumCommentUpdateOneWithoutRepliesNestedInput
   replies?: Prisma.ForumCommentUpdateManyWithoutParentNestedInput
   votes?: Prisma.ForumCommentVoteUpdateManyWithoutCommentNestedInput
+  likes?: Prisma.ForumCommentLikeUpdateManyWithoutCommentNestedInput
 }
 
 export type ForumCommentUncheckedUpdateWithoutReportsInput = {
@@ -1223,6 +1447,8 @@ export type ForumCommentUncheckedUpdateWithoutReportsInput = {
   body?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumForumContentStatusFieldUpdateOperationsInput | $Enums.ForumContentStatus
   score?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   removalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1230,6 +1456,7 @@ export type ForumCommentUncheckedUpdateWithoutReportsInput = {
   editedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   replies?: Prisma.ForumCommentUncheckedUpdateManyWithoutParentNestedInput
   votes?: Prisma.ForumCommentVoteUncheckedUpdateManyWithoutCommentNestedInput
+  likes?: Prisma.ForumCommentLikeUncheckedUpdateManyWithoutCommentNestedInput
 }
 
 export type ForumCommentCreateManyAuthorInput = {
@@ -1240,6 +1467,8 @@ export type ForumCommentCreateManyAuthorInput = {
   body: string
   status?: $Enums.ForumContentStatus
   score?: number
+  likeCount?: number
+  bodyHtml?: string | null
   removalReason?: string | null
   version?: number
   createdAt?: Date | string
@@ -1253,6 +1482,8 @@ export type ForumCommentUpdateWithoutAuthorInput = {
   body?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumForumContentStatusFieldUpdateOperationsInput | $Enums.ForumContentStatus
   score?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   removalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1262,6 +1493,7 @@ export type ForumCommentUpdateWithoutAuthorInput = {
   parent?: Prisma.ForumCommentUpdateOneWithoutRepliesNestedInput
   replies?: Prisma.ForumCommentUpdateManyWithoutParentNestedInput
   votes?: Prisma.ForumCommentVoteUpdateManyWithoutCommentNestedInput
+  likes?: Prisma.ForumCommentLikeUpdateManyWithoutCommentNestedInput
   reports?: Prisma.ForumReportUpdateManyWithoutCommentNestedInput
 }
 
@@ -1273,6 +1505,8 @@ export type ForumCommentUncheckedUpdateWithoutAuthorInput = {
   body?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumForumContentStatusFieldUpdateOperationsInput | $Enums.ForumContentStatus
   score?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   removalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1280,6 +1514,7 @@ export type ForumCommentUncheckedUpdateWithoutAuthorInput = {
   editedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   replies?: Prisma.ForumCommentUncheckedUpdateManyWithoutParentNestedInput
   votes?: Prisma.ForumCommentVoteUncheckedUpdateManyWithoutCommentNestedInput
+  likes?: Prisma.ForumCommentLikeUncheckedUpdateManyWithoutCommentNestedInput
   reports?: Prisma.ForumReportUncheckedUpdateManyWithoutCommentNestedInput
 }
 
@@ -1291,6 +1526,8 @@ export type ForumCommentUncheckedUpdateManyWithoutAuthorInput = {
   body?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumForumContentStatusFieldUpdateOperationsInput | $Enums.ForumContentStatus
   score?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   removalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1306,6 +1543,8 @@ export type ForumCommentCreateManyPostInput = {
   body: string
   status?: $Enums.ForumContentStatus
   score?: number
+  likeCount?: number
+  bodyHtml?: string | null
   removalReason?: string | null
   version?: number
   createdAt?: Date | string
@@ -1319,6 +1558,8 @@ export type ForumCommentUpdateWithoutPostInput = {
   body?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumForumContentStatusFieldUpdateOperationsInput | $Enums.ForumContentStatus
   score?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   removalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1328,6 +1569,7 @@ export type ForumCommentUpdateWithoutPostInput = {
   parent?: Prisma.ForumCommentUpdateOneWithoutRepliesNestedInput
   replies?: Prisma.ForumCommentUpdateManyWithoutParentNestedInput
   votes?: Prisma.ForumCommentVoteUpdateManyWithoutCommentNestedInput
+  likes?: Prisma.ForumCommentLikeUpdateManyWithoutCommentNestedInput
   reports?: Prisma.ForumReportUpdateManyWithoutCommentNestedInput
 }
 
@@ -1339,6 +1581,8 @@ export type ForumCommentUncheckedUpdateWithoutPostInput = {
   body?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumForumContentStatusFieldUpdateOperationsInput | $Enums.ForumContentStatus
   score?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   removalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1346,6 +1590,7 @@ export type ForumCommentUncheckedUpdateWithoutPostInput = {
   editedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   replies?: Prisma.ForumCommentUncheckedUpdateManyWithoutParentNestedInput
   votes?: Prisma.ForumCommentVoteUncheckedUpdateManyWithoutCommentNestedInput
+  likes?: Prisma.ForumCommentLikeUncheckedUpdateManyWithoutCommentNestedInput
   reports?: Prisma.ForumReportUncheckedUpdateManyWithoutCommentNestedInput
 }
 
@@ -1357,6 +1602,8 @@ export type ForumCommentUncheckedUpdateManyWithoutPostInput = {
   body?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumForumContentStatusFieldUpdateOperationsInput | $Enums.ForumContentStatus
   score?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   removalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1372,6 +1619,8 @@ export type ForumCommentCreateManyParentInput = {
   body: string
   status?: $Enums.ForumContentStatus
   score?: number
+  likeCount?: number
+  bodyHtml?: string | null
   removalReason?: string | null
   version?: number
   createdAt?: Date | string
@@ -1385,6 +1634,8 @@ export type ForumCommentUpdateWithoutParentInput = {
   body?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumForumContentStatusFieldUpdateOperationsInput | $Enums.ForumContentStatus
   score?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   removalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1394,6 +1645,7 @@ export type ForumCommentUpdateWithoutParentInput = {
   author?: Prisma.ForumProfileUpdateOneRequiredWithoutCommentsNestedInput
   replies?: Prisma.ForumCommentUpdateManyWithoutParentNestedInput
   votes?: Prisma.ForumCommentVoteUpdateManyWithoutCommentNestedInput
+  likes?: Prisma.ForumCommentLikeUpdateManyWithoutCommentNestedInput
   reports?: Prisma.ForumReportUpdateManyWithoutCommentNestedInput
 }
 
@@ -1405,6 +1657,8 @@ export type ForumCommentUncheckedUpdateWithoutParentInput = {
   body?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumForumContentStatusFieldUpdateOperationsInput | $Enums.ForumContentStatus
   score?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   removalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1412,6 +1666,7 @@ export type ForumCommentUncheckedUpdateWithoutParentInput = {
   editedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   replies?: Prisma.ForumCommentUncheckedUpdateManyWithoutParentNestedInput
   votes?: Prisma.ForumCommentVoteUncheckedUpdateManyWithoutCommentNestedInput
+  likes?: Prisma.ForumCommentLikeUncheckedUpdateManyWithoutCommentNestedInput
   reports?: Prisma.ForumReportUncheckedUpdateManyWithoutCommentNestedInput
 }
 
@@ -1423,6 +1678,8 @@ export type ForumCommentUncheckedUpdateManyWithoutParentInput = {
   body?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumForumContentStatusFieldUpdateOperationsInput | $Enums.ForumContentStatus
   score?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   removalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1438,12 +1695,14 @@ export type ForumCommentUncheckedUpdateManyWithoutParentInput = {
 export type ForumCommentCountOutputType = {
   replies: number
   votes: number
+  likes: number
   reports: number
 }
 
 export type ForumCommentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   replies?: boolean | ForumCommentCountOutputTypeCountRepliesArgs
   votes?: boolean | ForumCommentCountOutputTypeCountVotesArgs
+  likes?: boolean | ForumCommentCountOutputTypeCountLikesArgs
   reports?: boolean | ForumCommentCountOutputTypeCountReportsArgs
 }
 
@@ -1474,6 +1733,13 @@ export type ForumCommentCountOutputTypeCountVotesArgs<ExtArgs extends runtime.Ty
 /**
  * ForumCommentCountOutputType without action
  */
+export type ForumCommentCountOutputTypeCountLikesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ForumCommentLikeWhereInput
+}
+
+/**
+ * ForumCommentCountOutputType without action
+ */
 export type ForumCommentCountOutputTypeCountReportsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.ForumReportWhereInput
 }
@@ -1488,6 +1754,8 @@ export type ForumCommentSelect<ExtArgs extends runtime.Types.Extensions.Internal
   body?: boolean
   status?: boolean
   score?: boolean
+  likeCount?: boolean
+  bodyHtml?: boolean
   removalReason?: boolean
   version?: boolean
   createdAt?: boolean
@@ -1498,6 +1766,7 @@ export type ForumCommentSelect<ExtArgs extends runtime.Types.Extensions.Internal
   parent?: boolean | Prisma.ForumComment$parentArgs<ExtArgs>
   replies?: boolean | Prisma.ForumComment$repliesArgs<ExtArgs>
   votes?: boolean | Prisma.ForumComment$votesArgs<ExtArgs>
+  likes?: boolean | Prisma.ForumComment$likesArgs<ExtArgs>
   reports?: boolean | Prisma.ForumComment$reportsArgs<ExtArgs>
   _count?: boolean | Prisma.ForumCommentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["forumComment"]>
@@ -1513,6 +1782,8 @@ export type ForumCommentSelectScalar = {
   body?: boolean
   status?: boolean
   score?: boolean
+  likeCount?: boolean
+  bodyHtml?: boolean
   removalReason?: boolean
   version?: boolean
   createdAt?: boolean
@@ -1520,13 +1791,14 @@ export type ForumCommentSelectScalar = {
   editedAt?: boolean
 }
 
-export type ForumCommentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "postId" | "authorId" | "parentId" | "depth" | "body" | "status" | "score" | "removalReason" | "version" | "createdAt" | "updatedAt" | "editedAt", ExtArgs["result"]["forumComment"]>
+export type ForumCommentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "postId" | "authorId" | "parentId" | "depth" | "body" | "status" | "score" | "likeCount" | "bodyHtml" | "removalReason" | "version" | "createdAt" | "updatedAt" | "editedAt", ExtArgs["result"]["forumComment"]>
 export type ForumCommentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   post?: boolean | Prisma.ForumPostDefaultArgs<ExtArgs>
   author?: boolean | Prisma.ForumProfileDefaultArgs<ExtArgs>
   parent?: boolean | Prisma.ForumComment$parentArgs<ExtArgs>
   replies?: boolean | Prisma.ForumComment$repliesArgs<ExtArgs>
   votes?: boolean | Prisma.ForumComment$votesArgs<ExtArgs>
+  likes?: boolean | Prisma.ForumComment$likesArgs<ExtArgs>
   reports?: boolean | Prisma.ForumComment$reportsArgs<ExtArgs>
   _count?: boolean | Prisma.ForumCommentCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -1539,6 +1811,7 @@ export type $ForumCommentPayload<ExtArgs extends runtime.Types.Extensions.Intern
     parent: Prisma.$ForumCommentPayload<ExtArgs> | null
     replies: Prisma.$ForumCommentPayload<ExtArgs>[]
     votes: Prisma.$ForumCommentVotePayload<ExtArgs>[]
+    likes: Prisma.$ForumCommentLikePayload<ExtArgs>[]
     reports: Prisma.$ForumReportPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1550,6 +1823,8 @@ export type $ForumCommentPayload<ExtArgs extends runtime.Types.Extensions.Intern
     body: string
     status: $Enums.ForumContentStatus
     score: number
+    likeCount: number
+    bodyHtml: string | null
     removalReason: string | null
     version: number
     createdAt: Date
@@ -1900,6 +2175,7 @@ export interface Prisma__ForumCommentClient<T, Null = never, ExtArgs extends run
   parent<T extends Prisma.ForumComment$parentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ForumComment$parentArgs<ExtArgs>>): Prisma.Prisma__ForumCommentClient<runtime.Types.Result.GetResult<Prisma.$ForumCommentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   replies<T extends Prisma.ForumComment$repliesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ForumComment$repliesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ForumCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   votes<T extends Prisma.ForumComment$votesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ForumComment$votesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ForumCommentVotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  likes<T extends Prisma.ForumComment$likesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ForumComment$likesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ForumCommentLikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reports<T extends Prisma.ForumComment$reportsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ForumComment$reportsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ForumReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1938,6 +2214,8 @@ export interface ForumCommentFieldRefs {
   readonly body: Prisma.FieldRef<"ForumComment", 'String'>
   readonly status: Prisma.FieldRef<"ForumComment", 'ForumContentStatus'>
   readonly score: Prisma.FieldRef<"ForumComment", 'Int'>
+  readonly likeCount: Prisma.FieldRef<"ForumComment", 'Int'>
+  readonly bodyHtml: Prisma.FieldRef<"ForumComment", 'String'>
   readonly removalReason: Prisma.FieldRef<"ForumComment", 'String'>
   readonly version: Prisma.FieldRef<"ForumComment", 'Int'>
   readonly createdAt: Prisma.FieldRef<"ForumComment", 'DateTime'>
@@ -2355,6 +2633,30 @@ export type ForumComment$votesArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.ForumCommentVoteScalarFieldEnum | Prisma.ForumCommentVoteScalarFieldEnum[]
+}
+
+/**
+ * ForumComment.likes
+ */
+export type ForumComment$likesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ForumCommentLike
+   */
+  select?: Prisma.ForumCommentLikeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ForumCommentLike
+   */
+  omit?: Prisma.ForumCommentLikeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ForumCommentLikeInclude<ExtArgs> | null
+  where?: Prisma.ForumCommentLikeWhereInput
+  orderBy?: Prisma.ForumCommentLikeOrderByWithRelationInput | Prisma.ForumCommentLikeOrderByWithRelationInput[]
+  cursor?: Prisma.ForumCommentLikeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ForumCommentLikeScalarFieldEnum | Prisma.ForumCommentLikeScalarFieldEnum[]
 }
 
 /**

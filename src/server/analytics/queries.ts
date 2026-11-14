@@ -41,7 +41,7 @@ const between = (range: DateRange) => ({ gte: range.from, lt: range.to });
 
 async function overview(db: Db, range: DateRange) {
   const createdAt = between(range);
-  const [types, visitorRows, dealViews, sessionAgg, bounced, returning, commission] = await Promise.all([
+  const [types, visitorRows, dealViews, sessionAgg, bounced, returning, commission, uniqueRows] = await Promise.all([
     db.analyticsEvent.groupBy({ by: ["type"], where: { createdAt }, _count: { _all: true } }),
     db.$queryRaw<{ n: unknown }[]>(Prisma.sql`SELECT COUNT(DISTINCT ${col("visitorHash")}) AS n FROM ${table("AnalyticsEvent")} WHERE ${col("type")} = 'PAGE_VIEW' AND ${col("createdAt")} >= ${range.from} AND ${col("createdAt")} < ${range.to}`),
     db.analyticsEvent.count({ where: { createdAt, type: "PAGE_VIEW", pageType: "deal" } }),
@@ -49,6 +49,8 @@ async function overview(db: Db, range: DateRange) {
     db.analyticsSession.count({ where: { startedAt: createdAt, pageCount: { lte: 1 } } }),
     db.analyticsSession.count({ where: { startedAt: createdAt, returning: true } }),
     db.affiliateTransaction.aggregate({ where: { reportedAt: createdAt, status: { in: ["APPROVED", "PAID"] } }, _sum: { commissionMinor: true }, _count: { _all: true } }),
+    // People who accepted analytics, each counted once however many days they visit in the range.
+    db.$queryRaw<{ n: unknown }[]>(Prisma.sql`SELECT COUNT(DISTINCT ${col("visitorKey")}) AS n FROM ${table("AnalyticsSession")} WHERE ${col("visitorKey")} IS NOT NULL AND ${col("startedAt")} >= ${range.from} AND ${col("startedAt")} < ${range.to}`),
   ]);
   const count = (type: string) => types.find((t) => t.type === type)?._count._all ?? 0;
   const sessions = sessionAgg._count._all;
@@ -57,6 +59,7 @@ async function overview(db: Db, range: DateRange) {
   return {
     views: count("PAGE_VIEW"),
     visitors: num(visitorRows[0]?.n),
+    uniqueVisitors: num(uniqueRows[0]?.n),
     sessions,
     avgSessionSeconds: Math.round(sessionAgg._avg.activeSeconds ?? 0),
     pagesPerSession: Number((sessionAgg._avg.pageCount ?? 0).toFixed(2)),

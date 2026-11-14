@@ -194,6 +194,11 @@ export function DealCard({
             unoptimized
           />
         </div>
+        {deal.expiry === "expired" && (
+          <div className="deal-expired-overlay" aria-label="This deal has expired">
+            <span>Expired</span>
+          </div>
+        )}
         {galleryImages.length > 1 && (
           <div className="deal-gallery-controls" onClick={(event) => event.stopPropagation()}>
             <button type="button" aria-label={`Previous photo for ${deal.name}`} onClick={() => selectGalleryImage(-1)}><ChevronLeft size={18} /></button>
@@ -295,18 +300,20 @@ export function DealCard({
           >
             Post Details
           </a>
-          <a
-            href={`/go/${deal.id}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="deal-buy-now-btn"
-            aria-label={`Buy ${deal.name} now`}
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-          >
-            Buy Now <ExternalLink size={12} />
-          </a>
+          {deal.expiry === "expired" ? (
+            <span className="deal-buy-now-disabled" aria-label={`Offer expired for ${deal.name}`}>Expired</span>
+          ) : (
+            <a
+              href={`/go/${deal.id}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="deal-buy-now-btn"
+              aria-label={`Buy ${deal.name} now`}
+              onClick={(e) => e.stopPropagation()}
+            >
+              Buy Now <ExternalLink size={12} />
+            </a>
+          )}
         </div>
 
         {/* ROW 7: Social Interaction Row (Views, Like, Share, Comment) */}

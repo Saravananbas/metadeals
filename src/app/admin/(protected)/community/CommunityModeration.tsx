@@ -5,7 +5,8 @@ import Link from "next/link";
 import { AdminNav } from "@/components/admin/AdminNav";
 import styles from "../submissions/submissions.module.css";
 
-type Tab = "queue" | "reports" | "communities";
+type Tab = "queue" | "reports" | "messages" | "members" | "communities";
+type DmReport = { id: string; category: string; details: string | null; snapshot: string; status: string; version: number; createdAt: string; reporter: { handle: string }; reported: { id: string; handle: string; status: string | null } };
 type QueuePost = { id: string; slug: string; type: string; title: string; body: string; url: string | null; version: number; createdAt: string; community: { name: string }; author: { id: string; handle: string } };
 type Report = {
   id: string; targetType: "POST" | "COMMENT" | "PROFILE"; category: string; details: string | null; status: string; version: number; createdAt: string; resolution: string | null;
@@ -29,6 +30,7 @@ export function CommunityModeration({ canManage }: { canManage: boolean }) {
   const [queue, setQueue] = useState<QueuePost[]>([]);
   const [reports, setReports] = useState<Report[]>([]);
   const [openCount, setOpenCount] = useState(0);
+  const [dmReports, setDmReports] = useState<DmReport[]>([]), [dmOpen, setDmOpen] = useState(0);
   const [communities, setCommunities] = useState<CommunityRow[]>([]);
   const [reasons, setReasons] = useState<Record<string, string>>({});
   const [message, setMessage] = useState<{ ok: boolean; text: string } | null>(null);
@@ -39,6 +41,7 @@ export function CommunityModeration({ canManage }: { canManage: boolean }) {
     const fail = (e: unknown) => { if (alive) setMessage({ ok: false, text: e instanceof Error ? e.message : "Could not load" }); };
     if (tab === "queue") call<{ data: { items: QueuePost[] } }>("/api/v1/admin/community/queue").then((r) => alive && setQueue(r.data.items)).catch(fail);
     if (tab === "reports") call<{ data: { items: Report[]; open: number } }>("/api/v1/admin/community/reports?status=OPEN").then((r) => { if (alive) { setReports(r.data.items); setOpenCount(r.data.open); } }).catch(fail);
+    if (tab === "messages") call<{ data: { items: DmReport[]; open: number } }>("/api/v1/admin/community/dm-reports?status=OPEN").then((r) => { if (alive) { setDmReports(r.data.items); setDmOpen(r.data.open); } }).catch(fail);
     if (tab === "communities" && canManage) call<{ data: CommunityRow[] }>("/api/v1/admin/community/communities").then((r) => alive && setCommunities(r.data)).catch(fail);
     return () => { alive = false; };
   }, [tab, reload, canManage]);
@@ -62,6 +65,8 @@ export function CommunityModeration({ canManage }: { canManage: boolean }) {
           <div className={styles.tabs}>
             <button className={`${styles.tab} ${tab === "queue" ? styles.tabActive : ""}`} onClick={() => setTab("queue")}>Review queue</button>
             <button className={`${styles.tab} ${tab === "reports" ? styles.tabActive : ""}`} onClick={() => setTab("reports")}>Reports{tab === "reports" ? ` (${openCount})` : ""}</button>
+            <button className={`${styles.tab} ${tab === "messages" ? styles.tabActive : ""}`} onClick={() => setTab("messages")}>Reported messages{tab === "messages" ? ` (${dmOpen})` : ""}</button>
+            {canManage && <button className={`${styles.tab} ${tab === "members" ? styles.tabActive : ""}`} onClick={() => setTab("members")}>Verified members</button>}
             {canManage && <button className={`${styles.tab} ${tab === "communities" ? styles.tabActive : ""}`} onClick={() => setTab("communities")}>Communities</button>}
           </div>
         </div>
@@ -121,6 +126,46 @@ export function CommunityModeration({ canManage }: { canManage: boolean }) {
               );
             })}
           </>
+        )}
+
+        {tab === "messages" && (
+          <>
+            <p className={styles.meta}>Private messages are never browsed. You see only the single message a member reported, copied at the time of the report.</p>
+            {!dmReports.length && <div className={styles.empty}>No open reported messages.</div>}
+            {dmReports.map((r) => (
+              <article key={r.id} className={styles.card} style={{ gridTemplateColumns: "1fr" }}>
+                <div>
+                  <div className={styles.meta}><span className={styles.badge}>MESSAGE</span> {r.category.toLowerCase().replace("_", " ")} · reported by {r.reporter.handle} against <Link href={`/community/u/${r.reported.handle}`} target="_blank">{r.reported.handle}</Link>{r.reported.status === "SUSPENDED" ? " (suspended)" : ""} · {new Date(r.createdAt).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}</div>
+                  {r.details && <p>“{r.details}”</p>}
+                  <blockquote style={{ margin: "8px 0", padding: "8px 12px", borderLeft: "3px solid var(--md-purple-300)", whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}>{r.snapshot}</blockquote>
+                  <div className={styles.grid}>
+                    <label className={styles.wide}>Note (at least 5 characters)<input value={reasonOf(r.id)} onChange={(e) => setReason(r.id, e.target.value)} /></label>
+                  </div>
+                  <div className={styles.actions}>
+                    {canManage && r.reported.status === "ACTIVE" && <button className={styles.reject} disabled={!!busy || reasonOf(r.id).trim().length < 5} onClick={() => void run(r.id + "s", `/api/v1/admin/community/members/${r.reported.id}/suspend`, { reason: reasonOf(r.id), days: 7 }, "Member suspended for 7 days.")}>Suspend sender 7 days</button>}
+                    <button className={styles.approve} disabled={!!busy || reasonOf(r.id).trim().length < 5} onClick={() => void run(r.id + "r", `/api/v1/admin/community/dm-reports/${r.id}/resolve`, { version: r.version, outcome: "RESOLVED", resolution: reasonOf(r.id) }, "Report resolved.")}>Mark resolved</button>
+                    <button className={styles.tab} disabled={!!busy || reasonOf(r.id).trim().length < 5} onClick={() => void run(r.id + "d", `/api/v1/admin/community/dm-reports/${r.id}/resolve`, { version: r.version, outcome: "DISMISSED", resolution: reasonOf(r.id) }, "Report dismissed.")}>Dismiss</button>
+                    <button className={styles.tab} disabled={!!busy || reasonOf(r.id).trim().length < 5} onClick={() => void run(r.id + "e", `/api/v1/admin/community/dm-reports/${r.id}/resolve`, { version: r.version, outcome: "ESCALATED", resolution: reasonOf(r.id) }, "Escalated.")}>Escalate</button>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </>
+        )}
+
+        {tab === "members" && canManage && (
+          <form className={styles.card} style={{ gridTemplateColumns: "1fr" }} onSubmit={(e) => e.preventDefault()}>
+            <h2 className={styles.title}>Verified member badge</h2>
+            <p className={styles.meta}>Only grant it after you have confirmed who the member is. The badge appears next to their user name on their profile and in messages. The reason is kept in the moderation history; the member never sees who granted it.</p>
+            <div className={styles.grid}>
+              <label>User name<input value={reasonOf("verify-handle")} onChange={(e) => setReason("verify-handle", e.target.value)} placeholder="e.g. deal_hunter" maxLength={30} /></label>
+              <label className={styles.wide}>Reason (at least 5 characters)<input value={reasonOf("verify-reason")} onChange={(e) => setReason("verify-reason", e.target.value)} /></label>
+            </div>
+            <div className={styles.actions}>
+              <button className={styles.approve} disabled={!!busy || reasonOf("verify-handle").trim().length < 3 || reasonOf("verify-reason").trim().length < 5} onClick={() => void run("verify", `/api/v1/admin/community/members/${encodeURIComponent(reasonOf("verify-handle").trim().toLowerCase())}/verify`, { reason: reasonOf("verify-reason") }, "Member verified.")}>Verify member</button>
+              <button className={styles.tab} disabled={!!busy || reasonOf("verify-handle").trim().length < 3 || reasonOf("verify-reason").trim().length < 5} onClick={() => void run("unverify", `/api/v1/admin/community/members/${encodeURIComponent(reasonOf("verify-handle").trim().toLowerCase())}/unverify`, { reason: reasonOf("verify-reason") }, "Verification removed.")}>Remove verification</button>
+            </div>
+          </form>
         )}
 
         {tab === "communities" && canManage && (

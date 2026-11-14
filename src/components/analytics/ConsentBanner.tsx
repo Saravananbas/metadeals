@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { CONSENT_EVENT, getConsent, setConsent } from "@/lib/analytics-client";
+import { CONSENT_EVENT, CONSENT_OPEN_EVENT, getConsent, setConsent } from "@/lib/analytics-client";
 
 export function ConsentBanner() {
   const pathname = usePathname();
@@ -10,9 +10,11 @@ export function ConsentBanner() {
 
   useEffect(() => {
     const sync = () => setVisible(getConsent() === null);
+    const reopen = () => setVisible(true);
     sync();
     window.addEventListener(CONSENT_EVENT, sync);
-    return () => window.removeEventListener(CONSENT_EVENT, sync);
+    window.addEventListener(CONSENT_OPEN_EVENT, reopen);
+    return () => { window.removeEventListener(CONSENT_EVENT, sync); window.removeEventListener(CONSENT_OPEN_EVENT, reopen); };
   }, []);
 
   if (!visible || pathname.startsWith("/admin")) return null;

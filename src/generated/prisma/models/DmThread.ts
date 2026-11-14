@@ -33,6 +33,14 @@ export type DmThreadMinAggregateOutputType = {
   lastMessageAt: Date | null
   lowReadAt: Date | null
   highReadAt: Date | null
+  lowDeliveredAt: Date | null
+  highDeliveredAt: Date | null
+  lowMutedAt: Date | null
+  highMutedAt: Date | null
+  lowArchivedAt: Date | null
+  highArchivedAt: Date | null
+  lowClearedAt: Date | null
+  highClearedAt: Date | null
   createdAt: Date | null
 }
 
@@ -45,6 +53,14 @@ export type DmThreadMaxAggregateOutputType = {
   lastMessageAt: Date | null
   lowReadAt: Date | null
   highReadAt: Date | null
+  lowDeliveredAt: Date | null
+  highDeliveredAt: Date | null
+  lowMutedAt: Date | null
+  highMutedAt: Date | null
+  lowArchivedAt: Date | null
+  highArchivedAt: Date | null
+  lowClearedAt: Date | null
+  highClearedAt: Date | null
   createdAt: Date | null
 }
 
@@ -57,6 +73,14 @@ export type DmThreadCountAggregateOutputType = {
   lastMessageAt: number
   lowReadAt: number
   highReadAt: number
+  lowDeliveredAt: number
+  highDeliveredAt: number
+  lowMutedAt: number
+  highMutedAt: number
+  lowArchivedAt: number
+  highArchivedAt: number
+  lowClearedAt: number
+  highClearedAt: number
   createdAt: number
   _all: number
 }
@@ -71,6 +95,14 @@ export type DmThreadMinAggregateInputType = {
   lastMessageAt?: true
   lowReadAt?: true
   highReadAt?: true
+  lowDeliveredAt?: true
+  highDeliveredAt?: true
+  lowMutedAt?: true
+  highMutedAt?: true
+  lowArchivedAt?: true
+  highArchivedAt?: true
+  lowClearedAt?: true
+  highClearedAt?: true
   createdAt?: true
 }
 
@@ -83,6 +115,14 @@ export type DmThreadMaxAggregateInputType = {
   lastMessageAt?: true
   lowReadAt?: true
   highReadAt?: true
+  lowDeliveredAt?: true
+  highDeliveredAt?: true
+  lowMutedAt?: true
+  highMutedAt?: true
+  lowArchivedAt?: true
+  highArchivedAt?: true
+  lowClearedAt?: true
+  highClearedAt?: true
   createdAt?: true
 }
 
@@ -95,6 +135,14 @@ export type DmThreadCountAggregateInputType = {
   lastMessageAt?: true
   lowReadAt?: true
   highReadAt?: true
+  lowDeliveredAt?: true
+  highDeliveredAt?: true
+  lowMutedAt?: true
+  highMutedAt?: true
+  lowArchivedAt?: true
+  highArchivedAt?: true
+  lowClearedAt?: true
+  highClearedAt?: true
   createdAt?: true
   _all?: true
 }
@@ -180,6 +228,14 @@ export type DmThreadGroupByOutputType = {
   lastMessageAt: Date
   lowReadAt: Date | null
   highReadAt: Date | null
+  lowDeliveredAt: Date | null
+  highDeliveredAt: Date | null
+  lowMutedAt: Date | null
+  highMutedAt: Date | null
+  lowArchivedAt: Date | null
+  highArchivedAt: Date | null
+  lowClearedAt: Date | null
+  highClearedAt: Date | null
   createdAt: Date
   _count: DmThreadCountAggregateOutputType | null
   _min: DmThreadMinAggregateOutputType | null
@@ -213,6 +269,14 @@ export type DmThreadWhereInput = {
   lastMessageAt?: Prisma.DateTimeFilter<"DmThread"> | Date | string
   lowReadAt?: Prisma.DateTimeNullableFilter<"DmThread"> | Date | string | null
   highReadAt?: Prisma.DateTimeNullableFilter<"DmThread"> | Date | string | null
+  lowDeliveredAt?: Prisma.DateTimeNullableFilter<"DmThread"> | Date | string | null
+  highDeliveredAt?: Prisma.DateTimeNullableFilter<"DmThread"> | Date | string | null
+  lowMutedAt?: Prisma.DateTimeNullableFilter<"DmThread"> | Date | string | null
+  highMutedAt?: Prisma.DateTimeNullableFilter<"DmThread"> | Date | string | null
+  lowArchivedAt?: Prisma.DateTimeNullableFilter<"DmThread"> | Date | string | null
+  highArchivedAt?: Prisma.DateTimeNullableFilter<"DmThread"> | Date | string | null
+  lowClearedAt?: Prisma.DateTimeNullableFilter<"DmThread"> | Date | string | null
+  highClearedAt?: Prisma.DateTimeNullableFilter<"DmThread"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"DmThread"> | Date | string
   profileLow?: Prisma.XOR<Prisma.ForumProfileScalarRelationFilter, Prisma.ForumProfileWhereInput>
   profileHigh?: Prisma.XOR<Prisma.ForumProfileScalarRelationFilter, Prisma.ForumProfileWhereInput>
@@ -228,6 +292,14 @@ export type DmThreadOrderByWithRelationInput = {
   lastMessageAt?: Prisma.SortOrder
   lowReadAt?: Prisma.SortOrderInput | Prisma.SortOrder
   highReadAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  lowDeliveredAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  highDeliveredAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  lowMutedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  highMutedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  lowArchivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  highArchivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  lowClearedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  highClearedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   profileLow?: Prisma.ForumProfileOrderByWithRelationInput
   profileHigh?: Prisma.ForumProfileOrderByWithRelationInput
@@ -247,6 +319,14 @@ export type DmThreadWhereUniqueInput = Prisma.AtLeast<{
   lastMessageAt?: Prisma.DateTimeFilter<"DmThread"> | Date | string
   lowReadAt?: Prisma.DateTimeNullableFilter<"DmThread"> | Date | string | null
   highReadAt?: Prisma.DateTimeNullableFilter<"DmThread"> | Date | string | null
+  lowDeliveredAt?: Prisma.DateTimeNullableFilter<"DmThread"> | Date | string | null
+  highDeliveredAt?: Prisma.DateTimeNullableFilter<"DmThread"> | Date | string | null
+  lowMutedAt?: Prisma.DateTimeNullableFilter<"DmThread"> | Date | string | null
+  highMutedAt?: Prisma.DateTimeNullableFilter<"DmThread"> | Date | string | null
+  lowArchivedAt?: Prisma.DateTimeNullableFilter<"DmThread"> | Date | string | null
+  highArchivedAt?: Prisma.DateTimeNullableFilter<"DmThread"> | Date | string | null
+  lowClearedAt?: Prisma.DateTimeNullableFilter<"DmThread"> | Date | string | null
+  highClearedAt?: Prisma.DateTimeNullableFilter<"DmThread"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"DmThread"> | Date | string
   profileLow?: Prisma.XOR<Prisma.ForumProfileScalarRelationFilter, Prisma.ForumProfileWhereInput>
   profileHigh?: Prisma.XOR<Prisma.ForumProfileScalarRelationFilter, Prisma.ForumProfileWhereInput>
@@ -262,6 +342,14 @@ export type DmThreadOrderByWithAggregationInput = {
   lastMessageAt?: Prisma.SortOrder
   lowReadAt?: Prisma.SortOrderInput | Prisma.SortOrder
   highReadAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  lowDeliveredAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  highDeliveredAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  lowMutedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  highMutedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  lowArchivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  highArchivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  lowClearedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  highClearedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.DmThreadCountOrderByAggregateInput
   _max?: Prisma.DmThreadMaxOrderByAggregateInput
@@ -280,6 +368,14 @@ export type DmThreadScalarWhereWithAggregatesInput = {
   lastMessageAt?: Prisma.DateTimeWithAggregatesFilter<"DmThread"> | Date | string
   lowReadAt?: Prisma.DateTimeNullableWithAggregatesFilter<"DmThread"> | Date | string | null
   highReadAt?: Prisma.DateTimeNullableWithAggregatesFilter<"DmThread"> | Date | string | null
+  lowDeliveredAt?: Prisma.DateTimeNullableWithAggregatesFilter<"DmThread"> | Date | string | null
+  highDeliveredAt?: Prisma.DateTimeNullableWithAggregatesFilter<"DmThread"> | Date | string | null
+  lowMutedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"DmThread"> | Date | string | null
+  highMutedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"DmThread"> | Date | string | null
+  lowArchivedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"DmThread"> | Date | string | null
+  highArchivedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"DmThread"> | Date | string | null
+  lowClearedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"DmThread"> | Date | string | null
+  highClearedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"DmThread"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"DmThread"> | Date | string
 }
 
@@ -290,6 +386,14 @@ export type DmThreadCreateInput = {
   lastMessageAt?: Date | string
   lowReadAt?: Date | string | null
   highReadAt?: Date | string | null
+  lowDeliveredAt?: Date | string | null
+  highDeliveredAt?: Date | string | null
+  lowMutedAt?: Date | string | null
+  highMutedAt?: Date | string | null
+  lowArchivedAt?: Date | string | null
+  highArchivedAt?: Date | string | null
+  lowClearedAt?: Date | string | null
+  highClearedAt?: Date | string | null
   createdAt?: Date | string
   profileLow: Prisma.ForumProfileCreateNestedOneWithoutDmThreadsLowInput
   profileHigh: Prisma.ForumProfileCreateNestedOneWithoutDmThreadsHighInput
@@ -305,6 +409,14 @@ export type DmThreadUncheckedCreateInput = {
   lastMessageAt?: Date | string
   lowReadAt?: Date | string | null
   highReadAt?: Date | string | null
+  lowDeliveredAt?: Date | string | null
+  highDeliveredAt?: Date | string | null
+  lowMutedAt?: Date | string | null
+  highMutedAt?: Date | string | null
+  lowArchivedAt?: Date | string | null
+  highArchivedAt?: Date | string | null
+  lowClearedAt?: Date | string | null
+  highClearedAt?: Date | string | null
   createdAt?: Date | string
   messages?: Prisma.DmMessageUncheckedCreateNestedManyWithoutThreadInput
 }
@@ -316,6 +428,14 @@ export type DmThreadUpdateInput = {
   lastMessageAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lowReadAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   highReadAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowDeliveredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highDeliveredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowMutedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highMutedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowArchivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highArchivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profileLow?: Prisma.ForumProfileUpdateOneRequiredWithoutDmThreadsLowNestedInput
   profileHigh?: Prisma.ForumProfileUpdateOneRequiredWithoutDmThreadsHighNestedInput
@@ -331,6 +451,14 @@ export type DmThreadUncheckedUpdateInput = {
   lastMessageAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lowReadAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   highReadAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowDeliveredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highDeliveredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowMutedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highMutedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowArchivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highArchivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   messages?: Prisma.DmMessageUncheckedUpdateManyWithoutThreadNestedInput
 }
@@ -344,6 +472,14 @@ export type DmThreadCreateManyInput = {
   lastMessageAt?: Date | string
   lowReadAt?: Date | string | null
   highReadAt?: Date | string | null
+  lowDeliveredAt?: Date | string | null
+  highDeliveredAt?: Date | string | null
+  lowMutedAt?: Date | string | null
+  highMutedAt?: Date | string | null
+  lowArchivedAt?: Date | string | null
+  highArchivedAt?: Date | string | null
+  lowClearedAt?: Date | string | null
+  highClearedAt?: Date | string | null
   createdAt?: Date | string
 }
 
@@ -354,6 +490,14 @@ export type DmThreadUpdateManyMutationInput = {
   lastMessageAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lowReadAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   highReadAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowDeliveredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highDeliveredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowMutedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highMutedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowArchivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highArchivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -366,6 +510,14 @@ export type DmThreadUncheckedUpdateManyInput = {
   lastMessageAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lowReadAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   highReadAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowDeliveredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highDeliveredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowMutedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highMutedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowArchivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highArchivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -393,6 +545,14 @@ export type DmThreadCountOrderByAggregateInput = {
   lastMessageAt?: Prisma.SortOrder
   lowReadAt?: Prisma.SortOrder
   highReadAt?: Prisma.SortOrder
+  lowDeliveredAt?: Prisma.SortOrder
+  highDeliveredAt?: Prisma.SortOrder
+  lowMutedAt?: Prisma.SortOrder
+  highMutedAt?: Prisma.SortOrder
+  lowArchivedAt?: Prisma.SortOrder
+  highArchivedAt?: Prisma.SortOrder
+  lowClearedAt?: Prisma.SortOrder
+  highClearedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -405,6 +565,14 @@ export type DmThreadMaxOrderByAggregateInput = {
   lastMessageAt?: Prisma.SortOrder
   lowReadAt?: Prisma.SortOrder
   highReadAt?: Prisma.SortOrder
+  lowDeliveredAt?: Prisma.SortOrder
+  highDeliveredAt?: Prisma.SortOrder
+  lowMutedAt?: Prisma.SortOrder
+  highMutedAt?: Prisma.SortOrder
+  lowArchivedAt?: Prisma.SortOrder
+  highArchivedAt?: Prisma.SortOrder
+  lowClearedAt?: Prisma.SortOrder
+  highClearedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -417,6 +585,14 @@ export type DmThreadMinOrderByAggregateInput = {
   lastMessageAt?: Prisma.SortOrder
   lowReadAt?: Prisma.SortOrder
   highReadAt?: Prisma.SortOrder
+  lowDeliveredAt?: Prisma.SortOrder
+  highDeliveredAt?: Prisma.SortOrder
+  lowMutedAt?: Prisma.SortOrder
+  highMutedAt?: Prisma.SortOrder
+  lowArchivedAt?: Prisma.SortOrder
+  highArchivedAt?: Prisma.SortOrder
+  lowClearedAt?: Prisma.SortOrder
+  highClearedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -534,6 +710,14 @@ export type DmThreadCreateWithoutProfileLowInput = {
   lastMessageAt?: Date | string
   lowReadAt?: Date | string | null
   highReadAt?: Date | string | null
+  lowDeliveredAt?: Date | string | null
+  highDeliveredAt?: Date | string | null
+  lowMutedAt?: Date | string | null
+  highMutedAt?: Date | string | null
+  lowArchivedAt?: Date | string | null
+  highArchivedAt?: Date | string | null
+  lowClearedAt?: Date | string | null
+  highClearedAt?: Date | string | null
   createdAt?: Date | string
   profileHigh: Prisma.ForumProfileCreateNestedOneWithoutDmThreadsHighInput
   messages?: Prisma.DmMessageCreateNestedManyWithoutThreadInput
@@ -547,6 +731,14 @@ export type DmThreadUncheckedCreateWithoutProfileLowInput = {
   lastMessageAt?: Date | string
   lowReadAt?: Date | string | null
   highReadAt?: Date | string | null
+  lowDeliveredAt?: Date | string | null
+  highDeliveredAt?: Date | string | null
+  lowMutedAt?: Date | string | null
+  highMutedAt?: Date | string | null
+  lowArchivedAt?: Date | string | null
+  highArchivedAt?: Date | string | null
+  lowClearedAt?: Date | string | null
+  highClearedAt?: Date | string | null
   createdAt?: Date | string
   messages?: Prisma.DmMessageUncheckedCreateNestedManyWithoutThreadInput
 }
@@ -568,6 +760,14 @@ export type DmThreadCreateWithoutProfileHighInput = {
   lastMessageAt?: Date | string
   lowReadAt?: Date | string | null
   highReadAt?: Date | string | null
+  lowDeliveredAt?: Date | string | null
+  highDeliveredAt?: Date | string | null
+  lowMutedAt?: Date | string | null
+  highMutedAt?: Date | string | null
+  lowArchivedAt?: Date | string | null
+  highArchivedAt?: Date | string | null
+  lowClearedAt?: Date | string | null
+  highClearedAt?: Date | string | null
   createdAt?: Date | string
   profileLow: Prisma.ForumProfileCreateNestedOneWithoutDmThreadsLowInput
   messages?: Prisma.DmMessageCreateNestedManyWithoutThreadInput
@@ -581,6 +781,14 @@ export type DmThreadUncheckedCreateWithoutProfileHighInput = {
   lastMessageAt?: Date | string
   lowReadAt?: Date | string | null
   highReadAt?: Date | string | null
+  lowDeliveredAt?: Date | string | null
+  highDeliveredAt?: Date | string | null
+  lowMutedAt?: Date | string | null
+  highMutedAt?: Date | string | null
+  lowArchivedAt?: Date | string | null
+  highArchivedAt?: Date | string | null
+  lowClearedAt?: Date | string | null
+  highClearedAt?: Date | string | null
   createdAt?: Date | string
   messages?: Prisma.DmMessageUncheckedCreateNestedManyWithoutThreadInput
 }
@@ -623,6 +831,14 @@ export type DmThreadScalarWhereInput = {
   lastMessageAt?: Prisma.DateTimeFilter<"DmThread"> | Date | string
   lowReadAt?: Prisma.DateTimeNullableFilter<"DmThread"> | Date | string | null
   highReadAt?: Prisma.DateTimeNullableFilter<"DmThread"> | Date | string | null
+  lowDeliveredAt?: Prisma.DateTimeNullableFilter<"DmThread"> | Date | string | null
+  highDeliveredAt?: Prisma.DateTimeNullableFilter<"DmThread"> | Date | string | null
+  lowMutedAt?: Prisma.DateTimeNullableFilter<"DmThread"> | Date | string | null
+  highMutedAt?: Prisma.DateTimeNullableFilter<"DmThread"> | Date | string | null
+  lowArchivedAt?: Prisma.DateTimeNullableFilter<"DmThread"> | Date | string | null
+  highArchivedAt?: Prisma.DateTimeNullableFilter<"DmThread"> | Date | string | null
+  lowClearedAt?: Prisma.DateTimeNullableFilter<"DmThread"> | Date | string | null
+  highClearedAt?: Prisma.DateTimeNullableFilter<"DmThread"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"DmThread"> | Date | string
 }
 
@@ -649,6 +865,14 @@ export type DmThreadCreateWithoutMessagesInput = {
   lastMessageAt?: Date | string
   lowReadAt?: Date | string | null
   highReadAt?: Date | string | null
+  lowDeliveredAt?: Date | string | null
+  highDeliveredAt?: Date | string | null
+  lowMutedAt?: Date | string | null
+  highMutedAt?: Date | string | null
+  lowArchivedAt?: Date | string | null
+  highArchivedAt?: Date | string | null
+  lowClearedAt?: Date | string | null
+  highClearedAt?: Date | string | null
   createdAt?: Date | string
   profileLow: Prisma.ForumProfileCreateNestedOneWithoutDmThreadsLowInput
   profileHigh: Prisma.ForumProfileCreateNestedOneWithoutDmThreadsHighInput
@@ -663,6 +887,14 @@ export type DmThreadUncheckedCreateWithoutMessagesInput = {
   lastMessageAt?: Date | string
   lowReadAt?: Date | string | null
   highReadAt?: Date | string | null
+  lowDeliveredAt?: Date | string | null
+  highDeliveredAt?: Date | string | null
+  lowMutedAt?: Date | string | null
+  highMutedAt?: Date | string | null
+  lowArchivedAt?: Date | string | null
+  highArchivedAt?: Date | string | null
+  lowClearedAt?: Date | string | null
+  highClearedAt?: Date | string | null
   createdAt?: Date | string
 }
 
@@ -689,6 +921,14 @@ export type DmThreadUpdateWithoutMessagesInput = {
   lastMessageAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lowReadAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   highReadAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowDeliveredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highDeliveredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowMutedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highMutedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowArchivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highArchivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profileLow?: Prisma.ForumProfileUpdateOneRequiredWithoutDmThreadsLowNestedInput
   profileHigh?: Prisma.ForumProfileUpdateOneRequiredWithoutDmThreadsHighNestedInput
@@ -703,6 +943,14 @@ export type DmThreadUncheckedUpdateWithoutMessagesInput = {
   lastMessageAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lowReadAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   highReadAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowDeliveredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highDeliveredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowMutedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highMutedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowArchivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highArchivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -714,6 +962,14 @@ export type DmThreadCreateManyProfileLowInput = {
   lastMessageAt?: Date | string
   lowReadAt?: Date | string | null
   highReadAt?: Date | string | null
+  lowDeliveredAt?: Date | string | null
+  highDeliveredAt?: Date | string | null
+  lowMutedAt?: Date | string | null
+  highMutedAt?: Date | string | null
+  lowArchivedAt?: Date | string | null
+  highArchivedAt?: Date | string | null
+  lowClearedAt?: Date | string | null
+  highClearedAt?: Date | string | null
   createdAt?: Date | string
 }
 
@@ -725,6 +981,14 @@ export type DmThreadCreateManyProfileHighInput = {
   lastMessageAt?: Date | string
   lowReadAt?: Date | string | null
   highReadAt?: Date | string | null
+  lowDeliveredAt?: Date | string | null
+  highDeliveredAt?: Date | string | null
+  lowMutedAt?: Date | string | null
+  highMutedAt?: Date | string | null
+  lowArchivedAt?: Date | string | null
+  highArchivedAt?: Date | string | null
+  lowClearedAt?: Date | string | null
+  highClearedAt?: Date | string | null
   createdAt?: Date | string
 }
 
@@ -735,6 +999,14 @@ export type DmThreadUpdateWithoutProfileLowInput = {
   lastMessageAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lowReadAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   highReadAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowDeliveredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highDeliveredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowMutedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highMutedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowArchivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highArchivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profileHigh?: Prisma.ForumProfileUpdateOneRequiredWithoutDmThreadsHighNestedInput
   messages?: Prisma.DmMessageUpdateManyWithoutThreadNestedInput
@@ -748,6 +1020,14 @@ export type DmThreadUncheckedUpdateWithoutProfileLowInput = {
   lastMessageAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lowReadAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   highReadAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowDeliveredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highDeliveredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowMutedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highMutedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowArchivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highArchivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   messages?: Prisma.DmMessageUncheckedUpdateManyWithoutThreadNestedInput
 }
@@ -760,6 +1040,14 @@ export type DmThreadUncheckedUpdateManyWithoutProfileLowInput = {
   lastMessageAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lowReadAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   highReadAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowDeliveredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highDeliveredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowMutedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highMutedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowArchivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highArchivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -770,6 +1058,14 @@ export type DmThreadUpdateWithoutProfileHighInput = {
   lastMessageAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lowReadAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   highReadAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowDeliveredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highDeliveredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowMutedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highMutedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowArchivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highArchivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profileLow?: Prisma.ForumProfileUpdateOneRequiredWithoutDmThreadsLowNestedInput
   messages?: Prisma.DmMessageUpdateManyWithoutThreadNestedInput
@@ -783,6 +1079,14 @@ export type DmThreadUncheckedUpdateWithoutProfileHighInput = {
   lastMessageAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lowReadAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   highReadAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowDeliveredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highDeliveredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowMutedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highMutedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowArchivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highArchivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   messages?: Prisma.DmMessageUncheckedUpdateManyWithoutThreadNestedInput
 }
@@ -795,6 +1099,14 @@ export type DmThreadUncheckedUpdateManyWithoutProfileHighInput = {
   lastMessageAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lowReadAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   highReadAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowDeliveredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highDeliveredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowMutedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highMutedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowArchivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highArchivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lowClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  highClearedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -838,6 +1150,14 @@ export type DmThreadSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   lastMessageAt?: boolean
   lowReadAt?: boolean
   highReadAt?: boolean
+  lowDeliveredAt?: boolean
+  highDeliveredAt?: boolean
+  lowMutedAt?: boolean
+  highMutedAt?: boolean
+  lowArchivedAt?: boolean
+  highArchivedAt?: boolean
+  lowClearedAt?: boolean
+  highClearedAt?: boolean
   createdAt?: boolean
   profileLow?: boolean | Prisma.ForumProfileDefaultArgs<ExtArgs>
   profileHigh?: boolean | Prisma.ForumProfileDefaultArgs<ExtArgs>
@@ -854,6 +1174,14 @@ export type DmThreadSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   lastMessageAt?: boolean
   lowReadAt?: boolean
   highReadAt?: boolean
+  lowDeliveredAt?: boolean
+  highDeliveredAt?: boolean
+  lowMutedAt?: boolean
+  highMutedAt?: boolean
+  lowArchivedAt?: boolean
+  highArchivedAt?: boolean
+  lowClearedAt?: boolean
+  highClearedAt?: boolean
   createdAt?: boolean
   profileLow?: boolean | Prisma.ForumProfileDefaultArgs<ExtArgs>
   profileHigh?: boolean | Prisma.ForumProfileDefaultArgs<ExtArgs>
@@ -868,6 +1196,14 @@ export type DmThreadSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   lastMessageAt?: boolean
   lowReadAt?: boolean
   highReadAt?: boolean
+  lowDeliveredAt?: boolean
+  highDeliveredAt?: boolean
+  lowMutedAt?: boolean
+  highMutedAt?: boolean
+  lowArchivedAt?: boolean
+  highArchivedAt?: boolean
+  lowClearedAt?: boolean
+  highClearedAt?: boolean
   createdAt?: boolean
   profileLow?: boolean | Prisma.ForumProfileDefaultArgs<ExtArgs>
   profileHigh?: boolean | Prisma.ForumProfileDefaultArgs<ExtArgs>
@@ -882,10 +1218,18 @@ export type DmThreadSelectScalar = {
   lastMessageAt?: boolean
   lowReadAt?: boolean
   highReadAt?: boolean
+  lowDeliveredAt?: boolean
+  highDeliveredAt?: boolean
+  lowMutedAt?: boolean
+  highMutedAt?: boolean
+  lowArchivedAt?: boolean
+  highArchivedAt?: boolean
+  lowClearedAt?: boolean
+  highClearedAt?: boolean
   createdAt?: boolean
 }
 
-export type DmThreadOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "profileLowId" | "profileHighId" | "requestedById" | "status" | "lastMessageAt" | "lowReadAt" | "highReadAt" | "createdAt", ExtArgs["result"]["dmThread"]>
+export type DmThreadOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "profileLowId" | "profileHighId" | "requestedById" | "status" | "lastMessageAt" | "lowReadAt" | "highReadAt" | "lowDeliveredAt" | "highDeliveredAt" | "lowMutedAt" | "highMutedAt" | "lowArchivedAt" | "highArchivedAt" | "lowClearedAt" | "highClearedAt" | "createdAt", ExtArgs["result"]["dmThread"]>
 export type DmThreadInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   profileLow?: boolean | Prisma.ForumProfileDefaultArgs<ExtArgs>
   profileHigh?: boolean | Prisma.ForumProfileDefaultArgs<ExtArgs>
@@ -917,6 +1261,17 @@ export type $DmThreadPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     lastMessageAt: Date
     lowReadAt: Date | null
     highReadAt: Date | null
+    lowDeliveredAt: Date | null
+    highDeliveredAt: Date | null
+    lowMutedAt: Date | null
+    highMutedAt: Date | null
+    lowArchivedAt: Date | null
+    highArchivedAt: Date | null
+    /**
+     * "Delete conversation" only hides it for that member: messages up to this moment are no longer shown to them.
+     */
+    lowClearedAt: Date | null
+    highClearedAt: Date | null
     createdAt: Date
   }, ExtArgs["result"]["dmThread"]>
   composites: {}
@@ -1352,6 +1707,14 @@ export interface DmThreadFieldRefs {
   readonly lastMessageAt: Prisma.FieldRef<"DmThread", 'DateTime'>
   readonly lowReadAt: Prisma.FieldRef<"DmThread", 'DateTime'>
   readonly highReadAt: Prisma.FieldRef<"DmThread", 'DateTime'>
+  readonly lowDeliveredAt: Prisma.FieldRef<"DmThread", 'DateTime'>
+  readonly highDeliveredAt: Prisma.FieldRef<"DmThread", 'DateTime'>
+  readonly lowMutedAt: Prisma.FieldRef<"DmThread", 'DateTime'>
+  readonly highMutedAt: Prisma.FieldRef<"DmThread", 'DateTime'>
+  readonly lowArchivedAt: Prisma.FieldRef<"DmThread", 'DateTime'>
+  readonly highArchivedAt: Prisma.FieldRef<"DmThread", 'DateTime'>
+  readonly lowClearedAt: Prisma.FieldRef<"DmThread", 'DateTime'>
+  readonly highClearedAt: Prisma.FieldRef<"DmThread", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"DmThread", 'DateTime'>
 }
     

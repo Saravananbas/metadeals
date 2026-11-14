@@ -1,6 +1,13 @@
 # MetaDeals4U Master Progress
 
-Last updated: 2026-11-11
+Last updated: 2026-11-14
+
+## Session checkpoint — 2026-11-14
+
+- Admin navigation redesign is implemented in the existing admin shell (`src/components/admin/AdminNav.tsx`, `src/components/admin/admin-nav.module.css`); the Foundation dashboard’s duplicate top brand/sign-out header was removed. Focused ESLint and `npx tsc --noEmit` pass. Browser verification confirmed all tabs render; a horizontal overflow at 1280px was fixed with responsive wrapping and rechecked without overflow.
+- Wrote the required source-based moderator audit and phased implementation plan at `docs/community-forum/MODERATOR_PHASE_1_AUDIT_AND_IMPLEMENTATION_PLAN.md`. No moderator schema, permissions, APIs, or database changes have been made.
+- Moderator implementation remains gated: the focused community test command skipped 14 tests because no disposable test DB was configured. Owner has now clarified that Docker and PostgreSQL are out of the active environment and MariaDB is the runtime database. Validate new work against disposable MariaDB; retain legacy PostgreSQL schema/migrations without treating them as the runtime target unless the owner changes direction. The existing app and Python extractor were verified on 4123/8765; avoid duplicate starts.
+- No migration, database write, Hostinger/GCP access, deployment, staging, commit, or push occurred. Preserve existing staged/unstaged/untracked user work.
 
 ## Overall status
 
@@ -83,3 +90,11 @@ Phase 2–3: local Docker/runtime verification and confirmed bug remediation. Se
 
 See [USER_TASK_TRACKER.md](USER_TASK_TRACKER.md) for a consolidated table of every request and its current status. Latest verified local work: extraction preview reduced to two columns; merchant choices load all Merchant Websites pages; publishing maps selected merchant; public and mobile deal payloads carry exact-domain directory logos to deal cards. Current static checks pass. Browser/disposable-DB validation remains open.
 
+# 2026-11-14 reconciliation: existing local launcher and Python extractor were verified healthy; `/admin/login` returned HTTP 200. Admin navigation tabs were browser-verified and responsive wrapping fixed a confirmed horizontal overflow at 1280px. TypeScript and focused lint passed. Moderator phase 1 audit/plan is complete, implementation not started; DB integration tests skipped pending disposable DB availability.
+
+## Checkpoint: community moderator implementation (2026-11-14)
+- Status: implemented locally, tested on disposable MariaDB `metadeals_modtest`. NOT committed, staged, deployed, or applied to the persistent local database. Details and exact status: `docs/community-forum/MODERATOR_PHASE_2_IMPLEMENTATION.md`.
+- Built: `COMMUNITY_MODERATOR` role with nine least-privilege capabilities; invitation (single-use hashed token, authenticated customer binding by id, guideline consent, mandatory staff MFA setup); 30-day probation that never auto-confirms (admin confirm / extend with reason / revoke; undecided probation pauses access); immediate revocation with session deletion; warnings; 1-7 day posting restrictions enforced in discussions, comments, replies, edits and deal submissions; appeals decided by an independent administrator; sensitive-content hide + redacted escalation; draft-only community deal approval; moderator dashboard `/moderator` and admin page `/admin/moderators`.
+- Verification: migration from scratch PASS; permission matrix PASS; moderator system test PASS; real-session route boundary test PASS (moderator refused on 23 admin/account/deal/affiliate/scraper endpoints); community-forum 9/9 and community-submissions 5/5 PASS; full suite 228 pass / 7 fail / 1 skipped (the 7 need a real Redis, queue code untouched); tsc clean; ESLint 0 errors; design tokens PASS.
+- NOT VERIFIED: new screens in a browser; PostgreSQL migration execution.
+- Owner gate: apply migration `20261126100000_community_moderator` to the persistent local DB before using the screens on the running dev server.

@@ -99,6 +99,8 @@ a { text-decoration: none; }
 
 /* ROW 1: Product Image, Discount Badge, Wishlist Icon */
 .deal-image-wrap { position: relative; height: 160px; margin: 0; border-radius: 0; overflow: hidden; background: var(--md-white); display: flex; align-items: center; justify-content: center; padding: 12px; border-bottom: 1px solid var(--md-color-primary-soft); box-sizing: border-box; }
+.deal-expired-overlay { position: absolute; z-index: 3; inset: 0; display: grid; place-items: center; background: color-mix(in srgb, var(--md-white) 58%, transparent); pointer-events: none; }
+.deal-expired-overlay span { padding: 8px 22px; border: 1px solid color-mix(in srgb, var(--md-neutral-700) 20%, transparent); border-radius: 8px; background: color-mix(in srgb, var(--md-white) 88%, transparent); color: var(--md-neutral-700); font-size: 18px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
 .product-image-button { position: relative; display: block; width: 100%; height: 100%; }
 .product-image-button img { object-fit: contain; }
 .discount-badge { position: absolute; z-index: 2; left: 10px; top: 10px; background: var(--md-color-danger); color: var(--md-white); padding: 3px 8px; font-size: 11px; line-height: 1.1; border-radius: 6px; font-weight: 800; box-shadow: 0 2px 4px color-mix(in srgb, var(--md-red-600) 30%, transparent); letter-spacing: 0.3px; pointer-events: none; }
@@ -145,6 +147,7 @@ a { text-decoration: none; }
 .deal-view-details-btn:hover { background: var(--md-color-primary-subtle); }
 .deal-buy-now-btn { flex: 1.1; padding: 7px 10px; background: var(--md-orange-700); border: 1px solid var(--md-orange-700); color: var(--md-white); border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px; transition: all 0.15s ease; white-space: nowrap; text-decoration: none; }
 .deal-buy-now-btn:hover { background: var(--md-orange-800); border-color: var(--md-orange-800); }
+.deal-buy-now-disabled { flex: 1.1; padding: 7px 10px; border: 1px solid var(--md-color-border); color: var(--md-neutral-600); background: var(--md-color-surface-muted); border-radius: 8px; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: not-allowed; }
 
 /* ROW 7: Social Interaction Row */
 .deal-row-social { display: flex; align-items: center; justify-content: space-between; padding-top: 8px; border-top: 1px solid var(--md-color-surface-muted); min-height: 28px; }
@@ -598,3 +601,22 @@ body { background: radial-gradient(ellipse at 12% 18%, color-mix(in srgb, var(--
 /* The title bar stays at the top while the deals scroll (all screen sizes) */
 .site-header { position: sticky; top: 0; z-index: 50; background: color-mix(in srgb, var(--md-color-page) 88%, transparent); backdrop-filter: blur(14px); padding-bottom: 4px; }
 @media (max-width: 639px) { .mobile-feed-bar { top: 62px; z-index: 40; } }
+
+/* Homepage deal list: page numbers */
+.pager { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px; margin: 28px 0 8px; }
+.pager-list { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; margin: 0; padding: 0; align-items: center; justify-content: center; }
+.pager-num, .pager-btn { min-width: 44px; min-height: 44px; border-radius: 12px; border: 1px solid var(--md-purple-200); background: var(--md-white); color: var(--md-purple-800); font: inherit; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 4px; padding: 0 12px; }
+.pager-num[aria-current="page"] { background: var(--md-purple-600); border-color: var(--md-purple-600); color: var(--md-white); }
+.pager-num:hover:not([aria-current="page"]):not(:disabled), .pager-btn:hover:not(:disabled) { background: var(--md-purple-50); }
+.pager-num:disabled, .pager-btn:disabled { opacity: .5; cursor: not-allowed; }
+.pager-gap { color: var(--md-neutral-500); padding: 0 4px; }
+@media (max-width: 520px) { .pager-btn span { display: none; } .pager-btn { min-width: 44px; padding: 0; } }
+
+/* Search box in the top bar (phones use the search bar above the feed instead) */
+.header-search { display: none; align-items: center; flex: 0 1 280px; min-width: 0; height: 42px; padding: 0 4px 0 14px; border-radius: 999px; background: var(--md-input-bg); border: 1px solid var(--md-color-border); color: var(--md-color-text); }
+.header-search:focus-within { outline: 3px solid var(--md-input-border-focus); outline-offset: 1px; }
+.header-search input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font: inherit; font-size: 14px; }
+.header-search input::placeholder { color: var(--md-input-placeholder); opacity: 1; }
+.header-search button { width: 34px; height: 34px; border-radius: 50%; border: 0; display: grid; place-items: center; background: var(--md-color-accent); color: var(--md-white); cursor: pointer; flex: none; }
+@media (min-width: 640px) { .header-search { display: flex; } }
+@media (min-width: 1280px) { .header-search { flex-basis: 320px; } }

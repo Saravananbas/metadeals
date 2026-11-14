@@ -46,3 +46,9 @@ Tracked files and the 36-commit history were scanned for key patterns and secret
 
 ## Production blockers
 Not production-ready until: the owner items in `HOLD_FOR_OWNER_APPROVAL.md` are done (least-privilege database user, `ADMIN_ALLOWED_IPS`, Remote MySQL rules removed, staging password changed, deletion and retention decided) and the staging checks (CSP enforcement, proxy behaviour, wrap-mode affiliate links) pass; the admin lock and an avatar upload are tested on staging; EDITOR/ADMIN/customer isolation is tested with real sessions against a disposable database; and backup restore is verified. Deployment is not approved by this report.
+
+## Release gate execution, 13 Nov 2026
+See `RELEASE_GATE_EXECUTION_2026-11-13.md`: 7 Redis-dependent tests now pass (17 of 17 in their files); 1 Postgres-only test still not run; staging sign-in, role, isolation and Hostinger backup tests remain owner-dependent; WordPress production site investigated (plan only). Production: not approved.
+
+## Staging readiness run, 13 Nov 2026 (second pass)
+See `PRODUCTION_LAUNCH_TRACKER.md` (new 12-item list), `OWNER_APPROVAL_ITEMS_2026-11-13.md`, `../NATIVE_API_READINESS.md`. Summary: six migrations rehearsed locally (pass); staging backup, restore test and migration BLOCKED (stored staging credentials refused); secrets scan clean; full suite 228 tests, 227 pass, 1 skipped; production build, type check and lint pass; responsive emulation 360 to 1440 px clean. Recommendation: STAGING MIGRATION READY. Not production-ready.

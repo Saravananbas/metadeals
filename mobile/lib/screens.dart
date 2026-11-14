@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'api.dart';
+import 'brand.dart';
 import 'models.dart';
 import 'saved_store.dart';
 import 'widgets.dart';
@@ -73,19 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('MetaDeals4U', style: TextStyle(fontWeight: FontWeight.w800, color: brandPurple)),
-        actions: [
-          IconButton(
-            tooltip: 'Saved deals',
-            icon: const Icon(Icons.favorite_border),
-            onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => SavedScreen(api: widget.api, saved: widget.saved))),
-          ),
-          IconButton(tooltip: 'About', icon: const Icon(Icons.info_outline), onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const AboutScreen()))),
-        ],
-      ),
-      body: Column(children: [
+    return Column(children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(12, 4, 12, 0),
           child: TextField(
@@ -133,8 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
-      ]),
-    );
+    ]);
   }
 
   Widget _chip(String label, String slug) => Padding(
@@ -161,59 +149,97 @@ class DealScreen extends StatefulWidget {
 
 class _DealScreenState extends State<DealScreen> {
   late Deal deal = widget.summary;
+  List<Deal> _related = [];
 
   @override
   void initState() {
     super.initState();
     widget.api.deal(widget.summary.slug).then((d) => mounted ? setState(() => deal = d) : null).catchError((_) {});
+    _loadRelated();
   }
+
+  /// Other deals in the same category, shown after the post.
+  Future<void> _loadRelated() async {
+    try {
+      final cats = await widget.api.categories();
+      final slug = cats.where((c) => c.name == widget.summary.category).map((c) => c.slug).firstOrNull;
+      if (slug == null) return;
+      final page = await widget.api.deals(category: slug);
+      if (mounted) setState(() => _related = page.deals.where((d) => d.id != widget.summary.id).take(8).toList());
+    } catch (_) {/* related deals are optional */}
+  }
+
+  String _abs(String url) => url.startsWith('/') ? '$apiBase$url' : url;
 
   @override
   Widget build(BuildContext context) {
     final images = deal.gallery.isNotEmpty ? deal.gallery : [deal.imageUrl];
+    final logo = deal.merchantLogoUrl;
     return Scaffold(
-      appBar: AppBar(title: Text(deal.merchantName), actions: [
-        IconButton(tooltip: 'Share', icon: const Icon(Icons.share), onPressed: () => SharePlus.instance.share(ShareParams(text: '${deal.title} at ${rupees(deal.price)}\n${widget.api.base}/deal/${deal.slug}'))),
-        ListenableBuilder(
-          listenable: widget.saved,
-          builder: (_, _) => IconButton(
-            tooltip: 'Save deal',
-            icon: Icon(widget.saved.isSaved(deal.id) ? Icons.favorite : Icons.favorite_border, color: widget.saved.isSaved(deal.id) ? Colors.red : null),
-            onPressed: () => widget.saved.toggle(deal),
+      appBar: const BrandAppBar(showBack: true),
+      body: SafeArea(
+        top: false,
+        child: ListView(padding: const EdgeInsets.fromLTRB(16, 8, 16, 32), children: [
+          SizedBox(
+            height: 260,
+            child: PageView(children: [for (final url in images) Container(margin: const EdgeInsets.symmetric(horizontal: 4), decoration: BoxDecoration(color: const Color(0xFFF3F0FF), borderRadius: BorderRadius.circular(16)), padding: const EdgeInsets.all(10), child: DealImage(url))]),
           ),
-        ),
-      ]),
-      body: ListView(padding: const EdgeInsets.all(16), children: [
-        SizedBox(
-          height: 260,
-          child: PageView(children: [for (final url in images) Container(margin: const EdgeInsets.symmetric(horizontal: 4), decoration: BoxDecoration(color: const Color(0xFFF3F0FF), borderRadius: BorderRadius.circular(16)), padding: const EdgeInsets.all(10), child: DealImage(url))]),
-        ),
-        const SizedBox(height: 14),
-        Text(deal.title, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800)),
-        const SizedBox(height: 8),
-        Row(crossAxisAlignment: CrossAxisAlignment.baseline, textBaseline: TextBaseline.alphabetic, children: [
-          Text(rupees(deal.price), style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w800, color: const Color(0xFF2E1065))),
-          const SizedBox(width: 8),
-          if (deal.mrp > deal.price) Text(rupees(deal.mrp), style: const TextStyle(decoration: TextDecoration.lineThrough, color: Colors.black45)),
-          const SizedBox(width: 8),
-          if (deal.discountPercent > 0) Text('${deal.discountPercent}% off', style: const TextStyle(color: Color(0xFF166534), fontWeight: FontWeight.w700)),
+          const SizedBox(height: 10),
+          Row(children: [
+            if (logo != null && logo.isNotEmpty) ...[
+              ClipRRect(borderRadius: BorderRadius.circular(6), child: SizedBox(width: 28, height: 28, child: DealImage(_abs(logo)))),
+              const SizedBox(width: 8),
+            ],
+            Expanded(child: Text(deal.merchantName, style: const TextStyle(fontWeight: FontWeight.w700, color: Colors.black54))),
+            IconButton(tooltip: 'Share', icon: const Icon(Icons.share), onPressed: () => SharePlus.instance.share(ShareParams(text: '${deal.title} at ${rupees(deal.price)}\n${widget.api.base}/deal/${deal.slug}'))),
+            ListenableBuilder(
+              listenable: widget.saved,
+              builder: (_, _) => IconButton(
+                tooltip: 'Save deal',
+                icon: Icon(widget.saved.isSaved(deal.id) ? Icons.favorite : Icons.favorite_border, color: widget.saved.isSaved(deal.id) ? Colors.red : null),
+                onPressed: () => widget.saved.toggle(deal),
+              ),
+            ),
+          ]),
+          Text(deal.title, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800)),
+          const SizedBox(height: 8),
+          Row(crossAxisAlignment: CrossAxisAlignment.baseline, textBaseline: TextBaseline.alphabetic, children: [
+            Text(rupees(deal.price), style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w800, color: const Color(0xFF2E1065))),
+            const SizedBox(width: 8),
+            if (deal.mrp > deal.price) Text(rupees(deal.mrp), style: const TextStyle(decoration: TextDecoration.lineThrough, color: Colors.black45)),
+            const SizedBox(width: 8),
+            if (deal.discountPercent > 0) Text('${deal.discountPercent}% off', style: const TextStyle(color: Color(0xFF166534), fontWeight: FontWeight.w700)),
+          ]),
+          const SizedBox(height: 14),
+          FilledButton.icon(
+            style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(52), backgroundColor: brandOrange, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))),
+            onPressed: () => openBuyNow(context, widget.api, deal.outboundUrl),
+            icon: const Icon(Icons.open_in_new),
+            label: Text('Buy Now at ${deal.merchantName}', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
+          ),
+          const SizedBox(height: 8),
+          const Text('Prices and offers can change. Check the final price on the store before you pay. We may earn a commission at no extra cost to you.', style: TextStyle(fontSize: 12, color: Colors.black54)),
+          if (deal.description.isNotEmpty) ...[
+            const SizedBox(height: 18),
+            const Text('About this item', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
+            const SizedBox(height: 6),
+            Text(deal.description),
+          ],
+          if (_related.isNotEmpty) ...[
+            const SizedBox(height: 22),
+            const Text('Related deals', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18)),
+            const SizedBox(height: 6),
+            for (final d in _related)
+              DealCard(
+                api: widget.api,
+                deal: d,
+                saved: widget.saved.isSaved(d.id),
+                onSave: () => widget.saved.toggle(d),
+                onOpen: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => DealScreen(api: widget.api, saved: widget.saved, summary: d))),
+              ),
+          ],
         ]),
-        const SizedBox(height: 14),
-        FilledButton.icon(
-          style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(52), backgroundColor: brandOrange, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))),
-          onPressed: () => openBuyNow(context, widget.api, deal.outboundUrl),
-          icon: const Icon(Icons.open_in_new),
-          label: Text('Buy Now at ${deal.merchantName}', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
-        ),
-        const SizedBox(height: 8),
-        const Text('Prices and offers can change. Check the final price on the store before you pay. We may earn a commission at no extra cost to you.', style: TextStyle(fontSize: 12, color: Colors.black54)),
-        if (deal.description.isNotEmpty) ...[
-          const SizedBox(height: 18),
-          const Text('About this item', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
-          const SizedBox(height: 6),
-          Text(deal.description),
-        ],
-      ]),
+      ),
     );
   }
 }
@@ -225,7 +251,7 @@ class SavedScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: const Text('Saved deals')),
+        appBar: const BrandAppBar(showBack: true),
         body: ListenableBuilder(
           listenable: saved,
           builder: (context, _) {
@@ -253,7 +279,7 @@ class AboutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: const Text('About')),
+        appBar: const BrandAppBar(showBack: true),
         body: ListView(padding: const EdgeInsets.all(16), children: [
           const Text('MetaDeals4U lists deals from online stores. When you tap Buy Now you go to the store, and the sale is between you and that store. We may earn a commission at no extra cost to you.'),
           const SizedBox(height: 16),

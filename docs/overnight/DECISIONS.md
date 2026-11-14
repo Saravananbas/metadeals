@@ -47,3 +47,23 @@ Last updated: 2026-11-11
 - Owner requests every fetched product image to be retained with the deal and displayed in home cards as a carousel advancing every 3 seconds in a left-to-right direction. Use existing extraction data/media import security. Design storage for both PostgreSQL and MariaDB, validate schema/migrations only on disposable databases, and make carousel accessible/responsive with reduced-motion behavior. No migration is to be applied to persistent databases without approval.
 - Merchant-directory listing is now the source for chosen merchant name and logo. Public/mobile JSON enriches the operational merchant with its directory logo by exact normalized website domain. Avoid loose substring/first-merchant fallbacks.
 
+# Decisions — 2026-11-14 continuation
+
+- Preserve the current admin navigation implementation and existing routes; focused type/lint checks pass. The 2026-11-14 browser follow-up verified the live navigation and responsive wrapping at 1280px.
+- Moderator Phase 1 is source-audit complete, recorded in `docs/community-forum/MODERATOR_PHASE_1_AUDIT_AND_IMPLEMENTATION_PLAN.md`.
+- Do not implement/enable `COMMUNITY_MODERATOR` until disposable Postgres and MariaDB are reachable and schema parity, migrations, auth/MFA, route isolation, public hidden-content non-leak, posting restrictions, appeal independence, and permission tests can run. Existing broad `forum:moderate` and `forum:manage` are not sufficient least-privilege gates.
+- Use the existing Python extractor and Next.js launcher; do not bypass extractor health checks or disable authentication. The running launcher was verified healthy on 2026-11-14.
+- No database, migration, production, Hostinger, or cloud state was modified in this session.
+- Owner clarified on 2026-11-14 that Docker and PostgreSQL are no longer used; MariaDB is the active runtime. `.env` selects `mysql:` at 127.0.0.1:3307 and `prisma.config.ts` routes to MariaDB schema/migrations. Treat PostgreSQL files as retained legacy/compatibility material, not active target. Use disposable MariaDB for any migration or integration validation; do not infer permission to migrate the persistent local DB from this clarification.
+
+# 2026-11-14: Do not start or kill duplicate Next dev servers when `npm run dev` returns EADDRINUSE. The listener was verified as the existing D:\Metadeals launcher; app and extractor were healthy. Admin nav is allowed to wrap at medium desktop widths to avoid horizontal overflow. Moderator code remains gated until disposable database validation and isolated permission tests can run.
+
+# 2026-11-14: Community moderator design decisions
+- Moderators are a separate staff role (`COMMUNITY_MODERATOR`) with their own dashboard and API; the general admin APIs and layout refuse them. Existing `forum:moderate` / `forum:manage` were NOT widened; services now check specific `mod:*` capabilities that administrators also hold.
+- Identity is bound by customer id at acceptance, never by email; acceptance needs the member's own signed-in session, guideline consent and the normal staff MFA setup.
+- Probation never auto-confirms. If it ends undecided, access pauses (chosen as the safer reading of "never auto-confirm"); an administrator confirms, extends (max twice, with reason) or revokes. Revocation is immediate and keeps history.
+- Restrictions only stop posting (1-7 days for moderators, one at a time, max two per member per month); they never use `ForumProfile.status`. Private messages are deliberately not covered.
+- Appeals are decided by an administrator who did not take the action; moderators cannot decide any appeal.
+- Sensitive content is enabled because it is atomic (hide + history + audit + redacted escalation, no content copied); evidence access is administrator-only and audited. Image evidence is not exposed.
+- Moderators see reporter names as "hidden" and submitters' user names only.
+- Migration applied to the disposable MariaDB only; persistent local DB, staging and production untouched pending owner approval.

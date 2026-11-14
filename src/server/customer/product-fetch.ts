@@ -20,11 +20,14 @@ export async function fetchProductDetails(customerId: string, raw: unknown) {
   const d = result.data;
   const images = [d.media.primaryImageUrl.value, ...(d.media.additionalImageUrls?.value ?? [])].filter((u): u is string => Boolean(u)).map((u) => u.replace(/^http:/i, "https:")).slice(0, 8);
   const domain = (() => { try { return new URL(result.canonicalUrl || url).hostname.toLowerCase().replace(/^www\./, ""); } catch { return ""; } })();
-  const logo = domain ? await getDatabase().merchantWebsiteDirectory.findFirst({ where: { domain: { in: [domain, `www.${domain}`] } }, select: { logoUrl: true } }) : null;
+  const directoryMerchant = domain ? await getDatabase().merchantWebsiteDirectory.findFirst({
+    where: { domain: { in: [domain, `www.${domain}`] }, status: "ACTIVE" },
+    select: { name: true, logoMediaId: true, logoUrl: true },
+  }) : null;
   return {
-    logoUrl: logo?.logoUrl ?? null,
+    logoUrl: directoryMerchant?.logoMediaId ? `/api/v1/media/${directoryMerchant.logoMediaId}` : directoryMerchant?.logoUrl ?? null,
     status: result.status,
-    store: result.matchedTaxonomy?.merchantName ?? result.retailer,
+    store: directoryMerchant?.name ?? result.matchedTaxonomy?.merchantName ?? result.retailer,
     productUrl: result.canonicalUrl || url,
     title: result.suggestedFormValues?.title || d.identity.title.value || "",
     brand: result.suggestedFormValues?.brand || d.identity.brand.value || "",

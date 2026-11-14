@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { isPublicHttpsUrl } from "@/features/deals/validation";
 
-export const LIMITS = { title: 200, body: 10_000, comment: 3_000, maxLinksPost: 3, maxLinksComment: 1, maxCommentDepth: 2, bio: 280 } as const;
+export const LIMITS = { title: 200, newPostTitle: 120, richBody: 5_000, richComment: 2_000, maxImages: 3, body: 10_000, comment: 3_000, maxLinksPost: 3, maxLinksComment: 1, maxCommentDepth: 2, bio: 280 } as const;
 export const POST_TYPES = ["DEAL", "DISCUSSION", "QUESTION"] as const;
 export const REPORT_CATEGORIES = ["SPAM", "SCAM", "HARASSMENT", "HATE", "ILLEGAL", "PRIVACY", "IMPERSONATION", "OFF_TOPIC", "OTHER"] as const;
 export const REPORT_LABELS: Record<(typeof REPORT_CATEGORIES)[number], string> = {
@@ -54,8 +54,12 @@ const text = (min: number, max: number, label: string) =>
 export const postInputSchema = z.object({
   type: z.enum(POST_TYPES),
   communitySlug: z.string().trim().toLowerCase().min(2).max(40),
-  title: text(5, LIMITS.title, "Title"),
+  title: text(5, LIMITS.newPostTitle, "Title"),
   body: text(0, LIMITS.body, "Text").default(""),
+  // Written in the editor: sanitized again on the server, which also derives the plain text in `body`.
+  bodyHtml: z.string().max(30_000).optional(),
+  imageIds: z.array(z.string().min(1).max(40)).max(LIMITS.maxImages).optional(),
+  notifyReplies: z.boolean().optional(),
   url: z.string().trim().max(2048).refine(isPublicHttpsUrl, "Use a public HTTPS link (no logins, ports or IP addresses).").nullable().optional(),
   merchantName: text(0, 100, "Store name").nullable().optional(),
   priceMinor: z.number().int().min(100, "Price must be at least ₹1.").max(2_000_000_000).nullable().optional(),
@@ -77,15 +81,18 @@ export const postEditSchema = z.object({
   version: z.number().int().positive(),
   title: text(5, LIMITS.title, "Title").optional(),
   body: text(0, LIMITS.body, "Text").optional(),
+  bodyHtml: z.string().max(30_000).optional(),
 }).strict().refine((v) => v.title !== undefined || v.body !== undefined, "Nothing to change.");
 
 export const commentInputSchema = z.object({
   body: text(1, LIMITS.comment, "Comment"),
+  // Written in the editor: sanitized on the server, which also derives the plain text in `body`.
+  bodyHtml: z.string().max(12_000).optional(),
   parentId: z.string().min(1).max(40).nullable().optional(),
 }).strict().superRefine((value, ctx) => {
   if (findUrls(value.body).length > LIMITS.maxLinksComment) ctx.addIssue({ code: "custom", path: ["body"], message: `Use at most ${LIMITS.maxLinksComment} link in a comment.` });
 });
-export const commentEditSchema = z.object({ version: z.number().int().positive(), body: text(1, LIMITS.comment, "Comment") }).strict();
+export const commentEditSchema = z.object({ version: z.number().int().positive(), body: text(1, LIMITS.comment, "Comment"), bodyHtml: z.string().max(12_000).optional() }).strict();
 
 export const voteSchema = z.object({ value: z.union([z.literal(1), z.literal(-1)]) }).strict();
 
@@ -96,7 +103,7 @@ export const reportSchema = z.object({
   details: text(0, 500, "Details").nullable().optional(),
 }).strict();
 
-export const handleSchema = z.string().trim().toLowerCase().regex(/^[a-z0-9_]{3,30}$/, "Use 3 to 30 letters, numbers or underscores.").refine((h) => !RESERVED_HANDLES.has(h), "That name is reserved.");
+export const handleSchema = z.string().trim().toLowerCase().regex(/^[a-z0-9_]{3,30}$/, "Use 3 to 30 letters, numbers or underscores.").refine((h) => !RESERVED_HANDLES.has(h) && !looksLikeStaffName(h.replace(/_/g, " ")), "That name is reserved.");
 export const forumProfileSchema = z.object({ handle: handleSchema, bio: text(0, LIMITS.bio, "Bio").nullable().optional() }).strict();
 
 export const feedQuerySchema = z.object({

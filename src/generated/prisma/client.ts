@@ -147,6 +147,11 @@ export type CustomerIdentity = Prisma.CustomerIdentityModel
  */
 export type CustomerSignupChallenge = Prisma.CustomerSignupChallengeModel
 /**
+ * Model CustomerPasswordReset
+ * One pending "forgot password" request: a six-digit code sent by email. Only a keyed hash of the code is stored.
+ */
+export type CustomerPasswordReset = Prisma.CustomerPasswordResetModel
+/**
  * Model CustomerRateLimit
  * 
  */
@@ -292,6 +297,16 @@ export type ForumPostVote = Prisma.ForumPostVoteModel
  */
 export type ForumCommentVote = Prisma.ForumCommentVoteModel
 /**
+ * Model ForumPostLike
+ * A like is separate from a vote (votes rank content, likes only say "I liked this"); one per member and item.
+ */
+export type ForumPostLike = Prisma.ForumPostLikeModel
+/**
+ * Model ForumCommentLike
+ * 
+ */
+export type ForumCommentLike = Prisma.ForumCommentLikeModel
+/**
  * Model ForumSave
  * 
  */
@@ -301,6 +316,31 @@ export type ForumSave = Prisma.ForumSaveModel
  * 
  */
 export type ForumFollow = Prisma.ForumFollowModel
+/**
+ * Model ForumPostImage
+ * Pictures of a discussion (JPEG, PNG or WebP re-encoded to WebP). postId stays empty while the author is still composing.
+ */
+export type ForumPostImage = Prisma.ForumPostImageModel
+/**
+ * Model ForumPostDraft
+ * One unfinished discussion per member, private to them.
+ */
+export type ForumPostDraft = Prisma.ForumPostDraftModel
+/**
+ * Model ForumNotification
+ * A notice for a member (someone replied, or a moderator acted). Post title and link are copied in so the list needs no joins; moderators are never named.
+ */
+export type ForumNotification = Prisma.ForumNotificationModel
+/**
+ * Model ForumAnnouncement
+ * Official announcements. Publicly they always appear as "MetaDeals4U Team"; the staff member who wrote and published each one is kept here (and in the audit log), never shown to members.
+ */
+export type ForumAnnouncement = Prisma.ForumAnnouncementModel
+/**
+ * Model StaffPermissionGrant
+ * A permission granted to one staff member on top of their role (for example announcement:publish for an editor).
+ */
+export type StaffPermissionGrant = Prisma.StaffPermissionGrantModel
 /**
  * Model ForumReport
  * 
@@ -331,3 +371,58 @@ export type DmBlock = Prisma.DmBlockModel
  * Staff see a message only when a participant reports it; the text is copied here at that moment.
  */
 export type DmReport = Prisma.DmReportModel
+/**
+ * Model CustomerAppToken
+ * Sign-in token for the native apps. Only its SHA-256 is stored; the app keeps the token in the device's secure storage.
+ */
+export type CustomerAppToken = Prisma.CustomerAppTokenModel
+/**
+ * Model ForumMemberFollow
+ * One member following another (public: shown as follower counts).
+ */
+export type ForumMemberFollow = Prisma.ForumMemberFollowModel
+/**
+ * Model DevicePushToken
+ * A phone registered for push alerts (FCM token; it also reaches iPhones through Firebase). Alerts are sent only when a provider is configured.
+ */
+export type DevicePushToken = Prisma.DevicePushTokenModel
+/**
+ * Model ModeratorAppointment
+ * A customer invited to moderate. The invitation token is single use and stored only as a hash. Status: INVITED, PROBATION, CONFIRMED, REVOKED, DECLINED.
+ */
+export type ModeratorAppointment = Prisma.ModeratorAppointmentModel
+/**
+ * Model ModeratorAppointmentEvent
+ * Append-only history of an appointment (invited, accepted, extended, confirmed, revoked) with the actor and the stated reason.
+ */
+export type ModeratorAppointmentEvent = Prisma.ModeratorAppointmentEventModel
+/**
+ * Model MemberWarning
+ * A private warning to a member. The member sees the reason, never which moderator issued it.
+ */
+export type MemberWarning = Prisma.MemberWarningModel
+/**
+ * Model MemberRestriction
+ * A time-limited ban on posting (discussions, comments, replies, community deal submissions). Never touches ForumProfile.status.
+ */
+export type MemberRestriction = Prisma.MemberRestrictionModel
+/**
+ * Model ModerationAppeal
+ * A member's appeal against a warning, restriction or content action. Decided by an administrator who did not take the action.
+ */
+export type ModerationAppeal = Prisma.ModerationAppealModel
+/**
+ * Model ModerationEscalation
+ * A redacted pointer to content a moderator hid as sensitive. It holds no content; only administrators can open the hidden item.
+ */
+export type ModerationEscalation = Prisma.ModerationEscalationModel
+/**
+ * Model CustomerPreference
+ * Member's own notification and display choices (one row per member, created on first save). Nothing here is sent anywhere by itself: senders must check it.
+ */
+export type CustomerPreference = Prisma.CustomerPreferenceModel
+/**
+ * Model SavedDeal
+ * A deal the member bookmarked (server-side, so it follows them across devices).
+ */
+export type SavedDeal = Prisma.SavedDealModel

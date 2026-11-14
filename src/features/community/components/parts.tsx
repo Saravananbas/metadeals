@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { linkifyParts } from "../validation";
 import type { PostDto } from "@/server/community/service";
-import { VoteControl } from "./VoteControl";
+import { CardBar, ClickCard } from "./CardBar";
 import styles from "../community.module.css";
 
 /** Plain text with safe, public HTTPS links only. Everything else is escaped by React. */
@@ -57,20 +57,25 @@ export function DealBox({ post }: { post: PostDto }) {
 }
 
 export function PostCard({ post }: { post: PostDto }) {
-  const excerpt = post.body.length > 220 ? post.body.slice(0, 220) + "…" : post.body;
+  const excerpt = post.body.length > 200 ? post.body.slice(0, 200) + "…" : post.body;
+  const when = ago(post.publishedAt ?? post.createdAt);
   return (
-    <article className={styles.post}>
-      <VoteControl kind="post" id={post.id} score={post.score} initial={post.viewer?.vote ?? 0} disabled={post.viewer?.mine} />
-      <div>
-        <h2 className={styles.title}><Link href={`/community/post/${post.slug}`}>{post.title}</Link></h2>
-        <PostMeta post={post} />
-        <DealBox post={post} />
-        {excerpt && <p className={styles.excerpt}>{excerpt}</p>}
-        <div className={styles.meta} style={{ marginTop: 8 }}>
-          <Link href={`/community/post/${post.slug}`}>{post.commentCount} {post.commentCount === 1 ? "comment" : "comments"}</Link>
+    <ClickCard href={"/community/post/" + post.slug} className={styles.dcard}>
+      <div className={styles.dmain}>
+        <div className={styles.dtop}>
+          <Avatar handle={post.author.handle} url={post.author.avatarUrl} size={28} />
+          <Link href={"/community/u/" + post.author.handle} className={styles.dauthor}>{post.author.handle}</Link>
+          <span className={styles.notice}>{when}</span>
+          <Link href={"/community/c/" + post.community.slug} className={styles.pill}>{post.community.name}</Link>
+          <span className={styles.dtype + " " + styles[post.type]}>{TYPE_LABEL[post.type]}</span>
+          {post.viewer?.status === "PENDING_REVIEW" && <span className={styles.dtype + " " + styles.pending}>Awaiting review</span>}
         </div>
+        <h2 className={styles.dtitle}><Link href={"/community/post/" + post.slug}>{post.title}</Link></h2>
+        <DealBox post={post} />
+        {excerpt && <p className={styles.dexcerpt}>{excerpt}</p>}
+        <CardBar post={post} />
       </div>
-    </article>
+    </ClickCard>
   );
 }
 

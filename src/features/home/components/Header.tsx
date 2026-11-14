@@ -10,15 +10,16 @@ import {
   Menu,
   MessagesSquare,
   PlusCircle,
-  Store,
   Tag,
   UserRound,
+  Search,
 } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
 import { UserNamePrompt } from "@/features/customer/IdentityCard";
 import { BrandLogo } from "@/components/BrandLogo";
+import { MessagesLink } from "@/features/messages/MessagesLink";
 import type { DealFilters } from "@/features/deals/types";
 
 export type Panel = "saved" | "stores" | "account" | "notifications" | "blog" | "bank" | null;
@@ -38,6 +39,9 @@ export function Header({
   categories = [],
   savedCount,
   communityEnabled = false,
+  query = "",
+  onQuery,
+  onSearch,
 }: {
   onPanel: (panel: Panel) => void;
   onView: (view: DealFilters["view"]) => void;
@@ -46,6 +50,9 @@ export function Header({
   categories?: CategoryItem[];
   savedCount: number;
   communityEnabled?: boolean;
+  query?: string;
+  onQuery?: (query: string) => void;
+  onSearch?: (query: string) => void;
 }) {
   const [signedIn, setSignedIn] = useState(false);
   useEffect(() => {
@@ -248,15 +255,6 @@ export function Header({
             </div>
           </details>
 
-          <button
-            onClick={() => {
-              onPanel("stores");
-              closeMenu();
-            }}
-          >
-            <Store size={19} />
-            Stores
-          </button>
           {communityEnabled && (
             <Link href="/community" onClick={closeMenu}>
               <MessagesSquare size={19} />
@@ -272,7 +270,15 @@ export function Header({
         </nav>
 
         {signedIn && <UserNamePrompt />}
+        {onSearch && onQuery && (
+          <form className="header-search" role="search" onSubmit={(event) => { event.preventDefault(); onSearch(query); closeMenu(); }}>
+            <label className="sr-only" htmlFor="header-deal-search">Search deals by product or brand</label>
+            <input id="header-deal-search" type="search" value={query} onChange={(event) => onQuery(event.target.value)} placeholder="Search deals, brands, products" autoComplete="off" />
+            <button type="submit" aria-label="Search"><Search size={18} aria-hidden="true" /></button>
+          </form>
+        )}
         <div className="header-actions">
+          {signedIn && <MessagesLink className="icon-button" badgeClassName="saved-count" size={21} />}
           <button
             className="icon-button notification-button"
             aria-label="Notifications"
@@ -300,8 +306,9 @@ export function Header({
             </button>
             {signedIn && (
               <div className="account-menu-panel" role="menu" aria-label="Account menu">
-                <Link href="/account" role="menuitem">Manage Profile</Link>
-                <Link href="/post-deal#my-submissions" role="menuitem">Submitted Deals</Link>
+                <Link href="/account" role="menuitem">My Profile</Link>
+                <Link href="/account?tab=deals" role="menuitem">My Deals</Link>
+                <Link href="/account?tab=settings" role="menuitem">Settings &amp; Security</Link>
                 <button type="button" role="menuitem" onClick={() => void signOut({ callbackUrl: "/" })}>Logout</button>
               </div>
             )}

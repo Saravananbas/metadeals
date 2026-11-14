@@ -29,6 +29,11 @@ export type ForumProfileMinAggregateOutputType = {
   customerId: string | null
   handle: string | null
   bio: string | null
+  displayName: string | null
+  location: string | null
+  lastSeenAt: Date | null
+  verifiedAt: Date | null
+  verifiedById: string | null
   status: $Enums.ForumMemberStatus | null
   suspendedUntil: Date | null
   suspensionReason: string | null
@@ -43,6 +48,11 @@ export type ForumProfileMaxAggregateOutputType = {
   customerId: string | null
   handle: string | null
   bio: string | null
+  displayName: string | null
+  location: string | null
+  lastSeenAt: Date | null
+  verifiedAt: Date | null
+  verifiedById: string | null
   status: $Enums.ForumMemberStatus | null
   suspendedUntil: Date | null
   suspensionReason: string | null
@@ -57,6 +67,11 @@ export type ForumProfileCountAggregateOutputType = {
   customerId: number
   handle: number
   bio: number
+  displayName: number
+  location: number
+  lastSeenAt: number
+  verifiedAt: number
+  verifiedById: number
   status: number
   suspendedUntil: number
   suspensionReason: number
@@ -73,6 +88,11 @@ export type ForumProfileMinAggregateInputType = {
   customerId?: true
   handle?: true
   bio?: true
+  displayName?: true
+  location?: true
+  lastSeenAt?: true
+  verifiedAt?: true
+  verifiedById?: true
   status?: true
   suspendedUntil?: true
   suspensionReason?: true
@@ -87,6 +107,11 @@ export type ForumProfileMaxAggregateInputType = {
   customerId?: true
   handle?: true
   bio?: true
+  displayName?: true
+  location?: true
+  lastSeenAt?: true
+  verifiedAt?: true
+  verifiedById?: true
   status?: true
   suspendedUntil?: true
   suspensionReason?: true
@@ -101,6 +126,11 @@ export type ForumProfileCountAggregateInputType = {
   customerId?: true
   handle?: true
   bio?: true
+  displayName?: true
+  location?: true
+  lastSeenAt?: true
+  verifiedAt?: true
+  verifiedById?: true
   status?: true
   suspendedUntil?: true
   suspensionReason?: true
@@ -188,6 +218,11 @@ export type ForumProfileGroupByOutputType = {
   customerId: string
   handle: string
   bio: string | null
+  displayName: string | null
+  location: string | null
+  lastSeenAt: Date | null
+  verifiedAt: Date | null
+  verifiedById: string | null
   status: $Enums.ForumMemberStatus
   suspendedUntil: Date | null
   suspensionReason: string | null
@@ -223,6 +258,11 @@ export type ForumProfileWhereInput = {
   customerId?: Prisma.StringFilter<"ForumProfile"> | string
   handle?: Prisma.StringFilter<"ForumProfile"> | string
   bio?: Prisma.StringNullableFilter<"ForumProfile"> | string | null
+  displayName?: Prisma.StringNullableFilter<"ForumProfile"> | string | null
+  location?: Prisma.StringNullableFilter<"ForumProfile"> | string | null
+  lastSeenAt?: Prisma.DateTimeNullableFilter<"ForumProfile"> | Date | string | null
+  verifiedAt?: Prisma.DateTimeNullableFilter<"ForumProfile"> | Date | string | null
+  verifiedById?: Prisma.StringNullableFilter<"ForumProfile"> | string | null
   status?: Prisma.EnumForumMemberStatusFilter<"ForumProfile"> | $Enums.ForumMemberStatus
   suspendedUntil?: Prisma.DateTimeNullableFilter<"ForumProfile"> | Date | string | null
   suspensionReason?: Prisma.StringNullableFilter<"ForumProfile"> | string | null
@@ -231,6 +271,11 @@ export type ForumProfileWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"ForumProfile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ForumProfile"> | Date | string
   customer?: Prisma.XOR<Prisma.CustomerScalarRelationFilter, Prisma.CustomerWhereInput>
+  followers?: Prisma.ForumMemberFollowListRelationFilter
+  warnings?: Prisma.MemberWarningListRelationFilter
+  restrictions?: Prisma.MemberRestrictionListRelationFilter
+  appeals?: Prisma.ModerationAppealListRelationFilter
+  following?: Prisma.ForumMemberFollowListRelationFilter
   dmThreadsLow?: Prisma.DmThreadListRelationFilter
   dmThreadsHigh?: Prisma.DmThreadListRelationFilter
   dmMessages?: Prisma.DmMessageListRelationFilter
@@ -240,7 +285,13 @@ export type ForumProfileWhereInput = {
   comments?: Prisma.ForumCommentListRelationFilter
   postVotes?: Prisma.ForumPostVoteListRelationFilter
   commentVotes?: Prisma.ForumCommentVoteListRelationFilter
+  postImages?: Prisma.ForumPostImageListRelationFilter
+  draft?: Prisma.XOR<Prisma.ForumPostDraftNullableScalarRelationFilter, Prisma.ForumPostDraftWhereInput> | null
+  notifications?: Prisma.ForumNotificationListRelationFilter
+  notificationsMade?: Prisma.ForumNotificationListRelationFilter
   saves?: Prisma.ForumSaveListRelationFilter
+  postLikes?: Prisma.ForumPostLikeListRelationFilter
+  commentLikes?: Prisma.ForumCommentLikeListRelationFilter
   follows?: Prisma.ForumFollowListRelationFilter
   reportsMade?: Prisma.ForumReportListRelationFilter
   reportsAgainst?: Prisma.ForumReportListRelationFilter
@@ -251,6 +302,11 @@ export type ForumProfileOrderByWithRelationInput = {
   customerId?: Prisma.SortOrder
   handle?: Prisma.SortOrder
   bio?: Prisma.SortOrderInput | Prisma.SortOrder
+  displayName?: Prisma.SortOrderInput | Prisma.SortOrder
+  location?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastSeenAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  verifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  verifiedById?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   suspendedUntil?: Prisma.SortOrderInput | Prisma.SortOrder
   suspensionReason?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -259,6 +315,11 @@ export type ForumProfileOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   customer?: Prisma.CustomerOrderByWithRelationInput
+  followers?: Prisma.ForumMemberFollowOrderByRelationAggregateInput
+  warnings?: Prisma.MemberWarningOrderByRelationAggregateInput
+  restrictions?: Prisma.MemberRestrictionOrderByRelationAggregateInput
+  appeals?: Prisma.ModerationAppealOrderByRelationAggregateInput
+  following?: Prisma.ForumMemberFollowOrderByRelationAggregateInput
   dmThreadsLow?: Prisma.DmThreadOrderByRelationAggregateInput
   dmThreadsHigh?: Prisma.DmThreadOrderByRelationAggregateInput
   dmMessages?: Prisma.DmMessageOrderByRelationAggregateInput
@@ -268,7 +329,13 @@ export type ForumProfileOrderByWithRelationInput = {
   comments?: Prisma.ForumCommentOrderByRelationAggregateInput
   postVotes?: Prisma.ForumPostVoteOrderByRelationAggregateInput
   commentVotes?: Prisma.ForumCommentVoteOrderByRelationAggregateInput
+  postImages?: Prisma.ForumPostImageOrderByRelationAggregateInput
+  draft?: Prisma.ForumPostDraftOrderByWithRelationInput
+  notifications?: Prisma.ForumNotificationOrderByRelationAggregateInput
+  notificationsMade?: Prisma.ForumNotificationOrderByRelationAggregateInput
   saves?: Prisma.ForumSaveOrderByRelationAggregateInput
+  postLikes?: Prisma.ForumPostLikeOrderByRelationAggregateInput
+  commentLikes?: Prisma.ForumCommentLikeOrderByRelationAggregateInput
   follows?: Prisma.ForumFollowOrderByRelationAggregateInput
   reportsMade?: Prisma.ForumReportOrderByRelationAggregateInput
   reportsAgainst?: Prisma.ForumReportOrderByRelationAggregateInput
@@ -283,6 +350,11 @@ export type ForumProfileWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.ForumProfileWhereInput[]
   NOT?: Prisma.ForumProfileWhereInput | Prisma.ForumProfileWhereInput[]
   bio?: Prisma.StringNullableFilter<"ForumProfile"> | string | null
+  displayName?: Prisma.StringNullableFilter<"ForumProfile"> | string | null
+  location?: Prisma.StringNullableFilter<"ForumProfile"> | string | null
+  lastSeenAt?: Prisma.DateTimeNullableFilter<"ForumProfile"> | Date | string | null
+  verifiedAt?: Prisma.DateTimeNullableFilter<"ForumProfile"> | Date | string | null
+  verifiedById?: Prisma.StringNullableFilter<"ForumProfile"> | string | null
   status?: Prisma.EnumForumMemberStatusFilter<"ForumProfile"> | $Enums.ForumMemberStatus
   suspendedUntil?: Prisma.DateTimeNullableFilter<"ForumProfile"> | Date | string | null
   suspensionReason?: Prisma.StringNullableFilter<"ForumProfile"> | string | null
@@ -291,6 +363,11 @@ export type ForumProfileWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"ForumProfile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ForumProfile"> | Date | string
   customer?: Prisma.XOR<Prisma.CustomerScalarRelationFilter, Prisma.CustomerWhereInput>
+  followers?: Prisma.ForumMemberFollowListRelationFilter
+  warnings?: Prisma.MemberWarningListRelationFilter
+  restrictions?: Prisma.MemberRestrictionListRelationFilter
+  appeals?: Prisma.ModerationAppealListRelationFilter
+  following?: Prisma.ForumMemberFollowListRelationFilter
   dmThreadsLow?: Prisma.DmThreadListRelationFilter
   dmThreadsHigh?: Prisma.DmThreadListRelationFilter
   dmMessages?: Prisma.DmMessageListRelationFilter
@@ -300,7 +377,13 @@ export type ForumProfileWhereUniqueInput = Prisma.AtLeast<{
   comments?: Prisma.ForumCommentListRelationFilter
   postVotes?: Prisma.ForumPostVoteListRelationFilter
   commentVotes?: Prisma.ForumCommentVoteListRelationFilter
+  postImages?: Prisma.ForumPostImageListRelationFilter
+  draft?: Prisma.XOR<Prisma.ForumPostDraftNullableScalarRelationFilter, Prisma.ForumPostDraftWhereInput> | null
+  notifications?: Prisma.ForumNotificationListRelationFilter
+  notificationsMade?: Prisma.ForumNotificationListRelationFilter
   saves?: Prisma.ForumSaveListRelationFilter
+  postLikes?: Prisma.ForumPostLikeListRelationFilter
+  commentLikes?: Prisma.ForumCommentLikeListRelationFilter
   follows?: Prisma.ForumFollowListRelationFilter
   reportsMade?: Prisma.ForumReportListRelationFilter
   reportsAgainst?: Prisma.ForumReportListRelationFilter
@@ -311,6 +394,11 @@ export type ForumProfileOrderByWithAggregationInput = {
   customerId?: Prisma.SortOrder
   handle?: Prisma.SortOrder
   bio?: Prisma.SortOrderInput | Prisma.SortOrder
+  displayName?: Prisma.SortOrderInput | Prisma.SortOrder
+  location?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastSeenAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  verifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  verifiedById?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   suspendedUntil?: Prisma.SortOrderInput | Prisma.SortOrder
   suspensionReason?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -331,6 +419,11 @@ export type ForumProfileScalarWhereWithAggregatesInput = {
   customerId?: Prisma.StringWithAggregatesFilter<"ForumProfile"> | string
   handle?: Prisma.StringWithAggregatesFilter<"ForumProfile"> | string
   bio?: Prisma.StringNullableWithAggregatesFilter<"ForumProfile"> | string | null
+  displayName?: Prisma.StringNullableWithAggregatesFilter<"ForumProfile"> | string | null
+  location?: Prisma.StringNullableWithAggregatesFilter<"ForumProfile"> | string | null
+  lastSeenAt?: Prisma.DateTimeNullableWithAggregatesFilter<"ForumProfile"> | Date | string | null
+  verifiedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"ForumProfile"> | Date | string | null
+  verifiedById?: Prisma.StringNullableWithAggregatesFilter<"ForumProfile"> | string | null
   status?: Prisma.EnumForumMemberStatusWithAggregatesFilter<"ForumProfile"> | $Enums.ForumMemberStatus
   suspendedUntil?: Prisma.DateTimeNullableWithAggregatesFilter<"ForumProfile"> | Date | string | null
   suspensionReason?: Prisma.StringNullableWithAggregatesFilter<"ForumProfile"> | string | null
@@ -344,6 +437,11 @@ export type ForumProfileCreateInput = {
   id?: string
   handle: string
   bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
   status?: $Enums.ForumMemberStatus
   suspendedUntil?: Date | string | null
   suspensionReason?: string | null
@@ -352,6 +450,11 @@ export type ForumProfileCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
+  followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowerInput
   dmThreadsLow?: Prisma.DmThreadCreateNestedManyWithoutProfileLowInput
   dmThreadsHigh?: Prisma.DmThreadCreateNestedManyWithoutProfileHighInput
   dmMessages?: Prisma.DmMessageCreateNestedManyWithoutSenderInput
@@ -361,7 +464,13 @@ export type ForumProfileCreateInput = {
   comments?: Prisma.ForumCommentCreateNestedManyWithoutAuthorInput
   postVotes?: Prisma.ForumPostVoteCreateNestedManyWithoutProfileInput
   commentVotes?: Prisma.ForumCommentVoteCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationCreateNestedManyWithoutActorInput
   saves?: Prisma.ForumSaveCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeCreateNestedManyWithoutProfileInput
   follows?: Prisma.ForumFollowCreateNestedManyWithoutProfileInput
   reportsMade?: Prisma.ForumReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ForumReportCreateNestedManyWithoutTargetProfileInput
@@ -372,6 +481,11 @@ export type ForumProfileUncheckedCreateInput = {
   customerId: string
   handle: string
   bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
   status?: $Enums.ForumMemberStatus
   suspendedUntil?: Date | string | null
   suspensionReason?: string | null
@@ -379,6 +493,11 @@ export type ForumProfileUncheckedCreateInput = {
   avatarProvider?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowerInput
   dmThreadsLow?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileLowInput
   dmThreadsHigh?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileHighInput
   dmMessages?: Prisma.DmMessageUncheckedCreateNestedManyWithoutSenderInput
@@ -388,7 +507,13 @@ export type ForumProfileUncheckedCreateInput = {
   comments?: Prisma.ForumCommentUncheckedCreateNestedManyWithoutAuthorInput
   postVotes?: Prisma.ForumPostVoteUncheckedCreateNestedManyWithoutProfileInput
   commentVotes?: Prisma.ForumCommentVoteUncheckedCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageUncheckedCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftUncheckedCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutActorInput
   saves?: Prisma.ForumSaveUncheckedCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeUncheckedCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedCreateNestedManyWithoutProfileInput
   follows?: Prisma.ForumFollowUncheckedCreateNestedManyWithoutProfileInput
   reportsMade?: Prisma.ForumReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ForumReportUncheckedCreateNestedManyWithoutTargetProfileInput
@@ -398,6 +523,11 @@ export type ForumProfileUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   handle?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -406,6 +536,11 @@ export type ForumProfileUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
+  followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUpdateManyWithoutFollowerNestedInput
   dmThreadsLow?: Prisma.DmThreadUpdateManyWithoutProfileLowNestedInput
   dmThreadsHigh?: Prisma.DmThreadUpdateManyWithoutProfileHighNestedInput
   dmMessages?: Prisma.DmMessageUpdateManyWithoutSenderNestedInput
@@ -415,7 +550,13 @@ export type ForumProfileUpdateInput = {
   comments?: Prisma.ForumCommentUpdateManyWithoutAuthorNestedInput
   postVotes?: Prisma.ForumPostVoteUpdateManyWithoutProfileNestedInput
   commentVotes?: Prisma.ForumCommentVoteUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUpdateManyWithoutActorNestedInput
   saves?: Prisma.ForumSaveUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUpdateManyWithoutProfileNestedInput
   follows?: Prisma.ForumFollowUpdateManyWithoutProfileNestedInput
   reportsMade?: Prisma.ForumReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ForumReportUpdateManyWithoutTargetProfileNestedInput
@@ -426,6 +567,11 @@ export type ForumProfileUncheckedUpdateInput = {
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   handle?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -433,6 +579,11 @@ export type ForumProfileUncheckedUpdateInput = {
   avatarProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowerNestedInput
   dmThreadsLow?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileLowNestedInput
   dmThreadsHigh?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileHighNestedInput
   dmMessages?: Prisma.DmMessageUncheckedUpdateManyWithoutSenderNestedInput
@@ -442,7 +593,13 @@ export type ForumProfileUncheckedUpdateInput = {
   comments?: Prisma.ForumCommentUncheckedUpdateManyWithoutAuthorNestedInput
   postVotes?: Prisma.ForumPostVoteUncheckedUpdateManyWithoutProfileNestedInput
   commentVotes?: Prisma.ForumCommentVoteUncheckedUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUncheckedUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUncheckedUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUncheckedUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedUpdateManyWithoutActorNestedInput
   saves?: Prisma.ForumSaveUncheckedUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUncheckedUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedUpdateManyWithoutProfileNestedInput
   follows?: Prisma.ForumFollowUncheckedUpdateManyWithoutProfileNestedInput
   reportsMade?: Prisma.ForumReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ForumReportUncheckedUpdateManyWithoutTargetProfileNestedInput
@@ -453,6 +610,11 @@ export type ForumProfileCreateManyInput = {
   customerId: string
   handle: string
   bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
   status?: $Enums.ForumMemberStatus
   suspendedUntil?: Date | string | null
   suspensionReason?: string | null
@@ -466,6 +628,11 @@ export type ForumProfileUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   handle?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -480,6 +647,11 @@ export type ForumProfileUncheckedUpdateManyInput = {
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   handle?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -505,6 +677,11 @@ export type ForumProfileCountOrderByAggregateInput = {
   customerId?: Prisma.SortOrder
   handle?: Prisma.SortOrder
   bio?: Prisma.SortOrder
+  displayName?: Prisma.SortOrder
+  location?: Prisma.SortOrder
+  lastSeenAt?: Prisma.SortOrder
+  verifiedAt?: Prisma.SortOrder
+  verifiedById?: Prisma.SortOrder
   status?: Prisma.SortOrder
   suspendedUntil?: Prisma.SortOrder
   suspensionReason?: Prisma.SortOrder
@@ -519,6 +696,11 @@ export type ForumProfileMaxOrderByAggregateInput = {
   customerId?: Prisma.SortOrder
   handle?: Prisma.SortOrder
   bio?: Prisma.SortOrder
+  displayName?: Prisma.SortOrder
+  location?: Prisma.SortOrder
+  lastSeenAt?: Prisma.SortOrder
+  verifiedAt?: Prisma.SortOrder
+  verifiedById?: Prisma.SortOrder
   status?: Prisma.SortOrder
   suspendedUntil?: Prisma.SortOrder
   suspensionReason?: Prisma.SortOrder
@@ -533,6 +715,11 @@ export type ForumProfileMinOrderByAggregateInput = {
   customerId?: Prisma.SortOrder
   handle?: Prisma.SortOrder
   bio?: Prisma.SortOrder
+  displayName?: Prisma.SortOrder
+  location?: Prisma.SortOrder
+  lastSeenAt?: Prisma.SortOrder
+  verifiedAt?: Prisma.SortOrder
+  verifiedById?: Prisma.SortOrder
   status?: Prisma.SortOrder
   suspendedUntil?: Prisma.SortOrder
   suspensionReason?: Prisma.SortOrder
@@ -639,6 +826,34 @@ export type ForumProfileUpdateOneRequiredWithoutCommentVotesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ForumProfileUpdateToOneWithWhereWithoutCommentVotesInput, Prisma.ForumProfileUpdateWithoutCommentVotesInput>, Prisma.ForumProfileUncheckedUpdateWithoutCommentVotesInput>
 }
 
+export type ForumProfileCreateNestedOneWithoutPostLikesInput = {
+  create?: Prisma.XOR<Prisma.ForumProfileCreateWithoutPostLikesInput, Prisma.ForumProfileUncheckedCreateWithoutPostLikesInput>
+  connectOrCreate?: Prisma.ForumProfileCreateOrConnectWithoutPostLikesInput
+  connect?: Prisma.ForumProfileWhereUniqueInput
+}
+
+export type ForumProfileUpdateOneRequiredWithoutPostLikesNestedInput = {
+  create?: Prisma.XOR<Prisma.ForumProfileCreateWithoutPostLikesInput, Prisma.ForumProfileUncheckedCreateWithoutPostLikesInput>
+  connectOrCreate?: Prisma.ForumProfileCreateOrConnectWithoutPostLikesInput
+  upsert?: Prisma.ForumProfileUpsertWithoutPostLikesInput
+  connect?: Prisma.ForumProfileWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ForumProfileUpdateToOneWithWhereWithoutPostLikesInput, Prisma.ForumProfileUpdateWithoutPostLikesInput>, Prisma.ForumProfileUncheckedUpdateWithoutPostLikesInput>
+}
+
+export type ForumProfileCreateNestedOneWithoutCommentLikesInput = {
+  create?: Prisma.XOR<Prisma.ForumProfileCreateWithoutCommentLikesInput, Prisma.ForumProfileUncheckedCreateWithoutCommentLikesInput>
+  connectOrCreate?: Prisma.ForumProfileCreateOrConnectWithoutCommentLikesInput
+  connect?: Prisma.ForumProfileWhereUniqueInput
+}
+
+export type ForumProfileUpdateOneRequiredWithoutCommentLikesNestedInput = {
+  create?: Prisma.XOR<Prisma.ForumProfileCreateWithoutCommentLikesInput, Prisma.ForumProfileUncheckedCreateWithoutCommentLikesInput>
+  connectOrCreate?: Prisma.ForumProfileCreateOrConnectWithoutCommentLikesInput
+  upsert?: Prisma.ForumProfileUpsertWithoutCommentLikesInput
+  connect?: Prisma.ForumProfileWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ForumProfileUpdateToOneWithWhereWithoutCommentLikesInput, Prisma.ForumProfileUpdateWithoutCommentLikesInput>, Prisma.ForumProfileUncheckedUpdateWithoutCommentLikesInput>
+}
+
 export type ForumProfileCreateNestedOneWithoutSavesInput = {
   create?: Prisma.XOR<Prisma.ForumProfileCreateWithoutSavesInput, Prisma.ForumProfileUncheckedCreateWithoutSavesInput>
   connectOrCreate?: Prisma.ForumProfileCreateOrConnectWithoutSavesInput
@@ -665,6 +880,64 @@ export type ForumProfileUpdateOneRequiredWithoutFollowsNestedInput = {
   upsert?: Prisma.ForumProfileUpsertWithoutFollowsInput
   connect?: Prisma.ForumProfileWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.ForumProfileUpdateToOneWithWhereWithoutFollowsInput, Prisma.ForumProfileUpdateWithoutFollowsInput>, Prisma.ForumProfileUncheckedUpdateWithoutFollowsInput>
+}
+
+export type ForumProfileCreateNestedOneWithoutPostImagesInput = {
+  create?: Prisma.XOR<Prisma.ForumProfileCreateWithoutPostImagesInput, Prisma.ForumProfileUncheckedCreateWithoutPostImagesInput>
+  connectOrCreate?: Prisma.ForumProfileCreateOrConnectWithoutPostImagesInput
+  connect?: Prisma.ForumProfileWhereUniqueInput
+}
+
+export type ForumProfileUpdateOneRequiredWithoutPostImagesNestedInput = {
+  create?: Prisma.XOR<Prisma.ForumProfileCreateWithoutPostImagesInput, Prisma.ForumProfileUncheckedCreateWithoutPostImagesInput>
+  connectOrCreate?: Prisma.ForumProfileCreateOrConnectWithoutPostImagesInput
+  upsert?: Prisma.ForumProfileUpsertWithoutPostImagesInput
+  connect?: Prisma.ForumProfileWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ForumProfileUpdateToOneWithWhereWithoutPostImagesInput, Prisma.ForumProfileUpdateWithoutPostImagesInput>, Prisma.ForumProfileUncheckedUpdateWithoutPostImagesInput>
+}
+
+export type ForumProfileCreateNestedOneWithoutDraftInput = {
+  create?: Prisma.XOR<Prisma.ForumProfileCreateWithoutDraftInput, Prisma.ForumProfileUncheckedCreateWithoutDraftInput>
+  connectOrCreate?: Prisma.ForumProfileCreateOrConnectWithoutDraftInput
+  connect?: Prisma.ForumProfileWhereUniqueInput
+}
+
+export type ForumProfileUpdateOneRequiredWithoutDraftNestedInput = {
+  create?: Prisma.XOR<Prisma.ForumProfileCreateWithoutDraftInput, Prisma.ForumProfileUncheckedCreateWithoutDraftInput>
+  connectOrCreate?: Prisma.ForumProfileCreateOrConnectWithoutDraftInput
+  upsert?: Prisma.ForumProfileUpsertWithoutDraftInput
+  connect?: Prisma.ForumProfileWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ForumProfileUpdateToOneWithWhereWithoutDraftInput, Prisma.ForumProfileUpdateWithoutDraftInput>, Prisma.ForumProfileUncheckedUpdateWithoutDraftInput>
+}
+
+export type ForumProfileCreateNestedOneWithoutNotificationsInput = {
+  create?: Prisma.XOR<Prisma.ForumProfileCreateWithoutNotificationsInput, Prisma.ForumProfileUncheckedCreateWithoutNotificationsInput>
+  connectOrCreate?: Prisma.ForumProfileCreateOrConnectWithoutNotificationsInput
+  connect?: Prisma.ForumProfileWhereUniqueInput
+}
+
+export type ForumProfileCreateNestedOneWithoutNotificationsMadeInput = {
+  create?: Prisma.XOR<Prisma.ForumProfileCreateWithoutNotificationsMadeInput, Prisma.ForumProfileUncheckedCreateWithoutNotificationsMadeInput>
+  connectOrCreate?: Prisma.ForumProfileCreateOrConnectWithoutNotificationsMadeInput
+  connect?: Prisma.ForumProfileWhereUniqueInput
+}
+
+export type ForumProfileUpdateOneRequiredWithoutNotificationsNestedInput = {
+  create?: Prisma.XOR<Prisma.ForumProfileCreateWithoutNotificationsInput, Prisma.ForumProfileUncheckedCreateWithoutNotificationsInput>
+  connectOrCreate?: Prisma.ForumProfileCreateOrConnectWithoutNotificationsInput
+  upsert?: Prisma.ForumProfileUpsertWithoutNotificationsInput
+  connect?: Prisma.ForumProfileWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ForumProfileUpdateToOneWithWhereWithoutNotificationsInput, Prisma.ForumProfileUpdateWithoutNotificationsInput>, Prisma.ForumProfileUncheckedUpdateWithoutNotificationsInput>
+}
+
+export type ForumProfileUpdateOneWithoutNotificationsMadeNestedInput = {
+  create?: Prisma.XOR<Prisma.ForumProfileCreateWithoutNotificationsMadeInput, Prisma.ForumProfileUncheckedCreateWithoutNotificationsMadeInput>
+  connectOrCreate?: Prisma.ForumProfileCreateOrConnectWithoutNotificationsMadeInput
+  upsert?: Prisma.ForumProfileUpsertWithoutNotificationsMadeInput
+  disconnect?: Prisma.ForumProfileWhereInput | boolean
+  delete?: Prisma.ForumProfileWhereInput | boolean
+  connect?: Prisma.ForumProfileWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ForumProfileUpdateToOneWithWhereWithoutNotificationsMadeInput, Prisma.ForumProfileUpdateWithoutNotificationsMadeInput>, Prisma.ForumProfileUncheckedUpdateWithoutNotificationsMadeInput>
 }
 
 export type ForumProfileCreateNestedOneWithoutReportsMadeInput = {
@@ -767,10 +1040,85 @@ export type ForumProfileUpdateOneRequiredWithoutDmBlocksReceivedNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ForumProfileUpdateToOneWithWhereWithoutDmBlocksReceivedInput, Prisma.ForumProfileUpdateWithoutDmBlocksReceivedInput>, Prisma.ForumProfileUncheckedUpdateWithoutDmBlocksReceivedInput>
 }
 
+export type ForumProfileCreateNestedOneWithoutFollowingInput = {
+  create?: Prisma.XOR<Prisma.ForumProfileCreateWithoutFollowingInput, Prisma.ForumProfileUncheckedCreateWithoutFollowingInput>
+  connectOrCreate?: Prisma.ForumProfileCreateOrConnectWithoutFollowingInput
+  connect?: Prisma.ForumProfileWhereUniqueInput
+}
+
+export type ForumProfileCreateNestedOneWithoutFollowersInput = {
+  create?: Prisma.XOR<Prisma.ForumProfileCreateWithoutFollowersInput, Prisma.ForumProfileUncheckedCreateWithoutFollowersInput>
+  connectOrCreate?: Prisma.ForumProfileCreateOrConnectWithoutFollowersInput
+  connect?: Prisma.ForumProfileWhereUniqueInput
+}
+
+export type ForumProfileUpdateOneRequiredWithoutFollowingNestedInput = {
+  create?: Prisma.XOR<Prisma.ForumProfileCreateWithoutFollowingInput, Prisma.ForumProfileUncheckedCreateWithoutFollowingInput>
+  connectOrCreate?: Prisma.ForumProfileCreateOrConnectWithoutFollowingInput
+  upsert?: Prisma.ForumProfileUpsertWithoutFollowingInput
+  connect?: Prisma.ForumProfileWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ForumProfileUpdateToOneWithWhereWithoutFollowingInput, Prisma.ForumProfileUpdateWithoutFollowingInput>, Prisma.ForumProfileUncheckedUpdateWithoutFollowingInput>
+}
+
+export type ForumProfileUpdateOneRequiredWithoutFollowersNestedInput = {
+  create?: Prisma.XOR<Prisma.ForumProfileCreateWithoutFollowersInput, Prisma.ForumProfileUncheckedCreateWithoutFollowersInput>
+  connectOrCreate?: Prisma.ForumProfileCreateOrConnectWithoutFollowersInput
+  upsert?: Prisma.ForumProfileUpsertWithoutFollowersInput
+  connect?: Prisma.ForumProfileWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ForumProfileUpdateToOneWithWhereWithoutFollowersInput, Prisma.ForumProfileUpdateWithoutFollowersInput>, Prisma.ForumProfileUncheckedUpdateWithoutFollowersInput>
+}
+
+export type ForumProfileCreateNestedOneWithoutWarningsInput = {
+  create?: Prisma.XOR<Prisma.ForumProfileCreateWithoutWarningsInput, Prisma.ForumProfileUncheckedCreateWithoutWarningsInput>
+  connectOrCreate?: Prisma.ForumProfileCreateOrConnectWithoutWarningsInput
+  connect?: Prisma.ForumProfileWhereUniqueInput
+}
+
+export type ForumProfileUpdateOneRequiredWithoutWarningsNestedInput = {
+  create?: Prisma.XOR<Prisma.ForumProfileCreateWithoutWarningsInput, Prisma.ForumProfileUncheckedCreateWithoutWarningsInput>
+  connectOrCreate?: Prisma.ForumProfileCreateOrConnectWithoutWarningsInput
+  upsert?: Prisma.ForumProfileUpsertWithoutWarningsInput
+  connect?: Prisma.ForumProfileWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ForumProfileUpdateToOneWithWhereWithoutWarningsInput, Prisma.ForumProfileUpdateWithoutWarningsInput>, Prisma.ForumProfileUncheckedUpdateWithoutWarningsInput>
+}
+
+export type ForumProfileCreateNestedOneWithoutRestrictionsInput = {
+  create?: Prisma.XOR<Prisma.ForumProfileCreateWithoutRestrictionsInput, Prisma.ForumProfileUncheckedCreateWithoutRestrictionsInput>
+  connectOrCreate?: Prisma.ForumProfileCreateOrConnectWithoutRestrictionsInput
+  connect?: Prisma.ForumProfileWhereUniqueInput
+}
+
+export type ForumProfileUpdateOneRequiredWithoutRestrictionsNestedInput = {
+  create?: Prisma.XOR<Prisma.ForumProfileCreateWithoutRestrictionsInput, Prisma.ForumProfileUncheckedCreateWithoutRestrictionsInput>
+  connectOrCreate?: Prisma.ForumProfileCreateOrConnectWithoutRestrictionsInput
+  upsert?: Prisma.ForumProfileUpsertWithoutRestrictionsInput
+  connect?: Prisma.ForumProfileWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ForumProfileUpdateToOneWithWhereWithoutRestrictionsInput, Prisma.ForumProfileUpdateWithoutRestrictionsInput>, Prisma.ForumProfileUncheckedUpdateWithoutRestrictionsInput>
+}
+
+export type ForumProfileCreateNestedOneWithoutAppealsInput = {
+  create?: Prisma.XOR<Prisma.ForumProfileCreateWithoutAppealsInput, Prisma.ForumProfileUncheckedCreateWithoutAppealsInput>
+  connectOrCreate?: Prisma.ForumProfileCreateOrConnectWithoutAppealsInput
+  connect?: Prisma.ForumProfileWhereUniqueInput
+}
+
+export type ForumProfileUpdateOneRequiredWithoutAppealsNestedInput = {
+  create?: Prisma.XOR<Prisma.ForumProfileCreateWithoutAppealsInput, Prisma.ForumProfileUncheckedCreateWithoutAppealsInput>
+  connectOrCreate?: Prisma.ForumProfileCreateOrConnectWithoutAppealsInput
+  upsert?: Prisma.ForumProfileUpsertWithoutAppealsInput
+  connect?: Prisma.ForumProfileWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ForumProfileUpdateToOneWithWhereWithoutAppealsInput, Prisma.ForumProfileUpdateWithoutAppealsInput>, Prisma.ForumProfileUncheckedUpdateWithoutAppealsInput>
+}
+
 export type ForumProfileCreateWithoutCustomerInput = {
   id?: string
   handle: string
   bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
   status?: $Enums.ForumMemberStatus
   suspendedUntil?: Date | string | null
   suspensionReason?: string | null
@@ -778,6 +1126,11 @@ export type ForumProfileCreateWithoutCustomerInput = {
   avatarProvider?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowerInput
   dmThreadsLow?: Prisma.DmThreadCreateNestedManyWithoutProfileLowInput
   dmThreadsHigh?: Prisma.DmThreadCreateNestedManyWithoutProfileHighInput
   dmMessages?: Prisma.DmMessageCreateNestedManyWithoutSenderInput
@@ -787,7 +1140,13 @@ export type ForumProfileCreateWithoutCustomerInput = {
   comments?: Prisma.ForumCommentCreateNestedManyWithoutAuthorInput
   postVotes?: Prisma.ForumPostVoteCreateNestedManyWithoutProfileInput
   commentVotes?: Prisma.ForumCommentVoteCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationCreateNestedManyWithoutActorInput
   saves?: Prisma.ForumSaveCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeCreateNestedManyWithoutProfileInput
   follows?: Prisma.ForumFollowCreateNestedManyWithoutProfileInput
   reportsMade?: Prisma.ForumReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ForumReportCreateNestedManyWithoutTargetProfileInput
@@ -797,6 +1156,11 @@ export type ForumProfileUncheckedCreateWithoutCustomerInput = {
   id?: string
   handle: string
   bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
   status?: $Enums.ForumMemberStatus
   suspendedUntil?: Date | string | null
   suspensionReason?: string | null
@@ -804,6 +1168,11 @@ export type ForumProfileUncheckedCreateWithoutCustomerInput = {
   avatarProvider?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowerInput
   dmThreadsLow?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileLowInput
   dmThreadsHigh?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileHighInput
   dmMessages?: Prisma.DmMessageUncheckedCreateNestedManyWithoutSenderInput
@@ -813,7 +1182,13 @@ export type ForumProfileUncheckedCreateWithoutCustomerInput = {
   comments?: Prisma.ForumCommentUncheckedCreateNestedManyWithoutAuthorInput
   postVotes?: Prisma.ForumPostVoteUncheckedCreateNestedManyWithoutProfileInput
   commentVotes?: Prisma.ForumCommentVoteUncheckedCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageUncheckedCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftUncheckedCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutActorInput
   saves?: Prisma.ForumSaveUncheckedCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeUncheckedCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedCreateNestedManyWithoutProfileInput
   follows?: Prisma.ForumFollowUncheckedCreateNestedManyWithoutProfileInput
   reportsMade?: Prisma.ForumReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ForumReportUncheckedCreateNestedManyWithoutTargetProfileInput
@@ -839,6 +1214,11 @@ export type ForumProfileUpdateWithoutCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   handle?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -846,6 +1226,11 @@ export type ForumProfileUpdateWithoutCustomerInput = {
   avatarProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUpdateManyWithoutFollowerNestedInput
   dmThreadsLow?: Prisma.DmThreadUpdateManyWithoutProfileLowNestedInput
   dmThreadsHigh?: Prisma.DmThreadUpdateManyWithoutProfileHighNestedInput
   dmMessages?: Prisma.DmMessageUpdateManyWithoutSenderNestedInput
@@ -855,7 +1240,13 @@ export type ForumProfileUpdateWithoutCustomerInput = {
   comments?: Prisma.ForumCommentUpdateManyWithoutAuthorNestedInput
   postVotes?: Prisma.ForumPostVoteUpdateManyWithoutProfileNestedInput
   commentVotes?: Prisma.ForumCommentVoteUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUpdateManyWithoutActorNestedInput
   saves?: Prisma.ForumSaveUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUpdateManyWithoutProfileNestedInput
   follows?: Prisma.ForumFollowUpdateManyWithoutProfileNestedInput
   reportsMade?: Prisma.ForumReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ForumReportUpdateManyWithoutTargetProfileNestedInput
@@ -865,6 +1256,11 @@ export type ForumProfileUncheckedUpdateWithoutCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   handle?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -872,6 +1268,11 @@ export type ForumProfileUncheckedUpdateWithoutCustomerInput = {
   avatarProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowerNestedInput
   dmThreadsLow?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileLowNestedInput
   dmThreadsHigh?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileHighNestedInput
   dmMessages?: Prisma.DmMessageUncheckedUpdateManyWithoutSenderNestedInput
@@ -881,7 +1282,13 @@ export type ForumProfileUncheckedUpdateWithoutCustomerInput = {
   comments?: Prisma.ForumCommentUncheckedUpdateManyWithoutAuthorNestedInput
   postVotes?: Prisma.ForumPostVoteUncheckedUpdateManyWithoutProfileNestedInput
   commentVotes?: Prisma.ForumCommentVoteUncheckedUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUncheckedUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUncheckedUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUncheckedUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedUpdateManyWithoutActorNestedInput
   saves?: Prisma.ForumSaveUncheckedUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUncheckedUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedUpdateManyWithoutProfileNestedInput
   follows?: Prisma.ForumFollowUncheckedUpdateManyWithoutProfileNestedInput
   reportsMade?: Prisma.ForumReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ForumReportUncheckedUpdateManyWithoutTargetProfileNestedInput
@@ -891,6 +1298,11 @@ export type ForumProfileCreateWithoutPostsInput = {
   id?: string
   handle: string
   bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
   status?: $Enums.ForumMemberStatus
   suspendedUntil?: Date | string | null
   suspensionReason?: string | null
@@ -899,6 +1311,11 @@ export type ForumProfileCreateWithoutPostsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
+  followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowerInput
   dmThreadsLow?: Prisma.DmThreadCreateNestedManyWithoutProfileLowInput
   dmThreadsHigh?: Prisma.DmThreadCreateNestedManyWithoutProfileHighInput
   dmMessages?: Prisma.DmMessageCreateNestedManyWithoutSenderInput
@@ -907,7 +1324,13 @@ export type ForumProfileCreateWithoutPostsInput = {
   comments?: Prisma.ForumCommentCreateNestedManyWithoutAuthorInput
   postVotes?: Prisma.ForumPostVoteCreateNestedManyWithoutProfileInput
   commentVotes?: Prisma.ForumCommentVoteCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationCreateNestedManyWithoutActorInput
   saves?: Prisma.ForumSaveCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeCreateNestedManyWithoutProfileInput
   follows?: Prisma.ForumFollowCreateNestedManyWithoutProfileInput
   reportsMade?: Prisma.ForumReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ForumReportCreateNestedManyWithoutTargetProfileInput
@@ -918,6 +1341,11 @@ export type ForumProfileUncheckedCreateWithoutPostsInput = {
   customerId: string
   handle: string
   bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
   status?: $Enums.ForumMemberStatus
   suspendedUntil?: Date | string | null
   suspensionReason?: string | null
@@ -925,6 +1353,11 @@ export type ForumProfileUncheckedCreateWithoutPostsInput = {
   avatarProvider?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowerInput
   dmThreadsLow?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileLowInput
   dmThreadsHigh?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileHighInput
   dmMessages?: Prisma.DmMessageUncheckedCreateNestedManyWithoutSenderInput
@@ -933,7 +1366,13 @@ export type ForumProfileUncheckedCreateWithoutPostsInput = {
   comments?: Prisma.ForumCommentUncheckedCreateNestedManyWithoutAuthorInput
   postVotes?: Prisma.ForumPostVoteUncheckedCreateNestedManyWithoutProfileInput
   commentVotes?: Prisma.ForumCommentVoteUncheckedCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageUncheckedCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftUncheckedCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutActorInput
   saves?: Prisma.ForumSaveUncheckedCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeUncheckedCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedCreateNestedManyWithoutProfileInput
   follows?: Prisma.ForumFollowUncheckedCreateNestedManyWithoutProfileInput
   reportsMade?: Prisma.ForumReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ForumReportUncheckedCreateNestedManyWithoutTargetProfileInput
@@ -959,6 +1398,11 @@ export type ForumProfileUpdateWithoutPostsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   handle?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -967,6 +1411,11 @@ export type ForumProfileUpdateWithoutPostsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
+  followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUpdateManyWithoutFollowerNestedInput
   dmThreadsLow?: Prisma.DmThreadUpdateManyWithoutProfileLowNestedInput
   dmThreadsHigh?: Prisma.DmThreadUpdateManyWithoutProfileHighNestedInput
   dmMessages?: Prisma.DmMessageUpdateManyWithoutSenderNestedInput
@@ -975,7 +1424,13 @@ export type ForumProfileUpdateWithoutPostsInput = {
   comments?: Prisma.ForumCommentUpdateManyWithoutAuthorNestedInput
   postVotes?: Prisma.ForumPostVoteUpdateManyWithoutProfileNestedInput
   commentVotes?: Prisma.ForumCommentVoteUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUpdateManyWithoutActorNestedInput
   saves?: Prisma.ForumSaveUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUpdateManyWithoutProfileNestedInput
   follows?: Prisma.ForumFollowUpdateManyWithoutProfileNestedInput
   reportsMade?: Prisma.ForumReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ForumReportUpdateManyWithoutTargetProfileNestedInput
@@ -986,6 +1441,11 @@ export type ForumProfileUncheckedUpdateWithoutPostsInput = {
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   handle?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -993,6 +1453,11 @@ export type ForumProfileUncheckedUpdateWithoutPostsInput = {
   avatarProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowerNestedInput
   dmThreadsLow?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileLowNestedInput
   dmThreadsHigh?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileHighNestedInput
   dmMessages?: Prisma.DmMessageUncheckedUpdateManyWithoutSenderNestedInput
@@ -1001,7 +1466,13 @@ export type ForumProfileUncheckedUpdateWithoutPostsInput = {
   comments?: Prisma.ForumCommentUncheckedUpdateManyWithoutAuthorNestedInput
   postVotes?: Prisma.ForumPostVoteUncheckedUpdateManyWithoutProfileNestedInput
   commentVotes?: Prisma.ForumCommentVoteUncheckedUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUncheckedUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUncheckedUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUncheckedUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedUpdateManyWithoutActorNestedInput
   saves?: Prisma.ForumSaveUncheckedUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUncheckedUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedUpdateManyWithoutProfileNestedInput
   follows?: Prisma.ForumFollowUncheckedUpdateManyWithoutProfileNestedInput
   reportsMade?: Prisma.ForumReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ForumReportUncheckedUpdateManyWithoutTargetProfileNestedInput
@@ -1011,6 +1482,11 @@ export type ForumProfileCreateWithoutCommentsInput = {
   id?: string
   handle: string
   bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
   status?: $Enums.ForumMemberStatus
   suspendedUntil?: Date | string | null
   suspensionReason?: string | null
@@ -1019,6 +1495,11 @@ export type ForumProfileCreateWithoutCommentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
+  followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowerInput
   dmThreadsLow?: Prisma.DmThreadCreateNestedManyWithoutProfileLowInput
   dmThreadsHigh?: Prisma.DmThreadCreateNestedManyWithoutProfileHighInput
   dmMessages?: Prisma.DmMessageCreateNestedManyWithoutSenderInput
@@ -1027,7 +1508,13 @@ export type ForumProfileCreateWithoutCommentsInput = {
   posts?: Prisma.ForumPostCreateNestedManyWithoutAuthorInput
   postVotes?: Prisma.ForumPostVoteCreateNestedManyWithoutProfileInput
   commentVotes?: Prisma.ForumCommentVoteCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationCreateNestedManyWithoutActorInput
   saves?: Prisma.ForumSaveCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeCreateNestedManyWithoutProfileInput
   follows?: Prisma.ForumFollowCreateNestedManyWithoutProfileInput
   reportsMade?: Prisma.ForumReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ForumReportCreateNestedManyWithoutTargetProfileInput
@@ -1038,6 +1525,11 @@ export type ForumProfileUncheckedCreateWithoutCommentsInput = {
   customerId: string
   handle: string
   bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
   status?: $Enums.ForumMemberStatus
   suspendedUntil?: Date | string | null
   suspensionReason?: string | null
@@ -1045,6 +1537,11 @@ export type ForumProfileUncheckedCreateWithoutCommentsInput = {
   avatarProvider?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowerInput
   dmThreadsLow?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileLowInput
   dmThreadsHigh?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileHighInput
   dmMessages?: Prisma.DmMessageUncheckedCreateNestedManyWithoutSenderInput
@@ -1053,7 +1550,13 @@ export type ForumProfileUncheckedCreateWithoutCommentsInput = {
   posts?: Prisma.ForumPostUncheckedCreateNestedManyWithoutAuthorInput
   postVotes?: Prisma.ForumPostVoteUncheckedCreateNestedManyWithoutProfileInput
   commentVotes?: Prisma.ForumCommentVoteUncheckedCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageUncheckedCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftUncheckedCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutActorInput
   saves?: Prisma.ForumSaveUncheckedCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeUncheckedCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedCreateNestedManyWithoutProfileInput
   follows?: Prisma.ForumFollowUncheckedCreateNestedManyWithoutProfileInput
   reportsMade?: Prisma.ForumReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ForumReportUncheckedCreateNestedManyWithoutTargetProfileInput
@@ -1079,6 +1582,11 @@ export type ForumProfileUpdateWithoutCommentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   handle?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1087,6 +1595,11 @@ export type ForumProfileUpdateWithoutCommentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
+  followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUpdateManyWithoutFollowerNestedInput
   dmThreadsLow?: Prisma.DmThreadUpdateManyWithoutProfileLowNestedInput
   dmThreadsHigh?: Prisma.DmThreadUpdateManyWithoutProfileHighNestedInput
   dmMessages?: Prisma.DmMessageUpdateManyWithoutSenderNestedInput
@@ -1095,7 +1608,13 @@ export type ForumProfileUpdateWithoutCommentsInput = {
   posts?: Prisma.ForumPostUpdateManyWithoutAuthorNestedInput
   postVotes?: Prisma.ForumPostVoteUpdateManyWithoutProfileNestedInput
   commentVotes?: Prisma.ForumCommentVoteUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUpdateManyWithoutActorNestedInput
   saves?: Prisma.ForumSaveUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUpdateManyWithoutProfileNestedInput
   follows?: Prisma.ForumFollowUpdateManyWithoutProfileNestedInput
   reportsMade?: Prisma.ForumReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ForumReportUpdateManyWithoutTargetProfileNestedInput
@@ -1106,6 +1625,11 @@ export type ForumProfileUncheckedUpdateWithoutCommentsInput = {
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   handle?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1113,6 +1637,11 @@ export type ForumProfileUncheckedUpdateWithoutCommentsInput = {
   avatarProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowerNestedInput
   dmThreadsLow?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileLowNestedInput
   dmThreadsHigh?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileHighNestedInput
   dmMessages?: Prisma.DmMessageUncheckedUpdateManyWithoutSenderNestedInput
@@ -1121,7 +1650,13 @@ export type ForumProfileUncheckedUpdateWithoutCommentsInput = {
   posts?: Prisma.ForumPostUncheckedUpdateManyWithoutAuthorNestedInput
   postVotes?: Prisma.ForumPostVoteUncheckedUpdateManyWithoutProfileNestedInput
   commentVotes?: Prisma.ForumCommentVoteUncheckedUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUncheckedUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUncheckedUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUncheckedUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedUpdateManyWithoutActorNestedInput
   saves?: Prisma.ForumSaveUncheckedUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUncheckedUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedUpdateManyWithoutProfileNestedInput
   follows?: Prisma.ForumFollowUncheckedUpdateManyWithoutProfileNestedInput
   reportsMade?: Prisma.ForumReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ForumReportUncheckedUpdateManyWithoutTargetProfileNestedInput
@@ -1131,6 +1666,11 @@ export type ForumProfileCreateWithoutPostVotesInput = {
   id?: string
   handle: string
   bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
   status?: $Enums.ForumMemberStatus
   suspendedUntil?: Date | string | null
   suspensionReason?: string | null
@@ -1139,6 +1679,11 @@ export type ForumProfileCreateWithoutPostVotesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
+  followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowerInput
   dmThreadsLow?: Prisma.DmThreadCreateNestedManyWithoutProfileLowInput
   dmThreadsHigh?: Prisma.DmThreadCreateNestedManyWithoutProfileHighInput
   dmMessages?: Prisma.DmMessageCreateNestedManyWithoutSenderInput
@@ -1147,7 +1692,13 @@ export type ForumProfileCreateWithoutPostVotesInput = {
   posts?: Prisma.ForumPostCreateNestedManyWithoutAuthorInput
   comments?: Prisma.ForumCommentCreateNestedManyWithoutAuthorInput
   commentVotes?: Prisma.ForumCommentVoteCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationCreateNestedManyWithoutActorInput
   saves?: Prisma.ForumSaveCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeCreateNestedManyWithoutProfileInput
   follows?: Prisma.ForumFollowCreateNestedManyWithoutProfileInput
   reportsMade?: Prisma.ForumReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ForumReportCreateNestedManyWithoutTargetProfileInput
@@ -1158,6 +1709,11 @@ export type ForumProfileUncheckedCreateWithoutPostVotesInput = {
   customerId: string
   handle: string
   bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
   status?: $Enums.ForumMemberStatus
   suspendedUntil?: Date | string | null
   suspensionReason?: string | null
@@ -1165,6 +1721,11 @@ export type ForumProfileUncheckedCreateWithoutPostVotesInput = {
   avatarProvider?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowerInput
   dmThreadsLow?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileLowInput
   dmThreadsHigh?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileHighInput
   dmMessages?: Prisma.DmMessageUncheckedCreateNestedManyWithoutSenderInput
@@ -1173,7 +1734,13 @@ export type ForumProfileUncheckedCreateWithoutPostVotesInput = {
   posts?: Prisma.ForumPostUncheckedCreateNestedManyWithoutAuthorInput
   comments?: Prisma.ForumCommentUncheckedCreateNestedManyWithoutAuthorInput
   commentVotes?: Prisma.ForumCommentVoteUncheckedCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageUncheckedCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftUncheckedCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutActorInput
   saves?: Prisma.ForumSaveUncheckedCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeUncheckedCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedCreateNestedManyWithoutProfileInput
   follows?: Prisma.ForumFollowUncheckedCreateNestedManyWithoutProfileInput
   reportsMade?: Prisma.ForumReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ForumReportUncheckedCreateNestedManyWithoutTargetProfileInput
@@ -1199,6 +1766,11 @@ export type ForumProfileUpdateWithoutPostVotesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   handle?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1207,6 +1779,11 @@ export type ForumProfileUpdateWithoutPostVotesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
+  followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUpdateManyWithoutFollowerNestedInput
   dmThreadsLow?: Prisma.DmThreadUpdateManyWithoutProfileLowNestedInput
   dmThreadsHigh?: Prisma.DmThreadUpdateManyWithoutProfileHighNestedInput
   dmMessages?: Prisma.DmMessageUpdateManyWithoutSenderNestedInput
@@ -1215,7 +1792,13 @@ export type ForumProfileUpdateWithoutPostVotesInput = {
   posts?: Prisma.ForumPostUpdateManyWithoutAuthorNestedInput
   comments?: Prisma.ForumCommentUpdateManyWithoutAuthorNestedInput
   commentVotes?: Prisma.ForumCommentVoteUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUpdateManyWithoutActorNestedInput
   saves?: Prisma.ForumSaveUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUpdateManyWithoutProfileNestedInput
   follows?: Prisma.ForumFollowUpdateManyWithoutProfileNestedInput
   reportsMade?: Prisma.ForumReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ForumReportUpdateManyWithoutTargetProfileNestedInput
@@ -1226,6 +1809,11 @@ export type ForumProfileUncheckedUpdateWithoutPostVotesInput = {
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   handle?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1233,6 +1821,11 @@ export type ForumProfileUncheckedUpdateWithoutPostVotesInput = {
   avatarProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowerNestedInput
   dmThreadsLow?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileLowNestedInput
   dmThreadsHigh?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileHighNestedInput
   dmMessages?: Prisma.DmMessageUncheckedUpdateManyWithoutSenderNestedInput
@@ -1241,7 +1834,13 @@ export type ForumProfileUncheckedUpdateWithoutPostVotesInput = {
   posts?: Prisma.ForumPostUncheckedUpdateManyWithoutAuthorNestedInput
   comments?: Prisma.ForumCommentUncheckedUpdateManyWithoutAuthorNestedInput
   commentVotes?: Prisma.ForumCommentVoteUncheckedUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUncheckedUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUncheckedUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUncheckedUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedUpdateManyWithoutActorNestedInput
   saves?: Prisma.ForumSaveUncheckedUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUncheckedUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedUpdateManyWithoutProfileNestedInput
   follows?: Prisma.ForumFollowUncheckedUpdateManyWithoutProfileNestedInput
   reportsMade?: Prisma.ForumReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ForumReportUncheckedUpdateManyWithoutTargetProfileNestedInput
@@ -1251,6 +1850,11 @@ export type ForumProfileCreateWithoutCommentVotesInput = {
   id?: string
   handle: string
   bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
   status?: $Enums.ForumMemberStatus
   suspendedUntil?: Date | string | null
   suspensionReason?: string | null
@@ -1259,6 +1863,11 @@ export type ForumProfileCreateWithoutCommentVotesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
+  followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowerInput
   dmThreadsLow?: Prisma.DmThreadCreateNestedManyWithoutProfileLowInput
   dmThreadsHigh?: Prisma.DmThreadCreateNestedManyWithoutProfileHighInput
   dmMessages?: Prisma.DmMessageCreateNestedManyWithoutSenderInput
@@ -1267,7 +1876,13 @@ export type ForumProfileCreateWithoutCommentVotesInput = {
   posts?: Prisma.ForumPostCreateNestedManyWithoutAuthorInput
   comments?: Prisma.ForumCommentCreateNestedManyWithoutAuthorInput
   postVotes?: Prisma.ForumPostVoteCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationCreateNestedManyWithoutActorInput
   saves?: Prisma.ForumSaveCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeCreateNestedManyWithoutProfileInput
   follows?: Prisma.ForumFollowCreateNestedManyWithoutProfileInput
   reportsMade?: Prisma.ForumReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ForumReportCreateNestedManyWithoutTargetProfileInput
@@ -1278,6 +1893,11 @@ export type ForumProfileUncheckedCreateWithoutCommentVotesInput = {
   customerId: string
   handle: string
   bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
   status?: $Enums.ForumMemberStatus
   suspendedUntil?: Date | string | null
   suspensionReason?: string | null
@@ -1285,6 +1905,11 @@ export type ForumProfileUncheckedCreateWithoutCommentVotesInput = {
   avatarProvider?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowerInput
   dmThreadsLow?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileLowInput
   dmThreadsHigh?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileHighInput
   dmMessages?: Prisma.DmMessageUncheckedCreateNestedManyWithoutSenderInput
@@ -1293,7 +1918,13 @@ export type ForumProfileUncheckedCreateWithoutCommentVotesInput = {
   posts?: Prisma.ForumPostUncheckedCreateNestedManyWithoutAuthorInput
   comments?: Prisma.ForumCommentUncheckedCreateNestedManyWithoutAuthorInput
   postVotes?: Prisma.ForumPostVoteUncheckedCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageUncheckedCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftUncheckedCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutActorInput
   saves?: Prisma.ForumSaveUncheckedCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeUncheckedCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedCreateNestedManyWithoutProfileInput
   follows?: Prisma.ForumFollowUncheckedCreateNestedManyWithoutProfileInput
   reportsMade?: Prisma.ForumReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ForumReportUncheckedCreateNestedManyWithoutTargetProfileInput
@@ -1319,6 +1950,11 @@ export type ForumProfileUpdateWithoutCommentVotesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   handle?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1327,6 +1963,11 @@ export type ForumProfileUpdateWithoutCommentVotesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
+  followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUpdateManyWithoutFollowerNestedInput
   dmThreadsLow?: Prisma.DmThreadUpdateManyWithoutProfileLowNestedInput
   dmThreadsHigh?: Prisma.DmThreadUpdateManyWithoutProfileHighNestedInput
   dmMessages?: Prisma.DmMessageUpdateManyWithoutSenderNestedInput
@@ -1335,7 +1976,13 @@ export type ForumProfileUpdateWithoutCommentVotesInput = {
   posts?: Prisma.ForumPostUpdateManyWithoutAuthorNestedInput
   comments?: Prisma.ForumCommentUpdateManyWithoutAuthorNestedInput
   postVotes?: Prisma.ForumPostVoteUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUpdateManyWithoutActorNestedInput
   saves?: Prisma.ForumSaveUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUpdateManyWithoutProfileNestedInput
   follows?: Prisma.ForumFollowUpdateManyWithoutProfileNestedInput
   reportsMade?: Prisma.ForumReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ForumReportUpdateManyWithoutTargetProfileNestedInput
@@ -1346,6 +1993,11 @@ export type ForumProfileUncheckedUpdateWithoutCommentVotesInput = {
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   handle?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1353,6 +2005,11 @@ export type ForumProfileUncheckedUpdateWithoutCommentVotesInput = {
   avatarProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowerNestedInput
   dmThreadsLow?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileLowNestedInput
   dmThreadsHigh?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileHighNestedInput
   dmMessages?: Prisma.DmMessageUncheckedUpdateManyWithoutSenderNestedInput
@@ -1361,16 +2018,27 @@ export type ForumProfileUncheckedUpdateWithoutCommentVotesInput = {
   posts?: Prisma.ForumPostUncheckedUpdateManyWithoutAuthorNestedInput
   comments?: Prisma.ForumCommentUncheckedUpdateManyWithoutAuthorNestedInput
   postVotes?: Prisma.ForumPostVoteUncheckedUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUncheckedUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUncheckedUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUncheckedUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedUpdateManyWithoutActorNestedInput
   saves?: Prisma.ForumSaveUncheckedUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUncheckedUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedUpdateManyWithoutProfileNestedInput
   follows?: Prisma.ForumFollowUncheckedUpdateManyWithoutProfileNestedInput
   reportsMade?: Prisma.ForumReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ForumReportUncheckedUpdateManyWithoutTargetProfileNestedInput
 }
 
-export type ForumProfileCreateWithoutSavesInput = {
+export type ForumProfileCreateWithoutPostLikesInput = {
   id?: string
   handle: string
   bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
   status?: $Enums.ForumMemberStatus
   suspendedUntil?: Date | string | null
   suspensionReason?: string | null
@@ -1379,6 +2047,11 @@ export type ForumProfileCreateWithoutSavesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
+  followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowerInput
   dmThreadsLow?: Prisma.DmThreadCreateNestedManyWithoutProfileLowInput
   dmThreadsHigh?: Prisma.DmThreadCreateNestedManyWithoutProfileHighInput
   dmMessages?: Prisma.DmMessageCreateNestedManyWithoutSenderInput
@@ -1388,6 +2061,380 @@ export type ForumProfileCreateWithoutSavesInput = {
   comments?: Prisma.ForumCommentCreateNestedManyWithoutAuthorInput
   postVotes?: Prisma.ForumPostVoteCreateNestedManyWithoutProfileInput
   commentVotes?: Prisma.ForumCommentVoteCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationCreateNestedManyWithoutActorInput
+  saves?: Prisma.ForumSaveCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeCreateNestedManyWithoutProfileInput
+  follows?: Prisma.ForumFollowCreateNestedManyWithoutProfileInput
+  reportsMade?: Prisma.ForumReportCreateNestedManyWithoutReporterInput
+  reportsAgainst?: Prisma.ForumReportCreateNestedManyWithoutTargetProfileInput
+}
+
+export type ForumProfileUncheckedCreateWithoutPostLikesInput = {
+  id?: string
+  customerId: string
+  handle: string
+  bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
+  status?: $Enums.ForumMemberStatus
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  avatarKey?: string | null
+  avatarProvider?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowerInput
+  dmThreadsLow?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileLowInput
+  dmThreadsHigh?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileHighInput
+  dmMessages?: Prisma.DmMessageUncheckedCreateNestedManyWithoutSenderInput
+  dmBlocksMade?: Prisma.DmBlockUncheckedCreateNestedManyWithoutBlockerInput
+  dmBlocksReceived?: Prisma.DmBlockUncheckedCreateNestedManyWithoutBlockedInput
+  posts?: Prisma.ForumPostUncheckedCreateNestedManyWithoutAuthorInput
+  comments?: Prisma.ForumCommentUncheckedCreateNestedManyWithoutAuthorInput
+  postVotes?: Prisma.ForumPostVoteUncheckedCreateNestedManyWithoutProfileInput
+  commentVotes?: Prisma.ForumCommentVoteUncheckedCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageUncheckedCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftUncheckedCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutActorInput
+  saves?: Prisma.ForumSaveUncheckedCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedCreateNestedManyWithoutProfileInput
+  follows?: Prisma.ForumFollowUncheckedCreateNestedManyWithoutProfileInput
+  reportsMade?: Prisma.ForumReportUncheckedCreateNestedManyWithoutReporterInput
+  reportsAgainst?: Prisma.ForumReportUncheckedCreateNestedManyWithoutTargetProfileInput
+}
+
+export type ForumProfileCreateOrConnectWithoutPostLikesInput = {
+  where: Prisma.ForumProfileWhereUniqueInput
+  create: Prisma.XOR<Prisma.ForumProfileCreateWithoutPostLikesInput, Prisma.ForumProfileUncheckedCreateWithoutPostLikesInput>
+}
+
+export type ForumProfileUpsertWithoutPostLikesInput = {
+  update: Prisma.XOR<Prisma.ForumProfileUpdateWithoutPostLikesInput, Prisma.ForumProfileUncheckedUpdateWithoutPostLikesInput>
+  create: Prisma.XOR<Prisma.ForumProfileCreateWithoutPostLikesInput, Prisma.ForumProfileUncheckedCreateWithoutPostLikesInput>
+  where?: Prisma.ForumProfileWhereInput
+}
+
+export type ForumProfileUpdateToOneWithWhereWithoutPostLikesInput = {
+  where?: Prisma.ForumProfileWhereInput
+  data: Prisma.XOR<Prisma.ForumProfileUpdateWithoutPostLikesInput, Prisma.ForumProfileUncheckedUpdateWithoutPostLikesInput>
+}
+
+export type ForumProfileUpdateWithoutPostLikesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  handle?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
+  followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUpdateManyWithoutFollowerNestedInput
+  dmThreadsLow?: Prisma.DmThreadUpdateManyWithoutProfileLowNestedInput
+  dmThreadsHigh?: Prisma.DmThreadUpdateManyWithoutProfileHighNestedInput
+  dmMessages?: Prisma.DmMessageUpdateManyWithoutSenderNestedInput
+  dmBlocksMade?: Prisma.DmBlockUpdateManyWithoutBlockerNestedInput
+  dmBlocksReceived?: Prisma.DmBlockUpdateManyWithoutBlockedNestedInput
+  posts?: Prisma.ForumPostUpdateManyWithoutAuthorNestedInput
+  comments?: Prisma.ForumCommentUpdateManyWithoutAuthorNestedInput
+  postVotes?: Prisma.ForumPostVoteUpdateManyWithoutProfileNestedInput
+  commentVotes?: Prisma.ForumCommentVoteUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUpdateManyWithoutActorNestedInput
+  saves?: Prisma.ForumSaveUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUpdateManyWithoutProfileNestedInput
+  follows?: Prisma.ForumFollowUpdateManyWithoutProfileNestedInput
+  reportsMade?: Prisma.ForumReportUpdateManyWithoutReporterNestedInput
+  reportsAgainst?: Prisma.ForumReportUpdateManyWithoutTargetProfileNestedInput
+}
+
+export type ForumProfileUncheckedUpdateWithoutPostLikesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  handle?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowerNestedInput
+  dmThreadsLow?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileLowNestedInput
+  dmThreadsHigh?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileHighNestedInput
+  dmMessages?: Prisma.DmMessageUncheckedUpdateManyWithoutSenderNestedInput
+  dmBlocksMade?: Prisma.DmBlockUncheckedUpdateManyWithoutBlockerNestedInput
+  dmBlocksReceived?: Prisma.DmBlockUncheckedUpdateManyWithoutBlockedNestedInput
+  posts?: Prisma.ForumPostUncheckedUpdateManyWithoutAuthorNestedInput
+  comments?: Prisma.ForumCommentUncheckedUpdateManyWithoutAuthorNestedInput
+  postVotes?: Prisma.ForumPostVoteUncheckedUpdateManyWithoutProfileNestedInput
+  commentVotes?: Prisma.ForumCommentVoteUncheckedUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUncheckedUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUncheckedUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUncheckedUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedUpdateManyWithoutActorNestedInput
+  saves?: Prisma.ForumSaveUncheckedUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedUpdateManyWithoutProfileNestedInput
+  follows?: Prisma.ForumFollowUncheckedUpdateManyWithoutProfileNestedInput
+  reportsMade?: Prisma.ForumReportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsAgainst?: Prisma.ForumReportUncheckedUpdateManyWithoutTargetProfileNestedInput
+}
+
+export type ForumProfileCreateWithoutCommentLikesInput = {
+  id?: string
+  handle: string
+  bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
+  status?: $Enums.ForumMemberStatus
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  avatarKey?: string | null
+  avatarProvider?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
+  followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowerInput
+  dmThreadsLow?: Prisma.DmThreadCreateNestedManyWithoutProfileLowInput
+  dmThreadsHigh?: Prisma.DmThreadCreateNestedManyWithoutProfileHighInput
+  dmMessages?: Prisma.DmMessageCreateNestedManyWithoutSenderInput
+  dmBlocksMade?: Prisma.DmBlockCreateNestedManyWithoutBlockerInput
+  dmBlocksReceived?: Prisma.DmBlockCreateNestedManyWithoutBlockedInput
+  posts?: Prisma.ForumPostCreateNestedManyWithoutAuthorInput
+  comments?: Prisma.ForumCommentCreateNestedManyWithoutAuthorInput
+  postVotes?: Prisma.ForumPostVoteCreateNestedManyWithoutProfileInput
+  commentVotes?: Prisma.ForumCommentVoteCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationCreateNestedManyWithoutActorInput
+  saves?: Prisma.ForumSaveCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeCreateNestedManyWithoutProfileInput
+  follows?: Prisma.ForumFollowCreateNestedManyWithoutProfileInput
+  reportsMade?: Prisma.ForumReportCreateNestedManyWithoutReporterInput
+  reportsAgainst?: Prisma.ForumReportCreateNestedManyWithoutTargetProfileInput
+}
+
+export type ForumProfileUncheckedCreateWithoutCommentLikesInput = {
+  id?: string
+  customerId: string
+  handle: string
+  bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
+  status?: $Enums.ForumMemberStatus
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  avatarKey?: string | null
+  avatarProvider?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowerInput
+  dmThreadsLow?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileLowInput
+  dmThreadsHigh?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileHighInput
+  dmMessages?: Prisma.DmMessageUncheckedCreateNestedManyWithoutSenderInput
+  dmBlocksMade?: Prisma.DmBlockUncheckedCreateNestedManyWithoutBlockerInput
+  dmBlocksReceived?: Prisma.DmBlockUncheckedCreateNestedManyWithoutBlockedInput
+  posts?: Prisma.ForumPostUncheckedCreateNestedManyWithoutAuthorInput
+  comments?: Prisma.ForumCommentUncheckedCreateNestedManyWithoutAuthorInput
+  postVotes?: Prisma.ForumPostVoteUncheckedCreateNestedManyWithoutProfileInput
+  commentVotes?: Prisma.ForumCommentVoteUncheckedCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageUncheckedCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftUncheckedCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutActorInput
+  saves?: Prisma.ForumSaveUncheckedCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeUncheckedCreateNestedManyWithoutProfileInput
+  follows?: Prisma.ForumFollowUncheckedCreateNestedManyWithoutProfileInput
+  reportsMade?: Prisma.ForumReportUncheckedCreateNestedManyWithoutReporterInput
+  reportsAgainst?: Prisma.ForumReportUncheckedCreateNestedManyWithoutTargetProfileInput
+}
+
+export type ForumProfileCreateOrConnectWithoutCommentLikesInput = {
+  where: Prisma.ForumProfileWhereUniqueInput
+  create: Prisma.XOR<Prisma.ForumProfileCreateWithoutCommentLikesInput, Prisma.ForumProfileUncheckedCreateWithoutCommentLikesInput>
+}
+
+export type ForumProfileUpsertWithoutCommentLikesInput = {
+  update: Prisma.XOR<Prisma.ForumProfileUpdateWithoutCommentLikesInput, Prisma.ForumProfileUncheckedUpdateWithoutCommentLikesInput>
+  create: Prisma.XOR<Prisma.ForumProfileCreateWithoutCommentLikesInput, Prisma.ForumProfileUncheckedCreateWithoutCommentLikesInput>
+  where?: Prisma.ForumProfileWhereInput
+}
+
+export type ForumProfileUpdateToOneWithWhereWithoutCommentLikesInput = {
+  where?: Prisma.ForumProfileWhereInput
+  data: Prisma.XOR<Prisma.ForumProfileUpdateWithoutCommentLikesInput, Prisma.ForumProfileUncheckedUpdateWithoutCommentLikesInput>
+}
+
+export type ForumProfileUpdateWithoutCommentLikesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  handle?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
+  followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUpdateManyWithoutFollowerNestedInput
+  dmThreadsLow?: Prisma.DmThreadUpdateManyWithoutProfileLowNestedInput
+  dmThreadsHigh?: Prisma.DmThreadUpdateManyWithoutProfileHighNestedInput
+  dmMessages?: Prisma.DmMessageUpdateManyWithoutSenderNestedInput
+  dmBlocksMade?: Prisma.DmBlockUpdateManyWithoutBlockerNestedInput
+  dmBlocksReceived?: Prisma.DmBlockUpdateManyWithoutBlockedNestedInput
+  posts?: Prisma.ForumPostUpdateManyWithoutAuthorNestedInput
+  comments?: Prisma.ForumCommentUpdateManyWithoutAuthorNestedInput
+  postVotes?: Prisma.ForumPostVoteUpdateManyWithoutProfileNestedInput
+  commentVotes?: Prisma.ForumCommentVoteUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUpdateManyWithoutActorNestedInput
+  saves?: Prisma.ForumSaveUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUpdateManyWithoutProfileNestedInput
+  follows?: Prisma.ForumFollowUpdateManyWithoutProfileNestedInput
+  reportsMade?: Prisma.ForumReportUpdateManyWithoutReporterNestedInput
+  reportsAgainst?: Prisma.ForumReportUpdateManyWithoutTargetProfileNestedInput
+}
+
+export type ForumProfileUncheckedUpdateWithoutCommentLikesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  handle?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowerNestedInput
+  dmThreadsLow?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileLowNestedInput
+  dmThreadsHigh?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileHighNestedInput
+  dmMessages?: Prisma.DmMessageUncheckedUpdateManyWithoutSenderNestedInput
+  dmBlocksMade?: Prisma.DmBlockUncheckedUpdateManyWithoutBlockerNestedInput
+  dmBlocksReceived?: Prisma.DmBlockUncheckedUpdateManyWithoutBlockedNestedInput
+  posts?: Prisma.ForumPostUncheckedUpdateManyWithoutAuthorNestedInput
+  comments?: Prisma.ForumCommentUncheckedUpdateManyWithoutAuthorNestedInput
+  postVotes?: Prisma.ForumPostVoteUncheckedUpdateManyWithoutProfileNestedInput
+  commentVotes?: Prisma.ForumCommentVoteUncheckedUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUncheckedUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUncheckedUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUncheckedUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedUpdateManyWithoutActorNestedInput
+  saves?: Prisma.ForumSaveUncheckedUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUncheckedUpdateManyWithoutProfileNestedInput
+  follows?: Prisma.ForumFollowUncheckedUpdateManyWithoutProfileNestedInput
+  reportsMade?: Prisma.ForumReportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsAgainst?: Prisma.ForumReportUncheckedUpdateManyWithoutTargetProfileNestedInput
+}
+
+export type ForumProfileCreateWithoutSavesInput = {
+  id?: string
+  handle: string
+  bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
+  status?: $Enums.ForumMemberStatus
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  avatarKey?: string | null
+  avatarProvider?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
+  followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowerInput
+  dmThreadsLow?: Prisma.DmThreadCreateNestedManyWithoutProfileLowInput
+  dmThreadsHigh?: Prisma.DmThreadCreateNestedManyWithoutProfileHighInput
+  dmMessages?: Prisma.DmMessageCreateNestedManyWithoutSenderInput
+  dmBlocksMade?: Prisma.DmBlockCreateNestedManyWithoutBlockerInput
+  dmBlocksReceived?: Prisma.DmBlockCreateNestedManyWithoutBlockedInput
+  posts?: Prisma.ForumPostCreateNestedManyWithoutAuthorInput
+  comments?: Prisma.ForumCommentCreateNestedManyWithoutAuthorInput
+  postVotes?: Prisma.ForumPostVoteCreateNestedManyWithoutProfileInput
+  commentVotes?: Prisma.ForumCommentVoteCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationCreateNestedManyWithoutActorInput
+  postLikes?: Prisma.ForumPostLikeCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeCreateNestedManyWithoutProfileInput
   follows?: Prisma.ForumFollowCreateNestedManyWithoutProfileInput
   reportsMade?: Prisma.ForumReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ForumReportCreateNestedManyWithoutTargetProfileInput
@@ -1398,6 +2445,11 @@ export type ForumProfileUncheckedCreateWithoutSavesInput = {
   customerId: string
   handle: string
   bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
   status?: $Enums.ForumMemberStatus
   suspendedUntil?: Date | string | null
   suspensionReason?: string | null
@@ -1405,6 +2457,11 @@ export type ForumProfileUncheckedCreateWithoutSavesInput = {
   avatarProvider?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowerInput
   dmThreadsLow?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileLowInput
   dmThreadsHigh?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileHighInput
   dmMessages?: Prisma.DmMessageUncheckedCreateNestedManyWithoutSenderInput
@@ -1414,6 +2471,12 @@ export type ForumProfileUncheckedCreateWithoutSavesInput = {
   comments?: Prisma.ForumCommentUncheckedCreateNestedManyWithoutAuthorInput
   postVotes?: Prisma.ForumPostVoteUncheckedCreateNestedManyWithoutProfileInput
   commentVotes?: Prisma.ForumCommentVoteUncheckedCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageUncheckedCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftUncheckedCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutActorInput
+  postLikes?: Prisma.ForumPostLikeUncheckedCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedCreateNestedManyWithoutProfileInput
   follows?: Prisma.ForumFollowUncheckedCreateNestedManyWithoutProfileInput
   reportsMade?: Prisma.ForumReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ForumReportUncheckedCreateNestedManyWithoutTargetProfileInput
@@ -1439,6 +2502,11 @@ export type ForumProfileUpdateWithoutSavesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   handle?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1447,6 +2515,11 @@ export type ForumProfileUpdateWithoutSavesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
+  followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUpdateManyWithoutFollowerNestedInput
   dmThreadsLow?: Prisma.DmThreadUpdateManyWithoutProfileLowNestedInput
   dmThreadsHigh?: Prisma.DmThreadUpdateManyWithoutProfileHighNestedInput
   dmMessages?: Prisma.DmMessageUpdateManyWithoutSenderNestedInput
@@ -1456,6 +2529,12 @@ export type ForumProfileUpdateWithoutSavesInput = {
   comments?: Prisma.ForumCommentUpdateManyWithoutAuthorNestedInput
   postVotes?: Prisma.ForumPostVoteUpdateManyWithoutProfileNestedInput
   commentVotes?: Prisma.ForumCommentVoteUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUpdateManyWithoutActorNestedInput
+  postLikes?: Prisma.ForumPostLikeUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUpdateManyWithoutProfileNestedInput
   follows?: Prisma.ForumFollowUpdateManyWithoutProfileNestedInput
   reportsMade?: Prisma.ForumReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ForumReportUpdateManyWithoutTargetProfileNestedInput
@@ -1466,6 +2545,11 @@ export type ForumProfileUncheckedUpdateWithoutSavesInput = {
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   handle?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1473,6 +2557,11 @@ export type ForumProfileUncheckedUpdateWithoutSavesInput = {
   avatarProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowerNestedInput
   dmThreadsLow?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileLowNestedInput
   dmThreadsHigh?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileHighNestedInput
   dmMessages?: Prisma.DmMessageUncheckedUpdateManyWithoutSenderNestedInput
@@ -1482,6 +2571,12 @@ export type ForumProfileUncheckedUpdateWithoutSavesInput = {
   comments?: Prisma.ForumCommentUncheckedUpdateManyWithoutAuthorNestedInput
   postVotes?: Prisma.ForumPostVoteUncheckedUpdateManyWithoutProfileNestedInput
   commentVotes?: Prisma.ForumCommentVoteUncheckedUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUncheckedUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUncheckedUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUncheckedUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedUpdateManyWithoutActorNestedInput
+  postLikes?: Prisma.ForumPostLikeUncheckedUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedUpdateManyWithoutProfileNestedInput
   follows?: Prisma.ForumFollowUncheckedUpdateManyWithoutProfileNestedInput
   reportsMade?: Prisma.ForumReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ForumReportUncheckedUpdateManyWithoutTargetProfileNestedInput
@@ -1491,6 +2586,11 @@ export type ForumProfileCreateWithoutFollowsInput = {
   id?: string
   handle: string
   bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
   status?: $Enums.ForumMemberStatus
   suspendedUntil?: Date | string | null
   suspensionReason?: string | null
@@ -1499,6 +2599,11 @@ export type ForumProfileCreateWithoutFollowsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
+  followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowerInput
   dmThreadsLow?: Prisma.DmThreadCreateNestedManyWithoutProfileLowInput
   dmThreadsHigh?: Prisma.DmThreadCreateNestedManyWithoutProfileHighInput
   dmMessages?: Prisma.DmMessageCreateNestedManyWithoutSenderInput
@@ -1508,7 +2613,13 @@ export type ForumProfileCreateWithoutFollowsInput = {
   comments?: Prisma.ForumCommentCreateNestedManyWithoutAuthorInput
   postVotes?: Prisma.ForumPostVoteCreateNestedManyWithoutProfileInput
   commentVotes?: Prisma.ForumCommentVoteCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationCreateNestedManyWithoutActorInput
   saves?: Prisma.ForumSaveCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeCreateNestedManyWithoutProfileInput
   reportsMade?: Prisma.ForumReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ForumReportCreateNestedManyWithoutTargetProfileInput
 }
@@ -1518,6 +2629,11 @@ export type ForumProfileUncheckedCreateWithoutFollowsInput = {
   customerId: string
   handle: string
   bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
   status?: $Enums.ForumMemberStatus
   suspendedUntil?: Date | string | null
   suspensionReason?: string | null
@@ -1525,6 +2641,11 @@ export type ForumProfileUncheckedCreateWithoutFollowsInput = {
   avatarProvider?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowerInput
   dmThreadsLow?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileLowInput
   dmThreadsHigh?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileHighInput
   dmMessages?: Prisma.DmMessageUncheckedCreateNestedManyWithoutSenderInput
@@ -1534,7 +2655,13 @@ export type ForumProfileUncheckedCreateWithoutFollowsInput = {
   comments?: Prisma.ForumCommentUncheckedCreateNestedManyWithoutAuthorInput
   postVotes?: Prisma.ForumPostVoteUncheckedCreateNestedManyWithoutProfileInput
   commentVotes?: Prisma.ForumCommentVoteUncheckedCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageUncheckedCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftUncheckedCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutActorInput
   saves?: Prisma.ForumSaveUncheckedCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeUncheckedCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedCreateNestedManyWithoutProfileInput
   reportsMade?: Prisma.ForumReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ForumReportUncheckedCreateNestedManyWithoutTargetProfileInput
 }
@@ -1559,6 +2686,11 @@ export type ForumProfileUpdateWithoutFollowsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   handle?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1567,6 +2699,11 @@ export type ForumProfileUpdateWithoutFollowsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
+  followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUpdateManyWithoutFollowerNestedInput
   dmThreadsLow?: Prisma.DmThreadUpdateManyWithoutProfileLowNestedInput
   dmThreadsHigh?: Prisma.DmThreadUpdateManyWithoutProfileHighNestedInput
   dmMessages?: Prisma.DmMessageUpdateManyWithoutSenderNestedInput
@@ -1576,7 +2713,13 @@ export type ForumProfileUpdateWithoutFollowsInput = {
   comments?: Prisma.ForumCommentUpdateManyWithoutAuthorNestedInput
   postVotes?: Prisma.ForumPostVoteUpdateManyWithoutProfileNestedInput
   commentVotes?: Prisma.ForumCommentVoteUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUpdateManyWithoutActorNestedInput
   saves?: Prisma.ForumSaveUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUpdateManyWithoutProfileNestedInput
   reportsMade?: Prisma.ForumReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ForumReportUpdateManyWithoutTargetProfileNestedInput
 }
@@ -1586,6 +2729,11 @@ export type ForumProfileUncheckedUpdateWithoutFollowsInput = {
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   handle?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1593,6 +2741,11 @@ export type ForumProfileUncheckedUpdateWithoutFollowsInput = {
   avatarProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowerNestedInput
   dmThreadsLow?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileLowNestedInput
   dmThreadsHigh?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileHighNestedInput
   dmMessages?: Prisma.DmMessageUncheckedUpdateManyWithoutSenderNestedInput
@@ -1602,15 +2755,26 @@ export type ForumProfileUncheckedUpdateWithoutFollowsInput = {
   comments?: Prisma.ForumCommentUncheckedUpdateManyWithoutAuthorNestedInput
   postVotes?: Prisma.ForumPostVoteUncheckedUpdateManyWithoutProfileNestedInput
   commentVotes?: Prisma.ForumCommentVoteUncheckedUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUncheckedUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUncheckedUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUncheckedUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedUpdateManyWithoutActorNestedInput
   saves?: Prisma.ForumSaveUncheckedUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUncheckedUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedUpdateManyWithoutProfileNestedInput
   reportsMade?: Prisma.ForumReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ForumReportUncheckedUpdateManyWithoutTargetProfileNestedInput
 }
 
-export type ForumProfileCreateWithoutReportsMadeInput = {
+export type ForumProfileCreateWithoutPostImagesInput = {
   id?: string
   handle: string
   bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
   status?: $Enums.ForumMemberStatus
   suspendedUntil?: Date | string | null
   suspensionReason?: string | null
@@ -1619,6 +2783,11 @@ export type ForumProfileCreateWithoutReportsMadeInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
+  followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowerInput
   dmThreadsLow?: Prisma.DmThreadCreateNestedManyWithoutProfileLowInput
   dmThreadsHigh?: Prisma.DmThreadCreateNestedManyWithoutProfileHighInput
   dmMessages?: Prisma.DmMessageCreateNestedManyWithoutSenderInput
@@ -1628,16 +2797,27 @@ export type ForumProfileCreateWithoutReportsMadeInput = {
   comments?: Prisma.ForumCommentCreateNestedManyWithoutAuthorInput
   postVotes?: Prisma.ForumPostVoteCreateNestedManyWithoutProfileInput
   commentVotes?: Prisma.ForumCommentVoteCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationCreateNestedManyWithoutActorInput
   saves?: Prisma.ForumSaveCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeCreateNestedManyWithoutProfileInput
   follows?: Prisma.ForumFollowCreateNestedManyWithoutProfileInput
+  reportsMade?: Prisma.ForumReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ForumReportCreateNestedManyWithoutTargetProfileInput
 }
 
-export type ForumProfileUncheckedCreateWithoutReportsMadeInput = {
+export type ForumProfileUncheckedCreateWithoutPostImagesInput = {
   id?: string
   customerId: string
   handle: string
   bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
   status?: $Enums.ForumMemberStatus
   suspendedUntil?: Date | string | null
   suspensionReason?: string | null
@@ -1645,6 +2825,11 @@ export type ForumProfileUncheckedCreateWithoutReportsMadeInput = {
   avatarProvider?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowerInput
   dmThreadsLow?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileLowInput
   dmThreadsHigh?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileHighInput
   dmMessages?: Prisma.DmMessageUncheckedCreateNestedManyWithoutSenderInput
@@ -1654,7 +2839,749 @@ export type ForumProfileUncheckedCreateWithoutReportsMadeInput = {
   comments?: Prisma.ForumCommentUncheckedCreateNestedManyWithoutAuthorInput
   postVotes?: Prisma.ForumPostVoteUncheckedCreateNestedManyWithoutProfileInput
   commentVotes?: Prisma.ForumCommentVoteUncheckedCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftUncheckedCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutActorInput
   saves?: Prisma.ForumSaveUncheckedCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeUncheckedCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedCreateNestedManyWithoutProfileInput
+  follows?: Prisma.ForumFollowUncheckedCreateNestedManyWithoutProfileInput
+  reportsMade?: Prisma.ForumReportUncheckedCreateNestedManyWithoutReporterInput
+  reportsAgainst?: Prisma.ForumReportUncheckedCreateNestedManyWithoutTargetProfileInput
+}
+
+export type ForumProfileCreateOrConnectWithoutPostImagesInput = {
+  where: Prisma.ForumProfileWhereUniqueInput
+  create: Prisma.XOR<Prisma.ForumProfileCreateWithoutPostImagesInput, Prisma.ForumProfileUncheckedCreateWithoutPostImagesInput>
+}
+
+export type ForumProfileUpsertWithoutPostImagesInput = {
+  update: Prisma.XOR<Prisma.ForumProfileUpdateWithoutPostImagesInput, Prisma.ForumProfileUncheckedUpdateWithoutPostImagesInput>
+  create: Prisma.XOR<Prisma.ForumProfileCreateWithoutPostImagesInput, Prisma.ForumProfileUncheckedCreateWithoutPostImagesInput>
+  where?: Prisma.ForumProfileWhereInput
+}
+
+export type ForumProfileUpdateToOneWithWhereWithoutPostImagesInput = {
+  where?: Prisma.ForumProfileWhereInput
+  data: Prisma.XOR<Prisma.ForumProfileUpdateWithoutPostImagesInput, Prisma.ForumProfileUncheckedUpdateWithoutPostImagesInput>
+}
+
+export type ForumProfileUpdateWithoutPostImagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  handle?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
+  followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUpdateManyWithoutFollowerNestedInput
+  dmThreadsLow?: Prisma.DmThreadUpdateManyWithoutProfileLowNestedInput
+  dmThreadsHigh?: Prisma.DmThreadUpdateManyWithoutProfileHighNestedInput
+  dmMessages?: Prisma.DmMessageUpdateManyWithoutSenderNestedInput
+  dmBlocksMade?: Prisma.DmBlockUpdateManyWithoutBlockerNestedInput
+  dmBlocksReceived?: Prisma.DmBlockUpdateManyWithoutBlockedNestedInput
+  posts?: Prisma.ForumPostUpdateManyWithoutAuthorNestedInput
+  comments?: Prisma.ForumCommentUpdateManyWithoutAuthorNestedInput
+  postVotes?: Prisma.ForumPostVoteUpdateManyWithoutProfileNestedInput
+  commentVotes?: Prisma.ForumCommentVoteUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUpdateManyWithoutActorNestedInput
+  saves?: Prisma.ForumSaveUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUpdateManyWithoutProfileNestedInput
+  follows?: Prisma.ForumFollowUpdateManyWithoutProfileNestedInput
+  reportsMade?: Prisma.ForumReportUpdateManyWithoutReporterNestedInput
+  reportsAgainst?: Prisma.ForumReportUpdateManyWithoutTargetProfileNestedInput
+}
+
+export type ForumProfileUncheckedUpdateWithoutPostImagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  handle?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowerNestedInput
+  dmThreadsLow?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileLowNestedInput
+  dmThreadsHigh?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileHighNestedInput
+  dmMessages?: Prisma.DmMessageUncheckedUpdateManyWithoutSenderNestedInput
+  dmBlocksMade?: Prisma.DmBlockUncheckedUpdateManyWithoutBlockerNestedInput
+  dmBlocksReceived?: Prisma.DmBlockUncheckedUpdateManyWithoutBlockedNestedInput
+  posts?: Prisma.ForumPostUncheckedUpdateManyWithoutAuthorNestedInput
+  comments?: Prisma.ForumCommentUncheckedUpdateManyWithoutAuthorNestedInput
+  postVotes?: Prisma.ForumPostVoteUncheckedUpdateManyWithoutProfileNestedInput
+  commentVotes?: Prisma.ForumCommentVoteUncheckedUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUncheckedUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUncheckedUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedUpdateManyWithoutActorNestedInput
+  saves?: Prisma.ForumSaveUncheckedUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUncheckedUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedUpdateManyWithoutProfileNestedInput
+  follows?: Prisma.ForumFollowUncheckedUpdateManyWithoutProfileNestedInput
+  reportsMade?: Prisma.ForumReportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsAgainst?: Prisma.ForumReportUncheckedUpdateManyWithoutTargetProfileNestedInput
+}
+
+export type ForumProfileCreateWithoutDraftInput = {
+  id?: string
+  handle: string
+  bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
+  status?: $Enums.ForumMemberStatus
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  avatarKey?: string | null
+  avatarProvider?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
+  followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowerInput
+  dmThreadsLow?: Prisma.DmThreadCreateNestedManyWithoutProfileLowInput
+  dmThreadsHigh?: Prisma.DmThreadCreateNestedManyWithoutProfileHighInput
+  dmMessages?: Prisma.DmMessageCreateNestedManyWithoutSenderInput
+  dmBlocksMade?: Prisma.DmBlockCreateNestedManyWithoutBlockerInput
+  dmBlocksReceived?: Prisma.DmBlockCreateNestedManyWithoutBlockedInput
+  posts?: Prisma.ForumPostCreateNestedManyWithoutAuthorInput
+  comments?: Prisma.ForumCommentCreateNestedManyWithoutAuthorInput
+  postVotes?: Prisma.ForumPostVoteCreateNestedManyWithoutProfileInput
+  commentVotes?: Prisma.ForumCommentVoteCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageCreateNestedManyWithoutProfileInput
+  notifications?: Prisma.ForumNotificationCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationCreateNestedManyWithoutActorInput
+  saves?: Prisma.ForumSaveCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeCreateNestedManyWithoutProfileInput
+  follows?: Prisma.ForumFollowCreateNestedManyWithoutProfileInput
+  reportsMade?: Prisma.ForumReportCreateNestedManyWithoutReporterInput
+  reportsAgainst?: Prisma.ForumReportCreateNestedManyWithoutTargetProfileInput
+}
+
+export type ForumProfileUncheckedCreateWithoutDraftInput = {
+  id?: string
+  customerId: string
+  handle: string
+  bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
+  status?: $Enums.ForumMemberStatus
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  avatarKey?: string | null
+  avatarProvider?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowerInput
+  dmThreadsLow?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileLowInput
+  dmThreadsHigh?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileHighInput
+  dmMessages?: Prisma.DmMessageUncheckedCreateNestedManyWithoutSenderInput
+  dmBlocksMade?: Prisma.DmBlockUncheckedCreateNestedManyWithoutBlockerInput
+  dmBlocksReceived?: Prisma.DmBlockUncheckedCreateNestedManyWithoutBlockedInput
+  posts?: Prisma.ForumPostUncheckedCreateNestedManyWithoutAuthorInput
+  comments?: Prisma.ForumCommentUncheckedCreateNestedManyWithoutAuthorInput
+  postVotes?: Prisma.ForumPostVoteUncheckedCreateNestedManyWithoutProfileInput
+  commentVotes?: Prisma.ForumCommentVoteUncheckedCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageUncheckedCreateNestedManyWithoutProfileInput
+  notifications?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutActorInput
+  saves?: Prisma.ForumSaveUncheckedCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeUncheckedCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedCreateNestedManyWithoutProfileInput
+  follows?: Prisma.ForumFollowUncheckedCreateNestedManyWithoutProfileInput
+  reportsMade?: Prisma.ForumReportUncheckedCreateNestedManyWithoutReporterInput
+  reportsAgainst?: Prisma.ForumReportUncheckedCreateNestedManyWithoutTargetProfileInput
+}
+
+export type ForumProfileCreateOrConnectWithoutDraftInput = {
+  where: Prisma.ForumProfileWhereUniqueInput
+  create: Prisma.XOR<Prisma.ForumProfileCreateWithoutDraftInput, Prisma.ForumProfileUncheckedCreateWithoutDraftInput>
+}
+
+export type ForumProfileUpsertWithoutDraftInput = {
+  update: Prisma.XOR<Prisma.ForumProfileUpdateWithoutDraftInput, Prisma.ForumProfileUncheckedUpdateWithoutDraftInput>
+  create: Prisma.XOR<Prisma.ForumProfileCreateWithoutDraftInput, Prisma.ForumProfileUncheckedCreateWithoutDraftInput>
+  where?: Prisma.ForumProfileWhereInput
+}
+
+export type ForumProfileUpdateToOneWithWhereWithoutDraftInput = {
+  where?: Prisma.ForumProfileWhereInput
+  data: Prisma.XOR<Prisma.ForumProfileUpdateWithoutDraftInput, Prisma.ForumProfileUncheckedUpdateWithoutDraftInput>
+}
+
+export type ForumProfileUpdateWithoutDraftInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  handle?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
+  followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUpdateManyWithoutFollowerNestedInput
+  dmThreadsLow?: Prisma.DmThreadUpdateManyWithoutProfileLowNestedInput
+  dmThreadsHigh?: Prisma.DmThreadUpdateManyWithoutProfileHighNestedInput
+  dmMessages?: Prisma.DmMessageUpdateManyWithoutSenderNestedInput
+  dmBlocksMade?: Prisma.DmBlockUpdateManyWithoutBlockerNestedInput
+  dmBlocksReceived?: Prisma.DmBlockUpdateManyWithoutBlockedNestedInput
+  posts?: Prisma.ForumPostUpdateManyWithoutAuthorNestedInput
+  comments?: Prisma.ForumCommentUpdateManyWithoutAuthorNestedInput
+  postVotes?: Prisma.ForumPostVoteUpdateManyWithoutProfileNestedInput
+  commentVotes?: Prisma.ForumCommentVoteUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUpdateManyWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUpdateManyWithoutActorNestedInput
+  saves?: Prisma.ForumSaveUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUpdateManyWithoutProfileNestedInput
+  follows?: Prisma.ForumFollowUpdateManyWithoutProfileNestedInput
+  reportsMade?: Prisma.ForumReportUpdateManyWithoutReporterNestedInput
+  reportsAgainst?: Prisma.ForumReportUpdateManyWithoutTargetProfileNestedInput
+}
+
+export type ForumProfileUncheckedUpdateWithoutDraftInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  handle?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowerNestedInput
+  dmThreadsLow?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileLowNestedInput
+  dmThreadsHigh?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileHighNestedInput
+  dmMessages?: Prisma.DmMessageUncheckedUpdateManyWithoutSenderNestedInput
+  dmBlocksMade?: Prisma.DmBlockUncheckedUpdateManyWithoutBlockerNestedInput
+  dmBlocksReceived?: Prisma.DmBlockUncheckedUpdateManyWithoutBlockedNestedInput
+  posts?: Prisma.ForumPostUncheckedUpdateManyWithoutAuthorNestedInput
+  comments?: Prisma.ForumCommentUncheckedUpdateManyWithoutAuthorNestedInput
+  postVotes?: Prisma.ForumPostVoteUncheckedUpdateManyWithoutProfileNestedInput
+  commentVotes?: Prisma.ForumCommentVoteUncheckedUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUncheckedUpdateManyWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUncheckedUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedUpdateManyWithoutActorNestedInput
+  saves?: Prisma.ForumSaveUncheckedUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUncheckedUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedUpdateManyWithoutProfileNestedInput
+  follows?: Prisma.ForumFollowUncheckedUpdateManyWithoutProfileNestedInput
+  reportsMade?: Prisma.ForumReportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsAgainst?: Prisma.ForumReportUncheckedUpdateManyWithoutTargetProfileNestedInput
+}
+
+export type ForumProfileCreateWithoutNotificationsInput = {
+  id?: string
+  handle: string
+  bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
+  status?: $Enums.ForumMemberStatus
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  avatarKey?: string | null
+  avatarProvider?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
+  followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowerInput
+  dmThreadsLow?: Prisma.DmThreadCreateNestedManyWithoutProfileLowInput
+  dmThreadsHigh?: Prisma.DmThreadCreateNestedManyWithoutProfileHighInput
+  dmMessages?: Prisma.DmMessageCreateNestedManyWithoutSenderInput
+  dmBlocksMade?: Prisma.DmBlockCreateNestedManyWithoutBlockerInput
+  dmBlocksReceived?: Prisma.DmBlockCreateNestedManyWithoutBlockedInput
+  posts?: Prisma.ForumPostCreateNestedManyWithoutAuthorInput
+  comments?: Prisma.ForumCommentCreateNestedManyWithoutAuthorInput
+  postVotes?: Prisma.ForumPostVoteCreateNestedManyWithoutProfileInput
+  commentVotes?: Prisma.ForumCommentVoteCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftCreateNestedOneWithoutProfileInput
+  notificationsMade?: Prisma.ForumNotificationCreateNestedManyWithoutActorInput
+  saves?: Prisma.ForumSaveCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeCreateNestedManyWithoutProfileInput
+  follows?: Prisma.ForumFollowCreateNestedManyWithoutProfileInput
+  reportsMade?: Prisma.ForumReportCreateNestedManyWithoutReporterInput
+  reportsAgainst?: Prisma.ForumReportCreateNestedManyWithoutTargetProfileInput
+}
+
+export type ForumProfileUncheckedCreateWithoutNotificationsInput = {
+  id?: string
+  customerId: string
+  handle: string
+  bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
+  status?: $Enums.ForumMemberStatus
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  avatarKey?: string | null
+  avatarProvider?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowerInput
+  dmThreadsLow?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileLowInput
+  dmThreadsHigh?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileHighInput
+  dmMessages?: Prisma.DmMessageUncheckedCreateNestedManyWithoutSenderInput
+  dmBlocksMade?: Prisma.DmBlockUncheckedCreateNestedManyWithoutBlockerInput
+  dmBlocksReceived?: Prisma.DmBlockUncheckedCreateNestedManyWithoutBlockedInput
+  posts?: Prisma.ForumPostUncheckedCreateNestedManyWithoutAuthorInput
+  comments?: Prisma.ForumCommentUncheckedCreateNestedManyWithoutAuthorInput
+  postVotes?: Prisma.ForumPostVoteUncheckedCreateNestedManyWithoutProfileInput
+  commentVotes?: Prisma.ForumCommentVoteUncheckedCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageUncheckedCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftUncheckedCreateNestedOneWithoutProfileInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutActorInput
+  saves?: Prisma.ForumSaveUncheckedCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeUncheckedCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedCreateNestedManyWithoutProfileInput
+  follows?: Prisma.ForumFollowUncheckedCreateNestedManyWithoutProfileInput
+  reportsMade?: Prisma.ForumReportUncheckedCreateNestedManyWithoutReporterInput
+  reportsAgainst?: Prisma.ForumReportUncheckedCreateNestedManyWithoutTargetProfileInput
+}
+
+export type ForumProfileCreateOrConnectWithoutNotificationsInput = {
+  where: Prisma.ForumProfileWhereUniqueInput
+  create: Prisma.XOR<Prisma.ForumProfileCreateWithoutNotificationsInput, Prisma.ForumProfileUncheckedCreateWithoutNotificationsInput>
+}
+
+export type ForumProfileCreateWithoutNotificationsMadeInput = {
+  id?: string
+  handle: string
+  bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
+  status?: $Enums.ForumMemberStatus
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  avatarKey?: string | null
+  avatarProvider?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
+  followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowerInput
+  dmThreadsLow?: Prisma.DmThreadCreateNestedManyWithoutProfileLowInput
+  dmThreadsHigh?: Prisma.DmThreadCreateNestedManyWithoutProfileHighInput
+  dmMessages?: Prisma.DmMessageCreateNestedManyWithoutSenderInput
+  dmBlocksMade?: Prisma.DmBlockCreateNestedManyWithoutBlockerInput
+  dmBlocksReceived?: Prisma.DmBlockCreateNestedManyWithoutBlockedInput
+  posts?: Prisma.ForumPostCreateNestedManyWithoutAuthorInput
+  comments?: Prisma.ForumCommentCreateNestedManyWithoutAuthorInput
+  postVotes?: Prisma.ForumPostVoteCreateNestedManyWithoutProfileInput
+  commentVotes?: Prisma.ForumCommentVoteCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationCreateNestedManyWithoutRecipientInput
+  saves?: Prisma.ForumSaveCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeCreateNestedManyWithoutProfileInput
+  follows?: Prisma.ForumFollowCreateNestedManyWithoutProfileInput
+  reportsMade?: Prisma.ForumReportCreateNestedManyWithoutReporterInput
+  reportsAgainst?: Prisma.ForumReportCreateNestedManyWithoutTargetProfileInput
+}
+
+export type ForumProfileUncheckedCreateWithoutNotificationsMadeInput = {
+  id?: string
+  customerId: string
+  handle: string
+  bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
+  status?: $Enums.ForumMemberStatus
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  avatarKey?: string | null
+  avatarProvider?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowerInput
+  dmThreadsLow?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileLowInput
+  dmThreadsHigh?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileHighInput
+  dmMessages?: Prisma.DmMessageUncheckedCreateNestedManyWithoutSenderInput
+  dmBlocksMade?: Prisma.DmBlockUncheckedCreateNestedManyWithoutBlockerInput
+  dmBlocksReceived?: Prisma.DmBlockUncheckedCreateNestedManyWithoutBlockedInput
+  posts?: Prisma.ForumPostUncheckedCreateNestedManyWithoutAuthorInput
+  comments?: Prisma.ForumCommentUncheckedCreateNestedManyWithoutAuthorInput
+  postVotes?: Prisma.ForumPostVoteUncheckedCreateNestedManyWithoutProfileInput
+  commentVotes?: Prisma.ForumCommentVoteUncheckedCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageUncheckedCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftUncheckedCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutRecipientInput
+  saves?: Prisma.ForumSaveUncheckedCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeUncheckedCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedCreateNestedManyWithoutProfileInput
+  follows?: Prisma.ForumFollowUncheckedCreateNestedManyWithoutProfileInput
+  reportsMade?: Prisma.ForumReportUncheckedCreateNestedManyWithoutReporterInput
+  reportsAgainst?: Prisma.ForumReportUncheckedCreateNestedManyWithoutTargetProfileInput
+}
+
+export type ForumProfileCreateOrConnectWithoutNotificationsMadeInput = {
+  where: Prisma.ForumProfileWhereUniqueInput
+  create: Prisma.XOR<Prisma.ForumProfileCreateWithoutNotificationsMadeInput, Prisma.ForumProfileUncheckedCreateWithoutNotificationsMadeInput>
+}
+
+export type ForumProfileUpsertWithoutNotificationsInput = {
+  update: Prisma.XOR<Prisma.ForumProfileUpdateWithoutNotificationsInput, Prisma.ForumProfileUncheckedUpdateWithoutNotificationsInput>
+  create: Prisma.XOR<Prisma.ForumProfileCreateWithoutNotificationsInput, Prisma.ForumProfileUncheckedCreateWithoutNotificationsInput>
+  where?: Prisma.ForumProfileWhereInput
+}
+
+export type ForumProfileUpdateToOneWithWhereWithoutNotificationsInput = {
+  where?: Prisma.ForumProfileWhereInput
+  data: Prisma.XOR<Prisma.ForumProfileUpdateWithoutNotificationsInput, Prisma.ForumProfileUncheckedUpdateWithoutNotificationsInput>
+}
+
+export type ForumProfileUpdateWithoutNotificationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  handle?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
+  followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUpdateManyWithoutFollowerNestedInput
+  dmThreadsLow?: Prisma.DmThreadUpdateManyWithoutProfileLowNestedInput
+  dmThreadsHigh?: Prisma.DmThreadUpdateManyWithoutProfileHighNestedInput
+  dmMessages?: Prisma.DmMessageUpdateManyWithoutSenderNestedInput
+  dmBlocksMade?: Prisma.DmBlockUpdateManyWithoutBlockerNestedInput
+  dmBlocksReceived?: Prisma.DmBlockUpdateManyWithoutBlockedNestedInput
+  posts?: Prisma.ForumPostUpdateManyWithoutAuthorNestedInput
+  comments?: Prisma.ForumCommentUpdateManyWithoutAuthorNestedInput
+  postVotes?: Prisma.ForumPostVoteUpdateManyWithoutProfileNestedInput
+  commentVotes?: Prisma.ForumCommentVoteUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUpdateOneWithoutProfileNestedInput
+  notificationsMade?: Prisma.ForumNotificationUpdateManyWithoutActorNestedInput
+  saves?: Prisma.ForumSaveUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUpdateManyWithoutProfileNestedInput
+  follows?: Prisma.ForumFollowUpdateManyWithoutProfileNestedInput
+  reportsMade?: Prisma.ForumReportUpdateManyWithoutReporterNestedInput
+  reportsAgainst?: Prisma.ForumReportUpdateManyWithoutTargetProfileNestedInput
+}
+
+export type ForumProfileUncheckedUpdateWithoutNotificationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  handle?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowerNestedInput
+  dmThreadsLow?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileLowNestedInput
+  dmThreadsHigh?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileHighNestedInput
+  dmMessages?: Prisma.DmMessageUncheckedUpdateManyWithoutSenderNestedInput
+  dmBlocksMade?: Prisma.DmBlockUncheckedUpdateManyWithoutBlockerNestedInput
+  dmBlocksReceived?: Prisma.DmBlockUncheckedUpdateManyWithoutBlockedNestedInput
+  posts?: Prisma.ForumPostUncheckedUpdateManyWithoutAuthorNestedInput
+  comments?: Prisma.ForumCommentUncheckedUpdateManyWithoutAuthorNestedInput
+  postVotes?: Prisma.ForumPostVoteUncheckedUpdateManyWithoutProfileNestedInput
+  commentVotes?: Prisma.ForumCommentVoteUncheckedUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUncheckedUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUncheckedUpdateOneWithoutProfileNestedInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedUpdateManyWithoutActorNestedInput
+  saves?: Prisma.ForumSaveUncheckedUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUncheckedUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedUpdateManyWithoutProfileNestedInput
+  follows?: Prisma.ForumFollowUncheckedUpdateManyWithoutProfileNestedInput
+  reportsMade?: Prisma.ForumReportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsAgainst?: Prisma.ForumReportUncheckedUpdateManyWithoutTargetProfileNestedInput
+}
+
+export type ForumProfileUpsertWithoutNotificationsMadeInput = {
+  update: Prisma.XOR<Prisma.ForumProfileUpdateWithoutNotificationsMadeInput, Prisma.ForumProfileUncheckedUpdateWithoutNotificationsMadeInput>
+  create: Prisma.XOR<Prisma.ForumProfileCreateWithoutNotificationsMadeInput, Prisma.ForumProfileUncheckedCreateWithoutNotificationsMadeInput>
+  where?: Prisma.ForumProfileWhereInput
+}
+
+export type ForumProfileUpdateToOneWithWhereWithoutNotificationsMadeInput = {
+  where?: Prisma.ForumProfileWhereInput
+  data: Prisma.XOR<Prisma.ForumProfileUpdateWithoutNotificationsMadeInput, Prisma.ForumProfileUncheckedUpdateWithoutNotificationsMadeInput>
+}
+
+export type ForumProfileUpdateWithoutNotificationsMadeInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  handle?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
+  followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUpdateManyWithoutFollowerNestedInput
+  dmThreadsLow?: Prisma.DmThreadUpdateManyWithoutProfileLowNestedInput
+  dmThreadsHigh?: Prisma.DmThreadUpdateManyWithoutProfileHighNestedInput
+  dmMessages?: Prisma.DmMessageUpdateManyWithoutSenderNestedInput
+  dmBlocksMade?: Prisma.DmBlockUpdateManyWithoutBlockerNestedInput
+  dmBlocksReceived?: Prisma.DmBlockUpdateManyWithoutBlockedNestedInput
+  posts?: Prisma.ForumPostUpdateManyWithoutAuthorNestedInput
+  comments?: Prisma.ForumCommentUpdateManyWithoutAuthorNestedInput
+  postVotes?: Prisma.ForumPostVoteUpdateManyWithoutProfileNestedInput
+  commentVotes?: Prisma.ForumCommentVoteUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUpdateManyWithoutRecipientNestedInput
+  saves?: Prisma.ForumSaveUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUpdateManyWithoutProfileNestedInput
+  follows?: Prisma.ForumFollowUpdateManyWithoutProfileNestedInput
+  reportsMade?: Prisma.ForumReportUpdateManyWithoutReporterNestedInput
+  reportsAgainst?: Prisma.ForumReportUpdateManyWithoutTargetProfileNestedInput
+}
+
+export type ForumProfileUncheckedUpdateWithoutNotificationsMadeInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  handle?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowerNestedInput
+  dmThreadsLow?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileLowNestedInput
+  dmThreadsHigh?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileHighNestedInput
+  dmMessages?: Prisma.DmMessageUncheckedUpdateManyWithoutSenderNestedInput
+  dmBlocksMade?: Prisma.DmBlockUncheckedUpdateManyWithoutBlockerNestedInput
+  dmBlocksReceived?: Prisma.DmBlockUncheckedUpdateManyWithoutBlockedNestedInput
+  posts?: Prisma.ForumPostUncheckedUpdateManyWithoutAuthorNestedInput
+  comments?: Prisma.ForumCommentUncheckedUpdateManyWithoutAuthorNestedInput
+  postVotes?: Prisma.ForumPostVoteUncheckedUpdateManyWithoutProfileNestedInput
+  commentVotes?: Prisma.ForumCommentVoteUncheckedUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUncheckedUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUncheckedUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUncheckedUpdateManyWithoutRecipientNestedInput
+  saves?: Prisma.ForumSaveUncheckedUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUncheckedUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedUpdateManyWithoutProfileNestedInput
+  follows?: Prisma.ForumFollowUncheckedUpdateManyWithoutProfileNestedInput
+  reportsMade?: Prisma.ForumReportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsAgainst?: Prisma.ForumReportUncheckedUpdateManyWithoutTargetProfileNestedInput
+}
+
+export type ForumProfileCreateWithoutReportsMadeInput = {
+  id?: string
+  handle: string
+  bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
+  status?: $Enums.ForumMemberStatus
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  avatarKey?: string | null
+  avatarProvider?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
+  followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowerInput
+  dmThreadsLow?: Prisma.DmThreadCreateNestedManyWithoutProfileLowInput
+  dmThreadsHigh?: Prisma.DmThreadCreateNestedManyWithoutProfileHighInput
+  dmMessages?: Prisma.DmMessageCreateNestedManyWithoutSenderInput
+  dmBlocksMade?: Prisma.DmBlockCreateNestedManyWithoutBlockerInput
+  dmBlocksReceived?: Prisma.DmBlockCreateNestedManyWithoutBlockedInput
+  posts?: Prisma.ForumPostCreateNestedManyWithoutAuthorInput
+  comments?: Prisma.ForumCommentCreateNestedManyWithoutAuthorInput
+  postVotes?: Prisma.ForumPostVoteCreateNestedManyWithoutProfileInput
+  commentVotes?: Prisma.ForumCommentVoteCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationCreateNestedManyWithoutActorInput
+  saves?: Prisma.ForumSaveCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeCreateNestedManyWithoutProfileInput
+  follows?: Prisma.ForumFollowCreateNestedManyWithoutProfileInput
+  reportsAgainst?: Prisma.ForumReportCreateNestedManyWithoutTargetProfileInput
+}
+
+export type ForumProfileUncheckedCreateWithoutReportsMadeInput = {
+  id?: string
+  customerId: string
+  handle: string
+  bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
+  status?: $Enums.ForumMemberStatus
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  avatarKey?: string | null
+  avatarProvider?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowerInput
+  dmThreadsLow?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileLowInput
+  dmThreadsHigh?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileHighInput
+  dmMessages?: Prisma.DmMessageUncheckedCreateNestedManyWithoutSenderInput
+  dmBlocksMade?: Prisma.DmBlockUncheckedCreateNestedManyWithoutBlockerInput
+  dmBlocksReceived?: Prisma.DmBlockUncheckedCreateNestedManyWithoutBlockedInput
+  posts?: Prisma.ForumPostUncheckedCreateNestedManyWithoutAuthorInput
+  comments?: Prisma.ForumCommentUncheckedCreateNestedManyWithoutAuthorInput
+  postVotes?: Prisma.ForumPostVoteUncheckedCreateNestedManyWithoutProfileInput
+  commentVotes?: Prisma.ForumCommentVoteUncheckedCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageUncheckedCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftUncheckedCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutActorInput
+  saves?: Prisma.ForumSaveUncheckedCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeUncheckedCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedCreateNestedManyWithoutProfileInput
   follows?: Prisma.ForumFollowUncheckedCreateNestedManyWithoutProfileInput
   reportsAgainst?: Prisma.ForumReportUncheckedCreateNestedManyWithoutTargetProfileInput
 }
@@ -1668,6 +3595,11 @@ export type ForumProfileCreateWithoutReportsAgainstInput = {
   id?: string
   handle: string
   bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
   status?: $Enums.ForumMemberStatus
   suspendedUntil?: Date | string | null
   suspensionReason?: string | null
@@ -1676,6 +3608,11 @@ export type ForumProfileCreateWithoutReportsAgainstInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
+  followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowerInput
   dmThreadsLow?: Prisma.DmThreadCreateNestedManyWithoutProfileLowInput
   dmThreadsHigh?: Prisma.DmThreadCreateNestedManyWithoutProfileHighInput
   dmMessages?: Prisma.DmMessageCreateNestedManyWithoutSenderInput
@@ -1685,7 +3622,13 @@ export type ForumProfileCreateWithoutReportsAgainstInput = {
   comments?: Prisma.ForumCommentCreateNestedManyWithoutAuthorInput
   postVotes?: Prisma.ForumPostVoteCreateNestedManyWithoutProfileInput
   commentVotes?: Prisma.ForumCommentVoteCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationCreateNestedManyWithoutActorInput
   saves?: Prisma.ForumSaveCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeCreateNestedManyWithoutProfileInput
   follows?: Prisma.ForumFollowCreateNestedManyWithoutProfileInput
   reportsMade?: Prisma.ForumReportCreateNestedManyWithoutReporterInput
 }
@@ -1695,6 +3638,11 @@ export type ForumProfileUncheckedCreateWithoutReportsAgainstInput = {
   customerId: string
   handle: string
   bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
   status?: $Enums.ForumMemberStatus
   suspendedUntil?: Date | string | null
   suspensionReason?: string | null
@@ -1702,6 +3650,11 @@ export type ForumProfileUncheckedCreateWithoutReportsAgainstInput = {
   avatarProvider?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowerInput
   dmThreadsLow?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileLowInput
   dmThreadsHigh?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileHighInput
   dmMessages?: Prisma.DmMessageUncheckedCreateNestedManyWithoutSenderInput
@@ -1711,7 +3664,13 @@ export type ForumProfileUncheckedCreateWithoutReportsAgainstInput = {
   comments?: Prisma.ForumCommentUncheckedCreateNestedManyWithoutAuthorInput
   postVotes?: Prisma.ForumPostVoteUncheckedCreateNestedManyWithoutProfileInput
   commentVotes?: Prisma.ForumCommentVoteUncheckedCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageUncheckedCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftUncheckedCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutActorInput
   saves?: Prisma.ForumSaveUncheckedCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeUncheckedCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedCreateNestedManyWithoutProfileInput
   follows?: Prisma.ForumFollowUncheckedCreateNestedManyWithoutProfileInput
   reportsMade?: Prisma.ForumReportUncheckedCreateNestedManyWithoutReporterInput
 }
@@ -1736,6 +3695,11 @@ export type ForumProfileUpdateWithoutReportsMadeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   handle?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1744,6 +3708,11 @@ export type ForumProfileUpdateWithoutReportsMadeInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
+  followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUpdateManyWithoutFollowerNestedInput
   dmThreadsLow?: Prisma.DmThreadUpdateManyWithoutProfileLowNestedInput
   dmThreadsHigh?: Prisma.DmThreadUpdateManyWithoutProfileHighNestedInput
   dmMessages?: Prisma.DmMessageUpdateManyWithoutSenderNestedInput
@@ -1753,7 +3722,13 @@ export type ForumProfileUpdateWithoutReportsMadeInput = {
   comments?: Prisma.ForumCommentUpdateManyWithoutAuthorNestedInput
   postVotes?: Prisma.ForumPostVoteUpdateManyWithoutProfileNestedInput
   commentVotes?: Prisma.ForumCommentVoteUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUpdateManyWithoutActorNestedInput
   saves?: Prisma.ForumSaveUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUpdateManyWithoutProfileNestedInput
   follows?: Prisma.ForumFollowUpdateManyWithoutProfileNestedInput
   reportsAgainst?: Prisma.ForumReportUpdateManyWithoutTargetProfileNestedInput
 }
@@ -1763,6 +3738,11 @@ export type ForumProfileUncheckedUpdateWithoutReportsMadeInput = {
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   handle?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1770,6 +3750,11 @@ export type ForumProfileUncheckedUpdateWithoutReportsMadeInput = {
   avatarProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowerNestedInput
   dmThreadsLow?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileLowNestedInput
   dmThreadsHigh?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileHighNestedInput
   dmMessages?: Prisma.DmMessageUncheckedUpdateManyWithoutSenderNestedInput
@@ -1779,7 +3764,13 @@ export type ForumProfileUncheckedUpdateWithoutReportsMadeInput = {
   comments?: Prisma.ForumCommentUncheckedUpdateManyWithoutAuthorNestedInput
   postVotes?: Prisma.ForumPostVoteUncheckedUpdateManyWithoutProfileNestedInput
   commentVotes?: Prisma.ForumCommentVoteUncheckedUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUncheckedUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUncheckedUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUncheckedUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedUpdateManyWithoutActorNestedInput
   saves?: Prisma.ForumSaveUncheckedUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUncheckedUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedUpdateManyWithoutProfileNestedInput
   follows?: Prisma.ForumFollowUncheckedUpdateManyWithoutProfileNestedInput
   reportsAgainst?: Prisma.ForumReportUncheckedUpdateManyWithoutTargetProfileNestedInput
 }
@@ -1799,6 +3790,11 @@ export type ForumProfileUpdateWithoutReportsAgainstInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   handle?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1807,6 +3803,11 @@ export type ForumProfileUpdateWithoutReportsAgainstInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
+  followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUpdateManyWithoutFollowerNestedInput
   dmThreadsLow?: Prisma.DmThreadUpdateManyWithoutProfileLowNestedInput
   dmThreadsHigh?: Prisma.DmThreadUpdateManyWithoutProfileHighNestedInput
   dmMessages?: Prisma.DmMessageUpdateManyWithoutSenderNestedInput
@@ -1816,7 +3817,13 @@ export type ForumProfileUpdateWithoutReportsAgainstInput = {
   comments?: Prisma.ForumCommentUpdateManyWithoutAuthorNestedInput
   postVotes?: Prisma.ForumPostVoteUpdateManyWithoutProfileNestedInput
   commentVotes?: Prisma.ForumCommentVoteUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUpdateManyWithoutActorNestedInput
   saves?: Prisma.ForumSaveUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUpdateManyWithoutProfileNestedInput
   follows?: Prisma.ForumFollowUpdateManyWithoutProfileNestedInput
   reportsMade?: Prisma.ForumReportUpdateManyWithoutReporterNestedInput
 }
@@ -1826,6 +3833,11 @@ export type ForumProfileUncheckedUpdateWithoutReportsAgainstInput = {
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   handle?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1833,6 +3845,11 @@ export type ForumProfileUncheckedUpdateWithoutReportsAgainstInput = {
   avatarProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowerNestedInput
   dmThreadsLow?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileLowNestedInput
   dmThreadsHigh?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileHighNestedInput
   dmMessages?: Prisma.DmMessageUncheckedUpdateManyWithoutSenderNestedInput
@@ -1842,7 +3859,13 @@ export type ForumProfileUncheckedUpdateWithoutReportsAgainstInput = {
   comments?: Prisma.ForumCommentUncheckedUpdateManyWithoutAuthorNestedInput
   postVotes?: Prisma.ForumPostVoteUncheckedUpdateManyWithoutProfileNestedInput
   commentVotes?: Prisma.ForumCommentVoteUncheckedUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUncheckedUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUncheckedUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUncheckedUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedUpdateManyWithoutActorNestedInput
   saves?: Prisma.ForumSaveUncheckedUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUncheckedUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedUpdateManyWithoutProfileNestedInput
   follows?: Prisma.ForumFollowUncheckedUpdateManyWithoutProfileNestedInput
   reportsMade?: Prisma.ForumReportUncheckedUpdateManyWithoutReporterNestedInput
 }
@@ -1851,6 +3874,11 @@ export type ForumProfileCreateWithoutDmThreadsLowInput = {
   id?: string
   handle: string
   bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
   status?: $Enums.ForumMemberStatus
   suspendedUntil?: Date | string | null
   suspensionReason?: string | null
@@ -1859,6 +3887,11 @@ export type ForumProfileCreateWithoutDmThreadsLowInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
+  followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowerInput
   dmThreadsHigh?: Prisma.DmThreadCreateNestedManyWithoutProfileHighInput
   dmMessages?: Prisma.DmMessageCreateNestedManyWithoutSenderInput
   dmBlocksMade?: Prisma.DmBlockCreateNestedManyWithoutBlockerInput
@@ -1867,7 +3900,13 @@ export type ForumProfileCreateWithoutDmThreadsLowInput = {
   comments?: Prisma.ForumCommentCreateNestedManyWithoutAuthorInput
   postVotes?: Prisma.ForumPostVoteCreateNestedManyWithoutProfileInput
   commentVotes?: Prisma.ForumCommentVoteCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationCreateNestedManyWithoutActorInput
   saves?: Prisma.ForumSaveCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeCreateNestedManyWithoutProfileInput
   follows?: Prisma.ForumFollowCreateNestedManyWithoutProfileInput
   reportsMade?: Prisma.ForumReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ForumReportCreateNestedManyWithoutTargetProfileInput
@@ -1878,6 +3917,11 @@ export type ForumProfileUncheckedCreateWithoutDmThreadsLowInput = {
   customerId: string
   handle: string
   bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
   status?: $Enums.ForumMemberStatus
   suspendedUntil?: Date | string | null
   suspensionReason?: string | null
@@ -1885,6 +3929,11 @@ export type ForumProfileUncheckedCreateWithoutDmThreadsLowInput = {
   avatarProvider?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowerInput
   dmThreadsHigh?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileHighInput
   dmMessages?: Prisma.DmMessageUncheckedCreateNestedManyWithoutSenderInput
   dmBlocksMade?: Prisma.DmBlockUncheckedCreateNestedManyWithoutBlockerInput
@@ -1893,7 +3942,13 @@ export type ForumProfileUncheckedCreateWithoutDmThreadsLowInput = {
   comments?: Prisma.ForumCommentUncheckedCreateNestedManyWithoutAuthorInput
   postVotes?: Prisma.ForumPostVoteUncheckedCreateNestedManyWithoutProfileInput
   commentVotes?: Prisma.ForumCommentVoteUncheckedCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageUncheckedCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftUncheckedCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutActorInput
   saves?: Prisma.ForumSaveUncheckedCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeUncheckedCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedCreateNestedManyWithoutProfileInput
   follows?: Prisma.ForumFollowUncheckedCreateNestedManyWithoutProfileInput
   reportsMade?: Prisma.ForumReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ForumReportUncheckedCreateNestedManyWithoutTargetProfileInput
@@ -1908,6 +3963,11 @@ export type ForumProfileCreateWithoutDmThreadsHighInput = {
   id?: string
   handle: string
   bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
   status?: $Enums.ForumMemberStatus
   suspendedUntil?: Date | string | null
   suspensionReason?: string | null
@@ -1916,6 +3976,11 @@ export type ForumProfileCreateWithoutDmThreadsHighInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
+  followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowerInput
   dmThreadsLow?: Prisma.DmThreadCreateNestedManyWithoutProfileLowInput
   dmMessages?: Prisma.DmMessageCreateNestedManyWithoutSenderInput
   dmBlocksMade?: Prisma.DmBlockCreateNestedManyWithoutBlockerInput
@@ -1924,7 +3989,13 @@ export type ForumProfileCreateWithoutDmThreadsHighInput = {
   comments?: Prisma.ForumCommentCreateNestedManyWithoutAuthorInput
   postVotes?: Prisma.ForumPostVoteCreateNestedManyWithoutProfileInput
   commentVotes?: Prisma.ForumCommentVoteCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationCreateNestedManyWithoutActorInput
   saves?: Prisma.ForumSaveCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeCreateNestedManyWithoutProfileInput
   follows?: Prisma.ForumFollowCreateNestedManyWithoutProfileInput
   reportsMade?: Prisma.ForumReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ForumReportCreateNestedManyWithoutTargetProfileInput
@@ -1935,6 +4006,11 @@ export type ForumProfileUncheckedCreateWithoutDmThreadsHighInput = {
   customerId: string
   handle: string
   bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
   status?: $Enums.ForumMemberStatus
   suspendedUntil?: Date | string | null
   suspensionReason?: string | null
@@ -1942,6 +4018,11 @@ export type ForumProfileUncheckedCreateWithoutDmThreadsHighInput = {
   avatarProvider?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowerInput
   dmThreadsLow?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileLowInput
   dmMessages?: Prisma.DmMessageUncheckedCreateNestedManyWithoutSenderInput
   dmBlocksMade?: Prisma.DmBlockUncheckedCreateNestedManyWithoutBlockerInput
@@ -1950,7 +4031,13 @@ export type ForumProfileUncheckedCreateWithoutDmThreadsHighInput = {
   comments?: Prisma.ForumCommentUncheckedCreateNestedManyWithoutAuthorInput
   postVotes?: Prisma.ForumPostVoteUncheckedCreateNestedManyWithoutProfileInput
   commentVotes?: Prisma.ForumCommentVoteUncheckedCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageUncheckedCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftUncheckedCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutActorInput
   saves?: Prisma.ForumSaveUncheckedCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeUncheckedCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedCreateNestedManyWithoutProfileInput
   follows?: Prisma.ForumFollowUncheckedCreateNestedManyWithoutProfileInput
   reportsMade?: Prisma.ForumReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ForumReportUncheckedCreateNestedManyWithoutTargetProfileInput
@@ -1976,6 +4063,11 @@ export type ForumProfileUpdateWithoutDmThreadsLowInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   handle?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1984,6 +4076,11 @@ export type ForumProfileUpdateWithoutDmThreadsLowInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
+  followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUpdateManyWithoutFollowerNestedInput
   dmThreadsHigh?: Prisma.DmThreadUpdateManyWithoutProfileHighNestedInput
   dmMessages?: Prisma.DmMessageUpdateManyWithoutSenderNestedInput
   dmBlocksMade?: Prisma.DmBlockUpdateManyWithoutBlockerNestedInput
@@ -1992,7 +4089,13 @@ export type ForumProfileUpdateWithoutDmThreadsLowInput = {
   comments?: Prisma.ForumCommentUpdateManyWithoutAuthorNestedInput
   postVotes?: Prisma.ForumPostVoteUpdateManyWithoutProfileNestedInput
   commentVotes?: Prisma.ForumCommentVoteUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUpdateManyWithoutActorNestedInput
   saves?: Prisma.ForumSaveUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUpdateManyWithoutProfileNestedInput
   follows?: Prisma.ForumFollowUpdateManyWithoutProfileNestedInput
   reportsMade?: Prisma.ForumReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ForumReportUpdateManyWithoutTargetProfileNestedInput
@@ -2003,6 +4106,11 @@ export type ForumProfileUncheckedUpdateWithoutDmThreadsLowInput = {
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   handle?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2010,6 +4118,11 @@ export type ForumProfileUncheckedUpdateWithoutDmThreadsLowInput = {
   avatarProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowerNestedInput
   dmThreadsHigh?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileHighNestedInput
   dmMessages?: Prisma.DmMessageUncheckedUpdateManyWithoutSenderNestedInput
   dmBlocksMade?: Prisma.DmBlockUncheckedUpdateManyWithoutBlockerNestedInput
@@ -2018,7 +4131,13 @@ export type ForumProfileUncheckedUpdateWithoutDmThreadsLowInput = {
   comments?: Prisma.ForumCommentUncheckedUpdateManyWithoutAuthorNestedInput
   postVotes?: Prisma.ForumPostVoteUncheckedUpdateManyWithoutProfileNestedInput
   commentVotes?: Prisma.ForumCommentVoteUncheckedUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUncheckedUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUncheckedUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUncheckedUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedUpdateManyWithoutActorNestedInput
   saves?: Prisma.ForumSaveUncheckedUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUncheckedUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedUpdateManyWithoutProfileNestedInput
   follows?: Prisma.ForumFollowUncheckedUpdateManyWithoutProfileNestedInput
   reportsMade?: Prisma.ForumReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ForumReportUncheckedUpdateManyWithoutTargetProfileNestedInput
@@ -2039,6 +4158,11 @@ export type ForumProfileUpdateWithoutDmThreadsHighInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   handle?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2047,6 +4171,11 @@ export type ForumProfileUpdateWithoutDmThreadsHighInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
+  followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUpdateManyWithoutFollowerNestedInput
   dmThreadsLow?: Prisma.DmThreadUpdateManyWithoutProfileLowNestedInput
   dmMessages?: Prisma.DmMessageUpdateManyWithoutSenderNestedInput
   dmBlocksMade?: Prisma.DmBlockUpdateManyWithoutBlockerNestedInput
@@ -2055,7 +4184,13 @@ export type ForumProfileUpdateWithoutDmThreadsHighInput = {
   comments?: Prisma.ForumCommentUpdateManyWithoutAuthorNestedInput
   postVotes?: Prisma.ForumPostVoteUpdateManyWithoutProfileNestedInput
   commentVotes?: Prisma.ForumCommentVoteUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUpdateManyWithoutActorNestedInput
   saves?: Prisma.ForumSaveUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUpdateManyWithoutProfileNestedInput
   follows?: Prisma.ForumFollowUpdateManyWithoutProfileNestedInput
   reportsMade?: Prisma.ForumReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ForumReportUpdateManyWithoutTargetProfileNestedInput
@@ -2066,6 +4201,11 @@ export type ForumProfileUncheckedUpdateWithoutDmThreadsHighInput = {
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   handle?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2073,6 +4213,11 @@ export type ForumProfileUncheckedUpdateWithoutDmThreadsHighInput = {
   avatarProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowerNestedInput
   dmThreadsLow?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileLowNestedInput
   dmMessages?: Prisma.DmMessageUncheckedUpdateManyWithoutSenderNestedInput
   dmBlocksMade?: Prisma.DmBlockUncheckedUpdateManyWithoutBlockerNestedInput
@@ -2081,7 +4226,13 @@ export type ForumProfileUncheckedUpdateWithoutDmThreadsHighInput = {
   comments?: Prisma.ForumCommentUncheckedUpdateManyWithoutAuthorNestedInput
   postVotes?: Prisma.ForumPostVoteUncheckedUpdateManyWithoutProfileNestedInput
   commentVotes?: Prisma.ForumCommentVoteUncheckedUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUncheckedUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUncheckedUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUncheckedUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedUpdateManyWithoutActorNestedInput
   saves?: Prisma.ForumSaveUncheckedUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUncheckedUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedUpdateManyWithoutProfileNestedInput
   follows?: Prisma.ForumFollowUncheckedUpdateManyWithoutProfileNestedInput
   reportsMade?: Prisma.ForumReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ForumReportUncheckedUpdateManyWithoutTargetProfileNestedInput
@@ -2091,6 +4242,11 @@ export type ForumProfileCreateWithoutDmMessagesInput = {
   id?: string
   handle: string
   bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
   status?: $Enums.ForumMemberStatus
   suspendedUntil?: Date | string | null
   suspensionReason?: string | null
@@ -2099,6 +4255,11 @@ export type ForumProfileCreateWithoutDmMessagesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
+  followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowerInput
   dmThreadsLow?: Prisma.DmThreadCreateNestedManyWithoutProfileLowInput
   dmThreadsHigh?: Prisma.DmThreadCreateNestedManyWithoutProfileHighInput
   dmBlocksMade?: Prisma.DmBlockCreateNestedManyWithoutBlockerInput
@@ -2107,7 +4268,13 @@ export type ForumProfileCreateWithoutDmMessagesInput = {
   comments?: Prisma.ForumCommentCreateNestedManyWithoutAuthorInput
   postVotes?: Prisma.ForumPostVoteCreateNestedManyWithoutProfileInput
   commentVotes?: Prisma.ForumCommentVoteCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationCreateNestedManyWithoutActorInput
   saves?: Prisma.ForumSaveCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeCreateNestedManyWithoutProfileInput
   follows?: Prisma.ForumFollowCreateNestedManyWithoutProfileInput
   reportsMade?: Prisma.ForumReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ForumReportCreateNestedManyWithoutTargetProfileInput
@@ -2118,6 +4285,11 @@ export type ForumProfileUncheckedCreateWithoutDmMessagesInput = {
   customerId: string
   handle: string
   bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
   status?: $Enums.ForumMemberStatus
   suspendedUntil?: Date | string | null
   suspensionReason?: string | null
@@ -2125,6 +4297,11 @@ export type ForumProfileUncheckedCreateWithoutDmMessagesInput = {
   avatarProvider?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowerInput
   dmThreadsLow?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileLowInput
   dmThreadsHigh?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileHighInput
   dmBlocksMade?: Prisma.DmBlockUncheckedCreateNestedManyWithoutBlockerInput
@@ -2133,7 +4310,13 @@ export type ForumProfileUncheckedCreateWithoutDmMessagesInput = {
   comments?: Prisma.ForumCommentUncheckedCreateNestedManyWithoutAuthorInput
   postVotes?: Prisma.ForumPostVoteUncheckedCreateNestedManyWithoutProfileInput
   commentVotes?: Prisma.ForumCommentVoteUncheckedCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageUncheckedCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftUncheckedCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutActorInput
   saves?: Prisma.ForumSaveUncheckedCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeUncheckedCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedCreateNestedManyWithoutProfileInput
   follows?: Prisma.ForumFollowUncheckedCreateNestedManyWithoutProfileInput
   reportsMade?: Prisma.ForumReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ForumReportUncheckedCreateNestedManyWithoutTargetProfileInput
@@ -2159,6 +4342,11 @@ export type ForumProfileUpdateWithoutDmMessagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   handle?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2167,6 +4355,11 @@ export type ForumProfileUpdateWithoutDmMessagesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
+  followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUpdateManyWithoutFollowerNestedInput
   dmThreadsLow?: Prisma.DmThreadUpdateManyWithoutProfileLowNestedInput
   dmThreadsHigh?: Prisma.DmThreadUpdateManyWithoutProfileHighNestedInput
   dmBlocksMade?: Prisma.DmBlockUpdateManyWithoutBlockerNestedInput
@@ -2175,7 +4368,13 @@ export type ForumProfileUpdateWithoutDmMessagesInput = {
   comments?: Prisma.ForumCommentUpdateManyWithoutAuthorNestedInput
   postVotes?: Prisma.ForumPostVoteUpdateManyWithoutProfileNestedInput
   commentVotes?: Prisma.ForumCommentVoteUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUpdateManyWithoutActorNestedInput
   saves?: Prisma.ForumSaveUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUpdateManyWithoutProfileNestedInput
   follows?: Prisma.ForumFollowUpdateManyWithoutProfileNestedInput
   reportsMade?: Prisma.ForumReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ForumReportUpdateManyWithoutTargetProfileNestedInput
@@ -2186,6 +4385,11 @@ export type ForumProfileUncheckedUpdateWithoutDmMessagesInput = {
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   handle?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2193,6 +4397,11 @@ export type ForumProfileUncheckedUpdateWithoutDmMessagesInput = {
   avatarProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowerNestedInput
   dmThreadsLow?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileLowNestedInput
   dmThreadsHigh?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileHighNestedInput
   dmBlocksMade?: Prisma.DmBlockUncheckedUpdateManyWithoutBlockerNestedInput
@@ -2201,7 +4410,13 @@ export type ForumProfileUncheckedUpdateWithoutDmMessagesInput = {
   comments?: Prisma.ForumCommentUncheckedUpdateManyWithoutAuthorNestedInput
   postVotes?: Prisma.ForumPostVoteUncheckedUpdateManyWithoutProfileNestedInput
   commentVotes?: Prisma.ForumCommentVoteUncheckedUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUncheckedUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUncheckedUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUncheckedUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedUpdateManyWithoutActorNestedInput
   saves?: Prisma.ForumSaveUncheckedUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUncheckedUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedUpdateManyWithoutProfileNestedInput
   follows?: Prisma.ForumFollowUncheckedUpdateManyWithoutProfileNestedInput
   reportsMade?: Prisma.ForumReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ForumReportUncheckedUpdateManyWithoutTargetProfileNestedInput
@@ -2211,6 +4426,11 @@ export type ForumProfileCreateWithoutDmBlocksMadeInput = {
   id?: string
   handle: string
   bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
   status?: $Enums.ForumMemberStatus
   suspendedUntil?: Date | string | null
   suspensionReason?: string | null
@@ -2219,6 +4439,11 @@ export type ForumProfileCreateWithoutDmBlocksMadeInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
+  followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowerInput
   dmThreadsLow?: Prisma.DmThreadCreateNestedManyWithoutProfileLowInput
   dmThreadsHigh?: Prisma.DmThreadCreateNestedManyWithoutProfileHighInput
   dmMessages?: Prisma.DmMessageCreateNestedManyWithoutSenderInput
@@ -2227,7 +4452,13 @@ export type ForumProfileCreateWithoutDmBlocksMadeInput = {
   comments?: Prisma.ForumCommentCreateNestedManyWithoutAuthorInput
   postVotes?: Prisma.ForumPostVoteCreateNestedManyWithoutProfileInput
   commentVotes?: Prisma.ForumCommentVoteCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationCreateNestedManyWithoutActorInput
   saves?: Prisma.ForumSaveCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeCreateNestedManyWithoutProfileInput
   follows?: Prisma.ForumFollowCreateNestedManyWithoutProfileInput
   reportsMade?: Prisma.ForumReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ForumReportCreateNestedManyWithoutTargetProfileInput
@@ -2238,6 +4469,11 @@ export type ForumProfileUncheckedCreateWithoutDmBlocksMadeInput = {
   customerId: string
   handle: string
   bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
   status?: $Enums.ForumMemberStatus
   suspendedUntil?: Date | string | null
   suspensionReason?: string | null
@@ -2245,6 +4481,11 @@ export type ForumProfileUncheckedCreateWithoutDmBlocksMadeInput = {
   avatarProvider?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowerInput
   dmThreadsLow?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileLowInput
   dmThreadsHigh?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileHighInput
   dmMessages?: Prisma.DmMessageUncheckedCreateNestedManyWithoutSenderInput
@@ -2253,7 +4494,13 @@ export type ForumProfileUncheckedCreateWithoutDmBlocksMadeInput = {
   comments?: Prisma.ForumCommentUncheckedCreateNestedManyWithoutAuthorInput
   postVotes?: Prisma.ForumPostVoteUncheckedCreateNestedManyWithoutProfileInput
   commentVotes?: Prisma.ForumCommentVoteUncheckedCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageUncheckedCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftUncheckedCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutActorInput
   saves?: Prisma.ForumSaveUncheckedCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeUncheckedCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedCreateNestedManyWithoutProfileInput
   follows?: Prisma.ForumFollowUncheckedCreateNestedManyWithoutProfileInput
   reportsMade?: Prisma.ForumReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ForumReportUncheckedCreateNestedManyWithoutTargetProfileInput
@@ -2268,6 +4515,11 @@ export type ForumProfileCreateWithoutDmBlocksReceivedInput = {
   id?: string
   handle: string
   bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
   status?: $Enums.ForumMemberStatus
   suspendedUntil?: Date | string | null
   suspensionReason?: string | null
@@ -2276,6 +4528,11 @@ export type ForumProfileCreateWithoutDmBlocksReceivedInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
+  followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowerInput
   dmThreadsLow?: Prisma.DmThreadCreateNestedManyWithoutProfileLowInput
   dmThreadsHigh?: Prisma.DmThreadCreateNestedManyWithoutProfileHighInput
   dmMessages?: Prisma.DmMessageCreateNestedManyWithoutSenderInput
@@ -2284,7 +4541,13 @@ export type ForumProfileCreateWithoutDmBlocksReceivedInput = {
   comments?: Prisma.ForumCommentCreateNestedManyWithoutAuthorInput
   postVotes?: Prisma.ForumPostVoteCreateNestedManyWithoutProfileInput
   commentVotes?: Prisma.ForumCommentVoteCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationCreateNestedManyWithoutActorInput
   saves?: Prisma.ForumSaveCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeCreateNestedManyWithoutProfileInput
   follows?: Prisma.ForumFollowCreateNestedManyWithoutProfileInput
   reportsMade?: Prisma.ForumReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ForumReportCreateNestedManyWithoutTargetProfileInput
@@ -2295,6 +4558,11 @@ export type ForumProfileUncheckedCreateWithoutDmBlocksReceivedInput = {
   customerId: string
   handle: string
   bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
   status?: $Enums.ForumMemberStatus
   suspendedUntil?: Date | string | null
   suspensionReason?: string | null
@@ -2302,6 +4570,11 @@ export type ForumProfileUncheckedCreateWithoutDmBlocksReceivedInput = {
   avatarProvider?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowerInput
   dmThreadsLow?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileLowInput
   dmThreadsHigh?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileHighInput
   dmMessages?: Prisma.DmMessageUncheckedCreateNestedManyWithoutSenderInput
@@ -2310,7 +4583,13 @@ export type ForumProfileUncheckedCreateWithoutDmBlocksReceivedInput = {
   comments?: Prisma.ForumCommentUncheckedCreateNestedManyWithoutAuthorInput
   postVotes?: Prisma.ForumPostVoteUncheckedCreateNestedManyWithoutProfileInput
   commentVotes?: Prisma.ForumCommentVoteUncheckedCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageUncheckedCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftUncheckedCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutActorInput
   saves?: Prisma.ForumSaveUncheckedCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeUncheckedCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedCreateNestedManyWithoutProfileInput
   follows?: Prisma.ForumFollowUncheckedCreateNestedManyWithoutProfileInput
   reportsMade?: Prisma.ForumReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ForumReportUncheckedCreateNestedManyWithoutTargetProfileInput
@@ -2336,6 +4615,11 @@ export type ForumProfileUpdateWithoutDmBlocksMadeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   handle?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2344,6 +4628,11 @@ export type ForumProfileUpdateWithoutDmBlocksMadeInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
+  followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUpdateManyWithoutFollowerNestedInput
   dmThreadsLow?: Prisma.DmThreadUpdateManyWithoutProfileLowNestedInput
   dmThreadsHigh?: Prisma.DmThreadUpdateManyWithoutProfileHighNestedInput
   dmMessages?: Prisma.DmMessageUpdateManyWithoutSenderNestedInput
@@ -2352,7 +4641,13 @@ export type ForumProfileUpdateWithoutDmBlocksMadeInput = {
   comments?: Prisma.ForumCommentUpdateManyWithoutAuthorNestedInput
   postVotes?: Prisma.ForumPostVoteUpdateManyWithoutProfileNestedInput
   commentVotes?: Prisma.ForumCommentVoteUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUpdateManyWithoutActorNestedInput
   saves?: Prisma.ForumSaveUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUpdateManyWithoutProfileNestedInput
   follows?: Prisma.ForumFollowUpdateManyWithoutProfileNestedInput
   reportsMade?: Prisma.ForumReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ForumReportUpdateManyWithoutTargetProfileNestedInput
@@ -2363,6 +4658,11 @@ export type ForumProfileUncheckedUpdateWithoutDmBlocksMadeInput = {
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   handle?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2370,6 +4670,11 @@ export type ForumProfileUncheckedUpdateWithoutDmBlocksMadeInput = {
   avatarProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowerNestedInput
   dmThreadsLow?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileLowNestedInput
   dmThreadsHigh?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileHighNestedInput
   dmMessages?: Prisma.DmMessageUncheckedUpdateManyWithoutSenderNestedInput
@@ -2378,7 +4683,13 @@ export type ForumProfileUncheckedUpdateWithoutDmBlocksMadeInput = {
   comments?: Prisma.ForumCommentUncheckedUpdateManyWithoutAuthorNestedInput
   postVotes?: Prisma.ForumPostVoteUncheckedUpdateManyWithoutProfileNestedInput
   commentVotes?: Prisma.ForumCommentVoteUncheckedUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUncheckedUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUncheckedUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUncheckedUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedUpdateManyWithoutActorNestedInput
   saves?: Prisma.ForumSaveUncheckedUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUncheckedUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedUpdateManyWithoutProfileNestedInput
   follows?: Prisma.ForumFollowUncheckedUpdateManyWithoutProfileNestedInput
   reportsMade?: Prisma.ForumReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ForumReportUncheckedUpdateManyWithoutTargetProfileNestedInput
@@ -2399,6 +4710,11 @@ export type ForumProfileUpdateWithoutDmBlocksReceivedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   handle?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2407,6 +4723,11 @@ export type ForumProfileUpdateWithoutDmBlocksReceivedInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
+  followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUpdateManyWithoutFollowerNestedInput
   dmThreadsLow?: Prisma.DmThreadUpdateManyWithoutProfileLowNestedInput
   dmThreadsHigh?: Prisma.DmThreadUpdateManyWithoutProfileHighNestedInput
   dmMessages?: Prisma.DmMessageUpdateManyWithoutSenderNestedInput
@@ -2415,7 +4736,13 @@ export type ForumProfileUpdateWithoutDmBlocksReceivedInput = {
   comments?: Prisma.ForumCommentUpdateManyWithoutAuthorNestedInput
   postVotes?: Prisma.ForumPostVoteUpdateManyWithoutProfileNestedInput
   commentVotes?: Prisma.ForumCommentVoteUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUpdateManyWithoutActorNestedInput
   saves?: Prisma.ForumSaveUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUpdateManyWithoutProfileNestedInput
   follows?: Prisma.ForumFollowUpdateManyWithoutProfileNestedInput
   reportsMade?: Prisma.ForumReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ForumReportUpdateManyWithoutTargetProfileNestedInput
@@ -2426,6 +4753,11 @@ export type ForumProfileUncheckedUpdateWithoutDmBlocksReceivedInput = {
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   handle?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2433,6 +4765,11 @@ export type ForumProfileUncheckedUpdateWithoutDmBlocksReceivedInput = {
   avatarProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowerNestedInput
   dmThreadsLow?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileLowNestedInput
   dmThreadsHigh?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileHighNestedInput
   dmMessages?: Prisma.DmMessageUncheckedUpdateManyWithoutSenderNestedInput
@@ -2441,7 +4778,933 @@ export type ForumProfileUncheckedUpdateWithoutDmBlocksReceivedInput = {
   comments?: Prisma.ForumCommentUncheckedUpdateManyWithoutAuthorNestedInput
   postVotes?: Prisma.ForumPostVoteUncheckedUpdateManyWithoutProfileNestedInput
   commentVotes?: Prisma.ForumCommentVoteUncheckedUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUncheckedUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUncheckedUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUncheckedUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedUpdateManyWithoutActorNestedInput
   saves?: Prisma.ForumSaveUncheckedUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUncheckedUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedUpdateManyWithoutProfileNestedInput
+  follows?: Prisma.ForumFollowUncheckedUpdateManyWithoutProfileNestedInput
+  reportsMade?: Prisma.ForumReportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsAgainst?: Prisma.ForumReportUncheckedUpdateManyWithoutTargetProfileNestedInput
+}
+
+export type ForumProfileCreateWithoutFollowingInput = {
+  id?: string
+  handle: string
+  bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
+  status?: $Enums.ForumMemberStatus
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  avatarKey?: string | null
+  avatarProvider?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
+  followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
+  dmThreadsLow?: Prisma.DmThreadCreateNestedManyWithoutProfileLowInput
+  dmThreadsHigh?: Prisma.DmThreadCreateNestedManyWithoutProfileHighInput
+  dmMessages?: Prisma.DmMessageCreateNestedManyWithoutSenderInput
+  dmBlocksMade?: Prisma.DmBlockCreateNestedManyWithoutBlockerInput
+  dmBlocksReceived?: Prisma.DmBlockCreateNestedManyWithoutBlockedInput
+  posts?: Prisma.ForumPostCreateNestedManyWithoutAuthorInput
+  comments?: Prisma.ForumCommentCreateNestedManyWithoutAuthorInput
+  postVotes?: Prisma.ForumPostVoteCreateNestedManyWithoutProfileInput
+  commentVotes?: Prisma.ForumCommentVoteCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationCreateNestedManyWithoutActorInput
+  saves?: Prisma.ForumSaveCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeCreateNestedManyWithoutProfileInput
+  follows?: Prisma.ForumFollowCreateNestedManyWithoutProfileInput
+  reportsMade?: Prisma.ForumReportCreateNestedManyWithoutReporterInput
+  reportsAgainst?: Prisma.ForumReportCreateNestedManyWithoutTargetProfileInput
+}
+
+export type ForumProfileUncheckedCreateWithoutFollowingInput = {
+  id?: string
+  customerId: string
+  handle: string
+  bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
+  status?: $Enums.ForumMemberStatus
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  avatarKey?: string | null
+  avatarProvider?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
+  dmThreadsLow?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileLowInput
+  dmThreadsHigh?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileHighInput
+  dmMessages?: Prisma.DmMessageUncheckedCreateNestedManyWithoutSenderInput
+  dmBlocksMade?: Prisma.DmBlockUncheckedCreateNestedManyWithoutBlockerInput
+  dmBlocksReceived?: Prisma.DmBlockUncheckedCreateNestedManyWithoutBlockedInput
+  posts?: Prisma.ForumPostUncheckedCreateNestedManyWithoutAuthorInput
+  comments?: Prisma.ForumCommentUncheckedCreateNestedManyWithoutAuthorInput
+  postVotes?: Prisma.ForumPostVoteUncheckedCreateNestedManyWithoutProfileInput
+  commentVotes?: Prisma.ForumCommentVoteUncheckedCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageUncheckedCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftUncheckedCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutActorInput
+  saves?: Prisma.ForumSaveUncheckedCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeUncheckedCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedCreateNestedManyWithoutProfileInput
+  follows?: Prisma.ForumFollowUncheckedCreateNestedManyWithoutProfileInput
+  reportsMade?: Prisma.ForumReportUncheckedCreateNestedManyWithoutReporterInput
+  reportsAgainst?: Prisma.ForumReportUncheckedCreateNestedManyWithoutTargetProfileInput
+}
+
+export type ForumProfileCreateOrConnectWithoutFollowingInput = {
+  where: Prisma.ForumProfileWhereUniqueInput
+  create: Prisma.XOR<Prisma.ForumProfileCreateWithoutFollowingInput, Prisma.ForumProfileUncheckedCreateWithoutFollowingInput>
+}
+
+export type ForumProfileCreateWithoutFollowersInput = {
+  id?: string
+  handle: string
+  bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
+  status?: $Enums.ForumMemberStatus
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  avatarKey?: string | null
+  avatarProvider?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
+  warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowerInput
+  dmThreadsLow?: Prisma.DmThreadCreateNestedManyWithoutProfileLowInput
+  dmThreadsHigh?: Prisma.DmThreadCreateNestedManyWithoutProfileHighInput
+  dmMessages?: Prisma.DmMessageCreateNestedManyWithoutSenderInput
+  dmBlocksMade?: Prisma.DmBlockCreateNestedManyWithoutBlockerInput
+  dmBlocksReceived?: Prisma.DmBlockCreateNestedManyWithoutBlockedInput
+  posts?: Prisma.ForumPostCreateNestedManyWithoutAuthorInput
+  comments?: Prisma.ForumCommentCreateNestedManyWithoutAuthorInput
+  postVotes?: Prisma.ForumPostVoteCreateNestedManyWithoutProfileInput
+  commentVotes?: Prisma.ForumCommentVoteCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationCreateNestedManyWithoutActorInput
+  saves?: Prisma.ForumSaveCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeCreateNestedManyWithoutProfileInput
+  follows?: Prisma.ForumFollowCreateNestedManyWithoutProfileInput
+  reportsMade?: Prisma.ForumReportCreateNestedManyWithoutReporterInput
+  reportsAgainst?: Prisma.ForumReportCreateNestedManyWithoutTargetProfileInput
+}
+
+export type ForumProfileUncheckedCreateWithoutFollowersInput = {
+  id?: string
+  customerId: string
+  handle: string
+  bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
+  status?: $Enums.ForumMemberStatus
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  avatarKey?: string | null
+  avatarProvider?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowerInput
+  dmThreadsLow?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileLowInput
+  dmThreadsHigh?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileHighInput
+  dmMessages?: Prisma.DmMessageUncheckedCreateNestedManyWithoutSenderInput
+  dmBlocksMade?: Prisma.DmBlockUncheckedCreateNestedManyWithoutBlockerInput
+  dmBlocksReceived?: Prisma.DmBlockUncheckedCreateNestedManyWithoutBlockedInput
+  posts?: Prisma.ForumPostUncheckedCreateNestedManyWithoutAuthorInput
+  comments?: Prisma.ForumCommentUncheckedCreateNestedManyWithoutAuthorInput
+  postVotes?: Prisma.ForumPostVoteUncheckedCreateNestedManyWithoutProfileInput
+  commentVotes?: Prisma.ForumCommentVoteUncheckedCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageUncheckedCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftUncheckedCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutActorInput
+  saves?: Prisma.ForumSaveUncheckedCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeUncheckedCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedCreateNestedManyWithoutProfileInput
+  follows?: Prisma.ForumFollowUncheckedCreateNestedManyWithoutProfileInput
+  reportsMade?: Prisma.ForumReportUncheckedCreateNestedManyWithoutReporterInput
+  reportsAgainst?: Prisma.ForumReportUncheckedCreateNestedManyWithoutTargetProfileInput
+}
+
+export type ForumProfileCreateOrConnectWithoutFollowersInput = {
+  where: Prisma.ForumProfileWhereUniqueInput
+  create: Prisma.XOR<Prisma.ForumProfileCreateWithoutFollowersInput, Prisma.ForumProfileUncheckedCreateWithoutFollowersInput>
+}
+
+export type ForumProfileUpsertWithoutFollowingInput = {
+  update: Prisma.XOR<Prisma.ForumProfileUpdateWithoutFollowingInput, Prisma.ForumProfileUncheckedUpdateWithoutFollowingInput>
+  create: Prisma.XOR<Prisma.ForumProfileCreateWithoutFollowingInput, Prisma.ForumProfileUncheckedCreateWithoutFollowingInput>
+  where?: Prisma.ForumProfileWhereInput
+}
+
+export type ForumProfileUpdateToOneWithWhereWithoutFollowingInput = {
+  where?: Prisma.ForumProfileWhereInput
+  data: Prisma.XOR<Prisma.ForumProfileUpdateWithoutFollowingInput, Prisma.ForumProfileUncheckedUpdateWithoutFollowingInput>
+}
+
+export type ForumProfileUpdateWithoutFollowingInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  handle?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
+  followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
+  dmThreadsLow?: Prisma.DmThreadUpdateManyWithoutProfileLowNestedInput
+  dmThreadsHigh?: Prisma.DmThreadUpdateManyWithoutProfileHighNestedInput
+  dmMessages?: Prisma.DmMessageUpdateManyWithoutSenderNestedInput
+  dmBlocksMade?: Prisma.DmBlockUpdateManyWithoutBlockerNestedInput
+  dmBlocksReceived?: Prisma.DmBlockUpdateManyWithoutBlockedNestedInput
+  posts?: Prisma.ForumPostUpdateManyWithoutAuthorNestedInput
+  comments?: Prisma.ForumCommentUpdateManyWithoutAuthorNestedInput
+  postVotes?: Prisma.ForumPostVoteUpdateManyWithoutProfileNestedInput
+  commentVotes?: Prisma.ForumCommentVoteUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUpdateManyWithoutActorNestedInput
+  saves?: Prisma.ForumSaveUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUpdateManyWithoutProfileNestedInput
+  follows?: Prisma.ForumFollowUpdateManyWithoutProfileNestedInput
+  reportsMade?: Prisma.ForumReportUpdateManyWithoutReporterNestedInput
+  reportsAgainst?: Prisma.ForumReportUpdateManyWithoutTargetProfileNestedInput
+}
+
+export type ForumProfileUncheckedUpdateWithoutFollowingInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  handle?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
+  dmThreadsLow?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileLowNestedInput
+  dmThreadsHigh?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileHighNestedInput
+  dmMessages?: Prisma.DmMessageUncheckedUpdateManyWithoutSenderNestedInput
+  dmBlocksMade?: Prisma.DmBlockUncheckedUpdateManyWithoutBlockerNestedInput
+  dmBlocksReceived?: Prisma.DmBlockUncheckedUpdateManyWithoutBlockedNestedInput
+  posts?: Prisma.ForumPostUncheckedUpdateManyWithoutAuthorNestedInput
+  comments?: Prisma.ForumCommentUncheckedUpdateManyWithoutAuthorNestedInput
+  postVotes?: Prisma.ForumPostVoteUncheckedUpdateManyWithoutProfileNestedInput
+  commentVotes?: Prisma.ForumCommentVoteUncheckedUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUncheckedUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUncheckedUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUncheckedUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedUpdateManyWithoutActorNestedInput
+  saves?: Prisma.ForumSaveUncheckedUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUncheckedUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedUpdateManyWithoutProfileNestedInput
+  follows?: Prisma.ForumFollowUncheckedUpdateManyWithoutProfileNestedInput
+  reportsMade?: Prisma.ForumReportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsAgainst?: Prisma.ForumReportUncheckedUpdateManyWithoutTargetProfileNestedInput
+}
+
+export type ForumProfileUpsertWithoutFollowersInput = {
+  update: Prisma.XOR<Prisma.ForumProfileUpdateWithoutFollowersInput, Prisma.ForumProfileUncheckedUpdateWithoutFollowersInput>
+  create: Prisma.XOR<Prisma.ForumProfileCreateWithoutFollowersInput, Prisma.ForumProfileUncheckedCreateWithoutFollowersInput>
+  where?: Prisma.ForumProfileWhereInput
+}
+
+export type ForumProfileUpdateToOneWithWhereWithoutFollowersInput = {
+  where?: Prisma.ForumProfileWhereInput
+  data: Prisma.XOR<Prisma.ForumProfileUpdateWithoutFollowersInput, Prisma.ForumProfileUncheckedUpdateWithoutFollowersInput>
+}
+
+export type ForumProfileUpdateWithoutFollowersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  handle?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
+  warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUpdateManyWithoutFollowerNestedInput
+  dmThreadsLow?: Prisma.DmThreadUpdateManyWithoutProfileLowNestedInput
+  dmThreadsHigh?: Prisma.DmThreadUpdateManyWithoutProfileHighNestedInput
+  dmMessages?: Prisma.DmMessageUpdateManyWithoutSenderNestedInput
+  dmBlocksMade?: Prisma.DmBlockUpdateManyWithoutBlockerNestedInput
+  dmBlocksReceived?: Prisma.DmBlockUpdateManyWithoutBlockedNestedInput
+  posts?: Prisma.ForumPostUpdateManyWithoutAuthorNestedInput
+  comments?: Prisma.ForumCommentUpdateManyWithoutAuthorNestedInput
+  postVotes?: Prisma.ForumPostVoteUpdateManyWithoutProfileNestedInput
+  commentVotes?: Prisma.ForumCommentVoteUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUpdateManyWithoutActorNestedInput
+  saves?: Prisma.ForumSaveUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUpdateManyWithoutProfileNestedInput
+  follows?: Prisma.ForumFollowUpdateManyWithoutProfileNestedInput
+  reportsMade?: Prisma.ForumReportUpdateManyWithoutReporterNestedInput
+  reportsAgainst?: Prisma.ForumReportUpdateManyWithoutTargetProfileNestedInput
+}
+
+export type ForumProfileUncheckedUpdateWithoutFollowersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  handle?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowerNestedInput
+  dmThreadsLow?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileLowNestedInput
+  dmThreadsHigh?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileHighNestedInput
+  dmMessages?: Prisma.DmMessageUncheckedUpdateManyWithoutSenderNestedInput
+  dmBlocksMade?: Prisma.DmBlockUncheckedUpdateManyWithoutBlockerNestedInput
+  dmBlocksReceived?: Prisma.DmBlockUncheckedUpdateManyWithoutBlockedNestedInput
+  posts?: Prisma.ForumPostUncheckedUpdateManyWithoutAuthorNestedInput
+  comments?: Prisma.ForumCommentUncheckedUpdateManyWithoutAuthorNestedInput
+  postVotes?: Prisma.ForumPostVoteUncheckedUpdateManyWithoutProfileNestedInput
+  commentVotes?: Prisma.ForumCommentVoteUncheckedUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUncheckedUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUncheckedUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUncheckedUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedUpdateManyWithoutActorNestedInput
+  saves?: Prisma.ForumSaveUncheckedUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUncheckedUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedUpdateManyWithoutProfileNestedInput
+  follows?: Prisma.ForumFollowUncheckedUpdateManyWithoutProfileNestedInput
+  reportsMade?: Prisma.ForumReportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsAgainst?: Prisma.ForumReportUncheckedUpdateManyWithoutTargetProfileNestedInput
+}
+
+export type ForumProfileCreateWithoutWarningsInput = {
+  id?: string
+  handle: string
+  bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
+  status?: $Enums.ForumMemberStatus
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  avatarKey?: string | null
+  avatarProvider?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
+  followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowerInput
+  dmThreadsLow?: Prisma.DmThreadCreateNestedManyWithoutProfileLowInput
+  dmThreadsHigh?: Prisma.DmThreadCreateNestedManyWithoutProfileHighInput
+  dmMessages?: Prisma.DmMessageCreateNestedManyWithoutSenderInput
+  dmBlocksMade?: Prisma.DmBlockCreateNestedManyWithoutBlockerInput
+  dmBlocksReceived?: Prisma.DmBlockCreateNestedManyWithoutBlockedInput
+  posts?: Prisma.ForumPostCreateNestedManyWithoutAuthorInput
+  comments?: Prisma.ForumCommentCreateNestedManyWithoutAuthorInput
+  postVotes?: Prisma.ForumPostVoteCreateNestedManyWithoutProfileInput
+  commentVotes?: Prisma.ForumCommentVoteCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationCreateNestedManyWithoutActorInput
+  saves?: Prisma.ForumSaveCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeCreateNestedManyWithoutProfileInput
+  follows?: Prisma.ForumFollowCreateNestedManyWithoutProfileInput
+  reportsMade?: Prisma.ForumReportCreateNestedManyWithoutReporterInput
+  reportsAgainst?: Prisma.ForumReportCreateNestedManyWithoutTargetProfileInput
+}
+
+export type ForumProfileUncheckedCreateWithoutWarningsInput = {
+  id?: string
+  customerId: string
+  handle: string
+  bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
+  status?: $Enums.ForumMemberStatus
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  avatarKey?: string | null
+  avatarProvider?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowerInput
+  dmThreadsLow?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileLowInput
+  dmThreadsHigh?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileHighInput
+  dmMessages?: Prisma.DmMessageUncheckedCreateNestedManyWithoutSenderInput
+  dmBlocksMade?: Prisma.DmBlockUncheckedCreateNestedManyWithoutBlockerInput
+  dmBlocksReceived?: Prisma.DmBlockUncheckedCreateNestedManyWithoutBlockedInput
+  posts?: Prisma.ForumPostUncheckedCreateNestedManyWithoutAuthorInput
+  comments?: Prisma.ForumCommentUncheckedCreateNestedManyWithoutAuthorInput
+  postVotes?: Prisma.ForumPostVoteUncheckedCreateNestedManyWithoutProfileInput
+  commentVotes?: Prisma.ForumCommentVoteUncheckedCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageUncheckedCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftUncheckedCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutActorInput
+  saves?: Prisma.ForumSaveUncheckedCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeUncheckedCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedCreateNestedManyWithoutProfileInput
+  follows?: Prisma.ForumFollowUncheckedCreateNestedManyWithoutProfileInput
+  reportsMade?: Prisma.ForumReportUncheckedCreateNestedManyWithoutReporterInput
+  reportsAgainst?: Prisma.ForumReportUncheckedCreateNestedManyWithoutTargetProfileInput
+}
+
+export type ForumProfileCreateOrConnectWithoutWarningsInput = {
+  where: Prisma.ForumProfileWhereUniqueInput
+  create: Prisma.XOR<Prisma.ForumProfileCreateWithoutWarningsInput, Prisma.ForumProfileUncheckedCreateWithoutWarningsInput>
+}
+
+export type ForumProfileUpsertWithoutWarningsInput = {
+  update: Prisma.XOR<Prisma.ForumProfileUpdateWithoutWarningsInput, Prisma.ForumProfileUncheckedUpdateWithoutWarningsInput>
+  create: Prisma.XOR<Prisma.ForumProfileCreateWithoutWarningsInput, Prisma.ForumProfileUncheckedCreateWithoutWarningsInput>
+  where?: Prisma.ForumProfileWhereInput
+}
+
+export type ForumProfileUpdateToOneWithWhereWithoutWarningsInput = {
+  where?: Prisma.ForumProfileWhereInput
+  data: Prisma.XOR<Prisma.ForumProfileUpdateWithoutWarningsInput, Prisma.ForumProfileUncheckedUpdateWithoutWarningsInput>
+}
+
+export type ForumProfileUpdateWithoutWarningsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  handle?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
+  followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUpdateManyWithoutFollowerNestedInput
+  dmThreadsLow?: Prisma.DmThreadUpdateManyWithoutProfileLowNestedInput
+  dmThreadsHigh?: Prisma.DmThreadUpdateManyWithoutProfileHighNestedInput
+  dmMessages?: Prisma.DmMessageUpdateManyWithoutSenderNestedInput
+  dmBlocksMade?: Prisma.DmBlockUpdateManyWithoutBlockerNestedInput
+  dmBlocksReceived?: Prisma.DmBlockUpdateManyWithoutBlockedNestedInput
+  posts?: Prisma.ForumPostUpdateManyWithoutAuthorNestedInput
+  comments?: Prisma.ForumCommentUpdateManyWithoutAuthorNestedInput
+  postVotes?: Prisma.ForumPostVoteUpdateManyWithoutProfileNestedInput
+  commentVotes?: Prisma.ForumCommentVoteUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUpdateManyWithoutActorNestedInput
+  saves?: Prisma.ForumSaveUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUpdateManyWithoutProfileNestedInput
+  follows?: Prisma.ForumFollowUpdateManyWithoutProfileNestedInput
+  reportsMade?: Prisma.ForumReportUpdateManyWithoutReporterNestedInput
+  reportsAgainst?: Prisma.ForumReportUpdateManyWithoutTargetProfileNestedInput
+}
+
+export type ForumProfileUncheckedUpdateWithoutWarningsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  handle?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowerNestedInput
+  dmThreadsLow?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileLowNestedInput
+  dmThreadsHigh?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileHighNestedInput
+  dmMessages?: Prisma.DmMessageUncheckedUpdateManyWithoutSenderNestedInput
+  dmBlocksMade?: Prisma.DmBlockUncheckedUpdateManyWithoutBlockerNestedInput
+  dmBlocksReceived?: Prisma.DmBlockUncheckedUpdateManyWithoutBlockedNestedInput
+  posts?: Prisma.ForumPostUncheckedUpdateManyWithoutAuthorNestedInput
+  comments?: Prisma.ForumCommentUncheckedUpdateManyWithoutAuthorNestedInput
+  postVotes?: Prisma.ForumPostVoteUncheckedUpdateManyWithoutProfileNestedInput
+  commentVotes?: Prisma.ForumCommentVoteUncheckedUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUncheckedUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUncheckedUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUncheckedUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedUpdateManyWithoutActorNestedInput
+  saves?: Prisma.ForumSaveUncheckedUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUncheckedUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedUpdateManyWithoutProfileNestedInput
+  follows?: Prisma.ForumFollowUncheckedUpdateManyWithoutProfileNestedInput
+  reportsMade?: Prisma.ForumReportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsAgainst?: Prisma.ForumReportUncheckedUpdateManyWithoutTargetProfileNestedInput
+}
+
+export type ForumProfileCreateWithoutRestrictionsInput = {
+  id?: string
+  handle: string
+  bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
+  status?: $Enums.ForumMemberStatus
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  avatarKey?: string | null
+  avatarProvider?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
+  followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowerInput
+  dmThreadsLow?: Prisma.DmThreadCreateNestedManyWithoutProfileLowInput
+  dmThreadsHigh?: Prisma.DmThreadCreateNestedManyWithoutProfileHighInput
+  dmMessages?: Prisma.DmMessageCreateNestedManyWithoutSenderInput
+  dmBlocksMade?: Prisma.DmBlockCreateNestedManyWithoutBlockerInput
+  dmBlocksReceived?: Prisma.DmBlockCreateNestedManyWithoutBlockedInput
+  posts?: Prisma.ForumPostCreateNestedManyWithoutAuthorInput
+  comments?: Prisma.ForumCommentCreateNestedManyWithoutAuthorInput
+  postVotes?: Prisma.ForumPostVoteCreateNestedManyWithoutProfileInput
+  commentVotes?: Prisma.ForumCommentVoteCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationCreateNestedManyWithoutActorInput
+  saves?: Prisma.ForumSaveCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeCreateNestedManyWithoutProfileInput
+  follows?: Prisma.ForumFollowCreateNestedManyWithoutProfileInput
+  reportsMade?: Prisma.ForumReportCreateNestedManyWithoutReporterInput
+  reportsAgainst?: Prisma.ForumReportCreateNestedManyWithoutTargetProfileInput
+}
+
+export type ForumProfileUncheckedCreateWithoutRestrictionsInput = {
+  id?: string
+  customerId: string
+  handle: string
+  bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
+  status?: $Enums.ForumMemberStatus
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  avatarKey?: string | null
+  avatarProvider?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowerInput
+  dmThreadsLow?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileLowInput
+  dmThreadsHigh?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileHighInput
+  dmMessages?: Prisma.DmMessageUncheckedCreateNestedManyWithoutSenderInput
+  dmBlocksMade?: Prisma.DmBlockUncheckedCreateNestedManyWithoutBlockerInput
+  dmBlocksReceived?: Prisma.DmBlockUncheckedCreateNestedManyWithoutBlockedInput
+  posts?: Prisma.ForumPostUncheckedCreateNestedManyWithoutAuthorInput
+  comments?: Prisma.ForumCommentUncheckedCreateNestedManyWithoutAuthorInput
+  postVotes?: Prisma.ForumPostVoteUncheckedCreateNestedManyWithoutProfileInput
+  commentVotes?: Prisma.ForumCommentVoteUncheckedCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageUncheckedCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftUncheckedCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutActorInput
+  saves?: Prisma.ForumSaveUncheckedCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeUncheckedCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedCreateNestedManyWithoutProfileInput
+  follows?: Prisma.ForumFollowUncheckedCreateNestedManyWithoutProfileInput
+  reportsMade?: Prisma.ForumReportUncheckedCreateNestedManyWithoutReporterInput
+  reportsAgainst?: Prisma.ForumReportUncheckedCreateNestedManyWithoutTargetProfileInput
+}
+
+export type ForumProfileCreateOrConnectWithoutRestrictionsInput = {
+  where: Prisma.ForumProfileWhereUniqueInput
+  create: Prisma.XOR<Prisma.ForumProfileCreateWithoutRestrictionsInput, Prisma.ForumProfileUncheckedCreateWithoutRestrictionsInput>
+}
+
+export type ForumProfileUpsertWithoutRestrictionsInput = {
+  update: Prisma.XOR<Prisma.ForumProfileUpdateWithoutRestrictionsInput, Prisma.ForumProfileUncheckedUpdateWithoutRestrictionsInput>
+  create: Prisma.XOR<Prisma.ForumProfileCreateWithoutRestrictionsInput, Prisma.ForumProfileUncheckedCreateWithoutRestrictionsInput>
+  where?: Prisma.ForumProfileWhereInput
+}
+
+export type ForumProfileUpdateToOneWithWhereWithoutRestrictionsInput = {
+  where?: Prisma.ForumProfileWhereInput
+  data: Prisma.XOR<Prisma.ForumProfileUpdateWithoutRestrictionsInput, Prisma.ForumProfileUncheckedUpdateWithoutRestrictionsInput>
+}
+
+export type ForumProfileUpdateWithoutRestrictionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  handle?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
+  followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUpdateManyWithoutFollowerNestedInput
+  dmThreadsLow?: Prisma.DmThreadUpdateManyWithoutProfileLowNestedInput
+  dmThreadsHigh?: Prisma.DmThreadUpdateManyWithoutProfileHighNestedInput
+  dmMessages?: Prisma.DmMessageUpdateManyWithoutSenderNestedInput
+  dmBlocksMade?: Prisma.DmBlockUpdateManyWithoutBlockerNestedInput
+  dmBlocksReceived?: Prisma.DmBlockUpdateManyWithoutBlockedNestedInput
+  posts?: Prisma.ForumPostUpdateManyWithoutAuthorNestedInput
+  comments?: Prisma.ForumCommentUpdateManyWithoutAuthorNestedInput
+  postVotes?: Prisma.ForumPostVoteUpdateManyWithoutProfileNestedInput
+  commentVotes?: Prisma.ForumCommentVoteUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUpdateManyWithoutActorNestedInput
+  saves?: Prisma.ForumSaveUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUpdateManyWithoutProfileNestedInput
+  follows?: Prisma.ForumFollowUpdateManyWithoutProfileNestedInput
+  reportsMade?: Prisma.ForumReportUpdateManyWithoutReporterNestedInput
+  reportsAgainst?: Prisma.ForumReportUpdateManyWithoutTargetProfileNestedInput
+}
+
+export type ForumProfileUncheckedUpdateWithoutRestrictionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  handle?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowerNestedInput
+  dmThreadsLow?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileLowNestedInput
+  dmThreadsHigh?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileHighNestedInput
+  dmMessages?: Prisma.DmMessageUncheckedUpdateManyWithoutSenderNestedInput
+  dmBlocksMade?: Prisma.DmBlockUncheckedUpdateManyWithoutBlockerNestedInput
+  dmBlocksReceived?: Prisma.DmBlockUncheckedUpdateManyWithoutBlockedNestedInput
+  posts?: Prisma.ForumPostUncheckedUpdateManyWithoutAuthorNestedInput
+  comments?: Prisma.ForumCommentUncheckedUpdateManyWithoutAuthorNestedInput
+  postVotes?: Prisma.ForumPostVoteUncheckedUpdateManyWithoutProfileNestedInput
+  commentVotes?: Prisma.ForumCommentVoteUncheckedUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUncheckedUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUncheckedUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUncheckedUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedUpdateManyWithoutActorNestedInput
+  saves?: Prisma.ForumSaveUncheckedUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUncheckedUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedUpdateManyWithoutProfileNestedInput
+  follows?: Prisma.ForumFollowUncheckedUpdateManyWithoutProfileNestedInput
+  reportsMade?: Prisma.ForumReportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsAgainst?: Prisma.ForumReportUncheckedUpdateManyWithoutTargetProfileNestedInput
+}
+
+export type ForumProfileCreateWithoutAppealsInput = {
+  id?: string
+  handle: string
+  bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
+  status?: $Enums.ForumMemberStatus
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  avatarKey?: string | null
+  avatarProvider?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
+  followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowerInput
+  dmThreadsLow?: Prisma.DmThreadCreateNestedManyWithoutProfileLowInput
+  dmThreadsHigh?: Prisma.DmThreadCreateNestedManyWithoutProfileHighInput
+  dmMessages?: Prisma.DmMessageCreateNestedManyWithoutSenderInput
+  dmBlocksMade?: Prisma.DmBlockCreateNestedManyWithoutBlockerInput
+  dmBlocksReceived?: Prisma.DmBlockCreateNestedManyWithoutBlockedInput
+  posts?: Prisma.ForumPostCreateNestedManyWithoutAuthorInput
+  comments?: Prisma.ForumCommentCreateNestedManyWithoutAuthorInput
+  postVotes?: Prisma.ForumPostVoteCreateNestedManyWithoutProfileInput
+  commentVotes?: Prisma.ForumCommentVoteCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationCreateNestedManyWithoutActorInput
+  saves?: Prisma.ForumSaveCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeCreateNestedManyWithoutProfileInput
+  follows?: Prisma.ForumFollowCreateNestedManyWithoutProfileInput
+  reportsMade?: Prisma.ForumReportCreateNestedManyWithoutReporterInput
+  reportsAgainst?: Prisma.ForumReportCreateNestedManyWithoutTargetProfileInput
+}
+
+export type ForumProfileUncheckedCreateWithoutAppealsInput = {
+  id?: string
+  customerId: string
+  handle: string
+  bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
+  status?: $Enums.ForumMemberStatus
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  avatarKey?: string | null
+  avatarProvider?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowerInput
+  dmThreadsLow?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileLowInput
+  dmThreadsHigh?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileHighInput
+  dmMessages?: Prisma.DmMessageUncheckedCreateNestedManyWithoutSenderInput
+  dmBlocksMade?: Prisma.DmBlockUncheckedCreateNestedManyWithoutBlockerInput
+  dmBlocksReceived?: Prisma.DmBlockUncheckedCreateNestedManyWithoutBlockedInput
+  posts?: Prisma.ForumPostUncheckedCreateNestedManyWithoutAuthorInput
+  comments?: Prisma.ForumCommentUncheckedCreateNestedManyWithoutAuthorInput
+  postVotes?: Prisma.ForumPostVoteUncheckedCreateNestedManyWithoutProfileInput
+  commentVotes?: Prisma.ForumCommentVoteUncheckedCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageUncheckedCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftUncheckedCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutActorInput
+  saves?: Prisma.ForumSaveUncheckedCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeUncheckedCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedCreateNestedManyWithoutProfileInput
+  follows?: Prisma.ForumFollowUncheckedCreateNestedManyWithoutProfileInput
+  reportsMade?: Prisma.ForumReportUncheckedCreateNestedManyWithoutReporterInput
+  reportsAgainst?: Prisma.ForumReportUncheckedCreateNestedManyWithoutTargetProfileInput
+}
+
+export type ForumProfileCreateOrConnectWithoutAppealsInput = {
+  where: Prisma.ForumProfileWhereUniqueInput
+  create: Prisma.XOR<Prisma.ForumProfileCreateWithoutAppealsInput, Prisma.ForumProfileUncheckedCreateWithoutAppealsInput>
+}
+
+export type ForumProfileUpsertWithoutAppealsInput = {
+  update: Prisma.XOR<Prisma.ForumProfileUpdateWithoutAppealsInput, Prisma.ForumProfileUncheckedUpdateWithoutAppealsInput>
+  create: Prisma.XOR<Prisma.ForumProfileCreateWithoutAppealsInput, Prisma.ForumProfileUncheckedCreateWithoutAppealsInput>
+  where?: Prisma.ForumProfileWhereInput
+}
+
+export type ForumProfileUpdateToOneWithWhereWithoutAppealsInput = {
+  where?: Prisma.ForumProfileWhereInput
+  data: Prisma.XOR<Prisma.ForumProfileUpdateWithoutAppealsInput, Prisma.ForumProfileUncheckedUpdateWithoutAppealsInput>
+}
+
+export type ForumProfileUpdateWithoutAppealsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  handle?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
+  followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUpdateManyWithoutFollowerNestedInput
+  dmThreadsLow?: Prisma.DmThreadUpdateManyWithoutProfileLowNestedInput
+  dmThreadsHigh?: Prisma.DmThreadUpdateManyWithoutProfileHighNestedInput
+  dmMessages?: Prisma.DmMessageUpdateManyWithoutSenderNestedInput
+  dmBlocksMade?: Prisma.DmBlockUpdateManyWithoutBlockerNestedInput
+  dmBlocksReceived?: Prisma.DmBlockUpdateManyWithoutBlockedNestedInput
+  posts?: Prisma.ForumPostUpdateManyWithoutAuthorNestedInput
+  comments?: Prisma.ForumCommentUpdateManyWithoutAuthorNestedInput
+  postVotes?: Prisma.ForumPostVoteUpdateManyWithoutProfileNestedInput
+  commentVotes?: Prisma.ForumCommentVoteUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUpdateManyWithoutActorNestedInput
+  saves?: Prisma.ForumSaveUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUpdateManyWithoutProfileNestedInput
+  follows?: Prisma.ForumFollowUpdateManyWithoutProfileNestedInput
+  reportsMade?: Prisma.ForumReportUpdateManyWithoutReporterNestedInput
+  reportsAgainst?: Prisma.ForumReportUpdateManyWithoutTargetProfileNestedInput
+}
+
+export type ForumProfileUncheckedUpdateWithoutAppealsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  handle?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowerNestedInput
+  dmThreadsLow?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileLowNestedInput
+  dmThreadsHigh?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileHighNestedInput
+  dmMessages?: Prisma.DmMessageUncheckedUpdateManyWithoutSenderNestedInput
+  dmBlocksMade?: Prisma.DmBlockUncheckedUpdateManyWithoutBlockerNestedInput
+  dmBlocksReceived?: Prisma.DmBlockUncheckedUpdateManyWithoutBlockedNestedInput
+  posts?: Prisma.ForumPostUncheckedUpdateManyWithoutAuthorNestedInput
+  comments?: Prisma.ForumCommentUncheckedUpdateManyWithoutAuthorNestedInput
+  postVotes?: Prisma.ForumPostVoteUncheckedUpdateManyWithoutProfileNestedInput
+  commentVotes?: Prisma.ForumCommentVoteUncheckedUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUncheckedUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUncheckedUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUncheckedUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedUpdateManyWithoutActorNestedInput
+  saves?: Prisma.ForumSaveUncheckedUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUncheckedUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedUpdateManyWithoutProfileNestedInput
   follows?: Prisma.ForumFollowUncheckedUpdateManyWithoutProfileNestedInput
   reportsMade?: Prisma.ForumReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ForumReportUncheckedUpdateManyWithoutTargetProfileNestedInput
@@ -2453,6 +5716,11 @@ export type ForumProfileUncheckedUpdateWithoutDmBlocksReceivedInput = {
  */
 
 export type ForumProfileCountOutputType = {
+  followers: number
+  warnings: number
+  restrictions: number
+  appeals: number
+  following: number
   dmThreadsLow: number
   dmThreadsHigh: number
   dmMessages: number
@@ -2462,13 +5730,23 @@ export type ForumProfileCountOutputType = {
   comments: number
   postVotes: number
   commentVotes: number
+  postImages: number
+  notifications: number
+  notificationsMade: number
   saves: number
+  postLikes: number
+  commentLikes: number
   follows: number
   reportsMade: number
   reportsAgainst: number
 }
 
 export type ForumProfileCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  followers?: boolean | ForumProfileCountOutputTypeCountFollowersArgs
+  warnings?: boolean | ForumProfileCountOutputTypeCountWarningsArgs
+  restrictions?: boolean | ForumProfileCountOutputTypeCountRestrictionsArgs
+  appeals?: boolean | ForumProfileCountOutputTypeCountAppealsArgs
+  following?: boolean | ForumProfileCountOutputTypeCountFollowingArgs
   dmThreadsLow?: boolean | ForumProfileCountOutputTypeCountDmThreadsLowArgs
   dmThreadsHigh?: boolean | ForumProfileCountOutputTypeCountDmThreadsHighArgs
   dmMessages?: boolean | ForumProfileCountOutputTypeCountDmMessagesArgs
@@ -2478,7 +5756,12 @@ export type ForumProfileCountOutputTypeSelect<ExtArgs extends runtime.Types.Exte
   comments?: boolean | ForumProfileCountOutputTypeCountCommentsArgs
   postVotes?: boolean | ForumProfileCountOutputTypeCountPostVotesArgs
   commentVotes?: boolean | ForumProfileCountOutputTypeCountCommentVotesArgs
+  postImages?: boolean | ForumProfileCountOutputTypeCountPostImagesArgs
+  notifications?: boolean | ForumProfileCountOutputTypeCountNotificationsArgs
+  notificationsMade?: boolean | ForumProfileCountOutputTypeCountNotificationsMadeArgs
   saves?: boolean | ForumProfileCountOutputTypeCountSavesArgs
+  postLikes?: boolean | ForumProfileCountOutputTypeCountPostLikesArgs
+  commentLikes?: boolean | ForumProfileCountOutputTypeCountCommentLikesArgs
   follows?: boolean | ForumProfileCountOutputTypeCountFollowsArgs
   reportsMade?: boolean | ForumProfileCountOutputTypeCountReportsMadeArgs
   reportsAgainst?: boolean | ForumProfileCountOutputTypeCountReportsAgainstArgs
@@ -2492,6 +5775,41 @@ export type ForumProfileCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types
    * Select specific fields to fetch from the ForumProfileCountOutputType
    */
   select?: Prisma.ForumProfileCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * ForumProfileCountOutputType without action
+ */
+export type ForumProfileCountOutputTypeCountFollowersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ForumMemberFollowWhereInput
+}
+
+/**
+ * ForumProfileCountOutputType without action
+ */
+export type ForumProfileCountOutputTypeCountWarningsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MemberWarningWhereInput
+}
+
+/**
+ * ForumProfileCountOutputType without action
+ */
+export type ForumProfileCountOutputTypeCountRestrictionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MemberRestrictionWhereInput
+}
+
+/**
+ * ForumProfileCountOutputType without action
+ */
+export type ForumProfileCountOutputTypeCountAppealsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ModerationAppealWhereInput
+}
+
+/**
+ * ForumProfileCountOutputType without action
+ */
+export type ForumProfileCountOutputTypeCountFollowingArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ForumMemberFollowWhereInput
 }
 
 /**
@@ -2560,8 +5878,43 @@ export type ForumProfileCountOutputTypeCountCommentVotesArgs<ExtArgs extends run
 /**
  * ForumProfileCountOutputType without action
  */
+export type ForumProfileCountOutputTypeCountPostImagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ForumPostImageWhereInput
+}
+
+/**
+ * ForumProfileCountOutputType without action
+ */
+export type ForumProfileCountOutputTypeCountNotificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ForumNotificationWhereInput
+}
+
+/**
+ * ForumProfileCountOutputType without action
+ */
+export type ForumProfileCountOutputTypeCountNotificationsMadeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ForumNotificationWhereInput
+}
+
+/**
+ * ForumProfileCountOutputType without action
+ */
 export type ForumProfileCountOutputTypeCountSavesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.ForumSaveWhereInput
+}
+
+/**
+ * ForumProfileCountOutputType without action
+ */
+export type ForumProfileCountOutputTypeCountPostLikesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ForumPostLikeWhereInput
+}
+
+/**
+ * ForumProfileCountOutputType without action
+ */
+export type ForumProfileCountOutputTypeCountCommentLikesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ForumCommentLikeWhereInput
 }
 
 /**
@@ -2591,6 +5944,11 @@ export type ForumProfileSelect<ExtArgs extends runtime.Types.Extensions.Internal
   customerId?: boolean
   handle?: boolean
   bio?: boolean
+  displayName?: boolean
+  location?: boolean
+  lastSeenAt?: boolean
+  verifiedAt?: boolean
+  verifiedById?: boolean
   status?: boolean
   suspendedUntil?: boolean
   suspensionReason?: boolean
@@ -2599,6 +5957,11 @@ export type ForumProfileSelect<ExtArgs extends runtime.Types.Extensions.Internal
   createdAt?: boolean
   updatedAt?: boolean
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
+  followers?: boolean | Prisma.ForumProfile$followersArgs<ExtArgs>
+  warnings?: boolean | Prisma.ForumProfile$warningsArgs<ExtArgs>
+  restrictions?: boolean | Prisma.ForumProfile$restrictionsArgs<ExtArgs>
+  appeals?: boolean | Prisma.ForumProfile$appealsArgs<ExtArgs>
+  following?: boolean | Prisma.ForumProfile$followingArgs<ExtArgs>
   dmThreadsLow?: boolean | Prisma.ForumProfile$dmThreadsLowArgs<ExtArgs>
   dmThreadsHigh?: boolean | Prisma.ForumProfile$dmThreadsHighArgs<ExtArgs>
   dmMessages?: boolean | Prisma.ForumProfile$dmMessagesArgs<ExtArgs>
@@ -2608,7 +5971,13 @@ export type ForumProfileSelect<ExtArgs extends runtime.Types.Extensions.Internal
   comments?: boolean | Prisma.ForumProfile$commentsArgs<ExtArgs>
   postVotes?: boolean | Prisma.ForumProfile$postVotesArgs<ExtArgs>
   commentVotes?: boolean | Prisma.ForumProfile$commentVotesArgs<ExtArgs>
+  postImages?: boolean | Prisma.ForumProfile$postImagesArgs<ExtArgs>
+  draft?: boolean | Prisma.ForumProfile$draftArgs<ExtArgs>
+  notifications?: boolean | Prisma.ForumProfile$notificationsArgs<ExtArgs>
+  notificationsMade?: boolean | Prisma.ForumProfile$notificationsMadeArgs<ExtArgs>
   saves?: boolean | Prisma.ForumProfile$savesArgs<ExtArgs>
+  postLikes?: boolean | Prisma.ForumProfile$postLikesArgs<ExtArgs>
+  commentLikes?: boolean | Prisma.ForumProfile$commentLikesArgs<ExtArgs>
   follows?: boolean | Prisma.ForumProfile$followsArgs<ExtArgs>
   reportsMade?: boolean | Prisma.ForumProfile$reportsMadeArgs<ExtArgs>
   reportsAgainst?: boolean | Prisma.ForumProfile$reportsAgainstArgs<ExtArgs>
@@ -2622,6 +5991,11 @@ export type ForumProfileSelectScalar = {
   customerId?: boolean
   handle?: boolean
   bio?: boolean
+  displayName?: boolean
+  location?: boolean
+  lastSeenAt?: boolean
+  verifiedAt?: boolean
+  verifiedById?: boolean
   status?: boolean
   suspendedUntil?: boolean
   suspensionReason?: boolean
@@ -2631,9 +6005,14 @@ export type ForumProfileSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ForumProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "customerId" | "handle" | "bio" | "status" | "suspendedUntil" | "suspensionReason" | "avatarKey" | "avatarProvider" | "createdAt" | "updatedAt", ExtArgs["result"]["forumProfile"]>
+export type ForumProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "customerId" | "handle" | "bio" | "displayName" | "location" | "lastSeenAt" | "verifiedAt" | "verifiedById" | "status" | "suspendedUntil" | "suspensionReason" | "avatarKey" | "avatarProvider" | "createdAt" | "updatedAt", ExtArgs["result"]["forumProfile"]>
 export type ForumProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
+  followers?: boolean | Prisma.ForumProfile$followersArgs<ExtArgs>
+  warnings?: boolean | Prisma.ForumProfile$warningsArgs<ExtArgs>
+  restrictions?: boolean | Prisma.ForumProfile$restrictionsArgs<ExtArgs>
+  appeals?: boolean | Prisma.ForumProfile$appealsArgs<ExtArgs>
+  following?: boolean | Prisma.ForumProfile$followingArgs<ExtArgs>
   dmThreadsLow?: boolean | Prisma.ForumProfile$dmThreadsLowArgs<ExtArgs>
   dmThreadsHigh?: boolean | Prisma.ForumProfile$dmThreadsHighArgs<ExtArgs>
   dmMessages?: boolean | Prisma.ForumProfile$dmMessagesArgs<ExtArgs>
@@ -2643,7 +6022,13 @@ export type ForumProfileInclude<ExtArgs extends runtime.Types.Extensions.Interna
   comments?: boolean | Prisma.ForumProfile$commentsArgs<ExtArgs>
   postVotes?: boolean | Prisma.ForumProfile$postVotesArgs<ExtArgs>
   commentVotes?: boolean | Prisma.ForumProfile$commentVotesArgs<ExtArgs>
+  postImages?: boolean | Prisma.ForumProfile$postImagesArgs<ExtArgs>
+  draft?: boolean | Prisma.ForumProfile$draftArgs<ExtArgs>
+  notifications?: boolean | Prisma.ForumProfile$notificationsArgs<ExtArgs>
+  notificationsMade?: boolean | Prisma.ForumProfile$notificationsMadeArgs<ExtArgs>
   saves?: boolean | Prisma.ForumProfile$savesArgs<ExtArgs>
+  postLikes?: boolean | Prisma.ForumProfile$postLikesArgs<ExtArgs>
+  commentLikes?: boolean | Prisma.ForumProfile$commentLikesArgs<ExtArgs>
   follows?: boolean | Prisma.ForumProfile$followsArgs<ExtArgs>
   reportsMade?: boolean | Prisma.ForumProfile$reportsMadeArgs<ExtArgs>
   reportsAgainst?: boolean | Prisma.ForumProfile$reportsAgainstArgs<ExtArgs>
@@ -2654,6 +6039,11 @@ export type $ForumProfilePayload<ExtArgs extends runtime.Types.Extensions.Intern
   name: "ForumProfile"
   objects: {
     customer: Prisma.$CustomerPayload<ExtArgs>
+    followers: Prisma.$ForumMemberFollowPayload<ExtArgs>[]
+    warnings: Prisma.$MemberWarningPayload<ExtArgs>[]
+    restrictions: Prisma.$MemberRestrictionPayload<ExtArgs>[]
+    appeals: Prisma.$ModerationAppealPayload<ExtArgs>[]
+    following: Prisma.$ForumMemberFollowPayload<ExtArgs>[]
     dmThreadsLow: Prisma.$DmThreadPayload<ExtArgs>[]
     dmThreadsHigh: Prisma.$DmThreadPayload<ExtArgs>[]
     dmMessages: Prisma.$DmMessagePayload<ExtArgs>[]
@@ -2663,7 +6053,13 @@ export type $ForumProfilePayload<ExtArgs extends runtime.Types.Extensions.Intern
     comments: Prisma.$ForumCommentPayload<ExtArgs>[]
     postVotes: Prisma.$ForumPostVotePayload<ExtArgs>[]
     commentVotes: Prisma.$ForumCommentVotePayload<ExtArgs>[]
+    postImages: Prisma.$ForumPostImagePayload<ExtArgs>[]
+    draft: Prisma.$ForumPostDraftPayload<ExtArgs> | null
+    notifications: Prisma.$ForumNotificationPayload<ExtArgs>[]
+    notificationsMade: Prisma.$ForumNotificationPayload<ExtArgs>[]
     saves: Prisma.$ForumSavePayload<ExtArgs>[]
+    postLikes: Prisma.$ForumPostLikePayload<ExtArgs>[]
+    commentLikes: Prisma.$ForumCommentLikePayload<ExtArgs>[]
     follows: Prisma.$ForumFollowPayload<ExtArgs>[]
     reportsMade: Prisma.$ForumReportPayload<ExtArgs>[]
     reportsAgainst: Prisma.$ForumReportPayload<ExtArgs>[]
@@ -2673,6 +6069,14 @@ export type $ForumProfilePayload<ExtArgs extends runtime.Types.Extensions.Intern
     customerId: string
     handle: string
     bio: string | null
+    displayName: string | null
+    location: string | null
+    lastSeenAt: Date | null
+    /**
+     * Set by staff only (never by the member). Shown as the Verified member badge.
+     */
+    verifiedAt: Date | null
+    verifiedById: string | null
     status: $Enums.ForumMemberStatus
     suspendedUntil: Date | null
     suspensionReason: string | null
@@ -3021,6 +6425,11 @@ readonly fields: ForumProfileFieldRefs;
 export interface Prisma__ForumProfileClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   customer<T extends Prisma.CustomerDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CustomerDefaultArgs<ExtArgs>>): Prisma.Prisma__CustomerClient<runtime.Types.Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  followers<T extends Prisma.ForumProfile$followersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ForumProfile$followersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ForumMemberFollowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  warnings<T extends Prisma.ForumProfile$warningsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ForumProfile$warningsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MemberWarningPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  restrictions<T extends Prisma.ForumProfile$restrictionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ForumProfile$restrictionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MemberRestrictionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  appeals<T extends Prisma.ForumProfile$appealsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ForumProfile$appealsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ModerationAppealPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  following<T extends Prisma.ForumProfile$followingArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ForumProfile$followingArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ForumMemberFollowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   dmThreadsLow<T extends Prisma.ForumProfile$dmThreadsLowArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ForumProfile$dmThreadsLowArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DmThreadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   dmThreadsHigh<T extends Prisma.ForumProfile$dmThreadsHighArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ForumProfile$dmThreadsHighArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DmThreadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   dmMessages<T extends Prisma.ForumProfile$dmMessagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ForumProfile$dmMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DmMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3030,7 +6439,13 @@ export interface Prisma__ForumProfileClient<T, Null = never, ExtArgs extends run
   comments<T extends Prisma.ForumProfile$commentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ForumProfile$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ForumCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   postVotes<T extends Prisma.ForumProfile$postVotesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ForumProfile$postVotesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ForumPostVotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   commentVotes<T extends Prisma.ForumProfile$commentVotesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ForumProfile$commentVotesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ForumCommentVotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  postImages<T extends Prisma.ForumProfile$postImagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ForumProfile$postImagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ForumPostImagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  draft<T extends Prisma.ForumProfile$draftArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ForumProfile$draftArgs<ExtArgs>>): Prisma.Prisma__ForumPostDraftClient<runtime.Types.Result.GetResult<Prisma.$ForumPostDraftPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  notifications<T extends Prisma.ForumProfile$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ForumProfile$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ForumNotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  notificationsMade<T extends Prisma.ForumProfile$notificationsMadeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ForumProfile$notificationsMadeArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ForumNotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   saves<T extends Prisma.ForumProfile$savesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ForumProfile$savesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ForumSavePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  postLikes<T extends Prisma.ForumProfile$postLikesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ForumProfile$postLikesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ForumPostLikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  commentLikes<T extends Prisma.ForumProfile$commentLikesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ForumProfile$commentLikesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ForumCommentLikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   follows<T extends Prisma.ForumProfile$followsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ForumProfile$followsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ForumFollowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reportsMade<T extends Prisma.ForumProfile$reportsMadeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ForumProfile$reportsMadeArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ForumReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reportsAgainst<T extends Prisma.ForumProfile$reportsAgainstArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ForumProfile$reportsAgainstArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ForumReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3067,6 +6482,11 @@ export interface ForumProfileFieldRefs {
   readonly customerId: Prisma.FieldRef<"ForumProfile", 'String'>
   readonly handle: Prisma.FieldRef<"ForumProfile", 'String'>
   readonly bio: Prisma.FieldRef<"ForumProfile", 'String'>
+  readonly displayName: Prisma.FieldRef<"ForumProfile", 'String'>
+  readonly location: Prisma.FieldRef<"ForumProfile", 'String'>
+  readonly lastSeenAt: Prisma.FieldRef<"ForumProfile", 'DateTime'>
+  readonly verifiedAt: Prisma.FieldRef<"ForumProfile", 'DateTime'>
+  readonly verifiedById: Prisma.FieldRef<"ForumProfile", 'String'>
   readonly status: Prisma.FieldRef<"ForumProfile", 'ForumMemberStatus'>
   readonly suspendedUntil: Prisma.FieldRef<"ForumProfile", 'DateTime'>
   readonly suspensionReason: Prisma.FieldRef<"ForumProfile", 'String'>
@@ -3422,6 +6842,126 @@ export type ForumProfileDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.
 }
 
 /**
+ * ForumProfile.followers
+ */
+export type ForumProfile$followersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ForumMemberFollow
+   */
+  select?: Prisma.ForumMemberFollowSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ForumMemberFollow
+   */
+  omit?: Prisma.ForumMemberFollowOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ForumMemberFollowInclude<ExtArgs> | null
+  where?: Prisma.ForumMemberFollowWhereInput
+  orderBy?: Prisma.ForumMemberFollowOrderByWithRelationInput | Prisma.ForumMemberFollowOrderByWithRelationInput[]
+  cursor?: Prisma.ForumMemberFollowWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ForumMemberFollowScalarFieldEnum | Prisma.ForumMemberFollowScalarFieldEnum[]
+}
+
+/**
+ * ForumProfile.warnings
+ */
+export type ForumProfile$warningsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MemberWarning
+   */
+  select?: Prisma.MemberWarningSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MemberWarning
+   */
+  omit?: Prisma.MemberWarningOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MemberWarningInclude<ExtArgs> | null
+  where?: Prisma.MemberWarningWhereInput
+  orderBy?: Prisma.MemberWarningOrderByWithRelationInput | Prisma.MemberWarningOrderByWithRelationInput[]
+  cursor?: Prisma.MemberWarningWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MemberWarningScalarFieldEnum | Prisma.MemberWarningScalarFieldEnum[]
+}
+
+/**
+ * ForumProfile.restrictions
+ */
+export type ForumProfile$restrictionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MemberRestriction
+   */
+  select?: Prisma.MemberRestrictionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MemberRestriction
+   */
+  omit?: Prisma.MemberRestrictionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MemberRestrictionInclude<ExtArgs> | null
+  where?: Prisma.MemberRestrictionWhereInput
+  orderBy?: Prisma.MemberRestrictionOrderByWithRelationInput | Prisma.MemberRestrictionOrderByWithRelationInput[]
+  cursor?: Prisma.MemberRestrictionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MemberRestrictionScalarFieldEnum | Prisma.MemberRestrictionScalarFieldEnum[]
+}
+
+/**
+ * ForumProfile.appeals
+ */
+export type ForumProfile$appealsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ModerationAppeal
+   */
+  select?: Prisma.ModerationAppealSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ModerationAppeal
+   */
+  omit?: Prisma.ModerationAppealOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ModerationAppealInclude<ExtArgs> | null
+  where?: Prisma.ModerationAppealWhereInput
+  orderBy?: Prisma.ModerationAppealOrderByWithRelationInput | Prisma.ModerationAppealOrderByWithRelationInput[]
+  cursor?: Prisma.ModerationAppealWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ModerationAppealScalarFieldEnum | Prisma.ModerationAppealScalarFieldEnum[]
+}
+
+/**
+ * ForumProfile.following
+ */
+export type ForumProfile$followingArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ForumMemberFollow
+   */
+  select?: Prisma.ForumMemberFollowSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ForumMemberFollow
+   */
+  omit?: Prisma.ForumMemberFollowOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ForumMemberFollowInclude<ExtArgs> | null
+  where?: Prisma.ForumMemberFollowWhereInput
+  orderBy?: Prisma.ForumMemberFollowOrderByWithRelationInput | Prisma.ForumMemberFollowOrderByWithRelationInput[]
+  cursor?: Prisma.ForumMemberFollowWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ForumMemberFollowScalarFieldEnum | Prisma.ForumMemberFollowScalarFieldEnum[]
+}
+
+/**
  * ForumProfile.dmThreadsLow
  */
 export type ForumProfile$dmThreadsLowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3638,6 +7178,97 @@ export type ForumProfile$commentVotesArgs<ExtArgs extends runtime.Types.Extensio
 }
 
 /**
+ * ForumProfile.postImages
+ */
+export type ForumProfile$postImagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ForumPostImage
+   */
+  select?: Prisma.ForumPostImageSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ForumPostImage
+   */
+  omit?: Prisma.ForumPostImageOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ForumPostImageInclude<ExtArgs> | null
+  where?: Prisma.ForumPostImageWhereInput
+  orderBy?: Prisma.ForumPostImageOrderByWithRelationInput | Prisma.ForumPostImageOrderByWithRelationInput[]
+  cursor?: Prisma.ForumPostImageWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ForumPostImageScalarFieldEnum | Prisma.ForumPostImageScalarFieldEnum[]
+}
+
+/**
+ * ForumProfile.draft
+ */
+export type ForumProfile$draftArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ForumPostDraft
+   */
+  select?: Prisma.ForumPostDraftSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ForumPostDraft
+   */
+  omit?: Prisma.ForumPostDraftOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ForumPostDraftInclude<ExtArgs> | null
+  where?: Prisma.ForumPostDraftWhereInput
+}
+
+/**
+ * ForumProfile.notifications
+ */
+export type ForumProfile$notificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ForumNotification
+   */
+  select?: Prisma.ForumNotificationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ForumNotification
+   */
+  omit?: Prisma.ForumNotificationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ForumNotificationInclude<ExtArgs> | null
+  where?: Prisma.ForumNotificationWhereInput
+  orderBy?: Prisma.ForumNotificationOrderByWithRelationInput | Prisma.ForumNotificationOrderByWithRelationInput[]
+  cursor?: Prisma.ForumNotificationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ForumNotificationScalarFieldEnum | Prisma.ForumNotificationScalarFieldEnum[]
+}
+
+/**
+ * ForumProfile.notificationsMade
+ */
+export type ForumProfile$notificationsMadeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ForumNotification
+   */
+  select?: Prisma.ForumNotificationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ForumNotification
+   */
+  omit?: Prisma.ForumNotificationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ForumNotificationInclude<ExtArgs> | null
+  where?: Prisma.ForumNotificationWhereInput
+  orderBy?: Prisma.ForumNotificationOrderByWithRelationInput | Prisma.ForumNotificationOrderByWithRelationInput[]
+  cursor?: Prisma.ForumNotificationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ForumNotificationScalarFieldEnum | Prisma.ForumNotificationScalarFieldEnum[]
+}
+
+/**
  * ForumProfile.saves
  */
 export type ForumProfile$savesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3659,6 +7290,54 @@ export type ForumProfile$savesArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.ForumSaveScalarFieldEnum | Prisma.ForumSaveScalarFieldEnum[]
+}
+
+/**
+ * ForumProfile.postLikes
+ */
+export type ForumProfile$postLikesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ForumPostLike
+   */
+  select?: Prisma.ForumPostLikeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ForumPostLike
+   */
+  omit?: Prisma.ForumPostLikeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ForumPostLikeInclude<ExtArgs> | null
+  where?: Prisma.ForumPostLikeWhereInput
+  orderBy?: Prisma.ForumPostLikeOrderByWithRelationInput | Prisma.ForumPostLikeOrderByWithRelationInput[]
+  cursor?: Prisma.ForumPostLikeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ForumPostLikeScalarFieldEnum | Prisma.ForumPostLikeScalarFieldEnum[]
+}
+
+/**
+ * ForumProfile.commentLikes
+ */
+export type ForumProfile$commentLikesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ForumCommentLike
+   */
+  select?: Prisma.ForumCommentLikeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ForumCommentLike
+   */
+  omit?: Prisma.ForumCommentLikeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ForumCommentLikeInclude<ExtArgs> | null
+  where?: Prisma.ForumCommentLikeWhereInput
+  orderBy?: Prisma.ForumCommentLikeOrderByWithRelationInput | Prisma.ForumCommentLikeOrderByWithRelationInput[]
+  cursor?: Prisma.ForumCommentLikeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ForumCommentLikeScalarFieldEnum | Prisma.ForumCommentLikeScalarFieldEnum[]
 }
 
 /**

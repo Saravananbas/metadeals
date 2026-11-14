@@ -29,7 +29,7 @@ export function UserNamePrompt() {
   const [busy, setBusy] = useState(false);
   useEffect(() => {
     let alive = true;
-    if (typeof sessionStorage !== "undefined" && sessionStorage.getItem("md_username_later") === "1") return;
+    if (typeof localStorage !== "undefined" && Date.now() < Number(localStorage.getItem("md_username_later") ?? 0)) return;
     call("/api/v1/customer/identity").then((d) => alive && setIdentity(d)).catch(() => {});
     return () => { alive = false; };
   }, []);
@@ -49,7 +49,7 @@ export function UserNamePrompt() {
         {say && <div className={styles.err} role="alert">{say}</div>}
         <div className={styles.actions}>
           <button className={styles.primary} disabled={busy}>{busy ? "Saving…" : "Save"}</button>
-          <button type="button" className={styles.secondary} onClick={() => { sessionStorage.setItem("md_username_later", "1"); setDismissed(true); }}>Maybe later</button>
+          <button type="button" className={styles.secondary} onClick={() => { localStorage.setItem("md_username_later", String(Date.now() + 7 * 86_400_000)); setDismissed(true); }}>Maybe later</button>
         </div>
       </form>
     </div>

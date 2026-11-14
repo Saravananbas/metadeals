@@ -5,7 +5,7 @@ import { getCurrentAuthContext } from "@/server/auth/session";
 import { roleCan } from "@/server/auth/permissions";
 import { MerchantDirectoryStatus, MerchantDirectoryVerification } from "@/generated/prisma/client";
 import { assertSameOrigin, readJson } from "@/server/auth/request";
-import { changeDealState, DealError, getAdminDeal, previewToken, saveDeal, saveTaxonomy } from "@/server/deals/service";
+import { changeDealState, DealError, getAdminDeal, previewToken, saveDeal, saveTaxonomy, setDealExpired } from "@/server/deals/service";
 import { dealInclude } from "@/server/deals/repository";
 import { boundedBody, normalizeImage, storeImage, removeStoredImage } from "@/server/storage/media";
 import { api, json } from "@/server/http";
@@ -705,6 +705,10 @@ async function handle(request: Request, { params }: { params: Promise<{ path: st
     }
     const body = await readJson(request);
     if (id && action === "preview" && request.method === "POST") { const deal = await getAdminDeal(db, id); return json({ data: deal, previewToken: previewToken(actor.id, id, deal.version) }); }
+    if (id && action === "status" && request.method === "POST") {
+      const input = z.object({ version: z.number().int().positive(), expired: z.boolean() }).strict().parse(body);
+      return json({ data: await db.$transaction((tx) => setDealExpired(tx, actor, id, input.expired, input.version)) });
+    }
     if (id && (action === "publish" || action === "archive" || request.method === "DELETE")) {
       const input = z.object({ version: z.number().int().positive(), previewToken: z.string().max(2000).optional() }).parse(body);
       const changed = await db.$transaction((tx) => changeDealState(tx, actor, id, request.method === "DELETE" ? "delete" : action as "publish" | "archive", input.version, input.previewToken));

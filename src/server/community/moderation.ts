@@ -7,6 +7,7 @@ import { logger } from "@/server/logging/logger";
 import { roleCan, type AdminRole, type Permission } from "@/server/auth/permissions";
 import { DealError } from "@/server/deals/service";
 import { withRetry } from "./config";
+import { notify, type NotificationType } from "./notifications";
 
 export type Moderator = { id: string; role: AdminRole };
 
@@ -31,7 +32,7 @@ const postCard = {
 } as const;
 
 export async function listQueue(actor: Moderator, page = 1) {
-  need(actor, "forum:moderate");
+  need(actor, "mod:queue:read");
   const db = getDatabase(), take = 25;
   const [rows, total] = await Promise.all([
     db.forumPost.findMany({ where: { status: "PENDING_REVIEW" }, orderBy: [{ createdAt: "asc" }, { id: "asc" }], skip: (page - 1) * take, take, select: postCard }),
@@ -41,7 +42,7 @@ export async function listQueue(actor: Moderator, page = 1) {
 }
 
 export async function listReports(actor: Moderator, status: "OPEN" | "RESOLVED" | "DISMISSED" | "ESCALATED", page = 1) {
-  need(actor, "forum:moderate");
+  need(actor, "mod:queue:read");
   const db = getDatabase(), take = 25;
   const [rows, total, open] = await Promise.all([
     db.forumReport.findMany({
@@ -57,7 +58,9 @@ export async function listReports(actor: Moderator, status: "OPEN" | "RESOLVED" 
     db.forumReport.count({ where: { status } }),
     db.forumReport.count({ where: { status: "OPEN" } }),
   ]);
-  return { total, page, open, items: rows.map((r) => ({ ...r, createdAt: r.createdAt.toISOString(), comment: r.comment ? { ...r.comment, body: r.comment.body.slice(0, 500) } : null })) };
+  // Moderators are not told who reported: only people who can manage the community see the reporter's name.
+  const showReporter = roleCan(actor.role, "forum:manage");
+  return { total, page, open, items: rows.map((r) => ({ ...r, reporter: showReporter ? r.reporter : { handle: "hidden" }, createdAt: r.createdAt.toISOString(), comment: r.comment ? { ...r.comment, body: r.comment.body.slice(0, 500) } : null })) };
 }
 
 type PostAction = "approve" | "remove" | "restore" | "lock" | "unlock";
@@ -67,7 +70,7 @@ const POST_FROM: Record<PostAction, Array<"PENDING_REVIEW" | "PUBLISHED" | "REMO
 
 /** Every post action is a conditional update (version and current status) plus its history rows, all in one transaction: if two moderators race, one wins and the other gets a clear conflict. */
 export async function actOnPost(actor: Moderator, id: string, action: PostAction, raw: unknown) {
-  need(actor, "forum:moderate");
+  need(actor, "mod:post:review");
   const needsReason = action === "remove" || action === "restore" || action === "lock";
   const input = z.object({ version: versionSchema, reason: needsReason ? reasonSchema : reasonSchema.optional() }).strict().parse(raw);
   const reason = input.reason ?? `${action} by moderator`;
@@ -86,12 +89,16 @@ export async function actOnPost(actor: Moderator, id: string, action: PostAction
       throw new DealError(exists ? "This post was already handled or changed. Reload first." : "Post not found.", exists ? 409 : 404);
     }
     await record(tx, actor, { action: `post.${action}`, targetType: "POST", postId: id, reason });
+    // The author is told what happened (never which moderator did it).
+    const post = await tx.forumPost.findUniqueOrThrow({ where: { id }, select: { id: true, slug: true, title: true, authorId: true } });
+    const type: NotificationType = action === "approve" ? "POST_APPROVED" : action === "remove" ? "POST_REMOVED" : action === "restore" ? "POST_RESTORED" : action === "lock" ? "POST_LOCKED" : "POST_UNLOCKED";
+    await notify(tx, { recipientId: post.authorId, type, post });
     return { postId: id };
   });
 }
 
 export async function actOnComment(actor: Moderator, id: string, action: "remove" | "restore", raw: unknown) {
-  need(actor, "forum:moderate");
+  need(actor, "mod:comment:moderate");
   const input = z.object({ reason: reasonSchema }).strict().parse(raw);
   const db = getDatabase();
   return withRetry(() => db.$transaction(async (tx) => {
@@ -100,15 +107,16 @@ export async function actOnComment(actor: Moderator, id: string, action: "remove
       where: { id, status: from }, data: { status: action === "remove" ? "REMOVED" : "PUBLISHED", removalReason: action === "remove" ? input.reason : null, version: { increment: 1 } },
     });
     if (changed.count !== 1) throw new DealError("This comment was already handled or no longer exists.", 409);
-    const c = await tx.forumComment.findUniqueOrThrow({ where: { id }, select: { postId: true } });
+    const c = await tx.forumComment.findUniqueOrThrow({ where: { id }, select: { postId: true, authorId: true, post: { select: { id: true, slug: true, title: true } } } });
     await tx.forumPost.update({ where: { id: c.postId }, data: { commentCount: { increment: action === "remove" ? -1 : 1 } } });
     await record(tx, actor, { action: `comment.${action}`, targetType: "COMMENT", commentId: id, reason: input.reason });
+    await notify(tx, { recipientId: c.authorId, type: action === "remove" ? "COMMENT_REMOVED" : "COMMENT_RESTORED", post: c.post, commentId: id });
     return { commentId: id };
   }));
 }
 
 export async function resolveReport(actor: Moderator, id: string, raw: unknown) {
-  need(actor, "forum:moderate");
+  need(actor, "mod:report:handle");
   const input = z.object({ version: versionSchema, outcome: z.enum(["RESOLVED", "DISMISSED", "ESCALATED"]), resolution: reasonSchema }).strict().parse(raw);
   const db = getDatabase();
   return db.$transaction(async (tx) => {
@@ -169,5 +177,63 @@ export async function saveCommunity(actor: Moderator, raw: unknown, id?: string)
       if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025") throw new DealError("Community not found.", 404);
       throw error;
     }
+  });
+}
+
+/** Staff-granted "Verified member" badge. The reason is kept in the moderation history; the member never sets it themself. */
+export async function setMemberVerified(actor: Moderator, idOrHandle: string, verified: boolean, raw: unknown) {
+  need(actor, "forum:manage");
+  const input = z.object({ reason: reasonSchema }).strict().parse(raw);
+  const db = getDatabase();
+  return db.$transaction(async (tx) => {
+    const target = await tx.forumProfile.findFirst({ where: { OR: [{ id: idOrHandle }, { handle: idOrHandle.toLowerCase() }] }, select: { id: true, handle: true, verifiedAt: true } });
+    if (!target) throw new DealError("Member not found.", 404);
+    if (Boolean(target.verifiedAt) === verified) throw new DealError(verified ? "This member is already verified." : "This member is not verified.", 409);
+    await tx.forumProfile.update({ where: { id: target.id }, data: verified ? { verifiedAt: new Date(), verifiedById: actor.id } : { verifiedAt: null, verifiedById: null } });
+    await record(tx, actor, { action: verified ? "member.verify" : "member.unverify", targetType: "PROFILE", profileId: target.id, reason: input.reason });
+    return { handle: target.handle, verified };
+  });
+}
+
+type DmStatus = "OPEN" | "RESOLVED" | "DISMISSED" | "ESCALATED";
+/**
+ * Reported private messages. Staff see only what a participant reported: the copied text of that one message, its category and details,
+ * and the two members' user names. Conversations themselves are never listed or opened.
+ */
+export async function listDmReports(actor: Moderator, status: DmStatus, page = 1) {
+  need(actor, "forum:moderate");
+  const db = getDatabase(), take = 25;
+  const [rows, total, open] = await Promise.all([
+    db.dmReport.findMany({ where: { status }, orderBy: [{ createdAt: "asc" }, { id: "asc" }], skip: (page - 1) * take, take }),
+    db.dmReport.count({ where: { status } }),
+    db.dmReport.count({ where: { status: "OPEN" } }),
+  ]);
+  const ids = [...new Set(rows.flatMap((r) => [r.reporterId, r.reportedProfileId]))];
+  const profiles = ids.length ? await db.forumProfile.findMany({ where: { id: { in: ids } }, select: { id: true, handle: true, status: true } }) : [];
+  const by = new Map(profiles.map((p) => [p.id, p]));
+  return {
+    total, page, open,
+    items: rows.map((r) => ({
+      id: r.id, category: r.category, details: r.details, snapshot: r.snapshot, status: r.status, version: r.version, resolution: r.resolution, createdAt: r.createdAt.toISOString(),
+      reporter: { handle: by.get(r.reporterId)?.handle ?? "(deleted)" }, reported: { id: r.reportedProfileId, handle: by.get(r.reportedProfileId)?.handle ?? "(deleted)", status: by.get(r.reportedProfileId)?.status ?? null },
+    })),
+  };
+}
+
+export async function resolveDmReport(actor: Moderator, id: string, raw: unknown) {
+  need(actor, "forum:moderate");
+  const input = z.object({ version: versionSchema, outcome: z.enum(["RESOLVED", "DISMISSED", "ESCALATED"]), resolution: reasonSchema }).strict().parse(raw);
+  const db = getDatabase();
+  return db.$transaction(async (tx) => {
+    const current = await tx.dmReport.findUnique({ where: { id }, select: { status: true, reportedProfileId: true } });
+    if (!current) throw new DealError("Report not found.", 404);
+    if (current.status === "ESCALATED") need(actor, "forum:manage");
+    const changed = await tx.dmReport.updateMany({
+      where: { id, version: input.version, status: current.status === "ESCALATED" ? "ESCALATED" : "OPEN" },
+      data: { status: input.outcome, resolution: input.resolution, resolvedById: actor.id, resolvedAt: new Date(), version: { increment: 1 } },
+    });
+    if (changed.count !== 1) throw new DealError("This report was already handled or changed. Reload first.", 409);
+    await record(tx, actor, { action: `dm-report.${input.outcome.toLowerCase()}`, targetType: "DM", profileId: current.reportedProfileId, reason: input.resolution, meta: { reportId: id } });
+    return { reportId: id };
   });
 }

@@ -1,0 +1,9 @@
+/* Phone bottom navigation. Hidden from tablet width up, and inside the native app shell (which has its own tabs). */
+.bar { display: none; }
+@media (max-width: 760px) {
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; display: grid; grid-template-columns: repeat(5, 1fr); background: var(--md-white); border-top: 1px solid var(--md-neutral-200); padding: 4px 4px calc(4px + env(safe-area-inset-bottom)); }
+  .tab { position: relative; display: grid; justify-items: center; gap: 2px; padding: 6px 2px; min-height: 52px; font-size: 11px; font-weight: 700; color: var(--md-neutral-600); text-decoration: none; }
+  .on { color: var(--md-purple-600); }
+  .badge { position: absolute; top: 2px; left: calc(50% + 4px); min-width: 17px; height: 17px; padding: 0 4px; border-radius: 9px; background: var(--md-purple-600); color: var(--md-white); font-size: 10px; font-weight: 800; display: grid; place-items: center; }
+  .spacer { height: calc(64px + env(safe-area-inset-bottom)); }
+}

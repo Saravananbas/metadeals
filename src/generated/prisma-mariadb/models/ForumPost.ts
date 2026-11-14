@@ -31,6 +31,8 @@ export type ForumPostAvgAggregateOutputType = {
   mrpMinor: number | null
   score: number | null
   commentCount: number | null
+  viewCount: number | null
+  likeCount: number | null
   version: number | null
 }
 
@@ -39,6 +41,8 @@ export type ForumPostSumAggregateOutputType = {
   mrpMinor: number | null
   score: number | null
   commentCount: number | null
+  viewCount: number | null
+  likeCount: number | null
   version: number | null
 }
 
@@ -61,6 +65,10 @@ export type ForumPostMinAggregateOutputType = {
   locked: boolean | null
   score: number | null
   commentCount: number | null
+  viewCount: number | null
+  likeCount: number | null
+  bodyHtml: string | null
+  notifyReplies: boolean | null
   removalReason: string | null
   version: number | null
   createdAt: Date | null
@@ -88,6 +96,10 @@ export type ForumPostMaxAggregateOutputType = {
   locked: boolean | null
   score: number | null
   commentCount: number | null
+  viewCount: number | null
+  likeCount: number | null
+  bodyHtml: string | null
+  notifyReplies: boolean | null
   removalReason: string | null
   version: number | null
   createdAt: Date | null
@@ -115,6 +127,10 @@ export type ForumPostCountAggregateOutputType = {
   locked: number
   score: number
   commentCount: number
+  viewCount: number
+  likeCount: number
+  bodyHtml: number
+  notifyReplies: number
   removalReason: number
   version: number
   createdAt: number
@@ -130,6 +146,8 @@ export type ForumPostAvgAggregateInputType = {
   mrpMinor?: true
   score?: true
   commentCount?: true
+  viewCount?: true
+  likeCount?: true
   version?: true
 }
 
@@ -138,6 +156,8 @@ export type ForumPostSumAggregateInputType = {
   mrpMinor?: true
   score?: true
   commentCount?: true
+  viewCount?: true
+  likeCount?: true
   version?: true
 }
 
@@ -160,6 +180,10 @@ export type ForumPostMinAggregateInputType = {
   locked?: true
   score?: true
   commentCount?: true
+  viewCount?: true
+  likeCount?: true
+  bodyHtml?: true
+  notifyReplies?: true
   removalReason?: true
   version?: true
   createdAt?: true
@@ -187,6 +211,10 @@ export type ForumPostMaxAggregateInputType = {
   locked?: true
   score?: true
   commentCount?: true
+  viewCount?: true
+  likeCount?: true
+  bodyHtml?: true
+  notifyReplies?: true
   removalReason?: true
   version?: true
   createdAt?: true
@@ -214,6 +242,10 @@ export type ForumPostCountAggregateInputType = {
   locked?: true
   score?: true
   commentCount?: true
+  viewCount?: true
+  likeCount?: true
+  bodyHtml?: true
+  notifyReplies?: true
   removalReason?: true
   version?: true
   createdAt?: true
@@ -328,6 +360,10 @@ export type ForumPostGroupByOutputType = {
   locked: boolean
   score: number
   commentCount: number
+  viewCount: number
+  likeCount: number
+  bodyHtml: string | null
+  notifyReplies: boolean
   removalReason: string | null
   version: number
   createdAt: Date
@@ -378,6 +414,10 @@ export type ForumPostWhereInput = {
   locked?: Prisma.BoolFilter<"ForumPost"> | boolean
   score?: Prisma.IntFilter<"ForumPost"> | number
   commentCount?: Prisma.IntFilter<"ForumPost"> | number
+  viewCount?: Prisma.IntFilter<"ForumPost"> | number
+  likeCount?: Prisma.IntFilter<"ForumPost"> | number
+  bodyHtml?: Prisma.StringNullableFilter<"ForumPost"> | string | null
+  notifyReplies?: Prisma.BoolFilter<"ForumPost"> | boolean
   removalReason?: Prisma.StringNullableFilter<"ForumPost"> | string | null
   version?: Prisma.IntFilter<"ForumPost"> | number
   createdAt?: Prisma.DateTimeFilter<"ForumPost"> | Date | string
@@ -389,6 +429,8 @@ export type ForumPostWhereInput = {
   comments?: Prisma.ForumCommentListRelationFilter
   votes?: Prisma.ForumPostVoteListRelationFilter
   saves?: Prisma.ForumSaveListRelationFilter
+  images?: Prisma.ForumPostImageListRelationFilter
+  likes?: Prisma.ForumPostLikeListRelationFilter
   reports?: Prisma.ForumReportListRelationFilter
 }
 
@@ -411,6 +453,10 @@ export type ForumPostOrderByWithRelationInput = {
   locked?: Prisma.SortOrder
   score?: Prisma.SortOrder
   commentCount?: Prisma.SortOrder
+  viewCount?: Prisma.SortOrder
+  likeCount?: Prisma.SortOrder
+  bodyHtml?: Prisma.SortOrderInput | Prisma.SortOrder
+  notifyReplies?: Prisma.SortOrder
   removalReason?: Prisma.SortOrderInput | Prisma.SortOrder
   version?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -422,6 +468,8 @@ export type ForumPostOrderByWithRelationInput = {
   comments?: Prisma.ForumCommentOrderByRelationAggregateInput
   votes?: Prisma.ForumPostVoteOrderByRelationAggregateInput
   saves?: Prisma.ForumSaveOrderByRelationAggregateInput
+  images?: Prisma.ForumPostImageOrderByRelationAggregateInput
+  likes?: Prisma.ForumPostLikeOrderByRelationAggregateInput
   reports?: Prisma.ForumReportOrderByRelationAggregateInput
   _relevance?: Prisma.ForumPostOrderByRelevanceInput
 }
@@ -448,6 +496,10 @@ export type ForumPostWhereUniqueInput = Prisma.AtLeast<{
   locked?: Prisma.BoolFilter<"ForumPost"> | boolean
   score?: Prisma.IntFilter<"ForumPost"> | number
   commentCount?: Prisma.IntFilter<"ForumPost"> | number
+  viewCount?: Prisma.IntFilter<"ForumPost"> | number
+  likeCount?: Prisma.IntFilter<"ForumPost"> | number
+  bodyHtml?: Prisma.StringNullableFilter<"ForumPost"> | string | null
+  notifyReplies?: Prisma.BoolFilter<"ForumPost"> | boolean
   removalReason?: Prisma.StringNullableFilter<"ForumPost"> | string | null
   version?: Prisma.IntFilter<"ForumPost"> | number
   createdAt?: Prisma.DateTimeFilter<"ForumPost"> | Date | string
@@ -459,6 +511,8 @@ export type ForumPostWhereUniqueInput = Prisma.AtLeast<{
   comments?: Prisma.ForumCommentListRelationFilter
   votes?: Prisma.ForumPostVoteListRelationFilter
   saves?: Prisma.ForumSaveListRelationFilter
+  images?: Prisma.ForumPostImageListRelationFilter
+  likes?: Prisma.ForumPostLikeListRelationFilter
   reports?: Prisma.ForumReportListRelationFilter
 }, "id" | "slug">
 
@@ -481,6 +535,10 @@ export type ForumPostOrderByWithAggregationInput = {
   locked?: Prisma.SortOrder
   score?: Prisma.SortOrder
   commentCount?: Prisma.SortOrder
+  viewCount?: Prisma.SortOrder
+  likeCount?: Prisma.SortOrder
+  bodyHtml?: Prisma.SortOrderInput | Prisma.SortOrder
+  notifyReplies?: Prisma.SortOrder
   removalReason?: Prisma.SortOrderInput | Prisma.SortOrder
   version?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -516,6 +574,10 @@ export type ForumPostScalarWhereWithAggregatesInput = {
   locked?: Prisma.BoolWithAggregatesFilter<"ForumPost"> | boolean
   score?: Prisma.IntWithAggregatesFilter<"ForumPost"> | number
   commentCount?: Prisma.IntWithAggregatesFilter<"ForumPost"> | number
+  viewCount?: Prisma.IntWithAggregatesFilter<"ForumPost"> | number
+  likeCount?: Prisma.IntWithAggregatesFilter<"ForumPost"> | number
+  bodyHtml?: Prisma.StringNullableWithAggregatesFilter<"ForumPost"> | string | null
+  notifyReplies?: Prisma.BoolWithAggregatesFilter<"ForumPost"> | boolean
   removalReason?: Prisma.StringNullableWithAggregatesFilter<"ForumPost"> | string | null
   version?: Prisma.IntWithAggregatesFilter<"ForumPost"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"ForumPost"> | Date | string
@@ -541,6 +603,10 @@ export type ForumPostCreateInput = {
   locked?: boolean
   score?: number
   commentCount?: number
+  viewCount?: number
+  likeCount?: number
+  bodyHtml?: string | null
+  notifyReplies?: boolean
   removalReason?: string | null
   version?: number
   createdAt?: Date | string
@@ -552,6 +618,8 @@ export type ForumPostCreateInput = {
   comments?: Prisma.ForumCommentCreateNestedManyWithoutPostInput
   votes?: Prisma.ForumPostVoteCreateNestedManyWithoutPostInput
   saves?: Prisma.ForumSaveCreateNestedManyWithoutPostInput
+  images?: Prisma.ForumPostImageCreateNestedManyWithoutPostInput
+  likes?: Prisma.ForumPostLikeCreateNestedManyWithoutPostInput
   reports?: Prisma.ForumReportCreateNestedManyWithoutPostInput
 }
 
@@ -574,6 +642,10 @@ export type ForumPostUncheckedCreateInput = {
   locked?: boolean
   score?: number
   commentCount?: number
+  viewCount?: number
+  likeCount?: number
+  bodyHtml?: string | null
+  notifyReplies?: boolean
   removalReason?: string | null
   version?: number
   createdAt?: Date | string
@@ -583,6 +655,8 @@ export type ForumPostUncheckedCreateInput = {
   comments?: Prisma.ForumCommentUncheckedCreateNestedManyWithoutPostInput
   votes?: Prisma.ForumPostVoteUncheckedCreateNestedManyWithoutPostInput
   saves?: Prisma.ForumSaveUncheckedCreateNestedManyWithoutPostInput
+  images?: Prisma.ForumPostImageUncheckedCreateNestedManyWithoutPostInput
+  likes?: Prisma.ForumPostLikeUncheckedCreateNestedManyWithoutPostInput
   reports?: Prisma.ForumReportUncheckedCreateNestedManyWithoutPostInput
 }
 
@@ -603,6 +677,10 @@ export type ForumPostUpdateInput = {
   locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   score?: Prisma.IntFieldUpdateOperationsInput | number
   commentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notifyReplies?: Prisma.BoolFieldUpdateOperationsInput | boolean
   removalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -614,6 +692,8 @@ export type ForumPostUpdateInput = {
   comments?: Prisma.ForumCommentUpdateManyWithoutPostNestedInput
   votes?: Prisma.ForumPostVoteUpdateManyWithoutPostNestedInput
   saves?: Prisma.ForumSaveUpdateManyWithoutPostNestedInput
+  images?: Prisma.ForumPostImageUpdateManyWithoutPostNestedInput
+  likes?: Prisma.ForumPostLikeUpdateManyWithoutPostNestedInput
   reports?: Prisma.ForumReportUpdateManyWithoutPostNestedInput
 }
 
@@ -636,6 +716,10 @@ export type ForumPostUncheckedUpdateInput = {
   locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   score?: Prisma.IntFieldUpdateOperationsInput | number
   commentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notifyReplies?: Prisma.BoolFieldUpdateOperationsInput | boolean
   removalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -645,6 +729,8 @@ export type ForumPostUncheckedUpdateInput = {
   comments?: Prisma.ForumCommentUncheckedUpdateManyWithoutPostNestedInput
   votes?: Prisma.ForumPostVoteUncheckedUpdateManyWithoutPostNestedInput
   saves?: Prisma.ForumSaveUncheckedUpdateManyWithoutPostNestedInput
+  images?: Prisma.ForumPostImageUncheckedUpdateManyWithoutPostNestedInput
+  likes?: Prisma.ForumPostLikeUncheckedUpdateManyWithoutPostNestedInput
   reports?: Prisma.ForumReportUncheckedUpdateManyWithoutPostNestedInput
 }
 
@@ -667,6 +753,10 @@ export type ForumPostCreateManyInput = {
   locked?: boolean
   score?: number
   commentCount?: number
+  viewCount?: number
+  likeCount?: number
+  bodyHtml?: string | null
+  notifyReplies?: boolean
   removalReason?: string | null
   version?: number
   createdAt?: Date | string
@@ -692,6 +782,10 @@ export type ForumPostUpdateManyMutationInput = {
   locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   score?: Prisma.IntFieldUpdateOperationsInput | number
   commentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notifyReplies?: Prisma.BoolFieldUpdateOperationsInput | boolean
   removalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -719,6 +813,10 @@ export type ForumPostUncheckedUpdateManyInput = {
   locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   score?: Prisma.IntFieldUpdateOperationsInput | number
   commentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notifyReplies?: Prisma.BoolFieldUpdateOperationsInput | boolean
   removalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -762,6 +860,10 @@ export type ForumPostCountOrderByAggregateInput = {
   locked?: Prisma.SortOrder
   score?: Prisma.SortOrder
   commentCount?: Prisma.SortOrder
+  viewCount?: Prisma.SortOrder
+  likeCount?: Prisma.SortOrder
+  bodyHtml?: Prisma.SortOrder
+  notifyReplies?: Prisma.SortOrder
   removalReason?: Prisma.SortOrder
   version?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -775,6 +877,8 @@ export type ForumPostAvgOrderByAggregateInput = {
   mrpMinor?: Prisma.SortOrder
   score?: Prisma.SortOrder
   commentCount?: Prisma.SortOrder
+  viewCount?: Prisma.SortOrder
+  likeCount?: Prisma.SortOrder
   version?: Prisma.SortOrder
 }
 
@@ -797,6 +901,10 @@ export type ForumPostMaxOrderByAggregateInput = {
   locked?: Prisma.SortOrder
   score?: Prisma.SortOrder
   commentCount?: Prisma.SortOrder
+  viewCount?: Prisma.SortOrder
+  likeCount?: Prisma.SortOrder
+  bodyHtml?: Prisma.SortOrder
+  notifyReplies?: Prisma.SortOrder
   removalReason?: Prisma.SortOrder
   version?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -824,6 +932,10 @@ export type ForumPostMinOrderByAggregateInput = {
   locked?: Prisma.SortOrder
   score?: Prisma.SortOrder
   commentCount?: Prisma.SortOrder
+  viewCount?: Prisma.SortOrder
+  likeCount?: Prisma.SortOrder
+  bodyHtml?: Prisma.SortOrder
+  notifyReplies?: Prisma.SortOrder
   removalReason?: Prisma.SortOrder
   version?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -837,6 +949,8 @@ export type ForumPostSumOrderByAggregateInput = {
   mrpMinor?: Prisma.SortOrder
   score?: Prisma.SortOrder
   commentCount?: Prisma.SortOrder
+  viewCount?: Prisma.SortOrder
+  likeCount?: Prisma.SortOrder
   version?: Prisma.SortOrder
 }
 
@@ -970,6 +1084,20 @@ export type ForumPostUpdateOneRequiredWithoutVotesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ForumPostUpdateToOneWithWhereWithoutVotesInput, Prisma.ForumPostUpdateWithoutVotesInput>, Prisma.ForumPostUncheckedUpdateWithoutVotesInput>
 }
 
+export type ForumPostCreateNestedOneWithoutLikesInput = {
+  create?: Prisma.XOR<Prisma.ForumPostCreateWithoutLikesInput, Prisma.ForumPostUncheckedCreateWithoutLikesInput>
+  connectOrCreate?: Prisma.ForumPostCreateOrConnectWithoutLikesInput
+  connect?: Prisma.ForumPostWhereUniqueInput
+}
+
+export type ForumPostUpdateOneRequiredWithoutLikesNestedInput = {
+  create?: Prisma.XOR<Prisma.ForumPostCreateWithoutLikesInput, Prisma.ForumPostUncheckedCreateWithoutLikesInput>
+  connectOrCreate?: Prisma.ForumPostCreateOrConnectWithoutLikesInput
+  upsert?: Prisma.ForumPostUpsertWithoutLikesInput
+  connect?: Prisma.ForumPostWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ForumPostUpdateToOneWithWhereWithoutLikesInput, Prisma.ForumPostUpdateWithoutLikesInput>, Prisma.ForumPostUncheckedUpdateWithoutLikesInput>
+}
+
 export type ForumPostCreateNestedOneWithoutSavesInput = {
   create?: Prisma.XOR<Prisma.ForumPostCreateWithoutSavesInput, Prisma.ForumPostUncheckedCreateWithoutSavesInput>
   connectOrCreate?: Prisma.ForumPostCreateOrConnectWithoutSavesInput
@@ -982,6 +1110,22 @@ export type ForumPostUpdateOneRequiredWithoutSavesNestedInput = {
   upsert?: Prisma.ForumPostUpsertWithoutSavesInput
   connect?: Prisma.ForumPostWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.ForumPostUpdateToOneWithWhereWithoutSavesInput, Prisma.ForumPostUpdateWithoutSavesInput>, Prisma.ForumPostUncheckedUpdateWithoutSavesInput>
+}
+
+export type ForumPostCreateNestedOneWithoutImagesInput = {
+  create?: Prisma.XOR<Prisma.ForumPostCreateWithoutImagesInput, Prisma.ForumPostUncheckedCreateWithoutImagesInput>
+  connectOrCreate?: Prisma.ForumPostCreateOrConnectWithoutImagesInput
+  connect?: Prisma.ForumPostWhereUniqueInput
+}
+
+export type ForumPostUpdateOneWithoutImagesNestedInput = {
+  create?: Prisma.XOR<Prisma.ForumPostCreateWithoutImagesInput, Prisma.ForumPostUncheckedCreateWithoutImagesInput>
+  connectOrCreate?: Prisma.ForumPostCreateOrConnectWithoutImagesInput
+  upsert?: Prisma.ForumPostUpsertWithoutImagesInput
+  disconnect?: Prisma.ForumPostWhereInput | boolean
+  delete?: Prisma.ForumPostWhereInput | boolean
+  connect?: Prisma.ForumPostWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ForumPostUpdateToOneWithWhereWithoutImagesInput, Prisma.ForumPostUpdateWithoutImagesInput>, Prisma.ForumPostUncheckedUpdateWithoutImagesInput>
 }
 
 export type ForumPostCreateNestedOneWithoutReportsInput = {
@@ -1017,6 +1161,10 @@ export type ForumPostCreateWithoutCommunityInput = {
   locked?: boolean
   score?: number
   commentCount?: number
+  viewCount?: number
+  likeCount?: number
+  bodyHtml?: string | null
+  notifyReplies?: boolean
   removalReason?: string | null
   version?: number
   createdAt?: Date | string
@@ -1027,6 +1175,8 @@ export type ForumPostCreateWithoutCommunityInput = {
   comments?: Prisma.ForumCommentCreateNestedManyWithoutPostInput
   votes?: Prisma.ForumPostVoteCreateNestedManyWithoutPostInput
   saves?: Prisma.ForumSaveCreateNestedManyWithoutPostInput
+  images?: Prisma.ForumPostImageCreateNestedManyWithoutPostInput
+  likes?: Prisma.ForumPostLikeCreateNestedManyWithoutPostInput
   reports?: Prisma.ForumReportCreateNestedManyWithoutPostInput
 }
 
@@ -1048,6 +1198,10 @@ export type ForumPostUncheckedCreateWithoutCommunityInput = {
   locked?: boolean
   score?: number
   commentCount?: number
+  viewCount?: number
+  likeCount?: number
+  bodyHtml?: string | null
+  notifyReplies?: boolean
   removalReason?: string | null
   version?: number
   createdAt?: Date | string
@@ -1057,6 +1211,8 @@ export type ForumPostUncheckedCreateWithoutCommunityInput = {
   comments?: Prisma.ForumCommentUncheckedCreateNestedManyWithoutPostInput
   votes?: Prisma.ForumPostVoteUncheckedCreateNestedManyWithoutPostInput
   saves?: Prisma.ForumSaveUncheckedCreateNestedManyWithoutPostInput
+  images?: Prisma.ForumPostImageUncheckedCreateNestedManyWithoutPostInput
+  likes?: Prisma.ForumPostLikeUncheckedCreateNestedManyWithoutPostInput
   reports?: Prisma.ForumReportUncheckedCreateNestedManyWithoutPostInput
 }
 
@@ -1108,6 +1264,10 @@ export type ForumPostScalarWhereInput = {
   locked?: Prisma.BoolFilter<"ForumPost"> | boolean
   score?: Prisma.IntFilter<"ForumPost"> | number
   commentCount?: Prisma.IntFilter<"ForumPost"> | number
+  viewCount?: Prisma.IntFilter<"ForumPost"> | number
+  likeCount?: Prisma.IntFilter<"ForumPost"> | number
+  bodyHtml?: Prisma.StringNullableFilter<"ForumPost"> | string | null
+  notifyReplies?: Prisma.BoolFilter<"ForumPost"> | boolean
   removalReason?: Prisma.StringNullableFilter<"ForumPost"> | string | null
   version?: Prisma.IntFilter<"ForumPost"> | number
   createdAt?: Prisma.DateTimeFilter<"ForumPost"> | Date | string
@@ -1133,6 +1293,10 @@ export type ForumPostCreateWithoutAuthorInput = {
   locked?: boolean
   score?: number
   commentCount?: number
+  viewCount?: number
+  likeCount?: number
+  bodyHtml?: string | null
+  notifyReplies?: boolean
   removalReason?: string | null
   version?: number
   createdAt?: Date | string
@@ -1143,6 +1307,8 @@ export type ForumPostCreateWithoutAuthorInput = {
   comments?: Prisma.ForumCommentCreateNestedManyWithoutPostInput
   votes?: Prisma.ForumPostVoteCreateNestedManyWithoutPostInput
   saves?: Prisma.ForumSaveCreateNestedManyWithoutPostInput
+  images?: Prisma.ForumPostImageCreateNestedManyWithoutPostInput
+  likes?: Prisma.ForumPostLikeCreateNestedManyWithoutPostInput
   reports?: Prisma.ForumReportCreateNestedManyWithoutPostInput
 }
 
@@ -1164,6 +1330,10 @@ export type ForumPostUncheckedCreateWithoutAuthorInput = {
   locked?: boolean
   score?: number
   commentCount?: number
+  viewCount?: number
+  likeCount?: number
+  bodyHtml?: string | null
+  notifyReplies?: boolean
   removalReason?: string | null
   version?: number
   createdAt?: Date | string
@@ -1173,6 +1343,8 @@ export type ForumPostUncheckedCreateWithoutAuthorInput = {
   comments?: Prisma.ForumCommentUncheckedCreateNestedManyWithoutPostInput
   votes?: Prisma.ForumPostVoteUncheckedCreateNestedManyWithoutPostInput
   saves?: Prisma.ForumSaveUncheckedCreateNestedManyWithoutPostInput
+  images?: Prisma.ForumPostImageUncheckedCreateNestedManyWithoutPostInput
+  likes?: Prisma.ForumPostLikeUncheckedCreateNestedManyWithoutPostInput
   reports?: Prisma.ForumReportUncheckedCreateNestedManyWithoutPostInput
 }
 
@@ -1219,6 +1391,10 @@ export type ForumPostCreateWithoutCommentsInput = {
   locked?: boolean
   score?: number
   commentCount?: number
+  viewCount?: number
+  likeCount?: number
+  bodyHtml?: string | null
+  notifyReplies?: boolean
   removalReason?: string | null
   version?: number
   createdAt?: Date | string
@@ -1229,6 +1405,8 @@ export type ForumPostCreateWithoutCommentsInput = {
   author: Prisma.ForumProfileCreateNestedOneWithoutPostsInput
   votes?: Prisma.ForumPostVoteCreateNestedManyWithoutPostInput
   saves?: Prisma.ForumSaveCreateNestedManyWithoutPostInput
+  images?: Prisma.ForumPostImageCreateNestedManyWithoutPostInput
+  likes?: Prisma.ForumPostLikeCreateNestedManyWithoutPostInput
   reports?: Prisma.ForumReportCreateNestedManyWithoutPostInput
 }
 
@@ -1251,6 +1429,10 @@ export type ForumPostUncheckedCreateWithoutCommentsInput = {
   locked?: boolean
   score?: number
   commentCount?: number
+  viewCount?: number
+  likeCount?: number
+  bodyHtml?: string | null
+  notifyReplies?: boolean
   removalReason?: string | null
   version?: number
   createdAt?: Date | string
@@ -1259,6 +1441,8 @@ export type ForumPostUncheckedCreateWithoutCommentsInput = {
   editedAt?: Date | string | null
   votes?: Prisma.ForumPostVoteUncheckedCreateNestedManyWithoutPostInput
   saves?: Prisma.ForumSaveUncheckedCreateNestedManyWithoutPostInput
+  images?: Prisma.ForumPostImageUncheckedCreateNestedManyWithoutPostInput
+  likes?: Prisma.ForumPostLikeUncheckedCreateNestedManyWithoutPostInput
   reports?: Prisma.ForumReportUncheckedCreateNestedManyWithoutPostInput
 }
 
@@ -1295,6 +1479,10 @@ export type ForumPostUpdateWithoutCommentsInput = {
   locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   score?: Prisma.IntFieldUpdateOperationsInput | number
   commentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notifyReplies?: Prisma.BoolFieldUpdateOperationsInput | boolean
   removalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1305,6 +1493,8 @@ export type ForumPostUpdateWithoutCommentsInput = {
   author?: Prisma.ForumProfileUpdateOneRequiredWithoutPostsNestedInput
   votes?: Prisma.ForumPostVoteUpdateManyWithoutPostNestedInput
   saves?: Prisma.ForumSaveUpdateManyWithoutPostNestedInput
+  images?: Prisma.ForumPostImageUpdateManyWithoutPostNestedInput
+  likes?: Prisma.ForumPostLikeUpdateManyWithoutPostNestedInput
   reports?: Prisma.ForumReportUpdateManyWithoutPostNestedInput
 }
 
@@ -1327,6 +1517,10 @@ export type ForumPostUncheckedUpdateWithoutCommentsInput = {
   locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   score?: Prisma.IntFieldUpdateOperationsInput | number
   commentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notifyReplies?: Prisma.BoolFieldUpdateOperationsInput | boolean
   removalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1335,6 +1529,8 @@ export type ForumPostUncheckedUpdateWithoutCommentsInput = {
   editedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   votes?: Prisma.ForumPostVoteUncheckedUpdateManyWithoutPostNestedInput
   saves?: Prisma.ForumSaveUncheckedUpdateManyWithoutPostNestedInput
+  images?: Prisma.ForumPostImageUncheckedUpdateManyWithoutPostNestedInput
+  likes?: Prisma.ForumPostLikeUncheckedUpdateManyWithoutPostNestedInput
   reports?: Prisma.ForumReportUncheckedUpdateManyWithoutPostNestedInput
 }
 
@@ -1355,6 +1551,10 @@ export type ForumPostCreateWithoutVotesInput = {
   locked?: boolean
   score?: number
   commentCount?: number
+  viewCount?: number
+  likeCount?: number
+  bodyHtml?: string | null
+  notifyReplies?: boolean
   removalReason?: string | null
   version?: number
   createdAt?: Date | string
@@ -1365,6 +1565,8 @@ export type ForumPostCreateWithoutVotesInput = {
   author: Prisma.ForumProfileCreateNestedOneWithoutPostsInput
   comments?: Prisma.ForumCommentCreateNestedManyWithoutPostInput
   saves?: Prisma.ForumSaveCreateNestedManyWithoutPostInput
+  images?: Prisma.ForumPostImageCreateNestedManyWithoutPostInput
+  likes?: Prisma.ForumPostLikeCreateNestedManyWithoutPostInput
   reports?: Prisma.ForumReportCreateNestedManyWithoutPostInput
 }
 
@@ -1387,6 +1589,10 @@ export type ForumPostUncheckedCreateWithoutVotesInput = {
   locked?: boolean
   score?: number
   commentCount?: number
+  viewCount?: number
+  likeCount?: number
+  bodyHtml?: string | null
+  notifyReplies?: boolean
   removalReason?: string | null
   version?: number
   createdAt?: Date | string
@@ -1395,6 +1601,8 @@ export type ForumPostUncheckedCreateWithoutVotesInput = {
   editedAt?: Date | string | null
   comments?: Prisma.ForumCommentUncheckedCreateNestedManyWithoutPostInput
   saves?: Prisma.ForumSaveUncheckedCreateNestedManyWithoutPostInput
+  images?: Prisma.ForumPostImageUncheckedCreateNestedManyWithoutPostInput
+  likes?: Prisma.ForumPostLikeUncheckedCreateNestedManyWithoutPostInput
   reports?: Prisma.ForumReportUncheckedCreateNestedManyWithoutPostInput
 }
 
@@ -1431,6 +1639,10 @@ export type ForumPostUpdateWithoutVotesInput = {
   locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   score?: Prisma.IntFieldUpdateOperationsInput | number
   commentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notifyReplies?: Prisma.BoolFieldUpdateOperationsInput | boolean
   removalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1441,6 +1653,8 @@ export type ForumPostUpdateWithoutVotesInput = {
   author?: Prisma.ForumProfileUpdateOneRequiredWithoutPostsNestedInput
   comments?: Prisma.ForumCommentUpdateManyWithoutPostNestedInput
   saves?: Prisma.ForumSaveUpdateManyWithoutPostNestedInput
+  images?: Prisma.ForumPostImageUpdateManyWithoutPostNestedInput
+  likes?: Prisma.ForumPostLikeUpdateManyWithoutPostNestedInput
   reports?: Prisma.ForumReportUpdateManyWithoutPostNestedInput
 }
 
@@ -1463,6 +1677,10 @@ export type ForumPostUncheckedUpdateWithoutVotesInput = {
   locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   score?: Prisma.IntFieldUpdateOperationsInput | number
   commentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notifyReplies?: Prisma.BoolFieldUpdateOperationsInput | boolean
   removalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1471,6 +1689,168 @@ export type ForumPostUncheckedUpdateWithoutVotesInput = {
   editedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   comments?: Prisma.ForumCommentUncheckedUpdateManyWithoutPostNestedInput
   saves?: Prisma.ForumSaveUncheckedUpdateManyWithoutPostNestedInput
+  images?: Prisma.ForumPostImageUncheckedUpdateManyWithoutPostNestedInput
+  likes?: Prisma.ForumPostLikeUncheckedUpdateManyWithoutPostNestedInput
+  reports?: Prisma.ForumReportUncheckedUpdateManyWithoutPostNestedInput
+}
+
+export type ForumPostCreateWithoutLikesInput = {
+  id?: string
+  slug: string
+  type: $Enums.ForumPostType
+  title: string
+  body: string
+  url?: string | null
+  urlHash?: string | null
+  merchantName?: string | null
+  priceMinor?: number | null
+  mrpMinor?: number | null
+  couponCode?: string | null
+  contentHash: string
+  status?: $Enums.ForumContentStatus
+  locked?: boolean
+  score?: number
+  commentCount?: number
+  viewCount?: number
+  likeCount?: number
+  bodyHtml?: string | null
+  notifyReplies?: boolean
+  removalReason?: string | null
+  version?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  publishedAt?: Date | string | null
+  editedAt?: Date | string | null
+  community: Prisma.ForumCommunityCreateNestedOneWithoutPostsInput
+  author: Prisma.ForumProfileCreateNestedOneWithoutPostsInput
+  comments?: Prisma.ForumCommentCreateNestedManyWithoutPostInput
+  votes?: Prisma.ForumPostVoteCreateNestedManyWithoutPostInput
+  saves?: Prisma.ForumSaveCreateNestedManyWithoutPostInput
+  images?: Prisma.ForumPostImageCreateNestedManyWithoutPostInput
+  reports?: Prisma.ForumReportCreateNestedManyWithoutPostInput
+}
+
+export type ForumPostUncheckedCreateWithoutLikesInput = {
+  id?: string
+  slug: string
+  communityId: string
+  authorId: string
+  type: $Enums.ForumPostType
+  title: string
+  body: string
+  url?: string | null
+  urlHash?: string | null
+  merchantName?: string | null
+  priceMinor?: number | null
+  mrpMinor?: number | null
+  couponCode?: string | null
+  contentHash: string
+  status?: $Enums.ForumContentStatus
+  locked?: boolean
+  score?: number
+  commentCount?: number
+  viewCount?: number
+  likeCount?: number
+  bodyHtml?: string | null
+  notifyReplies?: boolean
+  removalReason?: string | null
+  version?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  publishedAt?: Date | string | null
+  editedAt?: Date | string | null
+  comments?: Prisma.ForumCommentUncheckedCreateNestedManyWithoutPostInput
+  votes?: Prisma.ForumPostVoteUncheckedCreateNestedManyWithoutPostInput
+  saves?: Prisma.ForumSaveUncheckedCreateNestedManyWithoutPostInput
+  images?: Prisma.ForumPostImageUncheckedCreateNestedManyWithoutPostInput
+  reports?: Prisma.ForumReportUncheckedCreateNestedManyWithoutPostInput
+}
+
+export type ForumPostCreateOrConnectWithoutLikesInput = {
+  where: Prisma.ForumPostWhereUniqueInput
+  create: Prisma.XOR<Prisma.ForumPostCreateWithoutLikesInput, Prisma.ForumPostUncheckedCreateWithoutLikesInput>
+}
+
+export type ForumPostUpsertWithoutLikesInput = {
+  update: Prisma.XOR<Prisma.ForumPostUpdateWithoutLikesInput, Prisma.ForumPostUncheckedUpdateWithoutLikesInput>
+  create: Prisma.XOR<Prisma.ForumPostCreateWithoutLikesInput, Prisma.ForumPostUncheckedCreateWithoutLikesInput>
+  where?: Prisma.ForumPostWhereInput
+}
+
+export type ForumPostUpdateToOneWithWhereWithoutLikesInput = {
+  where?: Prisma.ForumPostWhereInput
+  data: Prisma.XOR<Prisma.ForumPostUpdateWithoutLikesInput, Prisma.ForumPostUncheckedUpdateWithoutLikesInput>
+}
+
+export type ForumPostUpdateWithoutLikesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumForumPostTypeFieldUpdateOperationsInput | $Enums.ForumPostType
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  body?: Prisma.StringFieldUpdateOperationsInput | string
+  url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  urlHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  merchantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  mrpMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentHash?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumForumContentStatusFieldUpdateOperationsInput | $Enums.ForumContentStatus
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  score?: Prisma.IntFieldUpdateOperationsInput | number
+  commentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notifyReplies?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  removalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  editedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  community?: Prisma.ForumCommunityUpdateOneRequiredWithoutPostsNestedInput
+  author?: Prisma.ForumProfileUpdateOneRequiredWithoutPostsNestedInput
+  comments?: Prisma.ForumCommentUpdateManyWithoutPostNestedInput
+  votes?: Prisma.ForumPostVoteUpdateManyWithoutPostNestedInput
+  saves?: Prisma.ForumSaveUpdateManyWithoutPostNestedInput
+  images?: Prisma.ForumPostImageUpdateManyWithoutPostNestedInput
+  reports?: Prisma.ForumReportUpdateManyWithoutPostNestedInput
+}
+
+export type ForumPostUncheckedUpdateWithoutLikesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  communityId?: Prisma.StringFieldUpdateOperationsInput | string
+  authorId?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumForumPostTypeFieldUpdateOperationsInput | $Enums.ForumPostType
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  body?: Prisma.StringFieldUpdateOperationsInput | string
+  url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  urlHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  merchantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  mrpMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentHash?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumForumContentStatusFieldUpdateOperationsInput | $Enums.ForumContentStatus
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  score?: Prisma.IntFieldUpdateOperationsInput | number
+  commentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notifyReplies?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  removalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  editedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  comments?: Prisma.ForumCommentUncheckedUpdateManyWithoutPostNestedInput
+  votes?: Prisma.ForumPostVoteUncheckedUpdateManyWithoutPostNestedInput
+  saves?: Prisma.ForumSaveUncheckedUpdateManyWithoutPostNestedInput
+  images?: Prisma.ForumPostImageUncheckedUpdateManyWithoutPostNestedInput
   reports?: Prisma.ForumReportUncheckedUpdateManyWithoutPostNestedInput
 }
 
@@ -1491,6 +1871,10 @@ export type ForumPostCreateWithoutSavesInput = {
   locked?: boolean
   score?: number
   commentCount?: number
+  viewCount?: number
+  likeCount?: number
+  bodyHtml?: string | null
+  notifyReplies?: boolean
   removalReason?: string | null
   version?: number
   createdAt?: Date | string
@@ -1501,6 +1885,8 @@ export type ForumPostCreateWithoutSavesInput = {
   author: Prisma.ForumProfileCreateNestedOneWithoutPostsInput
   comments?: Prisma.ForumCommentCreateNestedManyWithoutPostInput
   votes?: Prisma.ForumPostVoteCreateNestedManyWithoutPostInput
+  images?: Prisma.ForumPostImageCreateNestedManyWithoutPostInput
+  likes?: Prisma.ForumPostLikeCreateNestedManyWithoutPostInput
   reports?: Prisma.ForumReportCreateNestedManyWithoutPostInput
 }
 
@@ -1523,6 +1909,10 @@ export type ForumPostUncheckedCreateWithoutSavesInput = {
   locked?: boolean
   score?: number
   commentCount?: number
+  viewCount?: number
+  likeCount?: number
+  bodyHtml?: string | null
+  notifyReplies?: boolean
   removalReason?: string | null
   version?: number
   createdAt?: Date | string
@@ -1531,6 +1921,8 @@ export type ForumPostUncheckedCreateWithoutSavesInput = {
   editedAt?: Date | string | null
   comments?: Prisma.ForumCommentUncheckedCreateNestedManyWithoutPostInput
   votes?: Prisma.ForumPostVoteUncheckedCreateNestedManyWithoutPostInput
+  images?: Prisma.ForumPostImageUncheckedCreateNestedManyWithoutPostInput
+  likes?: Prisma.ForumPostLikeUncheckedCreateNestedManyWithoutPostInput
   reports?: Prisma.ForumReportUncheckedCreateNestedManyWithoutPostInput
 }
 
@@ -1567,6 +1959,10 @@ export type ForumPostUpdateWithoutSavesInput = {
   locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   score?: Prisma.IntFieldUpdateOperationsInput | number
   commentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notifyReplies?: Prisma.BoolFieldUpdateOperationsInput | boolean
   removalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1577,6 +1973,8 @@ export type ForumPostUpdateWithoutSavesInput = {
   author?: Prisma.ForumProfileUpdateOneRequiredWithoutPostsNestedInput
   comments?: Prisma.ForumCommentUpdateManyWithoutPostNestedInput
   votes?: Prisma.ForumPostVoteUpdateManyWithoutPostNestedInput
+  images?: Prisma.ForumPostImageUpdateManyWithoutPostNestedInput
+  likes?: Prisma.ForumPostLikeUpdateManyWithoutPostNestedInput
   reports?: Prisma.ForumReportUpdateManyWithoutPostNestedInput
 }
 
@@ -1599,6 +1997,10 @@ export type ForumPostUncheckedUpdateWithoutSavesInput = {
   locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   score?: Prisma.IntFieldUpdateOperationsInput | number
   commentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notifyReplies?: Prisma.BoolFieldUpdateOperationsInput | boolean
   removalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1607,6 +2009,168 @@ export type ForumPostUncheckedUpdateWithoutSavesInput = {
   editedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   comments?: Prisma.ForumCommentUncheckedUpdateManyWithoutPostNestedInput
   votes?: Prisma.ForumPostVoteUncheckedUpdateManyWithoutPostNestedInput
+  images?: Prisma.ForumPostImageUncheckedUpdateManyWithoutPostNestedInput
+  likes?: Prisma.ForumPostLikeUncheckedUpdateManyWithoutPostNestedInput
+  reports?: Prisma.ForumReportUncheckedUpdateManyWithoutPostNestedInput
+}
+
+export type ForumPostCreateWithoutImagesInput = {
+  id?: string
+  slug: string
+  type: $Enums.ForumPostType
+  title: string
+  body: string
+  url?: string | null
+  urlHash?: string | null
+  merchantName?: string | null
+  priceMinor?: number | null
+  mrpMinor?: number | null
+  couponCode?: string | null
+  contentHash: string
+  status?: $Enums.ForumContentStatus
+  locked?: boolean
+  score?: number
+  commentCount?: number
+  viewCount?: number
+  likeCount?: number
+  bodyHtml?: string | null
+  notifyReplies?: boolean
+  removalReason?: string | null
+  version?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  publishedAt?: Date | string | null
+  editedAt?: Date | string | null
+  community: Prisma.ForumCommunityCreateNestedOneWithoutPostsInput
+  author: Prisma.ForumProfileCreateNestedOneWithoutPostsInput
+  comments?: Prisma.ForumCommentCreateNestedManyWithoutPostInput
+  votes?: Prisma.ForumPostVoteCreateNestedManyWithoutPostInput
+  saves?: Prisma.ForumSaveCreateNestedManyWithoutPostInput
+  likes?: Prisma.ForumPostLikeCreateNestedManyWithoutPostInput
+  reports?: Prisma.ForumReportCreateNestedManyWithoutPostInput
+}
+
+export type ForumPostUncheckedCreateWithoutImagesInput = {
+  id?: string
+  slug: string
+  communityId: string
+  authorId: string
+  type: $Enums.ForumPostType
+  title: string
+  body: string
+  url?: string | null
+  urlHash?: string | null
+  merchantName?: string | null
+  priceMinor?: number | null
+  mrpMinor?: number | null
+  couponCode?: string | null
+  contentHash: string
+  status?: $Enums.ForumContentStatus
+  locked?: boolean
+  score?: number
+  commentCount?: number
+  viewCount?: number
+  likeCount?: number
+  bodyHtml?: string | null
+  notifyReplies?: boolean
+  removalReason?: string | null
+  version?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  publishedAt?: Date | string | null
+  editedAt?: Date | string | null
+  comments?: Prisma.ForumCommentUncheckedCreateNestedManyWithoutPostInput
+  votes?: Prisma.ForumPostVoteUncheckedCreateNestedManyWithoutPostInput
+  saves?: Prisma.ForumSaveUncheckedCreateNestedManyWithoutPostInput
+  likes?: Prisma.ForumPostLikeUncheckedCreateNestedManyWithoutPostInput
+  reports?: Prisma.ForumReportUncheckedCreateNestedManyWithoutPostInput
+}
+
+export type ForumPostCreateOrConnectWithoutImagesInput = {
+  where: Prisma.ForumPostWhereUniqueInput
+  create: Prisma.XOR<Prisma.ForumPostCreateWithoutImagesInput, Prisma.ForumPostUncheckedCreateWithoutImagesInput>
+}
+
+export type ForumPostUpsertWithoutImagesInput = {
+  update: Prisma.XOR<Prisma.ForumPostUpdateWithoutImagesInput, Prisma.ForumPostUncheckedUpdateWithoutImagesInput>
+  create: Prisma.XOR<Prisma.ForumPostCreateWithoutImagesInput, Prisma.ForumPostUncheckedCreateWithoutImagesInput>
+  where?: Prisma.ForumPostWhereInput
+}
+
+export type ForumPostUpdateToOneWithWhereWithoutImagesInput = {
+  where?: Prisma.ForumPostWhereInput
+  data: Prisma.XOR<Prisma.ForumPostUpdateWithoutImagesInput, Prisma.ForumPostUncheckedUpdateWithoutImagesInput>
+}
+
+export type ForumPostUpdateWithoutImagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumForumPostTypeFieldUpdateOperationsInput | $Enums.ForumPostType
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  body?: Prisma.StringFieldUpdateOperationsInput | string
+  url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  urlHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  merchantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  mrpMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentHash?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumForumContentStatusFieldUpdateOperationsInput | $Enums.ForumContentStatus
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  score?: Prisma.IntFieldUpdateOperationsInput | number
+  commentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notifyReplies?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  removalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  editedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  community?: Prisma.ForumCommunityUpdateOneRequiredWithoutPostsNestedInput
+  author?: Prisma.ForumProfileUpdateOneRequiredWithoutPostsNestedInput
+  comments?: Prisma.ForumCommentUpdateManyWithoutPostNestedInput
+  votes?: Prisma.ForumPostVoteUpdateManyWithoutPostNestedInput
+  saves?: Prisma.ForumSaveUpdateManyWithoutPostNestedInput
+  likes?: Prisma.ForumPostLikeUpdateManyWithoutPostNestedInput
+  reports?: Prisma.ForumReportUpdateManyWithoutPostNestedInput
+}
+
+export type ForumPostUncheckedUpdateWithoutImagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  communityId?: Prisma.StringFieldUpdateOperationsInput | string
+  authorId?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumForumPostTypeFieldUpdateOperationsInput | $Enums.ForumPostType
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  body?: Prisma.StringFieldUpdateOperationsInput | string
+  url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  urlHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  merchantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  mrpMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentHash?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumForumContentStatusFieldUpdateOperationsInput | $Enums.ForumContentStatus
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  score?: Prisma.IntFieldUpdateOperationsInput | number
+  commentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notifyReplies?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  removalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  editedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  comments?: Prisma.ForumCommentUncheckedUpdateManyWithoutPostNestedInput
+  votes?: Prisma.ForumPostVoteUncheckedUpdateManyWithoutPostNestedInput
+  saves?: Prisma.ForumSaveUncheckedUpdateManyWithoutPostNestedInput
+  likes?: Prisma.ForumPostLikeUncheckedUpdateManyWithoutPostNestedInput
   reports?: Prisma.ForumReportUncheckedUpdateManyWithoutPostNestedInput
 }
 
@@ -1627,6 +2191,10 @@ export type ForumPostCreateWithoutReportsInput = {
   locked?: boolean
   score?: number
   commentCount?: number
+  viewCount?: number
+  likeCount?: number
+  bodyHtml?: string | null
+  notifyReplies?: boolean
   removalReason?: string | null
   version?: number
   createdAt?: Date | string
@@ -1638,6 +2206,8 @@ export type ForumPostCreateWithoutReportsInput = {
   comments?: Prisma.ForumCommentCreateNestedManyWithoutPostInput
   votes?: Prisma.ForumPostVoteCreateNestedManyWithoutPostInput
   saves?: Prisma.ForumSaveCreateNestedManyWithoutPostInput
+  images?: Prisma.ForumPostImageCreateNestedManyWithoutPostInput
+  likes?: Prisma.ForumPostLikeCreateNestedManyWithoutPostInput
 }
 
 export type ForumPostUncheckedCreateWithoutReportsInput = {
@@ -1659,6 +2229,10 @@ export type ForumPostUncheckedCreateWithoutReportsInput = {
   locked?: boolean
   score?: number
   commentCount?: number
+  viewCount?: number
+  likeCount?: number
+  bodyHtml?: string | null
+  notifyReplies?: boolean
   removalReason?: string | null
   version?: number
   createdAt?: Date | string
@@ -1668,6 +2242,8 @@ export type ForumPostUncheckedCreateWithoutReportsInput = {
   comments?: Prisma.ForumCommentUncheckedCreateNestedManyWithoutPostInput
   votes?: Prisma.ForumPostVoteUncheckedCreateNestedManyWithoutPostInput
   saves?: Prisma.ForumSaveUncheckedCreateNestedManyWithoutPostInput
+  images?: Prisma.ForumPostImageUncheckedCreateNestedManyWithoutPostInput
+  likes?: Prisma.ForumPostLikeUncheckedCreateNestedManyWithoutPostInput
 }
 
 export type ForumPostCreateOrConnectWithoutReportsInput = {
@@ -1703,6 +2279,10 @@ export type ForumPostUpdateWithoutReportsInput = {
   locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   score?: Prisma.IntFieldUpdateOperationsInput | number
   commentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notifyReplies?: Prisma.BoolFieldUpdateOperationsInput | boolean
   removalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1714,6 +2294,8 @@ export type ForumPostUpdateWithoutReportsInput = {
   comments?: Prisma.ForumCommentUpdateManyWithoutPostNestedInput
   votes?: Prisma.ForumPostVoteUpdateManyWithoutPostNestedInput
   saves?: Prisma.ForumSaveUpdateManyWithoutPostNestedInput
+  images?: Prisma.ForumPostImageUpdateManyWithoutPostNestedInput
+  likes?: Prisma.ForumPostLikeUpdateManyWithoutPostNestedInput
 }
 
 export type ForumPostUncheckedUpdateWithoutReportsInput = {
@@ -1735,6 +2317,10 @@ export type ForumPostUncheckedUpdateWithoutReportsInput = {
   locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   score?: Prisma.IntFieldUpdateOperationsInput | number
   commentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notifyReplies?: Prisma.BoolFieldUpdateOperationsInput | boolean
   removalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1744,6 +2330,8 @@ export type ForumPostUncheckedUpdateWithoutReportsInput = {
   comments?: Prisma.ForumCommentUncheckedUpdateManyWithoutPostNestedInput
   votes?: Prisma.ForumPostVoteUncheckedUpdateManyWithoutPostNestedInput
   saves?: Prisma.ForumSaveUncheckedUpdateManyWithoutPostNestedInput
+  images?: Prisma.ForumPostImageUncheckedUpdateManyWithoutPostNestedInput
+  likes?: Prisma.ForumPostLikeUncheckedUpdateManyWithoutPostNestedInput
 }
 
 export type ForumPostCreateManyCommunityInput = {
@@ -1764,6 +2352,10 @@ export type ForumPostCreateManyCommunityInput = {
   locked?: boolean
   score?: number
   commentCount?: number
+  viewCount?: number
+  likeCount?: number
+  bodyHtml?: string | null
+  notifyReplies?: boolean
   removalReason?: string | null
   version?: number
   createdAt?: Date | string
@@ -1789,6 +2381,10 @@ export type ForumPostUpdateWithoutCommunityInput = {
   locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   score?: Prisma.IntFieldUpdateOperationsInput | number
   commentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notifyReplies?: Prisma.BoolFieldUpdateOperationsInput | boolean
   removalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1799,6 +2395,8 @@ export type ForumPostUpdateWithoutCommunityInput = {
   comments?: Prisma.ForumCommentUpdateManyWithoutPostNestedInput
   votes?: Prisma.ForumPostVoteUpdateManyWithoutPostNestedInput
   saves?: Prisma.ForumSaveUpdateManyWithoutPostNestedInput
+  images?: Prisma.ForumPostImageUpdateManyWithoutPostNestedInput
+  likes?: Prisma.ForumPostLikeUpdateManyWithoutPostNestedInput
   reports?: Prisma.ForumReportUpdateManyWithoutPostNestedInput
 }
 
@@ -1820,6 +2418,10 @@ export type ForumPostUncheckedUpdateWithoutCommunityInput = {
   locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   score?: Prisma.IntFieldUpdateOperationsInput | number
   commentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notifyReplies?: Prisma.BoolFieldUpdateOperationsInput | boolean
   removalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1829,6 +2431,8 @@ export type ForumPostUncheckedUpdateWithoutCommunityInput = {
   comments?: Prisma.ForumCommentUncheckedUpdateManyWithoutPostNestedInput
   votes?: Prisma.ForumPostVoteUncheckedUpdateManyWithoutPostNestedInput
   saves?: Prisma.ForumSaveUncheckedUpdateManyWithoutPostNestedInput
+  images?: Prisma.ForumPostImageUncheckedUpdateManyWithoutPostNestedInput
+  likes?: Prisma.ForumPostLikeUncheckedUpdateManyWithoutPostNestedInput
   reports?: Prisma.ForumReportUncheckedUpdateManyWithoutPostNestedInput
 }
 
@@ -1850,6 +2454,10 @@ export type ForumPostUncheckedUpdateManyWithoutCommunityInput = {
   locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   score?: Prisma.IntFieldUpdateOperationsInput | number
   commentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notifyReplies?: Prisma.BoolFieldUpdateOperationsInput | boolean
   removalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1876,6 +2484,10 @@ export type ForumPostCreateManyAuthorInput = {
   locked?: boolean
   score?: number
   commentCount?: number
+  viewCount?: number
+  likeCount?: number
+  bodyHtml?: string | null
+  notifyReplies?: boolean
   removalReason?: string | null
   version?: number
   createdAt?: Date | string
@@ -1901,6 +2513,10 @@ export type ForumPostUpdateWithoutAuthorInput = {
   locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   score?: Prisma.IntFieldUpdateOperationsInput | number
   commentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notifyReplies?: Prisma.BoolFieldUpdateOperationsInput | boolean
   removalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1911,6 +2527,8 @@ export type ForumPostUpdateWithoutAuthorInput = {
   comments?: Prisma.ForumCommentUpdateManyWithoutPostNestedInput
   votes?: Prisma.ForumPostVoteUpdateManyWithoutPostNestedInput
   saves?: Prisma.ForumSaveUpdateManyWithoutPostNestedInput
+  images?: Prisma.ForumPostImageUpdateManyWithoutPostNestedInput
+  likes?: Prisma.ForumPostLikeUpdateManyWithoutPostNestedInput
   reports?: Prisma.ForumReportUpdateManyWithoutPostNestedInput
 }
 
@@ -1932,6 +2550,10 @@ export type ForumPostUncheckedUpdateWithoutAuthorInput = {
   locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   score?: Prisma.IntFieldUpdateOperationsInput | number
   commentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notifyReplies?: Prisma.BoolFieldUpdateOperationsInput | boolean
   removalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1941,6 +2563,8 @@ export type ForumPostUncheckedUpdateWithoutAuthorInput = {
   comments?: Prisma.ForumCommentUncheckedUpdateManyWithoutPostNestedInput
   votes?: Prisma.ForumPostVoteUncheckedUpdateManyWithoutPostNestedInput
   saves?: Prisma.ForumSaveUncheckedUpdateManyWithoutPostNestedInput
+  images?: Prisma.ForumPostImageUncheckedUpdateManyWithoutPostNestedInput
+  likes?: Prisma.ForumPostLikeUncheckedUpdateManyWithoutPostNestedInput
   reports?: Prisma.ForumReportUncheckedUpdateManyWithoutPostNestedInput
 }
 
@@ -1962,6 +2586,10 @@ export type ForumPostUncheckedUpdateManyWithoutAuthorInput = {
   locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   score?: Prisma.IntFieldUpdateOperationsInput | number
   commentCount?: Prisma.IntFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  bodyHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notifyReplies?: Prisma.BoolFieldUpdateOperationsInput | boolean
   removalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1979,6 +2607,8 @@ export type ForumPostCountOutputType = {
   comments: number
   votes: number
   saves: number
+  images: number
+  likes: number
   reports: number
 }
 
@@ -1986,6 +2616,8 @@ export type ForumPostCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensi
   comments?: boolean | ForumPostCountOutputTypeCountCommentsArgs
   votes?: boolean | ForumPostCountOutputTypeCountVotesArgs
   saves?: boolean | ForumPostCountOutputTypeCountSavesArgs
+  images?: boolean | ForumPostCountOutputTypeCountImagesArgs
+  likes?: boolean | ForumPostCountOutputTypeCountLikesArgs
   reports?: boolean | ForumPostCountOutputTypeCountReportsArgs
 }
 
@@ -2023,6 +2655,20 @@ export type ForumPostCountOutputTypeCountSavesArgs<ExtArgs extends runtime.Types
 /**
  * ForumPostCountOutputType without action
  */
+export type ForumPostCountOutputTypeCountImagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ForumPostImageWhereInput
+}
+
+/**
+ * ForumPostCountOutputType without action
+ */
+export type ForumPostCountOutputTypeCountLikesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ForumPostLikeWhereInput
+}
+
+/**
+ * ForumPostCountOutputType without action
+ */
 export type ForumPostCountOutputTypeCountReportsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.ForumReportWhereInput
 }
@@ -2047,6 +2693,10 @@ export type ForumPostSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   locked?: boolean
   score?: boolean
   commentCount?: boolean
+  viewCount?: boolean
+  likeCount?: boolean
+  bodyHtml?: boolean
+  notifyReplies?: boolean
   removalReason?: boolean
   version?: boolean
   createdAt?: boolean
@@ -2058,6 +2708,8 @@ export type ForumPostSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   comments?: boolean | Prisma.ForumPost$commentsArgs<ExtArgs>
   votes?: boolean | Prisma.ForumPost$votesArgs<ExtArgs>
   saves?: boolean | Prisma.ForumPost$savesArgs<ExtArgs>
+  images?: boolean | Prisma.ForumPost$imagesArgs<ExtArgs>
+  likes?: boolean | Prisma.ForumPost$likesArgs<ExtArgs>
   reports?: boolean | Prisma.ForumPost$reportsArgs<ExtArgs>
   _count?: boolean | Prisma.ForumPostCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["forumPost"]>
@@ -2083,6 +2735,10 @@ export type ForumPostSelectScalar = {
   locked?: boolean
   score?: boolean
   commentCount?: boolean
+  viewCount?: boolean
+  likeCount?: boolean
+  bodyHtml?: boolean
+  notifyReplies?: boolean
   removalReason?: boolean
   version?: boolean
   createdAt?: boolean
@@ -2091,13 +2747,15 @@ export type ForumPostSelectScalar = {
   editedAt?: boolean
 }
 
-export type ForumPostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "communityId" | "authorId" | "type" | "title" | "body" | "url" | "urlHash" | "merchantName" | "priceMinor" | "mrpMinor" | "couponCode" | "contentHash" | "status" | "locked" | "score" | "commentCount" | "removalReason" | "version" | "createdAt" | "updatedAt" | "publishedAt" | "editedAt", ExtArgs["result"]["forumPost"]>
+export type ForumPostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "communityId" | "authorId" | "type" | "title" | "body" | "url" | "urlHash" | "merchantName" | "priceMinor" | "mrpMinor" | "couponCode" | "contentHash" | "status" | "locked" | "score" | "commentCount" | "viewCount" | "likeCount" | "bodyHtml" | "notifyReplies" | "removalReason" | "version" | "createdAt" | "updatedAt" | "publishedAt" | "editedAt", ExtArgs["result"]["forumPost"]>
 export type ForumPostInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   community?: boolean | Prisma.ForumCommunityDefaultArgs<ExtArgs>
   author?: boolean | Prisma.ForumProfileDefaultArgs<ExtArgs>
   comments?: boolean | Prisma.ForumPost$commentsArgs<ExtArgs>
   votes?: boolean | Prisma.ForumPost$votesArgs<ExtArgs>
   saves?: boolean | Prisma.ForumPost$savesArgs<ExtArgs>
+  images?: boolean | Prisma.ForumPost$imagesArgs<ExtArgs>
+  likes?: boolean | Prisma.ForumPost$likesArgs<ExtArgs>
   reports?: boolean | Prisma.ForumPost$reportsArgs<ExtArgs>
   _count?: boolean | Prisma.ForumPostCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -2110,6 +2768,8 @@ export type $ForumPostPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     comments: Prisma.$ForumCommentPayload<ExtArgs>[]
     votes: Prisma.$ForumPostVotePayload<ExtArgs>[]
     saves: Prisma.$ForumSavePayload<ExtArgs>[]
+    images: Prisma.$ForumPostImagePayload<ExtArgs>[]
+    likes: Prisma.$ForumPostLikePayload<ExtArgs>[]
     reports: Prisma.$ForumReportPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -2131,6 +2791,10 @@ export type $ForumPostPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     locked: boolean
     score: number
     commentCount: number
+    viewCount: number
+    likeCount: number
+    bodyHtml: string | null
+    notifyReplies: boolean
     removalReason: string | null
     version: number
     createdAt: Date
@@ -2482,6 +3146,8 @@ export interface Prisma__ForumPostClient<T, Null = never, ExtArgs extends runtim
   comments<T extends Prisma.ForumPost$commentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ForumPost$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ForumCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   votes<T extends Prisma.ForumPost$votesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ForumPost$votesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ForumPostVotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   saves<T extends Prisma.ForumPost$savesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ForumPost$savesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ForumSavePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  images<T extends Prisma.ForumPost$imagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ForumPost$imagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ForumPostImagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  likes<T extends Prisma.ForumPost$likesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ForumPost$likesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ForumPostLikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reports<T extends Prisma.ForumPost$reportsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ForumPost$reportsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ForumReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -2530,6 +3196,10 @@ export interface ForumPostFieldRefs {
   readonly locked: Prisma.FieldRef<"ForumPost", 'Boolean'>
   readonly score: Prisma.FieldRef<"ForumPost", 'Int'>
   readonly commentCount: Prisma.FieldRef<"ForumPost", 'Int'>
+  readonly viewCount: Prisma.FieldRef<"ForumPost", 'Int'>
+  readonly likeCount: Prisma.FieldRef<"ForumPost", 'Int'>
+  readonly bodyHtml: Prisma.FieldRef<"ForumPost", 'String'>
+  readonly notifyReplies: Prisma.FieldRef<"ForumPost", 'Boolean'>
   readonly removalReason: Prisma.FieldRef<"ForumPost", 'String'>
   readonly version: Prisma.FieldRef<"ForumPost", 'Int'>
   readonly createdAt: Prisma.FieldRef<"ForumPost", 'DateTime'>
@@ -2953,6 +3623,54 @@ export type ForumPost$savesArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.ForumSaveScalarFieldEnum | Prisma.ForumSaveScalarFieldEnum[]
+}
+
+/**
+ * ForumPost.images
+ */
+export type ForumPost$imagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ForumPostImage
+   */
+  select?: Prisma.ForumPostImageSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ForumPostImage
+   */
+  omit?: Prisma.ForumPostImageOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ForumPostImageInclude<ExtArgs> | null
+  where?: Prisma.ForumPostImageWhereInput
+  orderBy?: Prisma.ForumPostImageOrderByWithRelationInput | Prisma.ForumPostImageOrderByWithRelationInput[]
+  cursor?: Prisma.ForumPostImageWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ForumPostImageScalarFieldEnum | Prisma.ForumPostImageScalarFieldEnum[]
+}
+
+/**
+ * ForumPost.likes
+ */
+export type ForumPost$likesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ForumPostLike
+   */
+  select?: Prisma.ForumPostLikeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ForumPostLike
+   */
+  omit?: Prisma.ForumPostLikeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ForumPostLikeInclude<ExtArgs> | null
+  where?: Prisma.ForumPostLikeWhereInput
+  orderBy?: Prisma.ForumPostLikeOrderByWithRelationInput | Prisma.ForumPostLikeOrderByWithRelationInput[]
+  cursor?: Prisma.ForumPostLikeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ForumPostLikeScalarFieldEnum | Prisma.ForumPostLikeScalarFieldEnum[]
 }
 
 /**

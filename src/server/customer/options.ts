@@ -1,5 +1,6 @@
 import "server-only";
 import type { NextAuthOptions } from "next-auth";
+import { encode as defaultEncode } from "next-auth/jwt";
 import type { Provider } from "next-auth/providers/index";
 import Google from "next-auth/providers/google";
 import Apple from "next-auth/providers/apple";
@@ -9,6 +10,7 @@ import { getDatabase } from "@/server/db/client";
 import { hashOpaqueToken } from "@/server/auth/crypto";
 import { verifiedProviderEmail } from "@/features/customer/validation";
 import { loginCustomer } from "./service";
+import { customerForProvider } from "./provider-login";
 import { clientIpFromHeaders } from "@/server/client-ip";
 
 export function customerProviders() {
@@ -17,6 +19,7 @@ export function customerProviders() {
     apple: Boolean(process.env.NEXTAUTH_URL?.startsWith("https://") && process.env.APPLE_CLIENT_ID && process.env.APPLE_CLIENT_SECRET),
   };
 }
+const REMEMBER_SECONDS = 30 * 86400;
 export function getCustomerAuthOptions(): NextAuthOptions {
   const env = getAuthEnv(), enabled = customerProviders(), secure = env.NEXTAUTH_URL.startsWith("https://");
   const providers: Provider[] = [
@@ -46,7 +49,9 @@ export function getCustomerAuthOptions(): NextAuthOptions {
   return {
     providers,
     secret: hashOpaqueToken("customer-nextauth", env.NEXTAUTH_SECRET),
-    session: { strategy: "jwt", maxAge: 86400 },
+    // "Remember me" keeps the sign-in for 30 days; without it the sign-in ends after 24 hours (the token itself carries that limit).
+    session: { strategy: "jwt", maxAge: REMEMBER_SECONDS },
+    jwt: { maxAge: REMEMBER_SECONDS, encode: (params) => defaultEncode({ ...params, maxAge: params.token?.remember ? REMEMBER_SECONDS : 86400 }) },
     pages: { signIn: "/account", error: "/account" },
     cookies: {
       sessionToken: { name: (secure ? "__Secure-" : "") + "md-customer-session", options: { httpOnly: true, sameSite: "lax", path: "/", secure } },
@@ -63,69 +68,13 @@ export function getCustomerAuthOptions(): NextAuthOptions {
         const email = user.email?.trim().toLowerCase();
         if (!email) return false;
 
-        const displayName = user.name?.slice(0, 80) || "MetaDeals4U shopper";
         const profileFields = profile as unknown as Record<string, unknown>;
         const providerImage = [profileFields.picture, profileFields.avatar_url].find(
           (value): value is string => typeof value === "string" && value.length > 0
         );
-        const avatarImage = user.image || providerImage || null;
-
         try {
-          const customer = await getDatabase().$transaction(async (tx) => {
-            const identity = await tx.customerIdentity.findUnique({
-              where: { provider_subject: { provider: account.provider, subject: account.providerAccountId } },
-              include: { customer: true },
-            });
-            if (identity) {
-              // Update details if missing
-              if (!identity.customer.image && avatarImage) {
-                await tx.customer.update({ where: { id: identity.customerId }, data: { image: avatarImage } });
-              }
-              await tx.customerIdentity.update({
-                where: { id: identity.id },
-                data: { email, name: displayName, avatarUrl: avatarImage },
-              });
-              return identity.customer;
-            }
-
-            const existingCustomer = await tx.customer.findUnique({ where: { email } });
-            if (existingCustomer) {
-              // Link identity to existing customer with same email
-              await tx.customerIdentity.create({
-                data: {
-                  customerId: existingCustomer.id,
-                  provider: account.provider,
-                  subject: account.providerAccountId,
-                  email,
-                  name: displayName,
-                  avatarUrl: avatarImage,
-                },
-              });
-              if (!existingCustomer.image && avatarImage) {
-                await tx.customer.update({ where: { id: existingCustomer.id }, data: { image: avatarImage } });
-              }
-              return existingCustomer;
-            }
-
-            return tx.customer.create({
-              data: {
-                email,
-                name: displayName,
-                image: avatarImage,
-                emailVerifiedAt: new Date(),
-                identities: {
-                  create: {
-                    provider: account.provider,
-                    subject: account.providerAccountId,
-                    email,
-                    name: displayName,
-                    avatarUrl: avatarImage,
-                  },
-                },
-              },
-            });
-          });
-          if (!customer || customer.disabledAt) return false;
+          const customer = await customerForProvider({ provider: account.provider as "google" | "apple", subject: account.providerAccountId, email, name: user.name, image: user.image || providerImage });
+          if (!customer) return false;
           user.id = customer.id;
           return true;
         } catch (err) {
@@ -136,6 +85,8 @@ export function getCustomerAuthOptions(): NextAuthOptions {
       async jwt({ token, user }) {
         if (user) {
           token.customerId = user.id;
+          // Only password sign-ins carry the "remember me" choice; Google and Apple sign-ins keep the short 24 hour session.
+          token.remember = (user as { remember?: boolean }).remember === true;
         }
         return token;
       },

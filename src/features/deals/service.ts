@@ -1,3 +1,4 @@
+import { HOME_PAGE_SIZE } from "./page-size";
 import "server-only";
 import { getDatabase } from "@/server/db/client";
 import { listPublicDeals } from "@/server/deals/repository";
@@ -28,7 +29,7 @@ export async function getHomepageListing(input: ListingInput) {
 
   return { ...result, data: result.data.map(toCard), source: "database" as const };
 }
-export async function getHomepageDeals() {
-  const result = await getHomepageListing(listingSchema.parse({ limit: 15 }));
-  return { ...result, deals: result.data };
+export async function getHomepageDeals(page = 1) {
+  const result = await getHomepageListing(listingSchema.parse({ limit: HOME_PAGE_SIZE, page }));
+  return { ...result, deals: result.data, totalPages: "totalPages" in result ? result.totalPages : 1 };
 }

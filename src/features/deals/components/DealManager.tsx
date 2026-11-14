@@ -1259,6 +1259,14 @@ export function DealManager({ role }: { role: AdminRole }) {
     });
   }
 
+  function updateExpired(row: Row, expired: boolean) {
+    void run(async () => {
+      const result = await request<{ data: Row }>(`deals/${row.id}/status`, "POST", { version: row.version, expired });
+      setRows((current) => current.map((item) => item.id === row.id ? result.data : item));
+      if (selected?.id === row.id) setSelected(result.data);
+    });
+  }
+
   function edit(row: Row) {
     const data: AdminDealForm = {
       slug: row.slug,
@@ -3052,6 +3060,28 @@ export function DealManager({ role }: { role: AdminRole }) {
                 </span>
               </div>
               <div style={{ display: "flex", gap: 8 }}>
+                {row.everPublished && ["PUBLISHED", "EXPIRED"].includes(row.status) && (
+                  <div className={styles.dealStatusActions}>
+                    <button
+                      type="button"
+                      className={`${styles.dealActiveButton} ${row.status === "EXPIRED" ? styles.dealActiveButtonDisabled : ""}`}
+                      disabled={busy || row.status === "EXPIRED" || !roleCan(role, "deal:publish")}
+                      aria-disabled={row.status === "EXPIRED"}
+                      title={row.status === "EXPIRED" ? "Expired deals cannot be active until you clear the expired checkbox" : "Deal is active"}
+                    >
+                      Active
+                    </button>
+                    <label className={styles.expiredCheckbox}>
+                      <input
+                        type="checkbox"
+                        checked={row.status === "EXPIRED"}
+                        disabled={busy || !roleCan(role, "deal:publish")}
+                        onChange={(event) => updateExpired(row, event.target.checked)}
+                      />
+                      Expired Deals
+                    </label>
+                  </div>
+                )}
                 <button type="button" className={styles.dealCardEdit} onClick={() => edit(row)} aria-label={`Edit ${row.title}`}>
                   ✏️ Edit
                 </button>

@@ -5,7 +5,7 @@ import { AdminNav } from "@/components/admin/AdminNav";
 import styles from "./analytics-dashboard.module.css";
 
 type Overview = {
-  views: number; visitors: number; sessions: number; avgSessionSeconds: number; pagesPerSession: number; bounceRate: number; returningRate: number;
+  views: number; visitors: number; uniqueVisitors: number; sessions: number; avgSessionSeconds: number; pagesPerSession: number; bounceRate: number; returningRate: number;
   dealViews: number; buyClicks: number; ctr: number; couponCopies: number; shares: number; likes: number; comments: number; modalOpens: number; searches: number;
   transactions: number; commissionMinor: number; earningsPerClickMinor: number;
 };
@@ -176,6 +176,7 @@ export function AnalyticsDashboard() {
             <section className={styles.tiles} aria-label="Key numbers">
               <Tile label="Page views" value={fmt(c.views)} now={c.views} before={p.views} />
               <Tile label="Visitors (per day)" value={fmt(c.visitors)} now={c.visitors} before={p.visitors} />
+              <Tile label="Unique visitors (accepted, all days)" value={fmt(c.uniqueVisitors)} now={c.uniqueVisitors} before={p.uniqueVisitors} />
               <Tile label="Sessions (accepted)" value={fmt(c.sessions)} now={c.sessions} before={p.sessions} />
               <Tile label="Avg time on site" value={duration(c.avgSessionSeconds)} now={c.avgSessionSeconds} before={p.avgSessionSeconds} />
               <Tile label="Pages per session" value={String(c.pagesPerSession)} now={c.pagesPerSession} before={p.pagesPerSession} />

@@ -10,6 +10,8 @@ export const adminApi = (request: Request, run: (actor: Moderator) => Promise<Re
   api(async () => {
     const context = await getCurrentAuthContext();
     if (!context) throw new DealError("Sign in required.", 401);
+    // Community moderators have their own dashboard and APIs; the general admin APIs are closed to them whatever a handler checks.
+    if (context.user.role === "COMMUNITY_MODERATOR") throw new DealError("Permission denied.", 403);
     if (request.method !== "GET" && !assertSameOrigin(request)) throw new DealError("Request origin could not be verified.", 403);
     return run({ id: context.user.id, role: context.user.role });
   });

@@ -11,6 +11,7 @@ enum UserRole {
   SUPER_ADMIN
   ADMIN
   EDITOR
+  COMMUNITY_MODERATOR
 }
 
 enum UserStatus {
@@ -51,6 +52,17 @@ model User {
   reviewedSubmissions CommunityDealSubmission[] @relation("SubmissionReviewer")
   forumReportsResolved ForumReport[] @relation("ForumReportResolver")
   forumActions ForumModerationAction[] @relation("ForumModerator")
+  announcementsCreated   ForumAnnouncement[] @relation("AnnouncementCreator")
+  announcementsPublished ForumAnnouncement[] @relation("AnnouncementPublisher")
+  permissionGrants       StaffPermissionGrant[] @relation("GrantTarget")
+  permissionGrantsMade   StaffPermissionGrant[] @relation("GrantGiver")
+  /// Set only when a customer accepts a moderator invitation while signed in; email equality is never used as proof.
+  linkedCustomerId       String?        @unique @db.VarChar(191)
+  linkedCustomer         Customer?      @relation("StaffLinkedCustomer", fields: [linkedCustomerId], references: [id], onDelete: Restrict)
+  moderatorAppointment   ModeratorAppointment? @relation("AppointmentStaff")
+  appointmentsInvited    ModeratorAppointment[] @relation("AppointmentInviter")
+  warningsIssued         MemberWarning[]     @relation("WarningIssuer")
+  restrictionsIssued     MemberRestriction[] @relation("RestrictionIssuer")
   createdAt           DateTime       @default(now())
   updatedAt           DateTime       @updatedAt
 
@@ -302,6 +314,7 @@ model Deal {
   priceObservations PriceObservation[]
   videoReviews   DealVideoReview[]
   communitySubmission CommunityDealSubmission?
+  savedBy         SavedDeal[]
   comments       DealComment[]
   youtubeReviewStatus String   @default("NOT_REQUESTED") @db.VarChar(50)
   youtubeLastSearchedAt DateTime?
@@ -356,6 +369,13 @@ model Customer {
   emailVerifiedAt DateTime?
   disabledAt      DateTime?
   identities      CustomerIdentity[]
+  passwordResets  CustomerPasswordReset[]
+  appTokens       CustomerAppToken[]
+  linkedStaff     User?              @relation("StaffLinkedCustomer")
+  moderatorAppointments ModeratorAppointment[] @relation("AppointmentCustomer")
+  pushTokens      DevicePushToken[]
+  preference      CustomerPreference?
+  savedDeals      SavedDeal[]
   createdAt       DateTime           @default(now())
   updatedAt       DateTime           @updatedAt
 }
@@ -383,6 +403,20 @@ model CustomerSignupChallenge {
   expiresAt DateTime
   createdAt DateTime @default(now())
   consumedAt DateTime?
+  @@index([expiresAt])
+}
+/// One pending "forgot password" request: a six-digit code sent by email. Only a keyed hash of the code is stored.
+model CustomerPasswordReset {
+  id         String    @id
+  customerId String
+  customer   Customer  @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  codeHash   String    @db.Char(64)
+  attempts   Int       @default(0)
+  expiresAt  DateTime
+  consumedAt DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([customerId, createdAt])
   @@index([expiresAt])
 }
 model CustomerRateLimit {
@@ -826,12 +860,15 @@ model AnalyticsSession {
   browser       String   @db.VarChar(30)
   os            String   @db.VarChar(30)
   returning     Boolean  @default(false)
+  /// Keyed hash of the long-lived visitor cookie; only set for visitors who accepted analytics.
+  visitorKey    String?  @db.VarChar(32)
   customerId    String?  @db.VarChar(191)
   events        AnalyticsEvent[]
 
   @@index([startedAt])
   @@index([lastSeenAt])
   @@index([customerId])
+  @@index([visitorKey, startedAt])
 }
 
 model AnalyticsEvent {
@@ -981,6 +1018,17 @@ model ForumProfile {
   customer         Customer          @relation(fields: [customerId], references: [id], onDelete: Restrict)
   handle           String            @unique @db.VarChar(30)
   bio              String?           @db.VarChar(280)
+  displayName      String?           @db.VarChar(60)
+  location         String?           @db.VarChar(80)
+  lastSeenAt       DateTime?
+  /// Set by staff only (never by the member). Shown as the Verified member badge.
+  verifiedAt       DateTime?
+  verifiedById     String?           @db.VarChar(191)
+  followers        ForumMemberFollow[] @relation("MemberFollowed")
+  warnings         MemberWarning[]     @relation("WarningTarget")
+  restrictions     MemberRestriction[] @relation("RestrictionTarget")
+  appeals          ModerationAppeal[]  @relation("AppealAppellant")
+  following        ForumMemberFollow[] @relation("MemberFollower")
   status           ForumMemberStatus @default(ACTIVE)
   suspendedUntil   DateTime?
   suspensionReason String?           @db.VarChar(300)
@@ -995,7 +1043,13 @@ model ForumProfile {
   comments         ForumComment[]
   postVotes        ForumPostVote[]
   commentVotes     ForumCommentVote[]
+  postImages       ForumPostImage[]
+  draft            ForumPostDraft?
+  notifications    ForumNotification[] @relation("NotificationRecipient")
+  notificationsMade ForumNotification[] @relation("NotificationActor")
   saves            ForumSave[]
+  postLikes        ForumPostLike[]
+  commentLikes     ForumCommentLike[]
   follows          ForumFollow[]
   reportsMade      ForumReport[]     @relation("ForumReporter")
   reportsAgainst   ForumReport[]     @relation("ForumReportedProfile")
@@ -1024,6 +1078,10 @@ model ForumPost {
   locked        Boolean            @default(false)
   score         Int                @default(0)
   commentCount  Int                @default(0)
+  viewCount     Int                @default(0)
+  likeCount     Int                @default(0)
+  bodyHtml      String?            @db.Text
+  notifyReplies Boolean            @default(false)
   removalReason String?            @db.VarChar(300)
   version       Int                @default(1)
   createdAt     DateTime           @default(now())
@@ -1033,12 +1091,16 @@ model ForumPost {
   comments      ForumComment[]
   votes         ForumPostVote[]
   saves         ForumSave[]
+  images        ForumPostImage[]
+  likes         ForumPostLike[]
   reports       ForumReport[]
 
   @@index([status, publishedAt, id])
   @@index([communityId, status, publishedAt])
   @@index([status, score, publishedAt])
   @@index([authorId, createdAt])
+  @@index([status, commentCount, publishedAt])
+  @@index([status, viewCount, publishedAt])
   @@index([urlHash])
   @@index([authorId, contentHash])
 }
@@ -1056,14 +1118,18 @@ model ForumComment {
   body          String             @db.Text
   status        ForumContentStatus @default(PUBLISHED)
   score         Int                @default(0)
+  likeCount     Int                @default(0)
+  bodyHtml      String?            @db.Text
   removalReason String?            @db.VarChar(300)
   version       Int                @default(1)
   createdAt     DateTime           @default(now())
   updatedAt     DateTime           @updatedAt
   editedAt      DateTime?
   votes         ForumCommentVote[]
+  likes         ForumCommentLike[]
   reports       ForumReport[]
 
+  @@index([postId, likeCount])
   @@index([postId, parentId, createdAt])
   @@index([parentId, createdAt])
   @@index([authorId, createdAt])
@@ -1097,6 +1163,31 @@ model ForumCommentVote {
   @@index([profileId])
 }
 
+/// A like is separate from a vote (votes rank content, likes only say "I liked this"); one per member and item.
+model ForumPostLike {
+  id        String       @id @default(cuid())
+  postId    String
+  post      ForumPost    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  profileId String
+  profile   ForumProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  createdAt DateTime     @default(now())
+
+  @@unique([postId, profileId])
+  @@index([profileId])
+}
+
+model ForumCommentLike {
+  id        String       @id @default(cuid())
+  commentId String
+  comment   ForumComment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  profileId String
+  profile   ForumProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  createdAt DateTime     @default(now())
+
+  @@unique([commentId, profileId])
+  @@index([profileId])
+}
+
 model ForumSave {
   id        String       @id @default(cuid())
   postId    String
@@ -1119,6 +1210,87 @@ model ForumFollow {
 
   @@unique([communityId, profileId])
   @@index([profileId])
+}
+
+/// Pictures of a discussion (JPEG, PNG or WebP re-encoded to WebP). postId stays empty while the author is still composing.
+model ForumPostImage {
+  id         String       @id @default(cuid())
+  postId     String?
+  post       ForumPost?   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  profileId  String
+  profile    ForumProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  position   Int          @default(0)
+  storageKey String       @db.VarChar(160)
+  provider   String       @db.VarChar(10)
+  width      Int
+  height     Int
+  bytes      Int
+  createdAt  DateTime     @default(now())
+
+  @@index([postId, position])
+  @@index([profileId, postId, createdAt])
+}
+
+/// One unfinished discussion per member, private to them.
+model ForumPostDraft {
+  id        String       @id @default(cuid())
+  profileId String       @unique
+  profile   ForumProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  payload   Json
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+}
+
+/// A notice for a member (someone replied, or a moderator acted). Post title and link are copied in so the list needs no joins; moderators are never named.
+model ForumNotification {
+  id          String        @id @default(cuid())
+  recipientId String
+  recipient   ForumProfile  @relation("NotificationRecipient", fields: [recipientId], references: [id], onDelete: Cascade)
+  actorId     String?
+  actor       ForumProfile? @relation("NotificationActor", fields: [actorId], references: [id], onDelete: SetNull)
+  type        String        @db.VarChar(30)
+  postId      String
+  postSlug    String        @db.VarChar(120)
+  postTitle   String        @db.VarChar(200)
+  commentId   String?
+  readAt      DateTime?
+  createdAt   DateTime      @default(now())
+
+  @@index([recipientId, readAt, createdAt])
+  @@index([createdAt])
+}
+
+/// Official announcements. Publicly they always appear as "MetaDeals4U Team"; the staff member who wrote and published each one is kept here (and in the audit log), never shown to members.
+model ForumAnnouncement {
+  id            String    @id @default(cuid())
+  slug          String    @unique @db.VarChar(120)
+  title         String    @db.VarChar(200)
+  body          String    @db.Text
+  bodyHtml      String?   @db.Text
+  status        String    @default("DRAFT") @db.VarChar(12)
+  createdById   String
+  createdBy     User      @relation("AnnouncementCreator", fields: [createdById], references: [id], onDelete: Restrict)
+  publishedById String?
+  publishedBy   User?     @relation("AnnouncementPublisher", fields: [publishedById], references: [id], onDelete: Restrict)
+  version       Int       @default(1)
+  publishedAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([status, publishedAt])
+}
+
+/// A permission granted to one staff member on top of their role (for example announcement:publish for an editor).
+model StaffPermissionGrant {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation("GrantTarget", fields: [userId], references: [id], onDelete: Cascade)
+  permission  String   @db.VarChar(60)
+  grantedById String?
+  grantedBy   User?    @relation("GrantGiver", fields: [grantedById], references: [id], onDelete: SetNull)
+  createdAt   DateTime @default(now())
+
+  @@unique([userId, permission])
 }
 
 model ForumReport {
@@ -1186,6 +1358,15 @@ model DmThread {
   lastMessageAt DateTime        @default(now())
   lowReadAt     DateTime?
   highReadAt    DateTime?
+  lowDeliveredAt  DateTime?
+  highDeliveredAt DateTime?
+  lowMutedAt      DateTime?
+  highMutedAt     DateTime?
+  lowArchivedAt   DateTime?
+  highArchivedAt  DateTime?
+  /// "Delete conversation" only hides it for that member: messages up to this moment are no longer shown to them.
+  lowClearedAt    DateTime?
+  highClearedAt   DateTime?
   createdAt     DateTime        @default(now())
   messages      DmMessage[]
 
@@ -1201,9 +1382,15 @@ model DmMessage {
   senderId  String
   sender    ForumProfile @relation("DmSender", fields: [senderId], references: [id], onDelete: Cascade)
   body      String       @db.Text
+  /// TEXT, DEAL or DISCUSSION. For a share, refId is the deal or discussion id and the card is built from the live record.
+  kind      String       @default("TEXT") @db.VarChar(12)
+  refId     String?      @db.VarChar(191)
+  /// Chosen by the sending device so a retried send is stored only once.
+  clientId  String?      @db.VarChar(40)
   deleted   Boolean      @default(false)
   createdAt DateTime     @default(now())
 
+  @@unique([senderId, clientId])
   @@index([threadId, createdAt])
 }
 
@@ -1238,4 +1425,192 @@ model DmReport {
 
   @@unique([reporterId, messageId])
   @@index([status, createdAt])
+}
+
+/// Sign-in token for the native apps. Only its SHA-256 is stored; the app keeps the token in the device's secure storage.
+model CustomerAppToken {
+  id         String    @id @default(cuid())
+  customerId String
+  customer   Customer  @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  tokenHash  String    @unique @db.Char(64)
+  /// Refresh token (hash only). It is replaced on every use; the previous one is kept so a replayed old token ends the whole sign-in.
+  refreshHash        String?  @unique @db.Char(64)
+  prevRefreshHash    String?  @db.Char(64)
+  refreshExpiresAt   DateTime?
+  device     String?   @db.VarChar(80)
+  expiresAt  DateTime
+  lastUsedAt DateTime?
+  revokedAt  DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([customerId])
+}
+
+/// One member following another (public: shown as follower counts).
+model ForumMemberFollow {
+  id         String       @id @default(cuid())
+  followerId String
+  follower   ForumProfile @relation("MemberFollower", fields: [followerId], references: [id], onDelete: Cascade)
+  followedId String
+  followed   ForumProfile @relation("MemberFollowed", fields: [followedId], references: [id], onDelete: Cascade)
+  createdAt  DateTime     @default(now())
+
+  @@unique([followerId, followedId])
+  @@index([followedId])
+}
+
+/// A phone registered for push alerts (FCM token; it also reaches iPhones through Firebase). Alerts are sent only when a provider is configured.
+model DevicePushToken {
+  id         String   @id @default(cuid())
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  platform   String   @db.VarChar(10)
+  token      String   @unique @db.VarChar(255)
+  device     String?  @db.VarChar(80)
+  createdAt  DateTime @default(now())
+  lastSeenAt DateTime @default(now())
+
+  @@index([customerId])
+}
+
+/// A customer invited to moderate. The invitation token is single use and stored only as a hash. Status: INVITED, PROBATION, CONFIRMED, REVOKED, DECLINED.
+model ModeratorAppointment {
+  id                  String    @id @default(cuid())
+  customerId          String
+  customer            Customer  @relation("AppointmentCustomer", fields: [customerId], references: [id], onDelete: Restrict)
+  invitedById         String
+  invitedBy           User      @relation("AppointmentInviter", fields: [invitedById], references: [id], onDelete: Restrict)
+  staffUserId         String?   @unique
+  staffUser           User?     @relation("AppointmentStaff", fields: [staffUserId], references: [id], onDelete: Restrict)
+  status              String    @default("INVITED") @db.VarChar(12)
+  inviteHash          String?   @unique @db.Char(64)
+  inviteExpiresAt     DateTime?
+  inviteNote          String?   @db.VarChar(300)
+  guidelinesVersion   String?   @db.VarChar(20)
+  guidelinesAcceptedAt DateTime?
+  acceptedAt          DateTime?
+  probationEndsAt     DateTime?
+  extensions          Int       @default(0)
+  confirmedAt         DateTime?
+  revokedAt           DateTime?
+  version             Int       @default(1)
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  events              ModeratorAppointmentEvent[]
+
+  @@index([customerId, status])
+  @@index([status])
+}
+
+/// Append-only history of an appointment (invited, accepted, extended, confirmed, revoked) with the actor and the stated reason.
+model ModeratorAppointmentEvent {
+  id            String               @id @default(cuid())
+  appointmentId String
+  appointment   ModeratorAppointment @relation(fields: [appointmentId], references: [id], onDelete: Restrict)
+  actorId       String?              @db.VarChar(191)
+  action        String               @db.VarChar(30)
+  reason        String?              @db.VarChar(300)
+  createdAt     DateTime             @default(now())
+
+  @@index([appointmentId, createdAt])
+}
+
+/// A private warning to a member. The member sees the reason, never which moderator issued it.
+model MemberWarning {
+  id         String       @id @default(cuid())
+  profileId  String
+  profile    ForumProfile @relation("WarningTarget", fields: [profileId], references: [id], onDelete: Restrict)
+  issuedById String
+  issuedBy   User         @relation("WarningIssuer", fields: [issuedById], references: [id], onDelete: Restrict)
+  reason     String       @db.VarChar(300)
+  postId     String?      @db.VarChar(191)
+  commentId  String?      @db.VarChar(191)
+  status     String       @default("ACTIVE") @db.VarChar(10)
+  createdAt  DateTime     @default(now())
+
+  @@index([profileId, createdAt])
+}
+
+/// A time-limited ban on posting (discussions, comments, replies, community deal submissions). Never touches ForumProfile.status.
+model MemberRestriction {
+  id           String       @id @default(cuid())
+  profileId    String
+  profile      ForumProfile @relation("RestrictionTarget", fields: [profileId], references: [id], onDelete: Restrict)
+  scope        String       @default("POSTING") @db.VarChar(12)
+  startsAt     DateTime     @default(now())
+  expiresAt    DateTime
+  reason       String       @db.VarChar(300)
+  issuedById   String
+  issuedBy     User         @relation("RestrictionIssuer", fields: [issuedById], references: [id], onDelete: Restrict)
+  issuedByRole String       @db.VarChar(24)
+  postId       String?      @db.VarChar(191)
+  commentId    String?      @db.VarChar(191)
+  reportId     String?      @db.VarChar(191)
+  revokedAt    DateTime?
+  revokedById  String?      @db.VarChar(191)
+  revokeReason String?      @db.VarChar(300)
+  createdAt    DateTime     @default(now())
+
+  @@index([profileId, expiresAt])
+}
+
+/// A member's appeal against a warning, restriction or content action. Decided by an administrator who did not take the action.
+model ModerationAppeal {
+  id              String       @id @default(cuid())
+  profileId       String
+  profile         ForumProfile @relation("AppealAppellant", fields: [profileId], references: [id], onDelete: Restrict)
+  targetType      String       @db.VarChar(12)
+  targetId        String       @db.VarChar(191)
+  originalActorId String       @db.VarChar(191)
+  message         String       @db.VarChar(1000)
+  status          String       @default("OPEN") @db.VarChar(12)
+  decidedById     String?      @db.VarChar(191)
+  decidedAt       DateTime?
+  decisionNote    String?      @db.VarChar(500)
+  version         Int          @default(1)
+  createdAt       DateTime     @default(now())
+
+  @@unique([profileId, targetType, targetId])
+  @@index([status, createdAt])
+}
+
+/// A redacted pointer to content a moderator hid as sensitive. It holds no content; only administrators can open the hidden item.
+model ModerationEscalation {
+  id          String    @id @default(cuid())
+  targetType  String    @db.VarChar(10)
+  targetId    String    @db.VarChar(191)
+  category    String    @db.VarChar(30)
+  createdById String    @db.VarChar(191)
+  status      String    @default("OPEN") @db.VarChar(10)
+  handledById String?   @db.VarChar(191)
+  handledAt   DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@index([status, createdAt])
+}
+
+/// Member's own notification and display choices (one row per member, created on first save). Nothing here is sent anywhere by itself: senders must check it.
+model CustomerPreference {
+  customerId   String   @id
+  customer     Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  dealAlerts   Boolean  @default(true)
+  emailUpdates Boolean  @default(true)
+  /// IMMEDIATE, DAILY, WEEKLY or OFF
+  frequency    String   @default("IMMEDIATE") @db.VarChar(10)
+  /// Comma-separated category slugs
+  categorySlugs String? @db.VarChar(1000)
+  updatedAt    DateTime @updatedAt
+}
+
+/// A deal the member bookmarked (server-side, so it follows them across devices).
+model SavedDeal {
+  id         String   @id @default(cuid())
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  dealId     String
+  deal       Deal     @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@unique([customerId, dealId])
+  @@index([customerId, createdAt])
 }

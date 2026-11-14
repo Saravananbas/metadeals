@@ -996,3 +996,7 @@
 
 
 
+.dealStatusActions { display: flex; align-items: center; gap: 8px; }
+.dealActiveButton { border: 1px solid var(--md-color-success); border-radius: 6px; padding: 7px 12px; background: var(--md-green-100); color: var(--md-green-700); font: inherit; font-weight: 700; }
+.dealActiveButtonDisabled { border-color: var(--md-color-border); background: var(--md-color-surface-muted); color: var(--md-neutral-500); cursor: not-allowed; }
+.expiredCheckbox { display: inline-flex; align-items: center; gap: 5px; color: var(--md-color-text-secondary); font-size: 12px; white-space: nowrap; }
