@@ -620,3 +620,9 @@ body { background: radial-gradient(ellipse at 12% 18%, color-mix(in srgb, var(--
 .header-search button { width: 34px; height: 34px; border-radius: 50%; border: 0; display: grid; place-items: center; background: var(--md-color-accent); color: var(--md-white); cursor: pointer; flex: none; }
 @media (min-width: 640px) { .header-search { display: flex; } }
 @media (min-width: 1280px) { .header-search { flex-basis: 320px; } }
+
+/* Admin notification panel (NotificationCenter) reserves its width on wide screens. */
+@media (min-width: 1280px) {
+  body.md-notify-dock { --admin-notify-w: 320px; padding-right: 320px; }
+  body.md-notify-rail { --admin-notify-w: 52px; padding-right: 52px; }
+}

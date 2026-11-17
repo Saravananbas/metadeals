@@ -57,11 +57,14 @@ export function DealCard({
   saved,
   onSave,
   onView,
+  priority = false,
 }: {
   deal: Deal;
   saved: boolean;
   onSave: (id: string) => void;
   onView: (deal: Deal) => void;
+  /** The first card is usually the largest contentful paint: load it first instead of lazily. */
+  priority?: boolean;
 }) {
   const savings = getSavings(deal.originalPrice, deal.price);
   const galleryImages = useMemo(
@@ -189,6 +192,8 @@ export function DealCard({
             aria-hidden="true"
             className="deal-gallery-image"
             fill
+            loading={priority ? "eager" : undefined}
+            fetchPriority={priority ? "high" : undefined}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 20vw"
             onError={() => setFailedImage(currentImage)}
             unoptimized

@@ -5,7 +5,6 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import {
   BarChart3,
-  Bell,
   ChevronDown,
   ExternalLink,
   FolderOpen,
@@ -21,6 +20,7 @@ import {
   Zap,
 } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
+import { NotificationCenter } from "./NotificationCenter";
 import styles from "./admin-nav.module.css";
 
 type AdminUser = { name: string | null; email: string | null; role: string };
@@ -54,10 +54,6 @@ export function AdminNav(props: { active?: string; onSelectTab?: (tab: "deals" |
   const [mobileOpen, setMobileOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
-  const bellRef = useRef<HTMLDivElement>(null);
-  const [bellOpen, setBellOpen] = useState(false);
-  const [notes, setNotes] = useState<{ pendingSubmissions: number; items: { id: string; title: string; submittedAt: string; resubmitted: boolean }[] }>({ pendingSubmissions: 0, items: [] });
-  const pending = notes.pendingSubmissions;
   const navigationRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -68,23 +64,6 @@ export function AdminNav(props: { active?: string; onSelectTab?: (tab: "deals" |
       .catch(() => undefined);
     return () => controller.abort();
   }, []);
-
-  useEffect(() => {
-    let alive = true;
-    const load = () => { if (!document.hidden) void fetch("/api/v1/admin/notifications", { cache: "no-store" }).then((r) => (r.ok ? r.json() : null)).then((r) => { if (alive && r?.data) setNotes(r.data); }).catch(() => undefined); };
-    load();
-    const timer = window.setInterval(load, 60_000);
-    return () => { alive = false; window.clearInterval(timer); };
-  }, []);
-
-  useEffect(() => {
-    if (!bellOpen) return;
-    const onDown = (event: PointerEvent) => { if (event.target instanceof Node && !bellRef.current?.contains(event.target)) setBellOpen(false); };
-    const onKey = (event: KeyboardEvent) => { if (event.key === "Escape") setBellOpen(false); };
-    document.addEventListener("pointerdown", onDown);
-    document.addEventListener("keydown", onKey);
-    return () => { document.removeEventListener("pointerdown", onDown); document.removeEventListener("keydown", onKey); };
-  }, [bellOpen]);
 
   useEffect(() => {
     if (!profileOpen) return;
@@ -155,27 +134,7 @@ export function AdminNav(props: { active?: string; onSelectTab?: (tab: "deals" |
             <span className={styles.version}>v2.5</span>
           </div>
           <div className={styles.headerActions}>
-            <div className={styles.bellWrap} ref={bellRef}>
-              <button className={styles.notificationLink} type="button" aria-label={`Notifications${pending ? `, ${pending} waiting` : ""}`} aria-expanded={bellOpen} aria-haspopup="dialog" onClick={() => setBellOpen((open) => !open)}>
-                <Bell size={22} aria-hidden="true" />
-                {pending > 0 && <span className={styles.bellBadge}>{pending > 99 ? "99+" : pending}</span>}
-              </button>
-              {bellOpen && (
-                <div className={styles.bellPanel} role="dialog" aria-label="Notifications">
-                  <strong>Notifications</strong>
-                  {notes.items.length === 0 && <p className={styles.bellEmpty}>Nothing waiting for review.</p>}
-                  {notes.items.map((item) => (
-                    <Link key={item.id} href="/admin/submissions" className={styles.bellItem} onClick={() => setBellOpen(false)}>
-                      <span>{item.resubmitted ? "Resubmitted deal" : "New deal submitted"}</span>
-                      <b>{item.title}</b>
-                      <small>{new Date(item.submittedAt).toLocaleString("en-IN", { timeZone: "Asia/Kolkata", day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit", hour12: true })}</small>
-                    </Link>
-                  ))}
-                  {pending > 0 && <Link href="/admin/submissions" className={styles.bellAll} onClick={() => setBellOpen(false)}>Review all {pending} awaiting</Link>}
-                  {user?.role === "SUPER_ADMIN" && <Link href="/admin#audit-heading" className={styles.bellAll} onClick={() => setBellOpen(false)}>Recent audit activity</Link>}
-                </div>
-              )}
-            </div>
+            <NotificationCenter />
             <div className={styles.profileWrap} ref={profileRef}>
               <button
                 className={styles.profileButton}

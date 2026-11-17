@@ -49,8 +49,8 @@ export function TopDealsSection({
 
       {deals.length ? (
         <div className="deal-grid">
-          {deals.map((deal) => (
-            <DealCard key={deal.id} deal={deal} saved={savedIds.includes(deal.id)} onSave={onSave} onView={onView} />
+          {deals.map((deal, index) => (
+            <DealCard key={deal.id} priority={index === 0} deal={deal} saved={savedIds.includes(deal.id)} onSave={onSave} onView={onView} />
           ))}
         </div>
       ) : (

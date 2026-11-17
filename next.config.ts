@@ -34,7 +34,8 @@ const nextConfig: NextConfig = {
   // Only for a second local test server (own build folder); unset everywhere else.
   ...(process.env.NEXT_DIST_DIR ? { distDir: process.env.NEXT_DIST_DIR } : {}),
   // The Hostinger build server reports 64 CPUs but allows few threads; fewer build workers avoids "can't spawn worker thread".
-  experimental: { cpus: 2 },
+  // strict: a page loads only the CSS of the modules it imports (the default merges CSS across routes, so the homepage was loading community and profile styles).
+  experimental: { cpus: 2, cssChunking: "strict" },
   reactStrictMode: true,
   // Keep the dev watcher scoped to this app instead of inferring a drive-wide root.
   turbopack: { root: process.cwd() },

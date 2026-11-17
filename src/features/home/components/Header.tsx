@@ -16,11 +16,14 @@ import {
 } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
-import { signOut } from "next-auth/react";
-import { UserNamePrompt } from "@/features/customer/IdentityCard";
+import dynamic from "next/dynamic";
 import { BrandLogo } from "@/components/BrandLogo";
 import { MessagesLink } from "@/features/messages/MessagesLink";
 import type { DealFilters } from "@/features/deals/types";
+
+// Only signed-in visitors need these, so their code (next-auth client, the profile styles) stays out of the first page load.
+const UserNamePrompt = dynamic(() => import("@/features/customer/IdentityCard").then((m) => m.UserNamePrompt), { ssr: false });
+const signOutNow = () => void import("next-auth/react").then((m) => m.signOut({ callbackUrl: "/" }));
 
 export type Panel = "saved" | "stores" | "account" | "notifications" | "blog" | "bank" | null;
 
@@ -309,7 +312,7 @@ export function Header({
                 <Link href="/account" role="menuitem">My Profile</Link>
                 <Link href="/account?tab=deals" role="menuitem">My Deals</Link>
                 <Link href="/account?tab=settings" role="menuitem">Settings &amp; Security</Link>
-                <button type="button" role="menuitem" onClick={() => void signOut({ callbackUrl: "/" })}>Logout</button>
+                <button type="button" role="menuitem" onClick={signOutNow}>Logout</button>
               </div>
             )}
           </div>
