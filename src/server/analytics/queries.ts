@@ -10,14 +10,14 @@ export const RAW_RETENTION_DAYS = 90;
 const isMysql = () => (process.env.DATABASE_PROVIDER ?? (process.env.DATABASE_URL?.startsWith("mysql:") ? "mysql" : "postgresql")) === "mysql";
 
 // Provider-neutral SQL fragments (MariaDB in production and locally, PostgreSQL for the CI schema).
-const table = (name: string) => Prisma.raw(isMysql() ? `\`${name}\`` : `"${name}"`);
-const col = (name: string, alias = "") => Prisma.raw(`${alias ? alias + "." : ""}${isMysql() ? `\`${name}\`` : `"${name}"`}`);
-const istDay = (alias = "") => (isMysql() ? Prisma.sql`DATE(${col("createdAt", alias)} + INTERVAL ${IST_OFFSET_MIN} MINUTE)` : Prisma.sql`DATE(${col("createdAt", alias)} + INTERVAL '330 minutes')`);
-const istHour = () => (isMysql() ? Prisma.sql`HOUR(${col("createdAt")} + INTERVAL ${IST_OFFSET_MIN} MINUTE)` : Prisma.sql`EXTRACT(HOUR FROM ${col("createdAt")} + INTERVAL '330 minutes')`);
-const istDow = () => (isMysql() ? Prisma.sql`(DAYOFWEEK(${col("createdAt")} + INTERVAL ${IST_OFFSET_MIN} MINUTE) - 1)` : Prisma.sql`EXTRACT(DOW FROM ${col("createdAt")} + INTERVAL '330 minutes')`);
+export const table = (name: string) => Prisma.raw(isMysql() ? `\`${name}\`` : `"${name}"`);
+export const col = (name: string, alias = "") => Prisma.raw(`${alias ? alias + "." : ""}${isMysql() ? `\`${name}\`` : `"${name}"`}`);
+export const istDay = (alias = "") => (isMysql() ? Prisma.sql`DATE(${col("createdAt", alias)} + INTERVAL ${IST_OFFSET_MIN} MINUTE)` : Prisma.sql`DATE(${col("createdAt", alias)} + INTERVAL '330 minutes')`);
+export const istHour = () => (isMysql() ? Prisma.sql`HOUR(${col("createdAt")} + INTERVAL ${IST_OFFSET_MIN} MINUTE)` : Prisma.sql`EXTRACT(HOUR FROM ${col("createdAt")} + INTERVAL '330 minutes')`);
+export const istDow = () => (isMysql() ? Prisma.sql`(DAYOFWEEK(${col("createdAt")} + INTERVAL ${IST_OFFSET_MIN} MINUTE) - 1)` : Prisma.sql`EXTRACT(DOW FROM ${col("createdAt")} + INTERVAL '330 minutes')`);
 
-const num = (value: unknown) => Number(value ?? 0);
-const dayKey = (value: unknown) => (value instanceof Date ? value.toISOString().slice(0, 10) : String(value).slice(0, 10));
+export const num = (value: unknown) => Number(value ?? 0);
+export const dayKey = (value: unknown) => (value instanceof Date ? value.toISOString().slice(0, 10) : String(value).slice(0, 10));
 
 /** Start of the Indian calendar day containing `date`, as a UTC instant. */
 export function istStartOfDay(date: Date) {
@@ -37,9 +37,9 @@ export function resolveRange(preset: string, fromParam?: string | null, toParam?
   return { from: new Date(today.getTime() - (days - 1) * day), to: new Date(today.getTime() + day) };
 }
 
-const between = (range: DateRange) => ({ gte: range.from, lt: range.to });
+export const between = (range: DateRange) => ({ gte: range.from, lt: range.to });
 
-async function overview(db: Db, range: DateRange) {
+export async function overview(db: Db, range: DateRange) {
   const createdAt = between(range);
   const [types, visitorRows, dealViews, sessionAgg, bounced, returning, commission, uniqueRows] = await Promise.all([
     db.analyticsEvent.groupBy({ by: ["type"], where: { createdAt }, _count: { _all: true } }),
@@ -81,7 +81,7 @@ async function overview(db: Db, range: DateRange) {
 }
 export type Overview = Awaited<ReturnType<typeof overview>>;
 
-async function series(db: Db, range: DateRange) {
+export async function series(db: Db, range: DateRange) {
   const cutoff = new Date(Date.now() - RAW_RETENTION_DAYS * 86_400_000);
   const rawFrom = new Date(Math.max(range.from.getTime(), istStartOfDay(cutoff).getTime()));
   const byDay = new Map<string, { views: number; visitors: number; clicks: number }>();
@@ -117,7 +117,7 @@ async function topPages(db: Db, range: DateRange) {
   return rows.map((r) => ({ path: r.path, views: num(r.views), visitors: num(r.visitors), viewsPerVisitor: num(r.visitors) ? Number((num(r.views) / num(r.visitors)).toFixed(2)) : 0 }));
 }
 
-async function ranked(db: Db, range: DateRange, field: "dealId" | "merchantId" | "categoryId", limit = 15) {
+export async function ranked(db: Db, range: DateRange, field: "dealId" | "merchantId" | "categoryId", limit = 15) {
   const view = Prisma.sql`SUM(CASE WHEN ${col("type")} = 'PAGE_VIEW' THEN 1 ELSE 0 END)`;
   const click = Prisma.sql`SUM(CASE WHEN ${col("type")} = 'BUY_CLICK' THEN 1 ELSE 0 END)`;
   const rows = await db.$queryRaw<{ id: string; views: unknown; clicks: unknown }[]>(Prisma.sql`
@@ -159,7 +159,7 @@ async function sources(db: Db, range: DateRange) {
   };
 }
 
-async function heatmap(db: Db, range: DateRange) {
+export async function heatmap(db: Db, range: DateRange) {
   const rows = await db.$queryRaw<{ dow: unknown; hr: unknown; n: unknown }[]>(Prisma.sql`
     SELECT ${istDow()} AS dow, ${istHour()} AS hr, COUNT(*) AS n FROM ${table("AnalyticsEvent")}
     WHERE ${col("type")} = 'PAGE_VIEW' AND ${col("createdAt")} >= ${range.from} AND ${col("createdAt")} < ${range.to} GROUP BY dow, hr`);

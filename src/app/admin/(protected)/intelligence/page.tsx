@@ -92,11 +92,7 @@ export default async function DealIntelligencePage() {
     <main className={styles.page}>
       <AdminNav active="intelligence" />
       <header className={styles.header}>
-        <div>
-          <p className={styles.eyebrow}>MetaDeals4U · Operations</p>
-          <h1>Deal Intelligence</h1>
-          <p>Live operational records from discovery, approvals, publishing, competitors and pricing.</p>
-        </div>
+        <h1 className="sr-only">Deal Intelligence</h1>
         <span className={styles.readOnly}>Read only · Agent permissions enforced by server workflows</span>
       </header>
 

@@ -1000,3 +1000,99 @@
 .dealActiveButton { border: 1px solid var(--md-color-success); border-radius: 6px; padding: 7px 12px; background: var(--md-green-100); color: var(--md-green-700); font: inherit; font-weight: 700; }
 .dealActiveButtonDisabled { border-color: var(--md-color-border); background: var(--md-color-surface-muted); color: var(--md-neutral-500); cursor: not-allowed; }
 .expiredCheckbox { display: inline-flex; align-items: center; gap: 5px; color: var(--md-color-text-secondary); font-size: 12px; white-space: nowrap; }
+
+/* ---- Add New Deal: two-column card layout (matches the approved reference) ---- */
+.addPanel { padding: 0; margin: 16px 0; background: transparent; border: 0; border-radius: 0; }
+.addHead { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; margin-bottom: 14px; }
+.addHead h2 { margin: 0; font-size: 24px; font-weight: 800; color: var(--md-purple-950); }
+.addHead p { margin: 4px 0 0; font-size: 13px; color: var(--md-color-text-secondary); }
+.addHeadActions { display: flex; gap: 10px; flex-wrap: wrap; }
+.headSave, .headPublish { display: inline-flex; align-items: center; gap: 8px; min-height: 42px; padding: 0 18px; border-radius: 10px; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; }
+.headSave { background: var(--md-white); color: var(--md-purple-800); border: 1px solid var(--md-purple-200); }
+.headSave:hover:not(:disabled) { background: var(--md-purple-50); }
+.headPublish { background: var(--md-purple-600); color: var(--md-white); border: 1px solid var(--md-purple-600); }
+.headPublish:hover:not(:disabled) { background: var(--md-purple-700); }
+.headSave:disabled, .headPublish:disabled { opacity: .55; cursor: not-allowed; }
+
+.addLayout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; border: 0; padding: 0; margin: 0; min-width: 0; align-items: start; }
+.addMain, .addSide { display: grid; gap: 14px; min-width: 0; align-content: start; }
+.addCard { background: var(--md-white); border: 1px solid var(--md-purple-100); border-radius: 16px; padding: 16px 18px; box-shadow: var(--md-shadow-card); min-width: 0; }
+.cardHead { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; }
+.cardHead h3 { margin: 0; font-size: 15px; font-weight: 800; color: var(--md-purple-950); }
+.cardHead p { margin: 2px 0 0; font-size: 11.5px; color: var(--md-color-text-secondary); }
+.cardIcon, .fetchIcon { width: 32px; height: 32px; border-radius: 9px; display: grid; place-items: center; flex: none; background: var(--md-purple-100); color: var(--md-purple-600); }
+
+.fetchCard { background: linear-gradient(135deg, var(--md-purple-100), var(--md-purple-50) 60%, var(--md-white)); border-color: var(--md-purple-200); }
+.fetchTitle { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
+.fetchTitle h3 { margin: 0; font-size: 14px; font-weight: 800; color: var(--md-purple-950); }
+.fetchTitle h3 em { font-style: normal; color: var(--md-purple-600); }
+.fetchTitle p { margin: 2px 0 0; font-size: 11.5px; color: var(--md-color-text-secondary); }
+.fetchCard .scrapeInputRow { align-items: center; gap: 10px; flex-wrap: wrap; }
+.fetchCard .scrapeInputRow label { display: block; flex: 1 1 260px; }
+.fetchCard .scrapeBtn { display: inline-flex; align-items: center; gap: 6px; height: 38px; padding: 0 16px; border-radius: 9px; background: var(--md-purple-600); color: var(--md-white); font-size: 13px; }
+.fetchCard .scrapeBtn:hover:not(:disabled) { background: var(--md-purple-700); }
+
+.fieldGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 16px; }
+.fieldGrid.cols3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.fieldGrid.cols12 { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+.fieldGrid.cols12 > label { grid-column: span 4; }
+.fieldGrid.cols12 > label:nth-child(n+4) { grid-column: span 3; }
+.fullRow { grid-column: 1 / -1; }
+.span2 { grid-column: span 2; }
+.fieldGrid label, .mediaId { display: flex; flex-wrap: wrap; align-items: baseline; align-content: start; gap: 5px 4px; font-size: 12.5px; font-weight: 700; color: var(--md-color-text); min-width: 0; }
+/* The required star stays on the label line and every control takes its own full-width row, so all boxes line up. */
+.fieldGrid label > input, .fieldGrid label > select, .fieldGrid label > textarea, .fieldGrid label > small, .fieldGrid label > .charCount, .mediaId > input { flex: 1 0 100%; }
+.fieldGrid label b { color: var(--md-red-600); }
+.addCard input:not([type="checkbox"]):not([type="file"]), .addCard select, .addCard textarea { width: 100%; box-sizing: border-box; min-width: 0; min-height: 38px; padding: 8px 11px; border: 1px solid var(--md-purple-200); border-radius: 9px; background: var(--md-white); color: var(--md-color-text); font: inherit; font-size: 13px; font-weight: 400; }
+.addCard textarea { min-height: 92px; resize: vertical; line-height: 1.45; }
+.addCard input:focus, .addCard select:focus, .addCard textarea:focus { outline: 0; border-color: var(--md-purple-600); box-shadow: var(--md-shadow-focus); }
+.charCount { text-align: right; font-size: 11px; font-weight: 400; color: var(--md-color-text-secondary); }
+.fieldGrid small { font-weight: 400; color: var(--md-color-text-secondary); }
+
+.dealPreview { display: grid; gap: 8px; }
+.dpImage { display: grid; place-items: center; aspect-ratio: 16 / 9; border-radius: 12px; background: var(--md-purple-50); color: var(--md-purple-300); overflow: hidden; }
+.dpImage img { width: 100%; height: 100%; object-fit: contain; }
+.dpTitle { font-size: 14px; line-height: 1.3; overflow-wrap: anywhere; }
+.dpMeta { font-size: 12px; color: var(--md-color-text-secondary); }
+.dpBar { display: block; height: 9px; border-radius: 999px; background: var(--md-purple-100); }
+.dpBarShort { width: 60%; }
+.dpPrice { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.dpPrice b { font-size: 20px; color: var(--md-purple-800); }
+.dpPrice s { color: var(--md-color-text-secondary); font-size: 13px; }
+.dpOff { padding: 2px 9px; border-radius: 999px; background: var(--md-green-100); color: var(--md-green-700); font-size: 12px; font-weight: 800; }
+.dpGhost { opacity: .45; }
+.dpCoupon { font-size: 12px; color: var(--md-purple-700); font-weight: 700; }
+
+.dropZone { display: grid; justify-items: center; gap: 4px; padding: 18px 12px; text-align: center; border: 1.5px dashed var(--md-purple-300); border-radius: 12px; background: var(--md-purple-50); color: var(--md-purple-600); }
+.dropZone strong { color: var(--md-color-text); font-size: 13px; }
+.dropZone span, .dropZone small { color: var(--md-color-text-secondary); font-size: 11.5px; }
+.chooseFile { position: relative; display: inline-flex; align-items: center; justify-content: center; min-height: 36px; margin-top: 6px; padding: 0 18px; border: 1px solid var(--md-purple-300); border-radius: 9px; background: var(--md-white); color: var(--md-purple-800); font-size: 13px; font-weight: 700; cursor: pointer; overflow: hidden; }
+.chooseFile input { position: absolute; inset: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
+.chooseFile:focus-within { box-shadow: var(--md-shadow-focus); }
+.mediaId { margin-top: 12px; }
+
+.toggleRow { display: flex; gap: 10px; align-items: flex-start; padding: 6px 0; cursor: pointer; }
+.toggleRow input { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--md-purple-600); flex: none; }
+.toggleRow span { display: grid; }
+.toggleRow b { font-size: 13px; }
+.toggleRow small { font-size: 11.5px; color: var(--md-color-text-secondary); }
+
+@media (min-width: 1000px) {
+  .addLayout { grid-template-columns: minmax(0, 2.2fr) minmax(280px, 1fr); }
+}
+@media (max-width: 640px) {
+  .fieldGrid, .fieldGrid.cols3 { grid-template-columns: minmax(0, 1fr); }
+  .span2 { grid-column: auto; }
+  .fieldGrid.cols12 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .fieldGrid.cols12 > label, .fieldGrid.cols12 > label:nth-child(n+4) { grid-column: auto; }
+  .addHeadActions { width: 100%; }
+  .headSave, .headPublish { flex: 1 1 auto; justify-content: center; }
+}
+
+/* Long unbroken column lists (bulk import help) must not widen the page on phones. */
+.panel p { overflow-wrap: anywhere; }
+
+/* The detected-store badge sits inside the URL box so typing a link never pushes the box down. */
+.fetchCard .scrapeInputRow label { position: relative; }
+.fetchCard .scrapeInputRow .retailerBadge { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); margin: 0; pointer-events: none; }
+.fetchCard .scrapeInputRow label:has(.retailerBadge) input { padding-right: 96px; }

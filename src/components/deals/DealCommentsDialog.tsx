@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
+import { createPortal } from "react-dom";
 import { MessageCircle, Send, X } from "lucide-react";
 import styles from "./DealCommentsDialog.module.css";
 
@@ -103,7 +104,8 @@ export function DealCommentsDialog({ dealIdOrSlug, dealTitle, onClose }: DealCom
     }
   }
 
-  return (
+  // Rendered into <body>: inside a deal card a transformed or clipped ancestor would pin the "fixed" overlay to the card, far below the viewport.
+  return createPortal(
     <div
       className={styles.backdrop}
       onClick={(event) => {
@@ -168,6 +170,7 @@ export function DealCommentsDialog({ dealIdOrSlug, dealTitle, onClose }: DealCom
           <p className={styles.privacyNote}>No account is required. Please keep comments respectful.</p>
         </form>
       </section>
-    </div>
+    </div>,
+    document.body,
   );
 }

@@ -38,6 +38,18 @@ export async function listSubmissions(actor: ReviewActor, status: "PENDING_REVIE
   };
 }
 
+/** Admin bell: deals members have submitted that still wait for a decision. Roles that cannot review get an empty list. */
+export async function getAdminNotifications(actor: ReviewActor) {
+  if (!canReviewSubmissions(actor.role)) return { pendingSubmissions: 0, items: [] as { id: string; title: string; submittedAt: string; resubmitted: boolean }[] };
+  const db = getDatabase();
+  const where = { status: "PENDING_REVIEW" as const };
+  const [pendingSubmissions, rows] = await Promise.all([
+    db.communityDealSubmission.count({ where }),
+    db.communityDealSubmission.findMany({ where, orderBy: { submittedAt: "desc" }, take: 8, select: { id: true, title: true, submittedAt: true, resubmissions: true } }),
+  ]);
+  return { pendingSubmissions, items: rows.map((r) => ({ id: r.id, title: r.title, submittedAt: r.submittedAt.toISOString(), resubmitted: r.resubmissions > 0 })) };
+}
+
 export async function getSubmissionImage(actor: ReviewActor, id: string) {
   assertCanReview(actor);
   const row = await getDatabase().communityDealSubmission.findUnique({ where: { id }, select: { imageKey: true, imageProvider: true, imageMime: true } });

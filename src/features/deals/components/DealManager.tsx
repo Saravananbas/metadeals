@@ -11,6 +11,7 @@ import {
   formatINR,
 } from "../currency";
 import { roleCan, type AdminRole } from "@/server/auth/permissions";
+import { Calendar, Eye, ImageIcon, Link2, Save, Send, Settings, Tag, UploadCloud, Wand2 } from "lucide-react";
 import { AdminNav } from "@/components/admin/AdminNav";
 import styles from "./manager.module.css";
 
@@ -146,6 +147,8 @@ export function DealManager({ role }: { role: AdminRole }) {
   const [previewEditValue, setPreviewEditValue] = useState("");
   const [previewEditSecondaryValue, setPreviewEditSecondaryValue] = useState("");
   const [publishingDirect, setPublishingDirect] = useState<boolean>(false);
+  // Set by the header "Publish Deal" button: save first, then open the existing saved-version preview whose confirm step publishes.
+  const publishAfterSave = useRef(false);
   const activeTab: string = "deals";
 
   function merchantDomain(value: string) {
@@ -1259,6 +1262,16 @@ export function DealManager({ role }: { role: AdminRole }) {
     });
   }
 
+  /** Same two steps as the saved-version preview: preview first (gives the publish token), then publish. */
+  function publishRow(row: Row) {
+    void run(async () => {
+      const prev = await request<{ data: Row; previewToken: string }>(`deals/${row.id}/preview`, "POST", {});
+      await request<{ data: Row }>(`deals/${row.id}/publish`, "POST", { version: prev.data.version, previewToken: prev.previewToken });
+      await load();
+      setMessage(`"${row.title}" is published (or scheduled by its dates).`);
+    });
+  }
+
   function updateExpired(row: Row, expired: boolean) {
     void run(async () => {
       const result = await request<{ data: Row }>(`deals/${row.id}/status`, "POST", { version: row.version, expired });
@@ -1340,6 +1353,8 @@ export function DealManager({ role }: { role: AdminRole }) {
 
   async function save(event: FormEvent) {
     event.preventDefault();
+    const publishNow = publishAfterSave.current;
+    publishAfterSave.current = false;
     await run(async () => {
       let mrpMinor: number;
       let priceMinor: number;
@@ -1420,8 +1435,18 @@ export function DealManager({ role }: { role: AdminRole }) {
       edit(result.data);
       await load();
       setMessage("Saved. Preview this saved version before publishing.");
+      if (publishNow) {
+        setPreview(await request(`deals/${result.data.id}/preview`, "POST", {}));
+        setMessage("Saved. Review the preview below, then confirm to publish.");
+        requestAnimationFrame(() => document.getElementById("saved-preview")?.scrollIntoView({ behavior: "smooth", block: "center" }));
+      }
     });
   }
+
+  const dpMrp = Number(form.mrpRupees), dpPrice = Number(form.priceRupees);
+  const dpDiscount = form.mrpRupees !== "" && form.priceRupees !== "" && dpMrp > 0 && dpPrice >= 0 && dpPrice <= dpMrp ? Math.round(((dpMrp - dpPrice) / dpMrp) * 100) : null;
+  const dpImage = form.mediaId.trim() ? `/api/v1/media/${encodeURIComponent(form.mediaId.trim())}` : extractionResult?.data.media.primaryImageUrl.value || "";
+  const dpMerchant = directoryMerchants.find((m) => m.id === form.merchantId)?.name ?? merchants.find((m) => m.id === form.merchantId)?.name ?? "";
 
   return (
     <main className={styles.page}>
@@ -2310,14 +2335,46 @@ export function DealManager({ role }: { role: AdminRole }) {
 
       {activeTab === "deals" && (
         <>
-          <section className={styles.panel}>
-            {selected && <h2>Edit deal</h2>}
-        <form onSubmit={save}>
-          <fieldset disabled={busy || selected?.status === "ARCHIVED"} className={styles.grid}>
-            <div className={styles.scrapeContainer}>
+          <section className={`${styles.panel} ${styles.addPanel}`}>
+            <div className={styles.addHead}>
+              <div>
+                <h2>{selected ? "Edit deal" : "Add New Deal"}</h2>
+                <p>{selected ? "Update the details of this deal." : "Add a new deal to MetaDeals4U."} You can fetch details from a product URL or enter them manually.</p>
+              </div>
+              <div className={styles.addHeadActions}>
+                <button type="submit" form="deal-form" className={styles.headSave} disabled={busy || selected?.status === "ARCHIVED"} onClick={() => { publishAfterSave.current = false; }}>
+                  <Save size={16} aria-hidden="true" /> Save as Draft
+                </button>
+                <button
+                  type="button"
+                  className={styles.headPublish}
+                  disabled={busy || selected?.status === "ARCHIVED"}
+                  onClick={() => {
+                    const formEl = document.getElementById("deal-form") as HTMLFormElement | null;
+                    if (!formEl) return;
+                    publishAfterSave.current = true;
+                    if (!formEl.reportValidity()) { publishAfterSave.current = false; return; }
+                    formEl.requestSubmit();
+                  }}
+                >
+                  <Send size={16} aria-hidden="true" /> Publish Deal
+                </button>
+              </div>
+            </div>
+        <form id="deal-form" onSubmit={save}>
+          <fieldset disabled={busy || selected?.status === "ARCHIVED"} className={styles.addLayout}>
+            <div className={styles.addMain}>
+            <div className={`${styles.scrapeContainer} ${styles.addCard} ${styles.fetchCard}`}>
+              <div className={styles.fetchTitle}>
+                <span className={styles.fetchIcon}><Link2 size={18} aria-hidden="true" /></span>
+                <div>
+                  <h3>Fetch Deal from URL <em>(Recommended)</em></h3>
+                  <p>Paste an Amazon, Flipkart or other product URL to auto-fill the details.</p>
+                </div>
+              </div>
               <div className={styles.scrapeInputRow}>
                 <label>
-                  Add URL to Fetch the Deal
+                  <span className="sr-only">Add URL to Fetch the Deal</span>
                   {detectedRetailer && (
                     <span className={styles.retailerBadge}>{detectedRetailer}</span>
                   )}
@@ -2338,7 +2395,7 @@ export function DealManager({ role }: { role: AdminRole }) {
                   onClick={handleScrape}
                   className={styles.scrapeBtn}
                 >
-                  {extracting ? "Fetching..." : "Fetch"}
+                  <Wand2 size={15} aria-hidden="true" /> {extracting ? "Fetching..." : "Fetch Details"}
                 </button>
                 <button
                   type="button"
@@ -2528,8 +2585,14 @@ export function DealManager({ role }: { role: AdminRole }) {
               </div>
             )}
 
-            <label>
-              Product title
+            <section className={styles.addCard}>
+              <div className={styles.cardHead}>
+                <span className={styles.cardIcon}><Tag size={18} aria-hidden="true" /></span>
+                <div><h3>Deal Details</h3><p>Enter the basic information about the product/deal.</p></div>
+              </div>
+              <div className={styles.fieldGrid}>
+            <label className={styles.fullRow}>
+              Product title <b aria-hidden="true">*</b>
               <input
                 id="product-title-input"
                 required
@@ -2555,14 +2618,17 @@ export function DealManager({ role }: { role: AdminRole }) {
                 onChange={(e) => field("brand", e.target.value)}
               />
             </label>
-            <label>
+            <label className={styles.fullRow}>
               Description
-              <input
+              <textarea
                 required
-                type="text"
+                rows={4}
+                maxLength={2000}
+                placeholder="Write a short and attractive deal description..."
                 value={form.description}
                 onChange={(e) => field("description", e.target.value)}
               />
+              <span className={styles.charCount}>{form.description.length} / 2000</span>
             </label>
             <label>
               Category
@@ -2600,7 +2666,6 @@ export function DealManager({ role }: { role: AdminRole }) {
                   ))}
               </select>
             </label>
-
             <label>
               Sub Category
               <select
@@ -2648,7 +2713,14 @@ export function DealManager({ role }: { role: AdminRole }) {
                 })()}
               </select>
             </label>
-
+              </div>
+            </section>
+            <section className={styles.addCard}>
+              <div className={styles.cardHead}>
+                <span className={styles.cardIcon}><Tag size={18} aria-hidden="true" /></span>
+                <div><h3>Pricing &amp; Merchant</h3><p>Set the price, merchant and affiliate details.</p></div>
+              </div>
+              <div className={`${styles.fieldGrid} ${styles.cols3}`}>
             <label>
               Primary merchant
               <select required value={form.merchantId} onChange={(e) => field("merchantId", e.target.value)}>
@@ -2703,7 +2775,7 @@ export function DealManager({ role }: { role: AdminRole }) {
                 <small>{formatINR(Number(form.priceRupees))}</small>
               )}
             </label>
-            <label>
+            <label className={styles.span2}>
               Coupon code (optional)
               <input
                 type="text"
@@ -2714,7 +2786,7 @@ export function DealManager({ role }: { role: AdminRole }) {
               />
             </label>
             {roleCan(role, "affiliate:manage") && (
-              <label>
+              <label className={styles.span2}>
                 Manual affiliate URL (optional)
                 <input
                   type="url"
@@ -2723,22 +2795,14 @@ export function DealManager({ role }: { role: AdminRole }) {
                 />
               </label>
             )}
-            <label>
-              Image upload (JPEG/PNG/WebP, 5 MB)
-              <input
-                type="file"
-                accept="image/png,image/jpeg,image/webp"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) uploadFormImage(file);
-                }}
-              />
-              <small>Or copy an image and press Ctrl+V anywhere on this page.</small>
-            </label>
-            <label>
-              Uploaded media ID
-              <input required value={form.mediaId} onChange={(e) => field("mediaId", e.target.value)} />
-            </label>
+              </div>
+            </section>
+            <section className={styles.addCard}>
+              <div className={styles.cardHead}>
+                <span className={styles.cardIcon}><Calendar size={18} aria-hidden="true" /></span>
+                <div><h3>Scheduling &amp; Settings</h3><p>Control when the deal is published and other optional settings.</p></div>
+              </div>
+              <div className={`${styles.fieldGrid} ${styles.cols12}`}>
             {(["publishedAt", "startsAt", "expiresAt"] as const).map((key) => (
               <label key={key}>
                 {
@@ -2796,22 +2860,8 @@ export function DealManager({ role }: { role: AdminRole }) {
                 <option>EXPIRED</option>
               </select>
             </label>
-            <label>
-              <input
-                type="checkbox"
-                checked={form.featured}
-                onChange={(e) => field("featured", e.target.checked)}
-              />{" "}
-              Featured
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                checked={form.trending}
-                onChange={(e) => field("trending", e.target.checked)}
-              />{" "}
-              Trending
-            </label>
+              </div>
+            </section>
 
             {/* YouTube Review Videos Configuration in Form */}
             <div className={styles.ytDiscoveryCard}>
@@ -2910,6 +2960,74 @@ export function DealManager({ role }: { role: AdminRole }) {
                 New deal
               </button>
             </div>
+            </div>
+            <aside className={styles.addSide}>
+              <section className={styles.addCard}>
+                <div className={styles.cardHead}>
+                  <span className={styles.cardIcon}><Eye size={18} aria-hidden="true" /></span>
+                  <div><h3>Deal Preview</h3><p>How the deal will look (live preview)</p></div>
+                </div>
+                <div className={styles.dealPreview} aria-live="polite">
+                  <div className={styles.dpImage}>
+                    {dpImage ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={dpImage} alt="" referrerPolicy="no-referrer" />
+                    ) : <ImageIcon size={44} aria-hidden="true" />}
+                  </div>
+                  {form.title.trim() ? <strong className={styles.dpTitle}>{form.title}</strong> : <><span className={styles.dpBar} /><span className={`${styles.dpBar} ${styles.dpBarShort}`} /></>}
+                  {(form.brand || dpMerchant) && <span className={styles.dpMeta}>{[form.brand, dpMerchant].filter(Boolean).join(" · ")}</span>}
+                  <div className={styles.dpPrice}>
+                    <b className={form.priceRupees === "" ? styles.dpGhost : ""}>{form.priceRupees !== "" && !isNaN(dpPrice) ? formatINR(dpPrice) : "₹1,499"}</b>
+                    <s className={form.mrpRupees === "" ? styles.dpGhost : ""}>{form.mrpRupees !== "" && !isNaN(dpMrp) ? formatINR(dpMrp) : "₹1,999"}</s>
+                    <span className={`${styles.dpOff} ${dpDiscount === null ? styles.dpGhost : ""}`}>{dpDiscount === null ? "25% OFF" : `${dpDiscount}% OFF`}</span>
+                  </div>
+                  {form.couponCode ? <span className={styles.dpCoupon}>Coupon: {form.couponCode}</span> : null}
+                </div>
+              </section>
+
+              <section className={styles.addCard}>
+                <div className={styles.cardHead}>
+                  <span className={styles.cardIcon}><ImageIcon size={18} aria-hidden="true" /></span>
+                  <div><h3>Media &amp; Appearance</h3><p>Add product image and additional display info.</p></div>
+                </div>
+                <div className={styles.dropZone}>
+                  <UploadCloud size={34} aria-hidden="true" />
+                  <strong>Upload Product Image</strong>
+                  <span>JPG, PNG or WebP (max 5 MB)</span>
+                  <label className={styles.chooseFile}>
+                    Choose File
+                    <input
+                      type="file"
+                      accept="image/png,image/jpeg,image/webp"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) uploadFormImage(file);
+                      }}
+                    />
+                  </label>
+                  <small>Or copy an image and press Ctrl+V anywhere on this page.</small>
+                </div>
+                <label className={styles.mediaId}>
+                  Uploaded media ID
+                  <input required value={form.mediaId} onChange={(e) => field("mediaId", e.target.value)} />
+                </label>
+              </section>
+
+              <section className={styles.addCard}>
+                <div className={styles.cardHead}>
+                  <span className={styles.cardIcon}><Settings size={18} aria-hidden="true" /></span>
+                  <div><h3>Other Settings</h3></div>
+                </div>
+                <label className={styles.toggleRow}>
+                  <input type="checkbox" checked={form.featured} onChange={(e) => field("featured", e.target.checked)} />
+                  <span><b>Featured Deal</b><small>Show this deal in the featured section</small></span>
+                </label>
+                <label className={styles.toggleRow}>
+                  <input type="checkbox" checked={form.trending} onChange={(e) => field("trending", e.target.checked)} />
+                  <span><b>Trending Deal</b><small>Mark this deal as trending</small></span>
+                </label>
+              </section>
+            </aside>
           </fieldset>
         </form>
         {selected && (
@@ -2949,7 +3067,7 @@ export function DealManager({ role }: { role: AdminRole }) {
           </div>
         )}
         {preview && (
-          <article className={styles.preview}>
+          <article className={styles.preview} id="saved-preview">
             <h3>Saved preview: {preview.data.title}</h3>
             <Image
               unoptimized
@@ -3081,6 +3199,11 @@ export function DealManager({ role }: { role: AdminRole }) {
                       Expired Deals
                     </label>
                   </div>
+                )}
+                {["DRAFT", "PENDING_REVIEW"].includes(row.status) && roleCan(role, "deal:publish") && (
+                  <button type="button" className={styles.dealCardEdit} disabled={busy} onClick={() => publishRow(row)} aria-label={`Publish ${row.title}`}>
+                    🚀 Publish
+                  </button>
                 )}
                 <button type="button" className={styles.dealCardEdit} onClick={() => edit(row)} aria-label={`Edit ${row.title}`}>
                   ✏️ Edit

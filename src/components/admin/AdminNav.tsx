@@ -27,10 +27,13 @@ type AdminUser = { name: string | null; email: string | null; role: string };
 
 type NavLink = { href: string; label: string; Icon: typeof Gauge; match: (path: string) => boolean };
 
-const navLinks: NavLink[] = [
-  { href: "/admin/intelligence", label: "Deal Intelligence", Icon: BarChart3, match: (path) => path.startsWith("/admin/intelligence") },
+const dealLinks: NavLink[] = [
   { href: "/admin/deals", label: "Deal Management", Icon: Tag, match: (path) => path.startsWith("/admin/deals") },
+  { href: "/admin/intelligence", label: "Deal Intelligence", Icon: BarChart3, match: (path) => path.startsWith("/admin/intelligence") },
   { href: "/admin/scraper", label: "Deal Scraper", Icon: Zap, match: (path) => path.startsWith("/admin/scraper") },
+];
+
+const navLinks: NavLink[] = [
   { href: "/admin/cuelinks", label: "Affiliate", Icon: Link2, match: (path) => path.startsWith("/admin/cuelinks") },
   { href: "/admin/analytics", label: "Analytics", Icon: BarChart3, match: (path) => path.startsWith("/admin/analytics") },
 ];
@@ -51,6 +54,10 @@ export function AdminNav(props: { active?: string; onSelectTab?: (tab: "deals" |
   const [mobileOpen, setMobileOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
+  const bellRef = useRef<HTMLDivElement>(null);
+  const [bellOpen, setBellOpen] = useState(false);
+  const [notes, setNotes] = useState<{ pendingSubmissions: number; items: { id: string; title: string; submittedAt: string; resubmitted: boolean }[] }>({ pendingSubmissions: 0, items: [] });
+  const pending = notes.pendingSubmissions;
   const navigationRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -61,6 +68,23 @@ export function AdminNav(props: { active?: string; onSelectTab?: (tab: "deals" |
       .catch(() => undefined);
     return () => controller.abort();
   }, []);
+
+  useEffect(() => {
+    let alive = true;
+    const load = () => { if (!document.hidden) void fetch("/api/v1/admin/notifications", { cache: "no-store" }).then((r) => (r.ok ? r.json() : null)).then((r) => { if (alive && r?.data) setNotes(r.data); }).catch(() => undefined); };
+    load();
+    const timer = window.setInterval(load, 60_000);
+    return () => { alive = false; window.clearInterval(timer); };
+  }, []);
+
+  useEffect(() => {
+    if (!bellOpen) return;
+    const onDown = (event: PointerEvent) => { if (event.target instanceof Node && !bellRef.current?.contains(event.target)) setBellOpen(false); };
+    const onKey = (event: KeyboardEvent) => { if (event.key === "Escape") setBellOpen(false); };
+    document.addEventListener("pointerdown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => { document.removeEventListener("pointerdown", onDown); document.removeEventListener("keydown", onKey); };
+  }, [bellOpen]);
 
   useEffect(() => {
     if (!profileOpen) return;
@@ -131,11 +155,27 @@ export function AdminNav(props: { active?: string; onSelectTab?: (tab: "deals" |
             <span className={styles.version}>v2.5</span>
           </div>
           <div className={styles.headerActions}>
-            {user?.role === "SUPER_ADMIN" && (
-              <Link className={styles.notificationLink} href="/admin#audit-heading" aria-label="Open recent audit activity" title="Recent audit activity">
+            <div className={styles.bellWrap} ref={bellRef}>
+              <button className={styles.notificationLink} type="button" aria-label={`Notifications${pending ? `, ${pending} waiting` : ""}`} aria-expanded={bellOpen} aria-haspopup="dialog" onClick={() => setBellOpen((open) => !open)}>
                 <Bell size={22} aria-hidden="true" />
-              </Link>
-            )}
+                {pending > 0 && <span className={styles.bellBadge}>{pending > 99 ? "99+" : pending}</span>}
+              </button>
+              {bellOpen && (
+                <div className={styles.bellPanel} role="dialog" aria-label="Notifications">
+                  <strong>Notifications</strong>
+                  {notes.items.length === 0 && <p className={styles.bellEmpty}>Nothing waiting for review.</p>}
+                  {notes.items.map((item) => (
+                    <Link key={item.id} href="/admin/submissions" className={styles.bellItem} onClick={() => setBellOpen(false)}>
+                      <span>{item.resubmitted ? "Resubmitted deal" : "New deal submitted"}</span>
+                      <b>{item.title}</b>
+                      <small>{new Date(item.submittedAt).toLocaleString("en-IN", { timeZone: "Asia/Kolkata", day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit", hour12: true })}</small>
+                    </Link>
+                  ))}
+                  {pending > 0 && <Link href="/admin/submissions" className={styles.bellAll} onClick={() => setBellOpen(false)}>Review all {pending} awaiting</Link>}
+                  {user?.role === "SUPER_ADMIN" && <Link href="/admin#audit-heading" className={styles.bellAll} onClick={() => setBellOpen(false)}>Recent audit activity</Link>}
+                </div>
+              )}
+            </div>
             <div className={styles.profileWrap} ref={profileRef}>
               <button
                 className={styles.profileButton}
@@ -158,7 +198,7 @@ export function AdminNav(props: { active?: string; onSelectTab?: (tab: "deals" |
                     {user?.email && <small>{user.email}</small>}
                   </div>
                   <Link href="/admin" role="menuitem" onClick={() => setProfileOpen(false)}>
-                    <Shield size={16} /> Admin Foundation
+                    <Shield size={16} /> Admin
                   </Link>
                   <button type="button" role="menuitem" onClick={() => void signOut()} disabled={signingOut}>
                     <LogOut size={16} /> {signingOut ? "Signing out…" : "Sign out"}
@@ -182,14 +222,14 @@ export function AdminNav(props: { active?: string; onSelectTab?: (tab: "deals" |
       <nav ref={navigationRef} className={`${styles.navigation} ${mobileOpen ? styles.navigationOpen : ""}`} aria-label="Admin navigation">
         <div className={styles.navigationInner}>
           <Link className={linkClass(pathname === "/admin")} href="/admin" onClick={closeNavigation} aria-current={pathname === "/admin" ? "page" : undefined}>
-            <Shield size={19} aria-hidden="true" /><span>Admin Foundation</span>
+            <Shield size={19} aria-hidden="true" /><span>Admin</span>
           </Link>
-          {navLinks.slice(0, 2).map(({ href, label, Icon, match }) => (
-            <Link key={href} className={linkClass(match(pathname))} href={href} onClick={closeNavigation} aria-current={match(pathname) ? "page" : undefined}>
-              <Icon size={19} aria-hidden="true" /><span>{label}</span>
-            </Link>
-          ))}
-
+          <details className={`${styles.navGroup} ${dealLinks.some((l) => l.match(pathname)) ? styles.navGroupActive : ""}`}>
+            <summary aria-label="Deals menu"><Tag size={19} aria-hidden="true" /><span>Deals</span><ChevronDown size={15} aria-hidden="true" /></summary>
+            <div className={styles.navDropdown}>
+              {dealLinks.map(({ href, label, match }) => <Link key={href} href={href} onClick={closeNavigation} aria-current={match(pathname) ? "page" : undefined}>{label}</Link>)}
+            </div>
+          </details>
           <details className={`${styles.navGroup} ${pathname.startsWith("/admin/categories") ? styles.navGroupActive : ""}`}>
             <summary aria-label="Categories menu"><FolderOpen size={19} aria-hidden="true" /><span>Categories</span><ChevronDown size={15} aria-hidden="true" /></summary>
             <div className={styles.navDropdown}><Link href="/admin/categories" onClick={closeNavigation}>Category Management</Link></div>
@@ -198,7 +238,7 @@ export function AdminNav(props: { active?: string; onSelectTab?: (tab: "deals" |
             <summary aria-label="Merchants menu"><Store size={19} aria-hidden="true" /><span>Merchants</span><ChevronDown size={15} aria-hidden="true" /></summary>
             <div className={styles.navDropdown}><Link href="/admin/merchant-websites" onClick={closeNavigation}>Merchant Websites</Link></div>
           </details>
-          {navLinks.slice(2).map(({ href, label, Icon, match }) => (
+          {navLinks.map(({ href, label, Icon, match }) => (
             <Link key={href} className={linkClass(match(pathname))} href={href} onClick={closeNavigation} aria-current={match(pathname) ? "page" : undefined}>
               <Icon size={19} aria-hidden="true" /><span>{label}</span>
             </Link>
@@ -217,6 +257,15 @@ export function AdminNav(props: { active?: string; onSelectTab?: (tab: "deals" |
           </details>
         </div>
       </nav>
+      {dealLinks.some((l) => l.match(pathname)) && (
+        <div className={styles.dealTabs} role="tablist" aria-label="Deals sections">
+          {dealLinks.map(({ href, label, Icon, match }) => (
+            <Link key={href} href={href} role="tab" aria-selected={match(pathname)} className={`${styles.dealTab} ${match(pathname) ? styles.dealTabActive : ""}`}>
+              <Icon size={16} aria-hidden="true" /><span>{label}</span>
+            </Link>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

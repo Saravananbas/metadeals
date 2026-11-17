@@ -79,17 +79,28 @@ export function SubmissionsReview() {
 
   const set = (id: string, patch: Partial<Draft>) => setDrafts((d) => ({ ...d, [id]: { ...d[id], ...patch } }));
 
-  async function act(item: Item, kind: "approve" | "reject") {
+  async function act(item: Item, kind: "approve" | "reject", publish = false) {
     const d = withSuggestions(item);
     setBusy(item.id + kind);
     setMessage(null);
     try {
       if (kind === "approve") {
-        await call(`/api/v1/admin/submissions/${item.id}/approve`, "POST", {
+        const approved = await call<{ data: { dealId: string } }>(`/api/v1/admin/submissions/${item.id}/approve`, "POST", {
           version: item.version, categoryId: d.categoryId, merchantId: d.merchantId, title: d.title, brand: d.brand, description: d.description, productUrl: d.productUrl,
           priceMinor: toMinor(d.price), mrpMinor: toMinor(d.mrp), couponCode: d.coupon || null,
         });
-        setMessage({ kind: "ok", text: "Approved. A draft deal was created: open Deal Management to preview and publish it." });
+        if (publish) {
+          // Same gate as Deal Management: preview the saved draft, then publish with that preview token.
+          try {
+            const prev = await call<{ data: { version: number }; previewToken: string }>(`/api/v1/admin/deals/${approved.data.dealId}/preview`, "POST", {});
+            await call(`/api/v1/admin/deals/${approved.data.dealId}/publish`, "POST", { version: prev.data.version, previewToken: prev.previewToken });
+            setMessage({ kind: "ok", text: "Approved and published. It is live on the home page now (or scheduled by its dates)." });
+          } catch (error) {
+            setMessage({ kind: "error", text: `Approved and saved as a draft, but publishing failed: ${error instanceof Error ? error.message : "unknown error"}. Open Deal Management and press Publish.` });
+          }
+        } else {
+          setMessage({ kind: "ok", text: "Approved as a draft. It is not on the home page yet: press Publish in Deal Management (or use Approve and publish next time)." });
+        }
       } else {
         await call(`/api/v1/admin/submissions/${item.id}/reject`, "POST", { version: item.version, reason: d.reason });
         setMessage({ kind: "ok", text: "Rejected. The customer can see your reason and resubmit." });
@@ -150,7 +161,8 @@ export function SubmissionsReview() {
                       <label className={styles.wide}>Reason, if rejecting (shown to the customer)<input value={d.reason} onChange={(e) => set(item.id, { reason: e.target.value })} placeholder="e.g. The price on the store page is different" /></label>
                     </div>
                     <div className={styles.actions}>
-                      <button className={styles.approve} disabled={!!busy || !d.categoryId || !d.merchantId || !d.mrp} onClick={() => void act(item, "approve")}>Approve and create draft</button>
+                      <button className={styles.approve} disabled={!!busy || !d.categoryId || !d.merchantId || !d.mrp} onClick={() => void act(item, "approve", true)}>Approve and publish</button>
+                      <button className={styles.approve} disabled={!!busy || !d.categoryId || !d.merchantId || !d.mrp} onClick={() => void act(item, "approve")}>Approve as draft</button>
                       <button className={styles.reject} disabled={!!busy || d.reason.trim().length < 5} onClick={() => void act(item, "reject")}>Reject</button>
                     </div>
                   </>

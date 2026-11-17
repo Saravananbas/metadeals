@@ -15,7 +15,8 @@ import { importBatchSchema } from "@/server/affiliate/types";
 import { autoPostToTelegram, createDestination, listDestinations, publishDealToDestinations, getDistributionHistory } from "@/server/distribution/service";
 import { destinationInputSchema, publishDealInputSchema } from "@/features/distribution/formatting";
 import { getUnifiedAnalyticsSummary } from "@/server/analytics/service";
-import { approveSubmission, getSubmissionImage, listSubmissions, rejectSubmission } from "@/server/community/review";
+import { approveSubmission, getAdminNotifications, getSubmissionImage, listSubmissions, rejectSubmission } from "@/server/community/review";
+import { exportCsv, getTab, TABS } from "@/server/analytics/tabs";
 import { getDashboard, getLive, getSessionTimeline, listSessions, resolveRange, vendorReport } from "@/server/analytics/queries";
 import { scraperService } from "@/server/scraper/service";
 import { candidateReviewActionSchema } from "@/features/scraper/validation";
@@ -425,6 +426,10 @@ async function handle(request: Request, { params }: { params: Promise<{ path: st
       }
       throw new DealError("Distribution endpoint not found.", 404);
     }
+    if (resource === "notifications") {
+      if (request.method !== "GET") throw new DealError("Method not supported.", 405);
+      return json({ data: await getAdminNotifications({ id: context.user.id, role: context.user.role }) });
+    }
     if (resource === "submissions") {
       const reviewer = { id: context.user.id, role: context.user.role };
       if (request.method === "GET" && id && action === "image") {
@@ -456,6 +461,18 @@ async function handle(request: Request, { params }: { params: Promise<{ path: st
         });
       }
       if (id === "dashboard") return json({ data: await getDashboard(range) });
+      if (id === "tab" || id === "export") {
+        const tab = z.enum(TABS).parse(action ?? "overview");
+        const filters = z.object({ merchantId: z.string().max(191).optional(), categoryId: z.string().max(191).optional(), status: z.string().max(20).optional() }).parse({
+          merchantId: url.searchParams.get("merchantId") || undefined, categoryId: url.searchParams.get("categoryId") || undefined, status: url.searchParams.get("status") || undefined,
+        });
+        if (id === "export") {
+          return new Response(await exportCsv(tab, range, filters), {
+            headers: { "Content-Type": "text/csv; charset=utf-8", "Content-Disposition": `attachment; filename="analytics-${tab}.csv"`, "Cache-Control": "no-store" },
+          });
+        }
+        return json({ data: await getTab(tab, range, { page: z.coerce.number().int().min(1).max(10_000).parse(url.searchParams.get("page") ?? 1), filters }) });
+      }
       throw new DealError("Unknown analytics report.", 404);
     }
     if (resource === "scraper") {

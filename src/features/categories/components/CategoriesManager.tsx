@@ -25,6 +25,9 @@ export function CategoriesManager({
   const [categories, setCategories] = useState<CategoryEntry[]>(initialCategories);
   const [loading, setLoading] = useState(initialCategories.length === 0);
   const [busy, setBusy] = useState(false);
+  // Parent cards start collapsed; the admin opens the ones to check.
+  const [expanded, setExpanded] = useState<Set<string>>(new Set());
+  const toggleExpanded = (id: string) => setExpanded((prev) => { const next = new Set(prev); if (next.has(id)) next.delete(id); else next.add(id); return next; });
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -139,6 +142,7 @@ export function CategoriesManager({
 
   function handleAddSubCategory(preferredParentId?: string) {
     const parentId = preferredParentId || categories.find((c) => !c.parentId)?.id || "";
+    if (parentId) setExpanded((prev) => new Set(prev).add(parentId));
     setForm({
       id: "",
       name: "",
@@ -597,7 +601,9 @@ export function CategoriesManager({
               💡 Drag &amp; Drop: You can drag any parent card to reorder them, or drag any subcategory item into another parent card to move it.
             </p>
           </div>
-          <span style={{ fontSize: 13, color: "var(--md-color-primary)", fontWeight: 600 }}>
+          <span style={{ display: "inline-flex", gap: 12, alignItems: "center", fontSize: 13, color: "var(--md-color-primary)", fontWeight: 600 }}>
+            <button type="button" onClick={() => setExpanded(new Set(parentCategories.map((p) => p.id)))} style={{ background: "none", border: 0, color: "inherit", font: "inherit", cursor: "pointer", textDecoration: "underline" }}>Expand all</button>
+            <button type="button" onClick={() => setExpanded(new Set())} style={{ background: "none", border: 0, color: "inherit", font: "inherit", cursor: "pointer", textDecoration: "underline" }}>Collapse all</button>
             {categories.length} categories active
           </span>
         </div>
@@ -625,6 +631,7 @@ export function CategoriesManager({
               const children = categories.filter((c) => c.parentId === parent.id);
               const isDragOver = dragOverParentId === parent.id;
               const isCardDragging = draggedParentId === parent.id;
+              const isOpen = expanded.has(parent.id);
 
               return (
                 <div
@@ -716,18 +723,24 @@ export function CategoriesManager({
                     </div>
 
                     <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                      <span
+                      <button
+                        type="button"
+                        onClick={(e) => { e.stopPropagation(); toggleExpanded(parent.id); }}
+                        aria-expanded={isOpen}
                         style={{
                           fontSize: "0.75rem",
                           fontWeight: 700,
                           padding: "2px 8px",
                           borderRadius: 10,
+                          border: 0,
+                          cursor: "pointer",
                           background: "var(--md-color-primary-soft)",
                           color: "var(--md-color-primary-hover)",
                         }}
+                        title={isOpen ? `Collapse ${parent.name}` : `Expand ${parent.name}`}
                       >
-                        {children.length} sub
-                      </span>
+                        {children.length} sub {isOpen ? "▴" : "▾"}
+                      </button>
                       <button
                         type="button"
                         onClick={(e) => {
@@ -790,7 +803,7 @@ export function CategoriesManager({
                   )}
 
                   {/* Subcategories Tree Branches */}
-                  <div style={{ display: "flex", flexDirection: "column", gap: 6, paddingLeft: 4 }}>
+                  <div style={{ display: isOpen ? "flex" : "none", flexDirection: "column", gap: 6, paddingLeft: 4 }}>
                     {children.length === 0 ? (
                       <div style={{ fontSize: 12, color: "var(--md-color-text-muted)", fontStyle: "italic", padding: "6px 8px" }}>
                         No subcategories under {parent.name} yet. Drag one here!

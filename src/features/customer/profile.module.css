@@ -54,7 +54,11 @@
 .dealStep h2{display:flex;align-items:center;gap:11px;margin:0;color:var(--md-c-21124b);font-size:19px;font-weight:800}
 .dealStep h2>span{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--md-c-6420df);color:var(--md-c-fff);font-size:15px}
 .dealStep>p{margin:-6px 0 0 41px;color:var(--md-c-615a79);font-size:13px}
-.dealStep label{display:grid;gap:6px;color:var(--md-c-211a36);font-size:13px;font-weight:650}
+.dealStep label{display:flex;flex-wrap:wrap;align-content:start;align-items:baseline;gap:6px 4px;color:var(--md-c-211a36);font-size:13px;font-weight:650}
+/* The required-field star stays on the label line; every control drops to its own full-width row, so all inputs line up and share one height. */
+.dealStep label>input,.dealStep label>select,.dealStep label>textarea,.dealStep label>.discountField,.dealStep label>.merchantControl,.dealStep label>small{flex:1 0 100%}
+.dealStep label>input,.dealStep label>select,.dealStep label>.discountField,.dealStep label>.merchantControl{box-sizing:border-box;min-height:44px}
+.dealStep label>.discountField{display:flex;align-items:center}
 .dealStep label b{color:var(--md-c-cf2450)}
 .dealStep input,.dealStep select,.dealStep textarea,.discountField{width:100%;min-width:0;border:1px solid var(--md-c-d9c8fb);border-radius:11px;background:var(--md-c-fff);color:var(--md-c-211a36);padding:11px 13px;font:inherit;font-size:14px;font-weight:400;outline:none;transition:border-color .15s,box-shadow .15s}
 .dealStep input:focus,.dealStep select:focus,.dealStep textarea:focus{border-color:var(--md-c-7533e9);box-shadow:0 0 0 3px var(--md-a-117-51-233-p12)}

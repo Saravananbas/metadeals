@@ -205,7 +205,7 @@ export function AdminDashboard({ actorId, role }: { actorId: string; role: UserR
 
       <section className={styles.foundationHero}>
         <div>
-          <h1>Admin Foundation</h1>
+          <h1>Admin</h1>
           <p>Authentication and account management for administrative access.</p>
         </div>
         <ShieldCheck size={60} aria-hidden="true" />
