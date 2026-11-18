@@ -1,6 +1,7 @@
 "use client";
 
 import { trackEvent } from "@/lib/analytics-client";
+import { dealShareUrl } from "@/features/deals/short-link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import {
@@ -135,7 +136,7 @@ export function DealCard({
 
   const handleShare = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    const url = typeof window !== "undefined" ? `${window.location.origin}/deal/${deal.slug || deal.id}` : "";
+    const url = typeof window !== "undefined" ? dealShareUrl(window.location.origin, deal) : "";
     if (url) {
       if (navigator.clipboard) {
         await navigator.clipboard.writeText(url);

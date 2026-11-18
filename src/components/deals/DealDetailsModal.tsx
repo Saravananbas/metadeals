@@ -1,4 +1,5 @@
 "use client";
+import { dealShareUrl } from "@/features/deals/short-link";
 
 import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import Image from "next/image";
@@ -205,7 +206,7 @@ export function DealDetailsModal({
       : activeDeal.retailerUrl || `/go/${activeDeal.id}`;
 
   const origin = typeof window !== "undefined" ? window.location.origin : "https://metadeals4u.in";
-  const canonicalUrl = `${origin}/deal/${activeDeal.slug || activeDeal.id}`;
+  const canonicalUrl = dealShareUrl(origin, activeDeal); // the short link, used for copy and for the share buttons
   const shareText = `🔥 Great Deal on MetaDeals4U: ${activeDeal.name} for ${formatINR(activeDeal.price)}! Check it out:`;
 
   const handleCopyLink = async () => {

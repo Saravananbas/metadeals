@@ -5,6 +5,7 @@ import Image from "next/image";
 import { ChevronLeft, ChevronRight, Heart, Maximize2, Share2, Check, X } from "lucide-react";
 import styles from "@/app/deal/[slug]/deal-detail.module.css";
 import { useSavedDeals } from "@/features/home/saved-store";
+import { dealShareUrl } from "@/features/deals/short-link";
 
 interface DealGalleryProps {
   dealId: string;
@@ -51,7 +52,7 @@ export function DealGallery({
 
   const handleShare = () => {
     if (typeof window !== "undefined") {
-      navigator.clipboard.writeText(window.location.href);
+      void navigator.clipboard.writeText(dealShareUrl(window.location.origin, { id: dealId, slug: window.location.pathname.split("/").pop() }));
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }

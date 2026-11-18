@@ -25,6 +25,12 @@ export async function findPostByCodeMariaDb(code: string): Promise<{ id: string;
   return rows[0] ?? null;
 }
 
+/** Deal that people can open (published or expired) whose id ends with the code. */
+export async function findDealByCodeMariaDb(code: string): Promise<{ id: string; slug: string } | null> {
+  const rows = await raw().$queryRaw<{ id: string; slug: string }[]>(Prisma.sql`SELECT id, slug FROM Deal WHERE status IN ('PUBLISHED', 'EXPIRED') AND RIGHT(id, ${code.length}) = ${code} LIMIT 1`);
+  return rows[0] ?? null;
+}
+
 /** Comment of the post whose id ends with the code. */
 export async function findCommentByCodeMariaDb(postId: string, code: string): Promise<string | null> {
   const rows = await raw().$queryRaw<{ id: string }[]>(Prisma.sql`SELECT id FROM ForumComment WHERE postId = ${postId} AND RIGHT(id, ${code.length}) = ${code} LIMIT 1`);
