@@ -268,7 +268,7 @@ export function DealCard({
         {/* ROW 4: Retailer & Posted Date */}
         <div className="deal-row-retailer">
           <StoreLogo store={deal.store} name={deal.storeName} logoUrl={deal.storeLogoUrl} logoOnly />
-          {postedDate && <span className="deal-posted-date">{postedDate}</span>}
+          {postedDate && <span className="deal-posted-date" suppressHydrationWarning>{postedDate}</span>}
         </div>
 
         {/* ROW 5: Coupon Row (Code + copy action OR aligned empty placeholder) */}

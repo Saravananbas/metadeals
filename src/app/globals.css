@@ -119,7 +119,7 @@ a { text-decoration: none; }
 .deal-price-col { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .deal-price-numbers { display: flex; align-items: baseline; gap: 6px; line-height: 1; }
 .deal-price-numbers strong { font-size: 19px; font-weight: 800; color: var(--md-purple-950); line-height: 1; white-space: nowrap; }
-.deal-price-numbers del { font-size: 12px; color: var(--md-color-text-muted); text-decoration: line-through; line-height: 1; white-space: nowrap; }
+.deal-price-numbers del { font-size: 12px; color: var(--md-neutral-600); text-decoration: line-through; line-height: 1; white-space: nowrap; }
 .deal-savings-row { display: flex; align-items: center; }
 .savings { display: inline-block; background: var(--md-color-success-bg); color: var(--md-green-700); font-size: 11px; font-weight: 750; padding: 2px 7px; border-radius: 9999px; border: 1px solid var(--md-color-success-border); line-height: 1.2; width: fit-content; white-space: nowrap; }
 
@@ -131,13 +131,13 @@ a { text-decoration: none; }
 
 /* ROW 4: Retailer & Posted Date */
 .deal-row-retailer { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px dashed var(--md-color-border); min-height: 24px; }
-.deal-posted-date { font-size: 11px; color: var(--md-color-text-muted); white-space: nowrap; }
+.deal-posted-date { font-size: 11px; color: var(--md-neutral-600); white-space: nowrap; }
 
 /* ROW 5: Coupon Row (Code + copy action OR placeholder) */
 .deal-row-coupon { min-height: 34px; margin-bottom: 10px; display: flex; align-items: center; }
 .deal-coupon-pill { display: flex; align-items: center; justify-content: space-between; width: 100%; background: var(--md-color-primary-subtle); border: 1px dashed var(--md-purple-300); border-radius: 8px; padding: 4px 8px; box-sizing: border-box; }
 .deal-coupon-code { font-size: 11.5px; font-weight: 700; color: var(--md-promo-bank-start); font-family: monospace; display: flex; align-items: center; gap: 4px; }
-.deal-coupon-copy { background: var(--md-color-primary-soft); border: none; border-radius: 4px; padding: 3px 6px; color: var(--md-purple-700); cursor: pointer; display: flex; align-items: center; gap: 3px; font-size: 10.5px; font-weight: 700; transition: all 0.15s ease; }
+.deal-coupon-copy { background: var(--md-color-primary-soft); border: none; border-radius: 6px; padding: 5px 9px; min-height: 28px; min-width: 28px; justify-content: center; color: var(--md-purple-700); cursor: pointer; display: flex; align-items: center; gap: 3px; font-size: 10.5px; font-weight: 700; transition: all 0.15s ease; }
 .deal-coupon-copy:hover { background: var(--md-color-primary-soft); }
 .deal-coupon-placeholder { height: 34px; width: 100%; }
 
@@ -145,8 +145,8 @@ a { text-decoration: none; }
 .deal-row-actions { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; margin-top: auto; }
 .deal-view-details-btn { flex: 1; padding: 7px 10px; background: var(--md-white); border: 1px solid var(--md-color-primary); color: var(--md-color-primary); border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px; transition: all 0.15s ease; white-space: nowrap; text-decoration: none; }
 .deal-view-details-btn:hover { background: var(--md-color-primary-subtle); }
-.deal-buy-now-btn { flex: 1.1; padding: 7px 10px; background: var(--md-orange-700); border: 1px solid var(--md-orange-700); color: var(--md-white); border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px; transition: all 0.15s ease; white-space: nowrap; text-decoration: none; }
-.deal-buy-now-btn:hover { background: var(--md-orange-800); border-color: var(--md-orange-800); }
+.deal-buy-now-btn { flex: 1.1; padding: 7px 10px; background: var(--md-orange-800); border: 1px solid var(--md-orange-800); color: var(--md-white); border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px; transition: all 0.15s ease; white-space: nowrap; text-decoration: none; }
+.deal-buy-now-btn:hover { background: var(--md-orange-900); border-color: var(--md-orange-900); }
 .deal-buy-now-disabled { flex: 1.1; padding: 7px 10px; border: 1px solid var(--md-color-border); color: var(--md-neutral-600); background: var(--md-color-surface-muted); border-radius: 8px; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: not-allowed; }
 
 /* ROW 7: Social Interaction Row */
