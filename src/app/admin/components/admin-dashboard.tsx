@@ -534,28 +534,49 @@ export function AdminDashboard({ actorId, role }: { actorId: string; role: UserR
               <h2 id="access-dialog-title">Access for {accessDialog.account.email ?? "this account"}</h2>
               <button type="button" className={styles.modalClose} aria-label="Close" onClick={() => setAccessDialog(null)} disabled={dialogBusy}><X size={18} /></button>
             </div>
-            <p>Choose what this person can open. The list replaces what their role normally allows. Pick &quot;No access&quot; to hide a module.</p>
+            <p>Tick what this person can open. The list replaces what their role normally allows; leave a module unticked to hide it.</p>
             {accessDialog.loading ? <p>Loading…</p> : (
               <>
                 <div className={styles.accessList}>
-                  {ACCESS_MODULES.map((module) => (
-                    <label key={module.key} className={styles.accessRow}>
-                      <span><strong>{module.label}</strong><small>{module.description}</small></span>
-                      <select value={accessDialog.levels[module.key] ?? ""} onChange={(event) => setAccessDialog((d) => d && ({ ...d, levels: { ...d.levels, [module.key]: event.target.value } }))}>
-                        <option value="">No access</option>
-                        {module.levels.map((level) => <option key={level.key} value={level.key}>{level.label}</option>)}
-                      </select>
-                    </label>
-                  ))}
+                  {ACCESS_MODULES.map((module) => {
+                    const selected = module.levels.findIndex((level) => level.key === accessDialog.levels[module.key]);
+                    return (
+                      <fieldset key={module.key} className={styles.accessRow}>
+                        <legend>{module.label}</legend>
+                        <small>{module.description}</small>
+                        <div className={styles.accessChecks}>
+                          {module.levels.map((level, index) => (
+                            <label key={level.key}>
+                              <input
+                                type="checkbox"
+                                checked={index <= selected}
+                                onChange={(event) => setAccessDialog((d) => {
+                                  if (!d) return d;
+                                  // A higher level includes the lower ones: ticking one ticks the levels below it, clearing one clears the levels above it.
+                                  const levels = { ...d.levels };
+                                  const next = event.target.checked ? level.key : module.levels[index - 1]?.key;
+                                  if (next) levels[module.key] = next; else delete levels[module.key];
+                                  return { ...d, levels };
+                                })}
+                              />
+                              {level.label}
+                            </label>
+                          ))}
+                        </div>
+                      </fieldset>
+                    );
+                  })}
                 </div>
                 <p className={styles.meta}>Always follows the role and is not set here: {ROLE_ONLY_MODULES.join(", ")}.</p>
-                <label className={styles.foundationInput}>Access ends (optional)
-                  <input type="datetime-local" value={accessDialog.until} onChange={(event) => setAccessDialog((d) => d && ({ ...d, until: event.target.value }))} />
-                  <small>After this time the person goes back to their role&apos;s normal access. Leave empty for no end.</small>
-                </label>
-                <label className={styles.foundationInput}>Your authenticator code (6 digits)
-                  <input name="totp" inputMode="numeric" pattern="[0-9]{6}" maxLength={6} autoComplete="one-time-code" placeholder="123456" required />
-                </label>
+                <div className={styles.accessFooter}>
+                  <label className={styles.foundationInput}>Access ends (optional)
+                    <input type="datetime-local" value={accessDialog.until} onChange={(event) => setAccessDialog((d) => d && ({ ...d, until: event.target.value }))} />
+                    <small>After this time the person goes back to their role&apos;s normal access. Leave empty for no end.</small>
+                  </label>
+                  <label className={styles.foundationInput}>Your authenticator code (6 digits)
+                    <input name="totp" inputMode="numeric" pattern="[0-9]{6}" maxLength={6} autoComplete="one-time-code" placeholder="123456" required />
+                  </label>
+                </div>
               </>
             )}
             {dialogError && <p className={styles.error} role="alert">{dialogError}</p>}

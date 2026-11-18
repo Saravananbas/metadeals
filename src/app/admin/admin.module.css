@@ -554,9 +554,14 @@
 .modalClose:hover { background: var(--md-purple-50); }
 .modalActions { display: flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap; }
 .modal textarea, .modal input { width: 100%; box-sizing: border-box; }
-.modalWide { width: min(640px, 100%); }
-.accessList { display: grid; gap: 8px; }
-.accessRow { display: grid; grid-template-columns: minmax(0, 1fr) minmax(150px, 210px); gap: 12px; align-items: center; padding: 10px 12px; border: 1px solid var(--md-purple-100); border-radius: 12px; }
-.accessRow span { display: grid; gap: 2px; min-width: 0; }
+.modalWide { width: min(1000px, 100%); }
+.accessList { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.accessRow { display: grid; align-content: start; gap: 6px; margin: 0; padding: 10px 12px; border: 1px solid var(--md-purple-100); border-radius: 12px; min-width: 0; }
+.accessRow legend { padding: 0 6px; font-size: 13.5px; font-weight: 800; }
 .accessRow small { color: var(--md-color-text-secondary); font-size: 12px; overflow-wrap: anywhere; }
-@media (max-width: 560px) { .accessRow { grid-template-columns: 1fr; } }
+.accessChecks { display: flex; flex-wrap: wrap; gap: 6px 16px; }
+.accessChecks label { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.accessChecks input { width: 16px; height: 16px; margin: 0; }
+@media (max-width: 760px) { .accessList { grid-template-columns: 1fr; } }
+.accessFooter { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; align-items: start; }
+@media (max-width: 760px) { .accessFooter { grid-template-columns: 1fr; } }

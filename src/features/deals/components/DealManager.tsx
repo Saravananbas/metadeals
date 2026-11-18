@@ -11,7 +11,7 @@ import {
   formatINR,
 } from "../currency";
 import { can, type AdminRole } from "@/server/auth/permissions";
-import { Calendar, Eye, ImageIcon, Link2, Save, Send, Settings, Tag, UploadCloud, Wand2 } from "lucide-react";
+import { Calendar, Eye, ImageIcon, Link2, Save, Send, Settings, Tag, UploadCloud, Wand2, X } from "lucide-react";
 import { AdminNav } from "@/components/admin/AdminNav";
 import styles from "./manager.module.css";
 
@@ -109,6 +109,9 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
   const [form, setForm] = useState<AdminDealForm>(empty);
   const [selectedParentCategoryId, setSelectedParentCategoryId] = useState<string>("");
   const [selected, setSelected] = useState<Row | null>(null);
+  // The Edit button on the deals table opens the form in a pop-up. Saving a NEW deal also selects it, but that must not pop anything up, so the pop-up is tied to the id it was opened for.
+  const [modalDealId, setModalDealId] = useState<string | null>(null);
+  const editModal = selected !== null && modalDealId === selected.id;
   const [preview, setPreview] = useState<{ data: Row; previewToken: string } | null>(null);
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
@@ -1280,6 +1283,18 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
     });
   }
 
+  function closeEditModal() {
+    setModalDealId(null);
+    setSelected(null);
+    setForm(empty);
+    setSelectedParentCategoryId("");
+    setPreview(null);
+    setDetectedRetailer(null);
+    setShowPreviewModal(false);
+    setExtractionResult(null);
+    setExtractProgress("");
+  }
+
   function edit(row: Row) {
     const data: AdminDealForm = {
       slug: row.slug,
@@ -1442,6 +1457,16 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
       }
     });
   }
+
+  useEffect(() => {
+    if (!editModal) return;
+    const onKey = (event: KeyboardEvent) => { if (event.key === "Escape" && !busy) closeEditModal(); };
+    document.addEventListener("keydown", onKey);
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => { document.removeEventListener("keydown", onKey); document.body.style.overflow = previous; };
+    // closeEditModal only sets state, so it is safe to leave out of the list.
+  }, [editModal, busy]);
 
   const dpMrp = Number(form.mrpRupees), dpPrice = Number(form.priceRupees);
   const dpDiscount = form.mrpRupees !== "" && form.priceRupees !== "" && dpMrp > 0 && dpPrice >= 0 && dpPrice <= dpMrp ? Math.round(((dpMrp - dpPrice) / dpMrp) * 100) : null;
@@ -2335,13 +2360,19 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
 
       {activeTab === "deals" && (
         <>
-          <section className={`${styles.panel} ${styles.addPanel}`}>
+          <div className={editModal ? styles.editBackdrop : undefined} onMouseDown={(event) => { if (editModal && event.target === event.currentTarget && !busy) closeEditModal(); }}>
+          <section className={`${styles.panel} ${styles.addPanel} ${editModal ? styles.editModal : ""}`} {...(editModal ? { role: "dialog", "aria-modal": true, "aria-label": "Edit deal" } : {})}>
             <div className={styles.addHead}>
               <div>
                 <h2>{selected ? "Edit deal" : "Add New Deal"}</h2>
                 <p>{selected ? "Update the details of this deal." : "Add a new deal to MetaDeals4U."} You can fetch details from a product URL or enter them manually.</p>
               </div>
               <div className={styles.addHeadActions}>
+                {editModal && (
+                  <button type="button" className={styles.editClose} onClick={closeEditModal} disabled={busy} aria-label="Close without saving" title="Close">
+                    <X size={18} aria-hidden="true" />
+                  </button>
+                )}
                 <button type="submit" form="deal-form" className={styles.headSave} disabled={busy || selected?.status === "ARCHIVED"} onClick={() => { publishAfterSave.current = false; }}>
                   <Save size={16} aria-hidden="true" /> Save as Draft
                 </button>
@@ -3027,6 +3058,64 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
                   <span><b>Trending Deal</b><small>Mark this deal as trending</small></span>
                 </label>
               </section>
+
+              <section className={styles.addCard}>
+                <div className={styles.cardHead}>
+                  <span className={styles.cardIcon}><UploadCloud size={18} aria-hidden="true" /></span>
+                  <div><h3>Bulk draft import</h3></div>
+                </div>
+                <p className={styles.bulkNote}>
+                  CSV or values-only XLSX, first sheet, at most 100 rows / 1 MB. Upload images first and use their media
+                  IDs. Price columns can be in Rupees (mrp, price) or paise (mrpMinor, priceMinor). Required columns:
+                  slug,title,description,categoryId,merchantId,mediaId,productUrl. Optional:
+                  brand,affiliateUrl,rating,reviewCount,ratingSource,publishedAt,startsAt,expiresAt,featured,trending.
+                  Dates use ISO UTC. All rows import atomically as drafts; duplicates fail without overwriting.
+                </p>
+                <input
+                  aria-label="Import file"
+                  type="file"
+                  accept=".csv,.xlsx"
+                  onChange={(e) => {
+                    setImportFile(e.target.files?.[0] ?? null);
+                    setImportPreview("");
+                  }}
+                />
+                <div className={styles.actions}>
+                  {[false, true].map((confirm) => (
+                    <button
+                      type="button"
+                      key={String(confirm)}
+                      disabled={busy || !importFile || (confirm && !importPreview)}
+                      onClick={() =>
+                        void run(async () => {
+                          if (!importFile) return;
+                          const response = await fetch(
+                            "/api/v1/admin/imports?format=" +
+                              (importFile.name.endsWith(".xlsx") ? "xlsx" : "csv") +
+                              "&confirm=" +
+                              confirm,
+                            { method: "POST", body: importFile }
+                          );
+                          const result = await response.json();
+                          if (!response.ok) throw new Error(result.error?.message ?? "Import failed.");
+                          if (confirm) {
+                            setMessage("Imported " + result.count + " drafts.");
+                            setImportPreview("");
+                            await load();
+                          } else {
+                            setImportPreview(JSON.stringify(result.preview, null, 2));
+                          }
+                        })
+                      }
+                    >
+                      {confirm ? "Import validated drafts" : "Validate and preview file"}
+                    </button>
+                  ))}
+                </div>
+                {importPreview && (
+                  <pre style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere", maxHeight: 220, overflow: "auto" }}>{importPreview}</pre>
+                )}
+              </section>
             </aside>
           </fieldset>
         </form>
@@ -3109,61 +3198,8 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
           </article>
         )}
       </section>
+          </div>
       <section className={styles.panel}>
-        <h2>Bulk draft import</h2>
-        <p>
-          CSV or values-only XLSX, first sheet, at most 100 rows / 1 MB. Upload images first and use their media
-          IDs. Price columns can be in Rupees (mrp, price) or paise (mrpMinor, priceMinor). Required columns:
-          slug,title,description,categoryId,merchantId,mediaId,productUrl. Optional:
-          brand,affiliateUrl,rating,reviewCount,ratingSource,publishedAt,startsAt,expiresAt,featured,trending.
-          Dates use ISO UTC. All rows import atomically as drafts; duplicates fail without overwriting.
-        </p>
-        <input
-          aria-label="Import file"
-          type="file"
-          accept=".csv,.xlsx"
-          onChange={(e) => {
-            setImportFile(e.target.files?.[0] ?? null);
-            setImportPreview("");
-          }}
-        />
-        <div className={styles.actions}>
-          {[false, true].map((confirm) => (
-            <button
-              key={String(confirm)}
-              disabled={busy || !importFile || (confirm && !importPreview)}
-              onClick={() =>
-                void run(async () => {
-                  if (!importFile) return;
-                  const response = await fetch(
-                    "/api/v1/admin/imports?format=" +
-                      (importFile.name.endsWith(".xlsx") ? "xlsx" : "csv") +
-                      "&confirm=" +
-                      confirm,
-                    { method: "POST", body: importFile }
-                  );
-                  const result = await response.json();
-                  if (!response.ok) throw new Error(result.error?.message ?? "Import failed.");
-                  if (confirm) {
-                    setMessage("Imported " + result.count + " drafts.");
-                    setImportPreview("");
-                    await load();
-                  } else {
-                    setImportPreview(JSON.stringify(result.preview, null, 2));
-                  }
-                })
-              }
-            >
-              {confirm ? "Import validated drafts" : "Validate and preview file"}
-            </button>
-          ))}
-        </div>
-        {importPreview && (
-          <pre style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}>{importPreview}</pre>
-        )}
-      </section>
-      <section className={styles.panel}>
-        <h2>Deals · page {page}</h2>
         {!rows.length && (
           <p>No deals yet. Add a category, merchant and product image to create the first draft.</p>
         )}
@@ -3188,7 +3224,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
                   return (
                     <tr key={row.id}>
                       <td className={styles.dealColTitle}>
-                        <span className={styles.dealTitleText} title={row.title}>{row.title.length > 60 ? `${row.title.slice(0, 59).trimEnd()}…` : row.title}</span>
+                        <span className={styles.dealTitleText} title={row.title}>{row.title.length > 100 ? `${row.title.slice(0, 99).trimEnd()}…` : row.title}</span>
                         {row.expiresAt && <small className={styles.dealSub}>expiry {row.expiresAt}</small>}
                       </td>
                       <td>{formatPaise(row.priceMinor)}</td>
@@ -3212,7 +3248,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
                         )}
                       </td>
                       <td>
-                        <button type="button" className={`${styles.dealCardEdit} ${styles.dealIconButton}`} onClick={() => edit(row)} aria-label={`Edit ${row.title}`} title="Edit">
+                        <button type="button" className={`${styles.dealCardEdit} ${styles.dealIconButton}`} onClick={() => { edit(row); setModalDealId(row.id); }} aria-label={`Edit ${row.title}`} title="Edit">
                           ✏️
                         </button>
                       </td>

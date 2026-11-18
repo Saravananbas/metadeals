@@ -27,9 +27,6 @@ export function TopDealsSection({
             <p>{displaySubtitle}</p>
           </div>
         </div>
-        <button className="text-link" onClick={onReset}>
-          View All Deals <ArrowRight size={17} />
-        </button>
       </div>
 
       {deals.some((deal) => deal.source !== "database") && (

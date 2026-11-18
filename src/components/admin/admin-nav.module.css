@@ -87,7 +87,9 @@
   cursor: pointer;
   text-align: left;
 }
-.profileButton:hover { background: var(--md-c-eee7fb); }
+/* Purple with white text; on hover and while the menu is open it gets darker, never lighter, so the text stays readable. */
+.profileWrap .profileButton { background: var(--admin-purple-600); color: var(--md-white); }
+.profileWrap .profileButton:hover, .profileWrap .profileButton[aria-expanded="true"] { background: var(--admin-purple-800); color: var(--md-white); }
 .avatar {
   width: 42px;
   height: 42px;
@@ -153,15 +155,15 @@
   padding: 8px clamp(18px, 2.2vw, 48px);
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 4px;
+  justify-content: center;
+  gap: 6px;
 }
 .navLink,
 .navGroup > summary {
   min-height: 46px;
   justify-content: center;
   gap: 9px;
-  padding: 9px clamp(9px, 1.1vw, 18px);
+  padding: 9px clamp(8px, .8vw, 12px);
   border: 1px solid transparent;
   border-radius: 12px;
   color: var(--md-c-fff);
@@ -226,14 +228,14 @@
 .srOnly { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 
 @media (max-width: 1400px) {
-  .navigationInner { justify-content: flex-start; flex-wrap: wrap; gap: 2px; }
+  .navigationInner { justify-content: center; flex-wrap: wrap; gap: 2px; }
   .navLink { flex: none; }
   .navLink, .navGroup > summary { gap: 7px; padding-inline: 10px; font-size: 12px; }
   .navGroup:last-child .navDropdown { left: auto; right: 0; }
 }
 
 @media (max-width: 1080px) {
-  .navigationInner { min-height: 58px; flex-wrap: wrap; justify-content: flex-start; padding-block: 7px; }
+  .navigationInner { min-height: 58px; flex-wrap: wrap; justify-content: center; padding-block: 7px; }
   .navLink, .navGroup > summary { min-height: 42px; }
 }
 

@@ -123,7 +123,6 @@ export function AdminNav(props: { active?: string; onSelectTab?: (tab: "deals" |
   }
 
   const activeCommunity = communityLinks.some((item) => pathname.startsWith(item.href));
-  const activeMore = pathname === "/";
   const displayName = user?.name?.trim() || user?.email || "Administrator";
   const initials = displayName.slice(0, 1).toUpperCase();
   // Until the session is known every link shows; the server refuses anything the person may not use.
@@ -218,12 +217,9 @@ export function AdminNav(props: { active?: string; onSelectTab?: (tab: "deals" |
               {visibleCommunity.map((item) => <Link key={item.href} href={item.href} onClick={closeNavigation}>{item.label}</Link>)}
             </div>
           </details>}
-          <details className={`${styles.navGroup} ${activeMore ? styles.navGroupActive : ""}`}>
-            <summary aria-label="More administration links"><Menu size={19} aria-hidden="true" /><span>More</span><ChevronDown size={15} aria-hidden="true" /></summary>
-            <div className={styles.navDropdown}>
-              <Link href="/" onClick={closeNavigation}><ExternalLink size={15} /> MetaDeals4U website</Link>
-            </div>
-          </details>
+          <Link className={styles.navLink} href="/" onClick={closeNavigation}>
+            <ExternalLink size={19} aria-hidden="true" /><span>MetaDeals4U</span>
+          </Link>
         </div>
       </nav>
       {dealLinks.some((l) => l.match(pathname)) && (
