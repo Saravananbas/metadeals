@@ -45,6 +45,11 @@ export type UserMinAggregateOutputType = {
   passwordHash: string | null
   totpSecretEncrypted: string | null
   totpEnabledAt: Date | null
+  suspendedFrom: Date | null
+  suspendedUntil: Date | null
+  suspensionReason: string | null
+  customAccess: boolean | null
+  customAccessUntil: Date | null
   lastTotpStep: bigint | null
   linkedCustomerId: string | null
   createdAt: Date | null
@@ -62,6 +67,11 @@ export type UserMaxAggregateOutputType = {
   passwordHash: string | null
   totpSecretEncrypted: string | null
   totpEnabledAt: Date | null
+  suspendedFrom: Date | null
+  suspendedUntil: Date | null
+  suspensionReason: string | null
+  customAccess: boolean | null
+  customAccessUntil: Date | null
   lastTotpStep: bigint | null
   linkedCustomerId: string | null
   createdAt: Date | null
@@ -79,6 +89,11 @@ export type UserCountAggregateOutputType = {
   passwordHash: number
   totpSecretEncrypted: number
   totpEnabledAt: number
+  suspendedFrom: number
+  suspendedUntil: number
+  suspensionReason: number
+  customAccess: number
+  customAccessUntil: number
   lastTotpStep: number
   linkedCustomerId: number
   createdAt: number
@@ -106,6 +121,11 @@ export type UserMinAggregateInputType = {
   passwordHash?: true
   totpSecretEncrypted?: true
   totpEnabledAt?: true
+  suspendedFrom?: true
+  suspendedUntil?: true
+  suspensionReason?: true
+  customAccess?: true
+  customAccessUntil?: true
   lastTotpStep?: true
   linkedCustomerId?: true
   createdAt?: true
@@ -123,6 +143,11 @@ export type UserMaxAggregateInputType = {
   passwordHash?: true
   totpSecretEncrypted?: true
   totpEnabledAt?: true
+  suspendedFrom?: true
+  suspendedUntil?: true
+  suspensionReason?: true
+  customAccess?: true
+  customAccessUntil?: true
   lastTotpStep?: true
   linkedCustomerId?: true
   createdAt?: true
@@ -140,6 +165,11 @@ export type UserCountAggregateInputType = {
   passwordHash?: true
   totpSecretEncrypted?: true
   totpEnabledAt?: true
+  suspendedFrom?: true
+  suspendedUntil?: true
+  suspensionReason?: true
+  customAccess?: true
+  customAccessUntil?: true
   lastTotpStep?: true
   linkedCustomerId?: true
   createdAt?: true
@@ -244,6 +274,11 @@ export type UserGroupByOutputType = {
   passwordHash: string | null
   totpSecretEncrypted: string | null
   totpEnabledAt: Date | null
+  suspendedFrom: Date | null
+  suspendedUntil: Date | null
+  suspensionReason: string | null
+  customAccess: boolean
+  customAccessUntil: Date | null
   lastTotpStep: bigint
   linkedCustomerId: string | null
   createdAt: Date
@@ -284,6 +319,11 @@ export type UserWhereInput = {
   passwordHash?: Prisma.StringNullableFilter<"User"> | string | null
   totpSecretEncrypted?: Prisma.StringNullableFilter<"User"> | string | null
   totpEnabledAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  suspendedFrom?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  suspendedUntil?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  suspensionReason?: Prisma.StringNullableFilter<"User"> | string | null
+  customAccess?: Prisma.BoolFilter<"User"> | boolean
+  customAccessUntil?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   lastTotpStep?: Prisma.BigIntFilter<"User"> | bigint | number
   linkedCustomerId?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
@@ -323,6 +363,11 @@ export type UserOrderByWithRelationInput = {
   passwordHash?: Prisma.SortOrderInput | Prisma.SortOrder
   totpSecretEncrypted?: Prisma.SortOrderInput | Prisma.SortOrder
   totpEnabledAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  suspendedFrom?: Prisma.SortOrderInput | Prisma.SortOrder
+  suspendedUntil?: Prisma.SortOrderInput | Prisma.SortOrder
+  suspensionReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  customAccess?: Prisma.SortOrder
+  customAccessUntil?: Prisma.SortOrderInput | Prisma.SortOrder
   lastTotpStep?: Prisma.SortOrder
   linkedCustomerId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -366,6 +411,11 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   passwordHash?: Prisma.StringNullableFilter<"User"> | string | null
   totpSecretEncrypted?: Prisma.StringNullableFilter<"User"> | string | null
   totpEnabledAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  suspendedFrom?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  suspendedUntil?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  suspensionReason?: Prisma.StringNullableFilter<"User"> | string | null
+  customAccess?: Prisma.BoolFilter<"User"> | boolean
+  customAccessUntil?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   lastTotpStep?: Prisma.BigIntFilter<"User"> | bigint | number
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
@@ -404,6 +454,11 @@ export type UserOrderByWithAggregationInput = {
   passwordHash?: Prisma.SortOrderInput | Prisma.SortOrder
   totpSecretEncrypted?: Prisma.SortOrderInput | Prisma.SortOrder
   totpEnabledAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  suspendedFrom?: Prisma.SortOrderInput | Prisma.SortOrder
+  suspendedUntil?: Prisma.SortOrderInput | Prisma.SortOrder
+  suspensionReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  customAccess?: Prisma.SortOrder
+  customAccessUntil?: Prisma.SortOrderInput | Prisma.SortOrder
   lastTotpStep?: Prisma.SortOrder
   linkedCustomerId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -429,6 +484,11 @@ export type UserScalarWhereWithAggregatesInput = {
   passwordHash?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   totpSecretEncrypted?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   totpEnabledAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  suspendedFrom?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  suspendedUntil?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  suspensionReason?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  customAccess?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
+  customAccessUntil?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   lastTotpStep?: Prisma.BigIntWithAggregatesFilter<"User"> | bigint | number
   linkedCustomerId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
@@ -446,6 +506,11 @@ export type UserCreateInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -484,6 +549,11 @@ export type UserUncheckedCreateInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   linkedCustomerId?: string | null
   createdAt?: Date | string
@@ -522,6 +592,11 @@ export type UserUpdateInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -560,6 +635,11 @@ export type UserUncheckedUpdateInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -598,6 +678,11 @@ export type UserCreateManyInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   linkedCustomerId?: string | null
   createdAt?: Date | string
@@ -615,6 +700,11 @@ export type UserUpdateManyMutationInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -631,6 +721,11 @@ export type UserUncheckedUpdateManyInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -648,6 +743,11 @@ export type UserCountOrderByAggregateInput = {
   passwordHash?: Prisma.SortOrder
   totpSecretEncrypted?: Prisma.SortOrder
   totpEnabledAt?: Prisma.SortOrder
+  suspendedFrom?: Prisma.SortOrder
+  suspendedUntil?: Prisma.SortOrder
+  suspensionReason?: Prisma.SortOrder
+  customAccess?: Prisma.SortOrder
+  customAccessUntil?: Prisma.SortOrder
   lastTotpStep?: Prisma.SortOrder
   linkedCustomerId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -669,6 +769,11 @@ export type UserMaxOrderByAggregateInput = {
   passwordHash?: Prisma.SortOrder
   totpSecretEncrypted?: Prisma.SortOrder
   totpEnabledAt?: Prisma.SortOrder
+  suspendedFrom?: Prisma.SortOrder
+  suspendedUntil?: Prisma.SortOrder
+  suspensionReason?: Prisma.SortOrder
+  customAccess?: Prisma.SortOrder
+  customAccessUntil?: Prisma.SortOrder
   lastTotpStep?: Prisma.SortOrder
   linkedCustomerId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -686,6 +791,11 @@ export type UserMinOrderByAggregateInput = {
   passwordHash?: Prisma.SortOrder
   totpSecretEncrypted?: Prisma.SortOrder
   totpEnabledAt?: Prisma.SortOrder
+  suspendedFrom?: Prisma.SortOrder
+  suspendedUntil?: Prisma.SortOrder
+  suspensionReason?: Prisma.SortOrder
+  customAccess?: Prisma.SortOrder
+  customAccessUntil?: Prisma.SortOrder
   lastTotpStep?: Prisma.SortOrder
   linkedCustomerId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -724,6 +834,10 @@ export type EnumUserRoleFieldUpdateOperationsInput = {
 
 export type EnumUserStatusFieldUpdateOperationsInput = {
   set?: $Enums.UserStatus
+}
+
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
 }
 
 export type BigIntFieldUpdateOperationsInput = {
@@ -1091,6 +1205,11 @@ export type UserCreateWithoutAccountsInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1128,6 +1247,11 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   linkedCustomerId?: string | null
   createdAt?: Date | string
@@ -1181,6 +1305,11 @@ export type UserUpdateWithoutAccountsInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1218,6 +1347,11 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1255,6 +1389,11 @@ export type UserCreateWithoutSessionsInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1292,6 +1431,11 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   linkedCustomerId?: string | null
   createdAt?: Date | string
@@ -1345,6 +1489,11 @@ export type UserUpdateWithoutSessionsInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1382,6 +1531,11 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1419,6 +1573,11 @@ export type UserCreateWithoutAuthSessionsInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1456,6 +1615,11 @@ export type UserUncheckedCreateWithoutAuthSessionsInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   linkedCustomerId?: string | null
   createdAt?: Date | string
@@ -1509,6 +1673,11 @@ export type UserUpdateWithoutAuthSessionsInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1546,6 +1715,11 @@ export type UserUncheckedUpdateWithoutAuthSessionsInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1583,6 +1757,11 @@ export type UserCreateWithoutRecoveryCodesInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1620,6 +1799,11 @@ export type UserUncheckedCreateWithoutRecoveryCodesInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   linkedCustomerId?: string | null
   createdAt?: Date | string
@@ -1673,6 +1857,11 @@ export type UserUpdateWithoutRecoveryCodesInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1710,6 +1899,11 @@ export type UserUncheckedUpdateWithoutRecoveryCodesInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1747,6 +1941,11 @@ export type UserCreateWithoutTokensInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1784,6 +1983,11 @@ export type UserUncheckedCreateWithoutTokensInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   linkedCustomerId?: string | null
   createdAt?: Date | string
@@ -1826,6 +2030,11 @@ export type UserCreateWithoutCreatedTokensInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1863,6 +2072,11 @@ export type UserUncheckedCreateWithoutCreatedTokensInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   linkedCustomerId?: string | null
   createdAt?: Date | string
@@ -1916,6 +2130,11 @@ export type UserUpdateWithoutTokensInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1953,6 +2172,11 @@ export type UserUncheckedUpdateWithoutTokensInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2001,6 +2225,11 @@ export type UserUpdateWithoutCreatedTokensInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2038,6 +2267,11 @@ export type UserUncheckedUpdateWithoutCreatedTokensInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2075,6 +2309,11 @@ export type UserCreateWithoutAuditAsActorInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2112,6 +2351,11 @@ export type UserUncheckedCreateWithoutAuditAsActorInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   linkedCustomerId?: string | null
   createdAt?: Date | string
@@ -2165,6 +2409,11 @@ export type UserUpdateWithoutAuditAsActorInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2202,6 +2451,11 @@ export type UserUncheckedUpdateWithoutAuditAsActorInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2239,6 +2493,11 @@ export type UserCreateWithoutUploadedMediaInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2276,6 +2535,11 @@ export type UserUncheckedCreateWithoutUploadedMediaInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   linkedCustomerId?: string | null
   createdAt?: Date | string
@@ -2329,6 +2593,11 @@ export type UserUpdateWithoutUploadedMediaInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2366,6 +2635,11 @@ export type UserUncheckedUpdateWithoutUploadedMediaInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2403,6 +2677,11 @@ export type UserCreateWithoutCreatedDealsInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2440,6 +2719,11 @@ export type UserUncheckedCreateWithoutCreatedDealsInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   linkedCustomerId?: string | null
   createdAt?: Date | string
@@ -2482,6 +2766,11 @@ export type UserCreateWithoutUpdatedDealsInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2519,6 +2808,11 @@ export type UserUncheckedCreateWithoutUpdatedDealsInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   linkedCustomerId?: string | null
   createdAt?: Date | string
@@ -2572,6 +2866,11 @@ export type UserUpdateWithoutCreatedDealsInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2609,6 +2908,11 @@ export type UserUncheckedUpdateWithoutCreatedDealsInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2657,6 +2961,11 @@ export type UserUpdateWithoutUpdatedDealsInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2694,6 +3003,11 @@ export type UserUncheckedUpdateWithoutUpdatedDealsInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2731,6 +3045,11 @@ export type UserCreateWithoutLinkedCustomerInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2768,6 +3087,11 @@ export type UserUncheckedCreateWithoutLinkedCustomerInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2821,6 +3145,11 @@ export type UserUpdateWithoutLinkedCustomerInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2858,6 +3187,11 @@ export type UserUncheckedUpdateWithoutLinkedCustomerInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2895,6 +3229,11 @@ export type UserCreateWithoutReviewedSubmissionsInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2932,6 +3271,11 @@ export type UserUncheckedCreateWithoutReviewedSubmissionsInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   linkedCustomerId?: string | null
   createdAt?: Date | string
@@ -2985,6 +3329,11 @@ export type UserUpdateWithoutReviewedSubmissionsInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3022,6 +3371,11 @@ export type UserUncheckedUpdateWithoutReviewedSubmissionsInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3059,6 +3413,11 @@ export type UserCreateWithoutAnnouncementsCreatedInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3096,6 +3455,11 @@ export type UserUncheckedCreateWithoutAnnouncementsCreatedInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   linkedCustomerId?: string | null
   createdAt?: Date | string
@@ -3138,6 +3502,11 @@ export type UserCreateWithoutAnnouncementsPublishedInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3175,6 +3544,11 @@ export type UserUncheckedCreateWithoutAnnouncementsPublishedInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   linkedCustomerId?: string | null
   createdAt?: Date | string
@@ -3228,6 +3602,11 @@ export type UserUpdateWithoutAnnouncementsCreatedInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3265,6 +3644,11 @@ export type UserUncheckedUpdateWithoutAnnouncementsCreatedInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3313,6 +3697,11 @@ export type UserUpdateWithoutAnnouncementsPublishedInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3350,6 +3739,11 @@ export type UserUncheckedUpdateWithoutAnnouncementsPublishedInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3387,6 +3781,11 @@ export type UserCreateWithoutPermissionGrantsInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3424,6 +3823,11 @@ export type UserUncheckedCreateWithoutPermissionGrantsInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   linkedCustomerId?: string | null
   createdAt?: Date | string
@@ -3466,6 +3870,11 @@ export type UserCreateWithoutPermissionGrantsMadeInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3503,6 +3912,11 @@ export type UserUncheckedCreateWithoutPermissionGrantsMadeInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   linkedCustomerId?: string | null
   createdAt?: Date | string
@@ -3556,6 +3970,11 @@ export type UserUpdateWithoutPermissionGrantsInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3593,6 +4012,11 @@ export type UserUncheckedUpdateWithoutPermissionGrantsInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3641,6 +4065,11 @@ export type UserUpdateWithoutPermissionGrantsMadeInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3678,6 +4107,11 @@ export type UserUncheckedUpdateWithoutPermissionGrantsMadeInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3715,6 +4149,11 @@ export type UserCreateWithoutForumReportsResolvedInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3752,6 +4191,11 @@ export type UserUncheckedCreateWithoutForumReportsResolvedInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   linkedCustomerId?: string | null
   createdAt?: Date | string
@@ -3805,6 +4249,11 @@ export type UserUpdateWithoutForumReportsResolvedInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3842,6 +4291,11 @@ export type UserUncheckedUpdateWithoutForumReportsResolvedInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3879,6 +4333,11 @@ export type UserCreateWithoutForumActionsInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3916,6 +4375,11 @@ export type UserUncheckedCreateWithoutForumActionsInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   linkedCustomerId?: string | null
   createdAt?: Date | string
@@ -3969,6 +4433,11 @@ export type UserUpdateWithoutForumActionsInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4006,6 +4475,11 @@ export type UserUncheckedUpdateWithoutForumActionsInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4043,6 +4517,11 @@ export type UserCreateWithoutAppointmentsInvitedInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -4080,6 +4559,11 @@ export type UserUncheckedCreateWithoutAppointmentsInvitedInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   linkedCustomerId?: string | null
   createdAt?: Date | string
@@ -4122,6 +4606,11 @@ export type UserCreateWithoutModeratorAppointmentInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -4159,6 +4648,11 @@ export type UserUncheckedCreateWithoutModeratorAppointmentInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   linkedCustomerId?: string | null
   createdAt?: Date | string
@@ -4212,6 +4706,11 @@ export type UserUpdateWithoutAppointmentsInvitedInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4249,6 +4748,11 @@ export type UserUncheckedUpdateWithoutAppointmentsInvitedInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4297,6 +4801,11 @@ export type UserUpdateWithoutModeratorAppointmentInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4334,6 +4843,11 @@ export type UserUncheckedUpdateWithoutModeratorAppointmentInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4371,6 +4885,11 @@ export type UserCreateWithoutWarningsIssuedInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -4408,6 +4927,11 @@ export type UserUncheckedCreateWithoutWarningsIssuedInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   linkedCustomerId?: string | null
   createdAt?: Date | string
@@ -4461,6 +4985,11 @@ export type UserUpdateWithoutWarningsIssuedInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4498,6 +5027,11 @@ export type UserUncheckedUpdateWithoutWarningsIssuedInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4535,6 +5069,11 @@ export type UserCreateWithoutRestrictionsIssuedInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -4572,6 +5111,11 @@ export type UserUncheckedCreateWithoutRestrictionsIssuedInput = {
   passwordHash?: string | null
   totpSecretEncrypted?: string | null
   totpEnabledAt?: Date | string | null
+  suspendedFrom?: Date | string | null
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  customAccess?: boolean
+  customAccessUntil?: Date | string | null
   lastTotpStep?: bigint | number
   linkedCustomerId?: string | null
   createdAt?: Date | string
@@ -4625,6 +5169,11 @@ export type UserUpdateWithoutRestrictionsIssuedInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4662,6 +5211,11 @@ export type UserUncheckedUpdateWithoutRestrictionsIssuedInput = {
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customAccess?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  customAccessUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastTotpStep?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   linkedCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4901,6 +5455,11 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   passwordHash?: boolean
   totpSecretEncrypted?: boolean
   totpEnabledAt?: boolean
+  suspendedFrom?: boolean
+  suspendedUntil?: boolean
+  suspensionReason?: boolean
+  customAccess?: boolean
+  customAccessUntil?: boolean
   lastTotpStep?: boolean
   linkedCustomerId?: boolean
   createdAt?: boolean
@@ -4941,6 +5500,11 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   passwordHash?: boolean
   totpSecretEncrypted?: boolean
   totpEnabledAt?: boolean
+  suspendedFrom?: boolean
+  suspendedUntil?: boolean
+  suspensionReason?: boolean
+  customAccess?: boolean
+  customAccessUntil?: boolean
   lastTotpStep?: boolean
   linkedCustomerId?: boolean
   createdAt?: boolean
@@ -4959,6 +5523,11 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   passwordHash?: boolean
   totpSecretEncrypted?: boolean
   totpEnabledAt?: boolean
+  suspendedFrom?: boolean
+  suspendedUntil?: boolean
+  suspensionReason?: boolean
+  customAccess?: boolean
+  customAccessUntil?: boolean
   lastTotpStep?: boolean
   linkedCustomerId?: boolean
   createdAt?: boolean
@@ -4977,13 +5546,18 @@ export type UserSelectScalar = {
   passwordHash?: boolean
   totpSecretEncrypted?: boolean
   totpEnabledAt?: boolean
+  suspendedFrom?: boolean
+  suspendedUntil?: boolean
+  suspensionReason?: boolean
+  customAccess?: boolean
+  customAccessUntil?: boolean
   lastTotpStep?: boolean
   linkedCustomerId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "role" | "status" | "passwordHash" | "totpSecretEncrypted" | "totpEnabledAt" | "lastTotpStep" | "linkedCustomerId" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "role" | "status" | "passwordHash" | "totpSecretEncrypted" | "totpEnabledAt" | "suspendedFrom" | "suspendedUntil" | "suspensionReason" | "customAccess" | "customAccessUntil" | "lastTotpStep" | "linkedCustomerId" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
@@ -5053,6 +5627,17 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     passwordHash: string | null
     totpSecretEncrypted: string | null
     totpEnabledAt: Date | null
+    /**
+     * Staff suspension window. Blocked while suspendedFrom <= now < suspendedUntil; a null start means immediately.
+     */
+    suspendedFrom: Date | null
+    suspendedUntil: Date | null
+    suspensionReason: string | null
+    /**
+     * When true the person's checklist in StaffPermissionGrant replaces their role defaults, until customAccessUntil (null = no end).
+     */
+    customAccess: boolean
+    customAccessUntil: Date | null
     lastTotpStep: bigint
     /**
      * Set only when a customer accepts a moderator invitation while signed in; email equality is never used as proof.
@@ -5515,6 +6100,11 @@ export interface UserFieldRefs {
   readonly passwordHash: Prisma.FieldRef<"User", 'String'>
   readonly totpSecretEncrypted: Prisma.FieldRef<"User", 'String'>
   readonly totpEnabledAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly suspendedFrom: Prisma.FieldRef<"User", 'DateTime'>
+  readonly suspendedUntil: Prisma.FieldRef<"User", 'DateTime'>
+  readonly suspensionReason: Prisma.FieldRef<"User", 'String'>
+  readonly customAccess: Prisma.FieldRef<"User", 'Boolean'>
+  readonly customAccessUntil: Prisma.FieldRef<"User", 'DateTime'>
   readonly lastTotpStep: Prisma.FieldRef<"User", 'BigInt'>
   readonly linkedCustomerId: Prisma.FieldRef<"User", 'String'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>

@@ -1,6 +1,7 @@
 import "server-only";
 import { getAuthEnv } from "@/config/env";
-import { roleCan, type AdminRole } from "@/server/auth/permissions";
+import { type AdminRole } from "@/server/auth/permissions";
+import { actorCan } from "@/server/auth/access";
 import { merchantSelect, type DealDatabase } from "@/server/deals/repository";
 import { ALLOWED_RETAILER_DOMAINS } from "@/server/product-extraction/security/domain-allowlist";
 import { convertMerchantUrl } from "./adapters/registry";
@@ -230,7 +231,7 @@ export async function importAffiliateTransactions(
   actor: AffiliateActor,
   batch: ImportBatchInput
 ) {
-  if (!roleCan(actor.role, "affiliate:manage")) {
+  if (!(await actorCan(actor, "affiliate:manage"))) {
     throw new AffiliateError("Forbidden: insufficient permissions.", 403);
   }
 
@@ -298,7 +299,7 @@ export async function getAffiliateClickStats(
   actor: AffiliateActor,
   filters: { dealId?: string; merchantId?: string; channel?: string }
 ) {
-  if (!roleCan(actor.role, "operations:read")) {
+  if (!(await actorCan(actor, "affiliate:view"))) {
     throw new AffiliateError("Forbidden: insufficient permissions.", 403);
   }
 
@@ -325,7 +326,7 @@ export async function getAffiliateTransactions(
   actor: AffiliateActor,
   filters: { provider?: string; status?: string }
 ) {
-  if (!roleCan(actor.role, "operations:read")) {
+  if (!(await actorCan(actor, "affiliate:view"))) {
     throw new AffiliateError("Forbidden: insufficient permissions.", 403);
   }
 

@@ -20,29 +20,31 @@ import {
   Zap,
 } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
+import { can, type AdminRole, type Permission } from "@/server/auth/permissions";
 import { NotificationCenter } from "./NotificationCenter";
 import styles from "./admin-nav.module.css";
 
-type AdminUser = { name: string | null; email: string | null; role: string };
+type AdminUser = { name: string | null; email: string | null; role: string; permissions?: string[] | null };
 
-type NavLink = { href: string; label: string; Icon: typeof Gauge; match: (path: string) => boolean };
+type NavLink = { href: string; label: string; Icon: typeof Gauge; match: (path: string) => boolean; needs: Permission[] };
 
 const dealLinks: NavLink[] = [
-  { href: "/admin/deals", label: "Deal Management", Icon: Tag, match: (path) => path.startsWith("/admin/deals") },
-  { href: "/admin/intelligence", label: "Deal Intelligence", Icon: BarChart3, match: (path) => path.startsWith("/admin/intelligence") },
-  { href: "/admin/scraper", label: "Deal Scraper", Icon: Zap, match: (path) => path.startsWith("/admin/scraper") },
+  { href: "/admin/deals", label: "Deal Management", Icon: Tag, match: (path) => path.startsWith("/admin/deals"), needs: ["deal:edit"] },
+  { href: "/admin/intelligence", label: "Deal Intelligence", Icon: BarChart3, match: (path) => path.startsWith("/admin/intelligence"), needs: ["intelligence:view"] },
+  { href: "/admin/scraper", label: "Deal Scraper", Icon: Zap, match: (path) => path.startsWith("/admin/scraper"), needs: ["scraper:use"] },
 ];
 
 const navLinks: NavLink[] = [
-  { href: "/admin/cuelinks", label: "Affiliate", Icon: Link2, match: (path) => path.startsWith("/admin/cuelinks") },
-  { href: "/admin/analytics", label: "Analytics", Icon: BarChart3, match: (path) => path.startsWith("/admin/analytics") },
+  { href: "/admin/cuelinks", label: "Affiliate", Icon: Link2, match: (path) => path.startsWith("/admin/cuelinks"), needs: ["affiliate:view"] },
+  { href: "/admin/analytics", label: "Analytics", Icon: BarChart3, match: (path) => path.startsWith("/admin/analytics"), needs: ["analytics:view"] },
 ];
 
-const communityLinks = [
-  { href: "/admin/submissions", label: "Community Deals" },
-  { href: "/admin/community", label: "Community Management" },
-  { href: "/admin/announcements", label: "Announcements" },
-  { href: "/admin/moderators", label: "Moderators" },
+// roleOnly: these follow the person's role even when their other access was set one by one.
+const communityLinks: { href: string; label: string; needs: Permission[]; roleOnly?: boolean }[] = [
+  { href: "/admin/submissions", label: "Community Deals", needs: ["mod:submission:review", "deal:publish"] },
+  { href: "/admin/community", label: "Community Management", needs: ["forum:moderate"], roleOnly: true },
+  { href: "/admin/announcements", label: "Announcements", needs: ["announcement.publish", "security:manage"], roleOnly: true },
+  { href: "/admin/moderators", label: "Moderators", needs: ["mod:appoint"], roleOnly: true },
 ];
 
 export function AdminNav(props: { active?: string; onSelectTab?: (tab: "deals" | "categories") => void }) {
@@ -124,6 +126,12 @@ export function AdminNav(props: { active?: string; onSelectTab?: (tab: "deals" |
   const activeMore = pathname === "/";
   const displayName = user?.name?.trim() || user?.email || "Administrator";
   const initials = displayName.slice(0, 1).toUpperCase();
+  // Until the session is known every link shows; the server refuses anything the person may not use.
+  const subject = user ? { role: user.role as AdminRole, permissions: user.permissions ?? null } : null;
+  const ok = (...perms: Permission[]) => !subject || perms.some((p) => can(subject, p));
+  const visibleDealLinks = dealLinks.filter((l) => ok(...l.needs));
+  const visibleNavLinks = navLinks.filter((l) => ok(...l.needs));
+  const visibleCommunity = communityLinks.filter((l) => (l.roleOnly && subject ? l.needs.some((p) => can({ role: subject.role }, p)) : ok(...l.needs)));
 
   return (
     <div className={styles.adminChrome}>
@@ -180,34 +188,36 @@ export function AdminNav(props: { active?: string; onSelectTab?: (tab: "deals" |
 
       <nav ref={navigationRef} className={`${styles.navigation} ${mobileOpen ? styles.navigationOpen : ""}`} aria-label="Admin navigation">
         <div className={styles.navigationInner}>
-          <Link className={linkClass(pathname === "/admin")} href="/admin" onClick={closeNavigation} aria-current={pathname === "/admin" ? "page" : undefined}>
-            <Shield size={19} aria-hidden="true" /><span>Admin</span>
-          </Link>
-          <details className={`${styles.navGroup} ${dealLinks.some((l) => l.match(pathname)) ? styles.navGroupActive : ""}`}>
+          {ok("account:read") && (
+            <Link className={linkClass(pathname === "/admin")} href="/admin" onClick={closeNavigation} aria-current={pathname === "/admin" ? "page" : undefined}>
+              <Shield size={19} aria-hidden="true" /><span>Admin</span>
+            </Link>
+          )}
+          {visibleDealLinks.length > 0 && <details className={`${styles.navGroup} ${dealLinks.some((l) => l.match(pathname)) ? styles.navGroupActive : ""}`}>
             <summary aria-label="Deals menu"><Tag size={19} aria-hidden="true" /><span>Deals</span><ChevronDown size={15} aria-hidden="true" /></summary>
             <div className={styles.navDropdown}>
-              {dealLinks.map(({ href, label, match }) => <Link key={href} href={href} onClick={closeNavigation} aria-current={match(pathname) ? "page" : undefined}>{label}</Link>)}
+              {visibleDealLinks.map(({ href, label, match }) => <Link key={href} href={href} onClick={closeNavigation} aria-current={match(pathname) ? "page" : undefined}>{label}</Link>)}
             </div>
-          </details>
-          <details className={`${styles.navGroup} ${pathname.startsWith("/admin/categories") ? styles.navGroupActive : ""}`}>
+          </details>}
+          {ok("deal:edit", "category:manage") && <details className={`${styles.navGroup} ${pathname.startsWith("/admin/categories") ? styles.navGroupActive : ""}`}>
             <summary aria-label="Categories menu"><FolderOpen size={19} aria-hidden="true" /><span>Categories</span><ChevronDown size={15} aria-hidden="true" /></summary>
             <div className={styles.navDropdown}><Link href="/admin/categories" onClick={closeNavigation}>Category Management</Link></div>
-          </details>
-          <details className={`${styles.navGroup} ${pathname.startsWith("/admin/merchant-websites") ? styles.navGroupActive : ""}`}>
+          </details>}
+          {ok("deal:edit", "merchant:manage") && <details className={`${styles.navGroup} ${pathname.startsWith("/admin/merchant-websites") ? styles.navGroupActive : ""}`}>
             <summary aria-label="Merchants menu"><Store size={19} aria-hidden="true" /><span>Merchants</span><ChevronDown size={15} aria-hidden="true" /></summary>
             <div className={styles.navDropdown}><Link href="/admin/merchant-websites" onClick={closeNavigation}>Merchant Websites</Link></div>
-          </details>
-          {navLinks.map(({ href, label, Icon, match }) => (
+          </details>}
+          {visibleNavLinks.map(({ href, label, Icon, match }) => (
             <Link key={href} className={linkClass(match(pathname))} href={href} onClick={closeNavigation} aria-current={match(pathname) ? "page" : undefined}>
               <Icon size={19} aria-hidden="true" /><span>{label}</span>
             </Link>
           ))}
-          <details className={`${styles.navGroup} ${activeCommunity ? styles.navGroupActive : ""}`}>
+          {visibleCommunity.length > 0 && <details className={`${styles.navGroup} ${activeCommunity ? styles.navGroupActive : ""}`}>
             <summary aria-label="Community administration menu"><Users size={19} aria-hidden="true" /><span>Community Deals</span><ChevronDown size={15} aria-hidden="true" /></summary>
             <div className={styles.navDropdown}>
-              {communityLinks.map((item) => <Link key={item.href} href={item.href} onClick={closeNavigation}>{item.label}</Link>)}
+              {visibleCommunity.map((item) => <Link key={item.href} href={item.href} onClick={closeNavigation}>{item.label}</Link>)}
             </div>
-          </details>
+          </details>}
           <details className={`${styles.navGroup} ${activeMore ? styles.navGroupActive : ""}`}>
             <summary aria-label="More administration links"><Menu size={19} aria-hidden="true" /><span>More</span><ChevronDown size={15} aria-hidden="true" /></summary>
             <div className={styles.navDropdown}>
@@ -218,7 +228,7 @@ export function AdminNav(props: { active?: string; onSelectTab?: (tab: "deals" |
       </nav>
       {dealLinks.some((l) => l.match(pathname)) && (
         <div className={styles.dealTabs} role="tablist" aria-label="Deals sections">
-          {dealLinks.map(({ href, label, Icon, match }) => (
+          {visibleDealLinks.map(({ href, label, Icon, match }) => (
             <Link key={href} href={href} role="tab" aria-selected={match(pathname)} className={`${styles.dealTab} ${match(pathname) ? styles.dealTabActive : ""}`}>
               <Icon size={16} aria-hidden="true" /><span>{label}</span>
             </Link>

@@ -3,7 +3,8 @@ import { redirect } from "next/navigation";
 import { AdminNav } from "@/components/admin/AdminNav";
 import { getDatabase } from "@/server/db/client";
 import { getCurrentAuthContext } from "@/server/auth/session";
-import { roleCan } from "@/server/auth/permissions";
+import { can } from "@/server/auth/permissions";
+import { firstAllowedPath } from "@/server/auth/modules";
 import styles from "./intelligence.module.css";
 
 function countByStatus<T extends string>(rows: Array<{ status: T; _count: { _all: number } }>) {
@@ -43,7 +44,7 @@ function when(value: Date | null | undefined) {
 export default async function DealIntelligencePage() {
   const context = await getCurrentAuthContext();
   if (!context) redirect("/admin/login");
-  if (!roleCan(context.user.role, "operations:read")) redirect("/admin/deals");
+  if (!can(context.user, "intelligence:view")) redirect(firstAllowedPath(context.user));
 
   const db = getDatabase();
   const [candidateRowsResult, authorizationRowsResult, candidateTotalResult, shadowTotalResult, latestCandidateResult, latestAuthorizationResult,

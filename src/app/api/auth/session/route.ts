@@ -9,6 +9,7 @@ export async function GET() {
       email: context.user.email,
       name: context.user.name,
       role: context.user.role,
+      permissions: context.user.permissions,
     },
   });
 }

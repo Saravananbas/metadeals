@@ -157,6 +157,11 @@ export const UserScalarFieldEnum = {
   passwordHash: 'passwordHash',
   totpSecretEncrypted: 'totpSecretEncrypted',
   totpEnabledAt: 'totpEnabledAt',
+  suspendedFrom: 'suspendedFrom',
+  suspendedUntil: 'suspendedUntil',
+  suspensionReason: 'suspensionReason',
+  customAccess: 'customAccess',
+  customAccessUntil: 'customAccessUntil',
   lastTotpStep: 'lastTotpStep',
   linkedCustomerId: 'linkedCustomerId',
   createdAt: 'createdAt',
@@ -1442,6 +1447,7 @@ export const UserOrderByRelevanceFieldEnum = {
   image: 'image',
   passwordHash: 'passwordHash',
   totpSecretEncrypted: 'totpSecretEncrypted',
+  suspensionReason: 'suspensionReason',
   linkedCustomerId: 'linkedCustomerId'
 } as const
 

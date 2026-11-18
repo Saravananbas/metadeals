@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { AdminNav } from "@/components/admin/AdminNav";
-import { roleCan, type AdminRole } from "@/server/auth/permissions";
+import { can, type AdminRole } from "@/server/auth/permissions";
 
 interface CategoryEntry {
   id: string;
@@ -17,9 +17,11 @@ function errorMessage(error: unknown, fallback: string): string {
 
 export function CategoriesManager({
   role,
+  permissions = null,
   initialCategories = [],
 }: {
   role: AdminRole;
+  permissions?: readonly string[] | null;
   initialCategories?: CategoryEntry[];
 }) {
   const [categories, setCategories] = useState<CategoryEntry[]>(initialCategories);
@@ -334,7 +336,7 @@ export function CategoriesManager({
       )}
 
       {/* Add / Edit Form Panel */}
-      {roleCan(role, "category:manage") && isFormOpen && (
+      {can({ role, permissions }, "category:manage") && isFormOpen && (
         <section
           style={{
             background: "var(--md-color-primary-subtle)",

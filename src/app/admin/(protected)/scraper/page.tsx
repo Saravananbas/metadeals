@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { getCurrentAuthContext } from "@/server/auth/session";
-import { roleCan } from "@/server/auth/permissions";
+import { can } from "@/server/auth/permissions";
 import { ScraperDashboard, type TabKey } from "./ScraperDashboard";
 
 export default async function ScraperAdminPage({
@@ -12,7 +12,7 @@ export default async function ScraperAdminPage({
   if (!context) redirect("/admin/login");
 
   // Require either deal:edit or account:read
-  if (!roleCan(context.user.role, "deal:edit") && !roleCan(context.user.role, "account:read")) {
+  if (!can(context.user, "scraper:use") && !can(context.user, "account:read")) {
     redirect("/admin/login");
   }
 

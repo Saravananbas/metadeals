@@ -631,10 +631,6 @@ export type NullableEnumUserRoleFieldUpdateOperationsInput = {
   set?: $Enums.UserRole | null
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
-}
-
 export type AuthTokenCreateWithoutUserInput = {
   id?: string
   tokenHash: string

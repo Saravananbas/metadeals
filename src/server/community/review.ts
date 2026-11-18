@@ -9,10 +9,10 @@ import { readImage } from "@/server/storage/media";
 import type { AdminRole } from "@/server/auth/permissions";
 
 type Db = ReturnType<typeof getDatabase>;
-export type ReviewActor = { id: string; role: AdminRole };
+export type ReviewActor = { id: string; role: AdminRole; permissions?: readonly string[] | null };
 
 const assertCanReview = (actor: ReviewActor) => {
-  if (!canReviewSubmissions(actor.role)) throw new DealError("Permission denied.", 403);
+  if (!canReviewSubmissions(actor)) throw new DealError("Permission denied.", 403);
 };
 
 const listSelect = {
@@ -34,7 +34,7 @@ export async function listSubmissions(actor: ReviewActor, status: "PENDING_REVIE
   return {
     total, page, pending,
     // Moderators see the member's public user name only, never their real name or email (administrators and editors keep what they had).
-    items: items.map(({ customer, ...row }) => ({ ...row, customer: canCreateDealsDirectly(actor.role) ? { id: customer.id, name: customer.name, email: customer.email } : { id: customer.id, name: customer.forumProfile?.handle ?? "member", email: "" }, submittedAt: row.submittedAt.toISOString(), reviewedAt: row.reviewedAt?.toISOString() ?? null, imageUrl: `${actor.role === "COMMUNITY_MODERATOR" ? "/api/v1/moderator" : "/api/v1/admin"}/submissions/${row.id}/image` })),
+    items: items.map(({ customer, ...row }) => ({ ...row, customer: canCreateDealsDirectly(actor) ? { id: customer.id, name: customer.name, email: customer.email } : { id: customer.id, name: customer.forumProfile?.handle ?? "member", email: "" }, submittedAt: row.submittedAt.toISOString(), reviewedAt: row.reviewedAt?.toISOString() ?? null, imageUrl: `${actor.role === "COMMUNITY_MODERATOR" ? "/api/v1/moderator" : "/api/v1/admin"}/submissions/${row.id}/image` })),
   };
 }
 
@@ -86,7 +86,7 @@ export async function approveSubmission(actor: ReviewActor, id: string, raw: unk
       mediaId: media.id, mrpMinor: input.mrpMinor, priceMinor: input.priceMinor, currency: "INR", rating: null, reviewCount: null, ratingSource: null,
       productUrl: input.productUrl, affiliateUrl: null, couponCode: input.couponCode || null, status: "DRAFT", publishedAt: null, startsAt: null, expiresAt: null,
       featured: false, trending: false, options: [],
-    }, undefined, undefined, { moderatorDraft: !canCreateDealsDirectly(actor.role) });
+    }, undefined, undefined, { moderatorDraft: !canCreateDealsDirectly(actor) });
     const changed = await tx.communityDealSubmission.updateMany({
       where: { id, version: input.version, status: "PENDING_REVIEW" },
       data: { status: "APPROVED", dealId: deal.id, reviewedById: actor.id, reviewedAt: new Date(), rejectionReason: null, version: { increment: 1 } },

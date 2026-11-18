@@ -59,6 +59,7 @@ function Table({ head, rows, empty = "No data for this period yet." }: { head: {
 }
 
 const Note = ({ text }: { text?: string | null }) => (text ? <p className={styles.note}>{text}</p> : null);
+// eslint-disable-next-line @next/next/no-img-element -- small admin thumbnails from the media endpoint, already resized
 const Thumb = ({ src }: { src: string | null }) => (src ? <img className={styles.thumb} src={src} alt="" loading="lazy" /> : <span className={styles.thumb} />);
 
 function Overview({ d, go }: { d: D; go: (t: TabKey) => void }) {

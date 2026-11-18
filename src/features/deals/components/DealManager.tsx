@@ -10,7 +10,7 @@ import {
   formatPaise,
   formatINR,
 } from "../currency";
-import { roleCan, type AdminRole } from "@/server/auth/permissions";
+import { can, type AdminRole } from "@/server/auth/permissions";
 import { Calendar, Eye, ImageIcon, Link2, Save, Send, Settings, Tag, UploadCloud, Wand2 } from "lucide-react";
 import { AdminNav } from "@/components/admin/AdminNav";
 import styles from "./manager.module.css";
@@ -101,7 +101,7 @@ async function request<T>(path: string, method = "GET", body?: unknown, signal?:
   return data;
 }
 
-export function DealManager({ role }: { role: AdminRole }) {
+export function DealManager({ role, permissions = null }: { role: AdminRole; permissions?: readonly string[] | null }) {
   const [rows, setRows] = useState<Row[]>([]);
   const [categories, setCategories] = useState<Entry[]>([]);
   const [merchants, setMerchants] = useState<Entry[]>([]);
@@ -2038,7 +2038,7 @@ export function DealManager({ role }: { role: AdminRole }) {
             </div>
           </div>
 
-        {roleCan(role, "category:manage") && (
+        {can({ role, permissions }, "category:manage") && (
           <form
             className={styles.grid}
             style={{
@@ -2785,7 +2785,7 @@ export function DealManager({ role }: { role: AdminRole }) {
                 onChange={(e) => field("couponCode", e.target.value ? e.target.value.toUpperCase() : null)}
               />
             </label>
-            {roleCan(role, "affiliate:manage") && (
+            {can({ role, permissions }, "affiliate:manage") && (
               <label className={styles.span2}>
                 Manual affiliate URL (optional)
                 <input
@@ -3040,7 +3040,7 @@ export function DealManager({ role }: { role: AdminRole }) {
             >
               Preview saved version
             </button>
-            {roleCan(role, "deal:archive") && (
+            {can({ role, permissions }, "deal:archive") && (
               <>
                 <button
                   disabled={busy}
@@ -3167,56 +3167,82 @@ export function DealManager({ role }: { role: AdminRole }) {
         {!rows.length && (
           <p>No deals yet. Add a category, merchant and product image to create the first draft.</p>
         )}
-        <div className={styles.list}>
-          {rows.map((row) => (
-            <article key={row.id} className={styles.dealCard}>
-              <div className={styles.dealCardSummary}>
-                <strong>{row.title}</strong>
-                <span>
-                  {row.status} · {formatPaise(row.priceMinor)}
-                  {row.expiresAt ? " · expiry " + row.expiresAt : ""}
-                </span>
-              </div>
-              <div style={{ display: "flex", gap: 8 }}>
-                {row.everPublished && ["PUBLISHED", "EXPIRED"].includes(row.status) && (
-                  <div className={styles.dealStatusActions}>
-                    <button
-                      type="button"
-                      className={`${styles.dealActiveButton} ${row.status === "EXPIRED" ? styles.dealActiveButtonDisabled : ""}`}
-                      disabled={busy || row.status === "EXPIRED" || !roleCan(role, "deal:publish")}
-                      aria-disabled={row.status === "EXPIRED"}
-                      title={row.status === "EXPIRED" ? "Expired deals cannot be active until you clear the expired checkbox" : "Deal is active"}
-                    >
-                      Active
-                    </button>
-                    <label className={styles.expiredCheckbox}>
-                      <input
-                        type="checkbox"
-                        checked={row.status === "EXPIRED"}
-                        disabled={busy || !roleCan(role, "deal:publish")}
-                        onChange={(event) => updateExpired(row, event.target.checked)}
-                      />
-                      Expired Deals
-                    </label>
-                  </div>
-                )}
-                {["DRAFT", "PENDING_REVIEW"].includes(row.status) && roleCan(role, "deal:publish") && (
-                  <button type="button" className={styles.dealCardEdit} disabled={busy} onClick={() => publishRow(row)} aria-label={`Publish ${row.title}`}>
-                    🚀 Publish
-                  </button>
-                )}
-                <button type="button" className={styles.dealCardEdit} onClick={() => edit(row)} aria-label={`Edit ${row.title}`}>
-                  ✏️ Edit
-                </button>
-                {roleCan(role, "deal:archive") && (
-                  <button type="button" className={styles.dealCardEdit} style={{ background: "var(--md-red-700)" }} disabled={busy} onClick={() => removeDeal(row)} aria-label={`Delete ${row.title}`}>
-                    🗑 Delete
-                  </button>
-                )}
-              </div>
-            </article>
-          ))}
-        </div>
+        {rows.length > 0 && (
+          <div className={styles.dealTableScroll}>
+            <table className={styles.dealTable}>
+              <thead>
+                <tr>
+                  <th scope="col" className={styles.dealColTitle}>Deal</th>
+                  <th scope="col">Deal Price</th>
+                  <th scope="col">Published</th>
+                  <th scope="col">Active</th>
+                  <th scope="col">Edit</th>
+                  <th scope="col">Delete</th>
+                  <th scope="col">Expired Deal</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map((row) => {
+                  const live = row.everPublished && ["PUBLISHED", "EXPIRED"].includes(row.status);
+                  const canPublishNow = ["DRAFT", "PENDING_REVIEW"].includes(row.status) && can({ role, permissions }, "deal:publish");
+                  return (
+                    <tr key={row.id}>
+                      <td className={styles.dealColTitle}>
+                        <span className={styles.dealTitleText} title={row.title}>{row.title.length > 60 ? `${row.title.slice(0, 59).trimEnd()}…` : row.title}</span>
+                        {row.expiresAt && <small className={styles.dealSub}>expiry {row.expiresAt}</small>}
+                      </td>
+                      <td>{formatPaise(row.priceMinor)}</td>
+                      <td>{row.status === "PUBLISHED" || row.status === "EXPIRED" ? "Yes" : "No"}</td>
+                      <td>
+                        {live && (
+                          <button
+                            type="button"
+                            className={`${styles.dealActiveButton} ${row.status === "EXPIRED" ? styles.dealActiveButtonDisabled : ""}`}
+                            disabled={busy || row.status === "EXPIRED" || !can({ role, permissions }, "deal:publish")}
+                            aria-disabled={row.status === "EXPIRED"}
+                            title={row.status === "EXPIRED" ? "Expired deals cannot be active until you clear the expired checkbox" : "Deal is active"}
+                          >
+                            Active
+                          </button>
+                        )}
+                        {canPublishNow && (
+                          <button type="button" className={styles.dealCardEdit} disabled={busy} onClick={() => publishRow(row)} aria-label={`Publish ${row.title}`}>
+                            🚀 Publish
+                          </button>
+                        )}
+                      </td>
+                      <td>
+                        <button type="button" className={`${styles.dealCardEdit} ${styles.dealIconButton}`} onClick={() => edit(row)} aria-label={`Edit ${row.title}`} title="Edit">
+                          ✏️
+                        </button>
+                      </td>
+                      <td>
+                        {can({ role, permissions }, "deal:archive") && (
+                          <button type="button" className={`${styles.dealCardEdit} ${styles.dealDeleteButton}`} style={{ background: "var(--md-red-700)", color: "var(--md-white)" }} disabled={busy} onClick={() => removeDeal(row)} aria-label={`Delete ${row.title}`}>
+                            🗑 Delete
+                          </button>
+                        )}
+                      </td>
+                      <td>
+                        {live && (
+                          <input
+                            type="checkbox"
+                            className={styles.expiredCheckbox}
+                            aria-label={`Expired: ${row.title}`}
+                            title="Expired Deal"
+                            checked={row.status === "EXPIRED"}
+                            disabled={busy || !can({ role, permissions }, "deal:publish")}
+                            onChange={(event) => updateExpired(row, event.target.checked)}
+                          />
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
         <div className={styles.actions}>
           <button
             disabled={busy || page === 1}

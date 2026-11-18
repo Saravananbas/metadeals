@@ -1,5 +1,5 @@
 import { getCurrentAuthContext } from "@/server/auth/session";
-import { roleCan } from "@/server/auth/permissions";
+import { can } from "@/server/auth/permissions";
 import { clientIpFromHeaders } from "@/server/client-ip";
 
 export const dynamic = "force-dynamic";
@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
 export async function GET(request: Request) {
   const context = await getCurrentAuthContext();
   if (!context) return Response.json({ error: "Sign in required." }, { status: 401, headers: { "Cache-Control": "no-store" } });
-  if (!roleCan(context.user.role, "operations:read")) return Response.json({ error: "Permission denied." }, { status: 403, headers: { "Cache-Control": "no-store" } });
+  if (!can(context.user, "operations:read")) return Response.json({ error: "Permission denied." }, { status: 403, headers: { "Cache-Control": "no-store" } });
   const forwarded = (request.headers.get("x-forwarded-for") ?? "").split(",").map((v) => v.trim()).filter(Boolean);
   return Response.json({
     clientIpUsed: clientIpFromHeaders(request.headers),

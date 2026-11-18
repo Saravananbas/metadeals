@@ -28,8 +28,11 @@ export async function GET(request: Request) {
   const db = getDatabase();
   const staffRoles = [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.EDITOR];
   const search = query.search.trim();
+  // Deleted accounts stay in the database but are not shown. Timed suspensions that have run out go back to Active.
+  await db.user.updateMany({ where: { status: UserStatus.SUSPENDED, suspendedUntil: { lte: new Date() } }, data: { status: UserStatus.ACTIVE, suspendedFrom: null, suspendedUntil: null, suspensionReason: null } });
   const where = {
     role: { in: staffRoles },
+    status: { not: UserStatus.DELETED },
     ...(search ? { OR: [
       { email: { contains: search, mode: "insensitive" as const } },
       { name: { contains: search, mode: "insensitive" as const } },
@@ -49,13 +52,18 @@ export async function GET(request: Request) {
         status: true,
         totpEnabledAt: true,
         createdAt: true,
+        suspendedFrom: true,
+        suspendedUntil: true,
+        suspensionReason: true,
+        customAccess: true,
+        customAccessUntil: true,
       },
     }),
     db.user.count({ where }),
-    db.user.count({ where: { role: { in: staffRoles } } }),
+    db.user.count({ where: { role: { in: staffRoles }, status: { not: UserStatus.DELETED } } }),
     db.user.count({ where: { role: { in: staffRoles }, status: UserStatus.ACTIVE } }),
     db.user.count({ where: { role: { in: staffRoles }, status: UserStatus.SUSPENDED } }),
-    db.user.count({ where: { role: { in: staffRoles }, totpEnabledAt: { not: null } } }),
+    db.user.count({ where: { role: { in: staffRoles }, status: { not: UserStatus.DELETED }, totpEnabledAt: { not: null } } }),
   ]);
   const accountIds = users.map((user) => user.id);
   const creationEvents = accountIds.length ? await db.auditEvent.findMany({

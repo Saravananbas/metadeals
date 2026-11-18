@@ -23,6 +23,7 @@ import {
   verifyTotp,
 } from "./crypto";
 import { ABSOLUTE_SESSION_TIMEOUT_MS, getSessionExpiry } from "./session-policy";
+import { suspensionBlocks, suspensionEnded } from "./suspension";
 
 export const BOOTSTRAP_EMAIL_APPROVED = "saran.be.2005@gmail.com";
 const BOOTSTRAP_STATE_ID = "initial-super-admin";
@@ -129,11 +130,16 @@ export async function authenticate(input: {
     where: { email },
     select: {
       id: true, email: true, passwordHash: true, role: true, status: true,
-      totpSecretEncrypted: true, totpEnabledAt: true, lastTotpStep: true,
+      totpSecretEncrypted: true, totpEnabledAt: true, lastTotpStep: true, suspendedFrom: true, suspendedUntil: true,
     },
   });
+  if (user && suspensionEnded(user, now)) {
+    // A timed suspension has run out: put the account back to normal before the checks below.
+    await db.user.updateMany({ where: { id: user.id, status: UserStatus.SUSPENDED }, data: { status: UserStatus.ACTIVE, suspendedFrom: null, suspendedUntil: null, suspensionReason: null } });
+    user.status = UserStatus.ACTIVE;
+  }
   const passwordMatches = await verifyPassword(user?.passwordHash ?? await DUMMY_HASH, input.password);
-  if (!user || !passwordMatches || user.status !== UserStatus.ACTIVE || !user.totpEnabledAt || !user.totpSecretEncrypted) {
+  if (!user || !passwordMatches || user.status !== UserStatus.ACTIVE || suspensionBlocks(user, now) || !user.totpEnabledAt || !user.totpSecretEncrypted) {
     await recordLoginFailure(subjectHashes, user?.id ?? null, input.metadata);
     throw new AuthenticationFailure("Invalid email, password, or authenticator code.");
   }

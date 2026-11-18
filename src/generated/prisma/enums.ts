@@ -22,7 +22,9 @@ export type UserRole = (typeof UserRole)[keyof typeof UserRole]
 export const UserStatus = {
   PENDING_SETUP: 'PENDING_SETUP',
   ACTIVE: 'ACTIVE',
-  SUSPENDED: 'SUSPENDED'
+  SUSPENDED: 'SUSPENDED',
+  DISABLED: 'DISABLED',
+  DELETED: 'DELETED'
 } as const
 
 export type UserStatus = (typeof UserStatus)[keyof typeof UserStatus]

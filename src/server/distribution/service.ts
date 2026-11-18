@@ -1,5 +1,6 @@
 import "server-only";
-import { roleCan, type AdminRole } from "@/server/auth/permissions";
+import { type AdminRole } from "@/server/auth/permissions";
+import { actorCan } from "@/server/auth/access";
 import type { DealDatabase } from "@/server/deals/repository";
 import {
   formatTelegramMessage,
@@ -27,7 +28,7 @@ export async function createDestination(
   actor: DistributionActor,
   input: DestinationInput
 ) {
-  if (!roleCan(actor.role, "operations:read") && !roleCan(actor.role, "deal:publish")) {
+  if (!(await actorCan(actor, "operations:read")) && !(await actorCan(actor, "deal:publish"))) {
     throw new DistributionError("Forbidden: insufficient permissions.", 403);
   }
 
@@ -49,7 +50,7 @@ export async function createDestination(
 }
 
 export async function listDestinations(db: DealDatabase, actor: DistributionActor) {
-  if (!roleCan(actor.role, "operations:read") && !roleCan(actor.role, "deal:publish")) {
+  if (!(await actorCan(actor, "operations:read")) && !(await actorCan(actor, "deal:publish"))) {
     throw new DistributionError("Forbidden: insufficient permissions.", 403);
   }
 
@@ -63,7 +64,7 @@ export async function publishDealToDestinations(
   actor: DistributionActor,
   input: PublishDealInput
 ) {
-  if (!roleCan(actor.role, "deal:publish")) {
+  if (!(await actorCan(actor, "deal:publish"))) {
     throw new DistributionError("Forbidden: deal:publish permission required.", 403);
   }
 
@@ -206,7 +207,7 @@ export async function getDistributionHistory(
   actor: DistributionActor,
   dealId?: string
 ) {
-  if (!roleCan(actor.role, "operations:read") && !roleCan(actor.role, "deal:publish")) {
+  if (!(await actorCan(actor, "operations:read")) && !(await actorCan(actor, "deal:publish"))) {
     throw new DistributionError("Forbidden: insufficient permissions.", 403);
   }
 

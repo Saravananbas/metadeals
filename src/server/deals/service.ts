@@ -1,7 +1,9 @@
 import "server-only";
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { getAuthEnv } from "@/config/env";
-import { roleCan, type Permission, type AdminRole } from "@/server/auth/permissions";
+import { can, type Permission, type AdminRole } from "@/server/auth/permissions";
+import { resolveAccess } from "@/server/auth/access";
+import { suspensionBlocks } from "@/server/auth/suspension";
 import { dealInputSchema, categoryInputSchema, merchantInputSchema } from "@/features/deals/validation";
 import { dealInclude, merchantSelect, type DealDatabase, type DealRecord } from "./repository";
 
@@ -11,7 +13,7 @@ export class DealError extends Error {
 export type DealActor = { id: string; role: AdminRole };
 export async function assertDealPermission(db: DealDatabase, actor: DealActor, permission: Permission) {
   const user = await db.user.findUnique({ where: { id: actor.id } });
-  if (!user || user.status !== "ACTIVE" || !user.totpEnabledAt || !roleCan(user.role, permission)) throw new DealError("Permission denied.", 403);
+  if (!user || user.status !== "ACTIVE" || suspensionBlocks(user) || !user.totpEnabledAt || !can({ role: user.role, permissions: await resolveAccess(user.id) }, permission)) throw new DealError("Permission denied.", 403);
 }
 function snapshot(deal: DealRecord) {
   return JSON.parse(JSON.stringify({ ...deal, category: undefined, merchant: undefined, media: undefined }));

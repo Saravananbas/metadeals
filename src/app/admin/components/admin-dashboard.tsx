@@ -3,9 +3,10 @@
 import { type FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import {
   CheckCircle2, ChevronLeft, ChevronRight, CircleUserRound, FileText,
-  PauseCircle, Plus, RotateCw, Search, ShieldCheck, Users,
+  Ban, KeyRound, PauseCircle, Plus, RotateCw, Search, ShieldCheck, Trash2, Users, X,
 } from "lucide-react";
 import { AdminNav } from "@/components/admin/AdminNav";
+import { ACCESS_MODULES, ROLE_ONLY_MODULES } from "@/server/auth/modules";
 import type { UserRole, UserStatus } from "@/generated/prisma/client";
 import styles from "../admin.module.css";
 
@@ -17,6 +18,11 @@ type Account = {
   status: UserStatus;
   totpEnabledAt: string | null;
   createdAt: string;
+  suspendedFrom: string | null;
+  suspendedUntil: string | null;
+  suspensionReason: string | null;
+  customAccess: boolean;
+  customAccessUntil: string | null;
   createdBy: { id: string; name: string | null; email: string | null } | null;
 };
 
@@ -52,6 +58,25 @@ function formatDate(value: string) {
   return new Intl.DateTimeFormat("en-IN", { dateStyle: "medium", timeStyle: "short" }).format(new Date(value));
 }
 
+type StateAction = "suspend" | "disable" | "enable" | "delete";
+const ACTION_COPY: Record<StateAction, { title: string; verb: string; text: string; needsCode: boolean }> = {
+  suspend: { title: "Suspend account", verb: "Suspend", text: "The person cannot sign in during the period you choose and is signed out when it starts.", needsCode: false },
+  disable: { title: "Disable account", verb: "Disable", text: "The person is signed out and cannot sign in until you enable the account again.", needsCode: true },
+  enable: { title: "Enable account", verb: "Enable", text: "The person can sign in again with their existing password and authenticator.", needsCode: true },
+  delete: { title: "Delete account", verb: "Delete", text: "The account disappears from this list and can no longer sign in. Its records stay in the database for the audit trail, and its email address cannot be reused.", needsCode: true },
+};
+/** Value for a datetime-local input, in the time zone of the browser. */
+function localInput(date: Date) {
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+function statusLabel(account: Account) {
+  const now = Date.now();
+  if (account.status === "SUSPENDED" && account.suspendedUntil) return `Suspended until ${formatDate(account.suspendedUntil)}`;
+  if (account.status === "ACTIVE" && account.suspendedUntil && new Date(account.suspendedUntil).getTime() > now) return `Suspension scheduled from ${formatDate(account.suspendedFrom ?? account.suspendedUntil)}`;
+  return account.status.replaceAll("_", " ");
+}
+
 export function AdminDashboard({ actorId, role }: { actorId: string; role: UserRole }) {
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [counts, setCounts] = useState({ total: 0, active: 0, suspended: 0, mfaEnabled: 0 });
@@ -77,6 +102,10 @@ export function AdminDashboard({ actorId, role }: { actorId: string; role: UserR
   const [roleChanges, setRoleChanges] = useState<Record<string, UserRole>>({});
   const [reloadVersion, setReloadVersion] = useState(0);
   const canReadAudit = role === "SUPER_ADMIN";
+  const [stateDialog, setStateDialog] = useState<{ account: Account; action: StateAction; from: string; until: string } | null>(null);
+  const [dialogError, setDialogError] = useState("");
+  const [dialogBusy, setDialogBusy] = useState(false);
+  const [accessDialog, setAccessDialog] = useState<{ account: Account; levels: Record<string, string>; until: string; loading: boolean } | null>(null);
 
   const load = useCallback(async (signal?: AbortSignal) => {
     const accountParams = new URLSearchParams({ page: String(accountPage), limit: "25", search: accountQuery });
@@ -190,6 +219,76 @@ export function AdminDashboard({ actorId, role }: { actorId: string; role: UserR
     }
   }
 
+  function openState(account: Account, action: StateAction) {
+    setDialogError("");
+    // Defaults are worked out here, in the click handler, so the dialog render stays pure.
+    const now = Date.now();
+    setStateDialog({ account, action, from: localInput(new Date(now)), until: localInput(new Date(now + 7 * 24 * 60 * 60 * 1000)) });
+  }
+
+  async function submitState(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!stateDialog) return;
+    const form = new FormData(event.currentTarget);
+    const { account, action } = stateDialog;
+    const body: Record<string, string> = { action };
+    if (ACTION_COPY[action].needsCode) body.totp = String(form.get("totp") ?? "").trim();
+    if (action === "suspend") {
+      const from = String(form.get("from") ?? ""), until = String(form.get("until") ?? "");
+      if (!from || !until) { setDialogError("Choose the start and end date and time."); return; }
+      body.suspendedFrom = new Date(from).toISOString();
+      body.suspendedUntil = new Date(until).toISOString();
+      body.reason = String(form.get("reason") ?? "");
+    }
+    setDialogBusy(true);
+    setDialogError("");
+    try {
+      await requestJson(`/api/admin/accounts/${encodeURIComponent(account.id)}/state`, {
+        method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body),
+      });
+      setStateDialog(null);
+      setNotice(`${ACTION_COPY[action].verb} done for ${account.email ?? "the account"}.`);
+      setReloadVersion((version) => version + 1);
+    } catch (reason) {
+      setDialogError(reason instanceof Error ? reason.message : "The action could not be completed.");
+    } finally {
+      setDialogBusy(false);
+    }
+  }
+
+  async function openAccess(account: Account) {
+    setDialogError("");
+    setAccessDialog({ account, levels: {}, until: "", loading: true });
+    try {
+      const { access } = await requestJson<{ access: { customAccess: boolean; customAccessUntil: string | null; levels: Record<string, string> } }>(`/api/admin/accounts/${encodeURIComponent(account.id)}/access`);
+      setAccessDialog({ account, levels: access.customAccess ? access.levels : {}, until: access.customAccessUntil ? localInput(new Date(access.customAccessUntil)) : "", loading: false });
+    } catch (reason) {
+      setAccessDialog(null);
+      setError(reason instanceof Error ? reason.message : "Access could not be loaded.");
+    }
+  }
+
+  async function submitAccess(formElement: HTMLFormElement, useRoleDefaults: boolean) {
+    if (!accessDialog) return;
+    const form = new FormData(formElement);
+    const choice = Object.fromEntries(Object.entries(accessDialog.levels).filter(([, level]) => level));
+    setDialogBusy(true);
+    setDialogError("");
+    try {
+      await requestJson(`/api/admin/accounts/${encodeURIComponent(accessDialog.account.id)}/access`, {
+        method: "PUT", headers: { "content-type": "application/json" },
+        body: JSON.stringify({ useRoleDefaults, ...(useRoleDefaults ? {} : { choice, until: accessDialog.until ? new Date(accessDialog.until).toISOString() : null }), totp: String(form.get("totp") ?? "").trim() }),
+      });
+      setNotice(useRoleDefaults ? "Access reset to the role defaults." : "Access saved. It applies on the person's next request.");
+      setAccessDialog(null);
+      setReloadVersion((version) => version + 1);
+    } catch (reason) {
+      setDialogError(reason instanceof Error ? reason.message : "Access could not be saved.");
+    } finally {
+      setDialogBusy(false);
+    }
+  }
+
   async function copySetupLink() {
     try {
       await navigator.clipboard.writeText(setupLink);
@@ -289,12 +388,13 @@ export function AdminDashboard({ actorId, role }: { actorId: string; role: UserR
                         <span className={styles.accountIdentity}><strong>{account.email || "No email address"}</strong><small>{account.name || account.email || account.id}</small></span>
                       </div>
                     </td>
-                    <td data-label="Role"><span className={styles.roleBadge}>{displayRole(account.role)}</span></td>
+                    <td data-label="Role"><span className={styles.roleBadge}>{displayRole(account.role)}</span>
+                      {account.customAccess && <small className={styles.meta} style={{ display: "block", marginTop: 4 }}>Custom access{account.customAccessUntil ? ` until ${formatDate(account.customAccessUntil)}` : ""}</small>}</td>
                     <td data-label="MFA Status"><span className={`${styles.stateBadge} ${account.totpEnabledAt ? styles.stateGood : styles.stateMuted}`}>
                       {account.totpEnabledAt ? <CheckCircle2 size={15} /> : <CircleUserRound size={15} />}{account.totpEnabledAt ? "Enabled" : "Not enrolled"}
                     </span></td>
-                    <td data-label="Status"><span className={`${styles.stateBadge} ${account.status === "ACTIVE" ? styles.stateGood : account.status === "SUSPENDED" ? styles.stateWarn : styles.stateMuted}`}>
-                      {account.status === "ACTIVE" ? <CheckCircle2 size={15} /> : <PauseCircle size={15} />}{account.status.replaceAll("_", " ")}
+                    <td data-label="Status"><span className={`${styles.stateBadge} ${account.status === "ACTIVE" ? styles.stateGood : account.status === "SUSPENDED" || account.status === "DISABLED" ? styles.stateWarn : styles.stateMuted}`}>
+                      {account.status === "ACTIVE" ? <CheckCircle2 size={15} /> : <PauseCircle size={15} />}{statusLabel(account)}
                     </span></td>
                     <td data-label="Created by"><span className={styles.creatorCell}>
                       {account.createdBy ? <><strong>{account.createdBy.name || account.createdBy.email || "Admin"}</strong>{account.createdBy.name && account.createdBy.email && <small>{account.createdBy.email}</small>}</> : <span className={styles.meta}>System / legacy</span>}
@@ -310,11 +410,20 @@ export function AdminDashboard({ actorId, role }: { actorId: string; role: UserR
                             onClick={() => void updateUser(account, { role: roleChanges[account.id] })}>Update Role</button>
                         </div>
                       )}
-                      {canManageAccount && account.status === "ACTIVE" && (
-                        <button type="button" className={styles.dangerButton} disabled={busy} onClick={() => void updateUser(account, { status: "SUSPENDED" })}>Suspend</button>
+                      {canManageAccount && account.status === "ACTIVE" && !account.suspendedUntil && (
+                        <button type="button" className={styles.dangerButton} disabled={busy} onClick={() => openState(account, "suspend")}><PauseCircle size={15} /> Suspend</button>
                       )}
-                      {canManageAccount && account.status === "SUSPENDED" && (
-                        <button type="button" className={styles.secondaryButton} disabled={busy} onClick={() => void updateUser(account, { status: "ACTIVE" })}><RotateCw size={15} /> Reactivate</button>
+                      {canManageAccount && (account.status === "ACTIVE" || account.status === "SUSPENDED") && (
+                        <button type="button" className={styles.dangerButton} disabled={busy} onClick={() => openState(account, "disable")}><Ban size={15} /> Disable</button>
+                      )}
+                      {canManageAccount && (account.status === "DISABLED" || account.status === "SUSPENDED" || (account.status === "ACTIVE" && account.suspendedUntil)) && (
+                        <button type="button" className={styles.secondaryButton} disabled={busy} onClick={() => openState(account, "enable")}><RotateCw size={15} /> Enable</button>
+                      )}
+                      {canManageAccount && role === "SUPER_ADMIN" && account.role !== "SUPER_ADMIN" && account.role !== "COMMUNITY_MODERATOR" && (
+                        <button type="button" className={styles.secondaryButton} disabled={busy} onClick={() => void openAccess(account)}><KeyRound size={15} /> Access</button>
+                      )}
+                      {canManageAccount && role === "SUPER_ADMIN" && (
+                        <button type="button" className={styles.dangerButton} disabled={busy} onClick={() => openState(account, "delete")}><Trash2 size={15} /> Delete</button>
                       )}
                       {!canManageAccount && <span className={styles.meta}>{account.id === actorId ? "Current account" : "—"}</span>}
                     </div></td>
@@ -385,6 +494,79 @@ export function AdminDashboard({ actorId, role }: { actorId: string; role: UserR
 
       {!canReadAudit && <p className={styles.meta}>Audit activity requires the audit read permission.</p>}
       <span className={styles.visuallyHidden} aria-live="polite">{loading ? "Refreshing dashboard data" : "Dashboard data loaded"}</span>
+      {stateDialog && (() => {
+        const { account, action } = stateDialog;
+        const copy = ACTION_COPY[action];
+        return (
+          <div className={styles.modalBackdrop} role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget && !dialogBusy) setStateDialog(null); }}>
+            <form className={styles.modal} role="dialog" aria-modal="true" aria-labelledby="state-dialog-title" onSubmit={submitState}>
+              <div className={styles.modalHead}>
+                <h2 id="state-dialog-title">{copy.title}</h2>
+                <button type="button" className={styles.modalClose} aria-label="Close" onClick={() => setStateDialog(null)} disabled={dialogBusy}><X size={18} /></button>
+              </div>
+              <p><strong>{account.email ?? account.id}</strong></p>
+              <p>{copy.text}</p>
+              {action === "suspend" && (
+                <>
+                  <label className={styles.foundationInput}>From<input name="from" type="datetime-local" defaultValue={stateDialog.from} required /></label>
+                  <label className={styles.foundationInput}>To<input name="until" type="datetime-local" defaultValue={stateDialog.until} required /></label>
+                  <label className={styles.foundationInput}>Reason for suspension<textarea name="reason" rows={3} minLength={5} maxLength={300} required placeholder="Why is this account being suspended?" /></label>
+                </>
+              )}
+              {copy.needsCode && (
+                <label className={styles.foundationInput}>Authenticator code (6 digits)
+                  <input name="totp" inputMode="numeric" pattern="[0-9]{6}" maxLength={6} autoComplete="one-time-code" placeholder="123456" required autoFocus />
+                </label>
+              )}
+              {dialogError && <p className={styles.error} role="alert">{dialogError}</p>}
+              <div className={styles.modalActions}>
+                <button type="button" className={styles.secondaryButton} onClick={() => setStateDialog(null)} disabled={dialogBusy}>Cancel</button>
+                <button className={action === "enable" ? styles.button : styles.dangerButton} disabled={dialogBusy}>{dialogBusy ? "Working…" : `Confirm ${copy.verb.toLowerCase()}`}</button>
+              </div>
+            </form>
+          </div>
+        );
+      })()}
+      {accessDialog && (
+        <div className={styles.modalBackdrop} role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget && !dialogBusy) setAccessDialog(null); }}>
+          <form className={`${styles.modal} ${styles.modalWide}`} role="dialog" aria-modal="true" aria-labelledby="access-dialog-title" onSubmit={(event) => { event.preventDefault(); void submitAccess(event.currentTarget, false); }}>
+            <div className={styles.modalHead}>
+              <h2 id="access-dialog-title">Access for {accessDialog.account.email ?? "this account"}</h2>
+              <button type="button" className={styles.modalClose} aria-label="Close" onClick={() => setAccessDialog(null)} disabled={dialogBusy}><X size={18} /></button>
+            </div>
+            <p>Choose what this person can open. The list replaces what their role normally allows. Pick &quot;No access&quot; to hide a module.</p>
+            {accessDialog.loading ? <p>Loading…</p> : (
+              <>
+                <div className={styles.accessList}>
+                  {ACCESS_MODULES.map((module) => (
+                    <label key={module.key} className={styles.accessRow}>
+                      <span><strong>{module.label}</strong><small>{module.description}</small></span>
+                      <select value={accessDialog.levels[module.key] ?? ""} onChange={(event) => setAccessDialog((d) => d && ({ ...d, levels: { ...d.levels, [module.key]: event.target.value } }))}>
+                        <option value="">No access</option>
+                        {module.levels.map((level) => <option key={level.key} value={level.key}>{level.label}</option>)}
+                      </select>
+                    </label>
+                  ))}
+                </div>
+                <p className={styles.meta}>Always follows the role and is not set here: {ROLE_ONLY_MODULES.join(", ")}.</p>
+                <label className={styles.foundationInput}>Access ends (optional)
+                  <input type="datetime-local" value={accessDialog.until} onChange={(event) => setAccessDialog((d) => d && ({ ...d, until: event.target.value }))} />
+                  <small>After this time the person goes back to their role&apos;s normal access. Leave empty for no end.</small>
+                </label>
+                <label className={styles.foundationInput}>Your authenticator code (6 digits)
+                  <input name="totp" inputMode="numeric" pattern="[0-9]{6}" maxLength={6} autoComplete="one-time-code" placeholder="123456" required />
+                </label>
+              </>
+            )}
+            {dialogError && <p className={styles.error} role="alert">{dialogError}</p>}
+            <div className={styles.modalActions}>
+              <button type="button" className={styles.secondaryButton} onClick={() => setAccessDialog(null)} disabled={dialogBusy}>Cancel</button>
+              <button type="button" className={styles.secondaryButton} disabled={dialogBusy || accessDialog.loading} onClick={(event) => { const f = event.currentTarget.form; if (f && f.reportValidity()) void submitAccess(f, true); }}>Use role defaults</button>
+              <button className={styles.button} disabled={dialogBusy || accessDialog.loading}>{dialogBusy ? "Saving…" : "Save access"}</button>
+            </div>
+          </form>
+        </div>
+      )}
     </main>
   );
 }

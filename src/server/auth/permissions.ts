@@ -7,6 +7,7 @@ export type Permission =
   | "account:role:update"
   | "account:suspend"
   | "account:reactivate"
+  | "account:delete"
   | "account:read"
   | "audit:read"
   | "security:manage"
@@ -18,6 +19,10 @@ export type Permission =
   | "category:manage"
   | "affiliate:manage"
   | "operations:read"
+  | "analytics:view"
+  | "intelligence:view"
+  | "scraper:use"
+  | "affiliate:view"
   | "forum:moderate"
   | "forum:manage"
   | "announcement.publish"
@@ -34,17 +39,17 @@ const ADMIN_MODERATION = [...MODERATOR_PERMISSIONS, "mod:appoint", "mod:appeal:d
 const rolePermissions: Record<AdminRole, ReadonlySet<Permission>> = {
   SUPER_ADMIN: new Set([
     "account:create:super-admin", "account:create:admin", "account:create:editor",
-    "account:role:update", "account:suspend", "account:reactivate", "account:read",
+    "account:role:update", "account:suspend", "account:reactivate", "account:delete", "account:read",
     "audit:read", "security:manage", "deal:create", "deal:edit", "deal:publish",
     "deal:archive", "merchant:manage", "category:manage", "affiliate:manage",
-    "operations:read", "forum:moderate", "forum:manage", "announcement.publish", ...ADMIN_MODERATION,
+    "operations:read", "analytics:view", "intelligence:view", "scraper:use", "affiliate:view", "forum:moderate", "forum:manage", "announcement.publish", ...ADMIN_MODERATION,
   ]),
   ADMIN: new Set([
     "account:create:editor", "account:suspend", "account:reactivate", "account:read",
     "deal:create", "deal:edit", "deal:publish", "deal:archive", "merchant:manage",
-    "category:manage", "affiliate:manage", "operations:read", "forum:moderate", "forum:manage", "announcement.publish", ...ADMIN_MODERATION,
+    "category:manage", "affiliate:manage", "operations:read", "analytics:view", "intelligence:view", "scraper:use", "affiliate:view", "forum:moderate", "forum:manage", "announcement.publish", ...ADMIN_MODERATION,
   ]),
-  EDITOR: new Set(["deal:create", "deal:edit", "deal:publish"]),
+  EDITOR: new Set(["deal:create", "deal:edit", "deal:publish", "scraper:use"]),
   COMMUNITY_MODERATOR: new Set<Permission>(MODERATOR_PERMISSIONS),
 };
 
@@ -52,10 +57,19 @@ export function roleCan(role: AdminRole, permission: Permission): boolean {
   return rolePermissions[role]?.has(permission) ?? false; // unknown roles get nothing
 }
 
+/** Who is asking. `permissions` is the person's own checklist when an administrator set one (it replaces the role defaults); null or missing means the role defaults apply. */
+export type AccessSubject = { role: AdminRole; permissions?: readonly string[] | null };
+export function can(subject: AccessSubject, permission: Permission): boolean {
+  return subject.permissions ? subject.permissions.includes(permission) : roleCan(subject.role, permission);
+}
+
 /** Who may review community deal submissions: moderators and administrators (new capability), and anyone who could already review them through deal publishing (editors). */
-export const canReviewSubmissions = (role: AdminRole) => roleCan(role, "mod:submission:review") || roleCan(role, "deal:publish");
+export const canReviewSubmissions = (subject: AccessSubject | AdminRole) => {
+  const who = typeof subject === "string" ? { role: subject } : subject;
+  return can(who, "mod:submission:review") || can(who, "deal:publish");
+};
 /** Creating the DRAFT for an approved submission needs the normal deal rights, or the moderator's draft-only path below. */
-export const canCreateDealsDirectly = (role: AdminRole) => roleCan(role, "deal:create");
+export const canCreateDealsDirectly = (subject: AccessSubject | AdminRole) => can(typeof subject === "string" ? { role: subject } : subject, "deal:create");
 
 export function canAssignRole(actor: AdminRole, target: AdminRole): boolean {
   if (actor === "SUPER_ADMIN") return true;

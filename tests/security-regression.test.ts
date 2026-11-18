@@ -83,7 +83,7 @@ test("authorization guards stay in the admin routes (source check)", () => {
   assert.match(admin, /resource === "merchant-websites"[\s\S]{0,400}merchant:manage/, "merchant directory writes need merchant:manage");
   assert.match(admin, /resource === "categories"[\s\S]{0,300}category:manage/, "category delete needs category:manage");
   assert.match(admin, /id === "scan"[\s\S]{0,200}operations:read/, "scraper scan needs an operations role");
-  assert.match(admin, /resource === "cuelinks"[\s\S]{0,300}operations:read/, "cuelinks stats need an operations role");
+  assert.match(admin, /resource === "cuelinks"[\s\S]{0,300}affiliate:view/, "cuelinks stats need affiliate:view (admins and above by role, or a chosen list)");
   assert.match(admin, /dealVideoReview\.delete\(\{ where: \{ id: body\.reviewId, dealId: id \}/, "review changes are bound to the deal in the URL");
   const kill = readFileSync("src/app/api/v1/admin/intelligence-controls/route.ts", "utf8");
   assert.match(kill, /assertSameOrigin/, "kill switch checks the request origin");

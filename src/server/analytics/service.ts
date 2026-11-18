@@ -1,5 +1,6 @@
 import "server-only";
-import { roleCan, type AdminRole } from "@/server/auth/permissions";
+import { type AdminRole } from "@/server/auth/permissions";
+import { actorCan } from "@/server/auth/access";
 import type { DealDatabase } from "@/server/deals/repository";
 
 export class AnalyticsError extends Error {
@@ -18,8 +19,8 @@ export async function getUnifiedAnalyticsSummary(
   db: DealDatabase,
   actor: AnalyticsActor
 ) {
-  if (!roleCan(actor.role, "operations:read")) {
-    throw new AnalyticsError("Forbidden: operations:read permission required.", 403);
+  if (!(await actorCan(actor, "analytics:view"))) {
+    throw new AnalyticsError("Forbidden: analytics:view permission required.", 403);
   }
 
   const [

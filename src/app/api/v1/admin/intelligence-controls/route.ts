@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 import { getCurrentAuthContext } from "@/server/auth/session";
-import { roleCan } from "@/server/auth/permissions";
+import { can } from "@/server/auth/permissions";
 import { Agent2PublishingEngine } from "@/server/scraper/agent2-publishing-engine";
 import { getDatabase } from "@/server/db/client";
 import { assertSameOrigin, readJson } from "@/server/auth/request";
 
 export async function GET() {
   const context = await getCurrentAuthContext();
-  if (!context || !roleCan(context.user.role, "operations:read")) {
+  if (!context || !can(context.user, "intelligence:view")) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -43,7 +43,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
   const context = await getCurrentAuthContext();
-  if (!context || !roleCan(context.user.role, "deal:publish")) {
+  if (!context || !can(context.user, "deal:publish")) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   }
   if (!assertSameOrigin(request)) return NextResponse.json({ error: "Request origin could not be verified." }, { status: 403 });
@@ -54,7 +54,7 @@ export async function POST(request: Request) {
   if (body.action === "TOGGLE_KILL_SWITCH") {
     const activate = Boolean(body.value);
     // Switching the safety stop ON is open to anyone who can publish; switching it OFF needs an operations role.
-    if (!activate && !roleCan(context.user.role, "operations:read")) return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    if (!activate && !can(context.user, "intelligence:view")) return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     Agent2PublishingEngine.setKillSwitch(activate);
     await getDatabase().auditEvent.create({ data: { actorId: context.user.id, action: "intelligence.kill_switch", targetId: "agent2", success: true, metadata: { active: activate } } });
     return NextResponse.json({

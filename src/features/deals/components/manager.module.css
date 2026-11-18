@@ -999,7 +999,7 @@
 .dealStatusActions { display: flex; align-items: center; gap: 8px; }
 .dealActiveButton { border: 1px solid var(--md-color-success); border-radius: 6px; padding: 7px 12px; background: var(--md-green-100); color: var(--md-green-700); font: inherit; font-weight: 700; }
 .dealActiveButtonDisabled { border-color: var(--md-color-border); background: var(--md-color-surface-muted); color: var(--md-neutral-500); cursor: not-allowed; }
-.expiredCheckbox { display: inline-flex; align-items: center; gap: 5px; color: var(--md-color-text-secondary); font-size: 12px; white-space: nowrap; }
+.expiredCheckbox { width: 18px; height: 18px; margin: 0; cursor: pointer; }
 
 /* ---- Add New Deal: two-column card layout (matches the approved reference) ---- */
 .addPanel { padding: 0; margin: 16px 0; background: transparent; border: 0; border-radius: 0; }
@@ -1096,3 +1096,18 @@
 .fetchCard .scrapeInputRow label { position: relative; }
 .fetchCard .scrapeInputRow .retailerBadge { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); margin: 0; pointer-events: none; }
 .fetchCard .scrapeInputRow label:has(.retailerBadge) input { padding-right: 96px; }
+
+/* Deal list as a table: Deal | Deal Price | Published | Active | Edit | Delete | Expired Deal. It scrolls sideways on narrow screens. */
+.dealTableScroll { overflow-x: auto; border: 1px solid var(--md-color-border); border-radius: 10px; background: var(--md-color-surface); }
+.dealTable { width: 100%; min-width: 720px; border-collapse: collapse; font-size: 13px; }
+.dealTable th { padding: 9px 10px; text-align: center; font-size: 12px; font-weight: 800; white-space: nowrap; color: var(--md-color-text); background: var(--md-purple-50); border-bottom: 1px solid var(--md-color-border); }
+.dealTable td { padding: 7px 10px; text-align: center; vertical-align: middle; border-bottom: 1px solid var(--md-color-border); }
+.dealTable tbody tr:last-child td { border-bottom: 0; }
+.dealTable tbody tr:hover { background: var(--md-purple-50); }
+.dealTable .dealColTitle { text-align: left; width: 100%; max-width: 0; }
+.dealTable th.dealColTitle { max-width: none; }
+.dealTitleText { display: block; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dealSub { display: block; font-size: 11px; color: var(--md-color-text-secondary); }
+.dealTable button { min-height: 32px; padding: 4px 10px; font-size: 12.5px; white-space: nowrap; }
+.dealIconButton { min-width: 36px; padding: 4px 8px; }
+.dealTable .dealDeleteButton { background: var(--md-red-700); color: var(--md-white); }

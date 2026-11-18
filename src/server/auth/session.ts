@@ -3,6 +3,8 @@ import { cookies } from "next/headers";
 import { getAuthEnv } from "@/config/env";
 import { getDatabase } from "@/server/db/client";
 import { createOpaqueToken, hashOpaqueToken } from "./crypto";
+import { resolveAccess } from "./access";
+import { suspensionBlocks } from "./suspension";
 import {
   ABSOLUTE_SESSION_TIMEOUT_MS,
   getSessionExpiry,
@@ -47,7 +49,7 @@ async function getDevBypassContext() {
     where: { role: "SUPER_ADMIN", status: "ACTIVE" },
     select: { id: true, email: true, name: true, role: true, status: true, totpEnabledAt: true },
   });
-  return user ? { user, session: null } : null;
+  return user ? { user: { ...user, permissions: null as string[] | null }, session: null } : null;
 }
 
 export async function getCurrentAuthContext() {
@@ -62,10 +64,10 @@ export async function getCurrentAuthContext() {
   const db = getDatabase();
   const session = await db.authSession.findUnique({
     where: { tokenHash: hashOpaqueToken(token, env.AUTH_SESSION_SECRET) },
-    include: { user: { select: { id: true, email: true, name: true, role: true, status: true, totpEnabledAt: true } } },
+    include: { user: { select: { id: true, email: true, name: true, role: true, status: true, totpEnabledAt: true, suspendedFrom: true, suspendedUntil: true } } },
   });
   if (!session || isSessionExpired(session.expiresAt, session.absoluteExpiresAt, now) ||
-      session.user.status !== "ACTIVE" || !session.user.totpEnabledAt) {
+      session.user.status !== "ACTIVE" || suspensionBlocks(session.user, now) || !session.user.totpEnabledAt) {
     // Concurrent requests may all discover and clean up the same expired session.
     if (session) await db.authSession.deleteMany({ where: { id: session.id } });
     return null;
@@ -87,7 +89,8 @@ export async function getCurrentAuthContext() {
       return null;
     }
   }
-  return { user: session.user, session };
+  // A person whose access was set one by one gets that checklist; everyone else gets their role defaults (null).
+  return { user: { ...session.user, permissions: await resolveAccess(session.user.id) }, session };
 }
 
 export type AuthContext = NonNullable<Awaited<ReturnType<typeof getCurrentAuthContext>>>;

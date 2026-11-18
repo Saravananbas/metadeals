@@ -18,6 +18,8 @@ enum UserStatus {
   PENDING_SETUP
   ACTIVE
   SUSPENDED
+  DISABLED
+  DELETED
 }
 
 enum AuthTokenPurpose {
@@ -38,6 +40,13 @@ model User {
   passwordHash        String?        @db.VarChar(255)
   totpSecretEncrypted String?        @db.Text
   totpEnabledAt       DateTime?
+  /// Staff suspension window. Blocked while suspendedFrom <= now < suspendedUntil; a null start means immediately.
+  suspendedFrom       DateTime?
+  suspendedUntil      DateTime?
+  suspensionReason    String?        @db.VarChar(300)
+  /// When true the person's checklist in StaffPermissionGrant replaces their role defaults, until customAccessUntil (null = no end).
+  customAccess        Boolean        @default(false)
+  customAccessUntil   DateTime?
   lastTotpStep        BigInt         @default(-1)
   accounts            Account[]
   sessions            Session[]

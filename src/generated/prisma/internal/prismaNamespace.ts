@@ -6241,6 +6241,11 @@ export const UserScalarFieldEnum = {
   passwordHash: 'passwordHash',
   totpSecretEncrypted: 'totpSecretEncrypted',
   totpEnabledAt: 'totpEnabledAt',
+  suspendedFrom: 'suspendedFrom',
+  suspendedUntil: 'suspendedUntil',
+  suspensionReason: 'suspensionReason',
+  customAccess: 'customAccess',
+  customAccessUntil: 'customAccessUntil',
   lastTotpStep: 'lastTotpStep',
   linkedCustomerId: 'linkedCustomerId',
   createdAt: 'createdAt',
@@ -7599,6 +7604,13 @@ export type ListEnumUserStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$P
 
 
 /**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
  * Reference to a field of type 'BigInt'
  */
 export type BigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt'>
@@ -7637,13 +7649,6 @@ export type EnumAuthTokenPurposeFieldRefInput<$PrismaModel> = FieldRefInputType<
  * Reference to a field of type 'AuthTokenPurpose[]'
  */
 export type ListEnumAuthTokenPurposeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AuthTokenPurpose[]'>
-    
-
-
-/**
- * Reference to a field of type 'Boolean'
- */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 

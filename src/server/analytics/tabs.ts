@@ -173,6 +173,9 @@ export async function engagementTab(range: DateRange) {
   const db = getDatabase();
   const types = ["LIKE", "SHARE", "COMMENT", "COUPON_COPY", "MODAL_OPEN"];
   const created = { gte: range.from, lt: range.to };
+  // The discussion tables may be behind on a database that has not had the latest community migrations; that must not take the whole tab down.
+  let communityMissing = false;
+  const soft = <T,>(value: Promise<T>, fallback: T) => value.catch(() => { communityMissing = true; return fallback; });
   const [daily, heat, rows, posts, comments, topPosts, communityViews] = await Promise.all([
     dailyCounts(db, range, types), heatFor(db, range, types),
     db.$queryRaw<{ id: string; likes: unknown; shares: unknown; comments: unknown; coupons: unknown; opens: unknown }[]>(Prisma.sql`
@@ -181,9 +184,9 @@ export async function engagementTab(range: DateRange) {
              SUM(CASE WHEN ${col("type")} = 'MODAL_OPEN' THEN 1 ELSE 0 END) AS opens
       FROM ${table("AnalyticsEvent")} WHERE ${col("dealId")} IS NOT NULL AND ${col("type")} IN (${Prisma.join(types)}) AND ${inRange(range)}
       GROUP BY ${col("dealId")} ORDER BY COUNT(*) DESC LIMIT 15`),
-    db.forumPost.count({ where: { createdAt: created, status: "PUBLISHED" } }),
-    db.forumComment.count({ where: { createdAt: created, status: "PUBLISHED" } }),
-    db.forumPost.findMany({ where: { status: "PUBLISHED" }, orderBy: [{ viewCount: "desc" }], take: 10, select: { id: true, slug: true, title: true, viewCount: true, commentCount: true, likeCount: true } }),
+    soft(db.forumPost.count({ where: { createdAt: created, status: "PUBLISHED" } }), 0),
+    soft(db.forumComment.count({ where: { createdAt: created, status: "PUBLISHED" } }), 0),
+    soft(db.forumPost.findMany({ where: { status: "PUBLISHED" }, orderBy: [{ viewCount: "desc" }], take: 10, select: { id: true, slug: true, title: true, viewCount: true, commentCount: true, likeCount: true } }), []),
     db.analyticsEvent.count({ where: { createdAt: created, type: "PAGE_VIEW", path: { startsWith: "/community" } } }),
   ]);
   const totals = Object.fromEntries(types.map((t) => [t, daily.reduce((a, d) => a + (d[t] ?? 0), 0)])) as Record<string, number>;
@@ -194,7 +197,7 @@ export async function engagementTab(range: DateRange) {
     heatmap: heat,
     deals: rows.map((r) => ({ id: r.id, title: info.get(r.id)?.title ?? "(deleted deal)", merchant: info.get(r.id)?.merchant ?? "", likes: num(r.likes), shares: num(r.shares), comments: num(r.comments), coupons: num(r.coupons), opens: num(r.opens), total: num(r.likes) + num(r.shares) + num(r.comments) + num(r.coupons) + num(r.opens) })),
     discussions: topPosts.map((p) => ({ id: p.id, slug: p.slug, title: p.title, views: p.viewCount, comments: p.commentCount, likes: p.likeCount })),
-    note: [rawNote(range), "Discussion views, comments and likes in the discussions table are all-time counters; discussions and comments created use the selected dates."].filter(Boolean).join(" "),
+    note: [rawNote(range), "Discussion views, comments and likes in the discussions table are all-time counters; discussions and comments created use the selected dates.", communityMissing ? "Discussion figures could not be read from the database and show as zero." : ""].filter(Boolean).join(" "),
   };
 }
 

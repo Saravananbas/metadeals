@@ -2,7 +2,8 @@ import { merchantSelect } from "@/server/deals/repository";
 import { z } from "zod";
 import { getDatabase } from "@/server/db/client";
 import { getCurrentAuthContext } from "@/server/auth/session";
-import { roleCan } from "@/server/auth/permissions";
+import { can, type Permission } from "@/server/auth/permissions";
+import { DELEGABLE_PERMISSIONS } from "@/server/auth/modules";
 import { MerchantDirectoryStatus, MerchantDirectoryVerification } from "@/generated/prisma/client";
 import { assertSameOrigin, readJson } from "@/server/auth/request";
 import { changeDealState, DealError, getAdminDeal, previewToken, saveDeal, saveTaxonomy, setDealExpired } from "@/server/deals/service";
@@ -15,7 +16,7 @@ import { importBatchSchema } from "@/server/affiliate/types";
 import { autoPostToTelegram, createDestination, listDestinations, publishDealToDestinations, getDistributionHistory } from "@/server/distribution/service";
 import { destinationInputSchema, publishDealInputSchema } from "@/features/distribution/formatting";
 import { getUnifiedAnalyticsSummary } from "@/server/analytics/service";
-import { getAdminNotifications } from "@/server/admin/notifications";
+import { getAdminNotifications, getNotificationIds } from "@/server/admin/notifications";
 import { approveSubmission, getSubmissionImage, listSubmissions, rejectSubmission } from "@/server/community/review";
 import { exportCsv, getTab, TABS } from "@/server/analytics/tabs";
 import { getDashboard, getLive, getSessionTimeline, listSessions, resolveRange, vendorReport } from "@/server/analytics/queries";
@@ -62,6 +63,18 @@ const merchantWebsitePatchSchema = z.object({
   logoUrl: z.string().trim().max(2048).nullable().optional(),
 });
 
+/** Which permission opens each part of this API. Anything not listed needs deal:edit, as before. */
+const ADMIN_GATES: Record<string, Permission[]> = {
+  analytics: ["analytics:view"],
+  cuelinks: ["affiliate:view", "affiliate:manage"],
+  scraper: ["scraper:use"],
+  submissions: ["deal:edit", "deal:publish", "mod:submission:review"],
+  categories: ["deal:edit", "category:manage"],
+  merchants: ["deal:edit", "merchant:manage"],
+  "merchant-websites": ["deal:edit", "merchant:manage"],
+  notifications: [...DELEGABLE_PERMISSIONS, "account:read"] as Permission[],
+};
+
 async function handle(request: Request, { params }: { params: Promise<{ path: string[] }> }) {
   return api(async () => {
     const context = await getCurrentAuthContext(); if (!context) throw new DealError("Sign in required.", 401);
@@ -69,11 +82,13 @@ async function handle(request: Request, { params }: { params: Promise<{ path: st
     const actor = { id: context.user.id, role: context.user.role }; const db = getDatabase();
     // The session lookup already verified active status, TOTP and the live role.
     // Reuse that trusted context instead of issuing another user query per request.
-    if (!roleCan(context.user.role, "deal:edit")) throw new DealError("Permission denied.", 403);
+    // Community moderators use their own API; this one is for staff.
+    if (context.user.role === "COMMUNITY_MODERATOR") throw new DealError("Permission denied.", 403);
     const [resource, id, action] = (await params).path;
+    if (!(ADMIN_GATES[resource] ?? ["deal:edit"]).some((permission) => can(context.user, permission))) throw new DealError("Permission denied.", 403);
     if (resource === "merchant-websites") {
       // Reading the directory is part of deal authoring; changing it (it feeds the trusted-domain list and live merchants) needs the same permission as /merchants.
-      if (request.method !== "GET" && !roleCan(context.user.role, "merchant:manage")) throw new DealError("Permission denied.", 403);
+      if (request.method !== "GET" && !can(context.user, "merchant:manage")) throw new DealError("Permission denied.", 403);
       if (request.method === "GET") {
         if (id) {
           const merchant = await MerchantWebsiteDirectoryService.getById(id);
@@ -367,7 +382,7 @@ async function handle(request: Request, { params }: { params: Promise<{ path: st
       if (request.method === "POST" || request.method === "PUT") { const body = await readJson(request); return json({ data: await db.$transaction((tx) => saveTaxonomy(tx, actor, resource, body, id), { isolationLevel: "Serializable" }) }); }
       if (request.method === "DELETE" && id) {
         if (resource === "categories") {
-          if (!roleCan(context.user.role, "category:manage")) throw new DealError("Permission denied.", 403);
+          if (!can(context.user, "category:manage")) throw new DealError("Permission denied.", 403);
           // Check if category has child subcategories or associated deals
           const childCount = await db.category.count({ where: { parentId: id } });
           if (childCount > 0) throw new DealError(`Cannot delete category with ${childCount} child subcategories. Reassign or delete them first.`, 409);
@@ -429,10 +444,15 @@ async function handle(request: Request, { params }: { params: Promise<{ path: st
     }
     if (resource === "notifications") {
       if (request.method !== "GET") throw new DealError("Method not supported.", 405);
-      return json({ data: await getAdminNotifications({ id: context.user.id, role: context.user.role }) });
+      const query = new URL(request.url).searchParams;
+      // Ids this person dismissed in their own panel (kept in their browser); capped so the address stays short.
+      const hidden = z.array(z.string().min(1).max(40)).max(200).parse((query.get("hide") ?? "").split(",").filter(Boolean));
+      const group = query.get("ids");
+      if (group) return json({ data: { ids: await getNotificationIds(context.user, group, hidden) } });
+      return json({ data: await getAdminNotifications(context.user, hidden) });
     }
     if (resource === "submissions") {
-      const reviewer = { id: context.user.id, role: context.user.role };
+      const reviewer = { id: context.user.id, role: context.user.role, permissions: context.user.permissions };
       if (request.method === "GET" && id && action === "image") {
         const { bytes, mimeType } = await getSubmissionImage(reviewer, id);
         return new Response(new Uint8Array(bytes), { headers: { "Content-Type": mimeType, "X-Content-Type-Options": "nosniff", "Cache-Control": "private, no-store" } });
@@ -448,7 +468,7 @@ async function handle(request: Request, { params }: { params: Promise<{ path: st
     }
     if (resource === "analytics" && request.method === "GET") {
       if (!id) return json({ data: await getUnifiedAnalyticsSummary(db, actor) });
-      if (!roleCan(context.user.role, "operations:read")) throw new DealError("Permission denied.", 403);
+      if (!can(context.user, "analytics:view")) throw new DealError("Permission denied.", 403);
       const url = new URL(request.url);
       const range = resolveRange(url.searchParams.get("range") ?? "7d", url.searchParams.get("from"), url.searchParams.get("to"));
       if (id === "live") return json({ data: await getLive() });
@@ -491,7 +511,7 @@ async function handle(request: Request, { params }: { params: Promise<{ path: st
           return json({ data: await scraperService.listCandidates(db, { status, limit, offset }) });
         }
         if (request.method === "POST") {
-          if (!roleCan(context.user.role, "operations:read")) throw new DealError("Permission denied.", 403);
+          if (!can(context.user, "operations:read")) throw new DealError("Permission denied.", 403);
           const body = await readJson(request);
           return json({ data: await scraperService.ingestCandidate(db, body) }, 201);
         }
@@ -502,7 +522,7 @@ async function handle(request: Request, { params }: { params: Promise<{ path: st
         return json({ data: await scraperService.reviewCandidate(db, body.candidateId, actionParsed, actor.id) });
       }
       if (id === "scan" && request.method === "POST") {
-        if (!roleCan(context.user.role, "operations:read")) throw new DealError("Permission denied.", 403);
+        if (!can(context.user, "operations:read")) throw new DealError("Permission denied.", 403);
         const body = await readJson(request) as { connectorCode: string };
         return json({ data: await scraperService.runConnectorScan(db, body.connectorCode) });
       }
@@ -513,9 +533,9 @@ async function handle(request: Request, { params }: { params: Promise<{ path: st
     }
     if (resource === "cuelinks") {
       // Earnings and campaign data are operations data (ADMIN and above), like /affiliate/transactions.
-      if (request.method === "GET" && !roleCan(context.user.role, "operations:read")) throw new DealError("Permission denied.", 403);
+      if (request.method === "GET" && !can(context.user, "affiliate:view")) throw new DealError("Permission denied.", 403);
       // Converting links spends the shared Cuelinks quota; it pairs with writing affiliate URLs, which needs affiliate:manage.
-      if (request.method !== "GET" && !roleCan(context.user.role, "affiliate:manage")) throw new DealError("Permission denied.", 403);
+      if (request.method !== "GET" && !can(context.user, "affiliate:manage")) throw new DealError("Permission denied.", 403);
       if (request.method === "GET") {
         const health = await cuelinksClient.checkHealth();
         const [totalDeals, monetizedDeals, totalClicks, transactionsSummary] = await Promise.all([
