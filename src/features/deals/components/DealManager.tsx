@@ -11,8 +11,9 @@ import {
   formatINR,
 } from "../currency";
 import { can, type AdminRole } from "@/server/auth/permissions";
-import { Calendar, Eye, ImageIcon, Link2, Save, Send, Settings, Tag, UploadCloud, Wand2, X } from "lucide-react";
+import { Calendar, Eye, ImageIcon, Link2, Save, Send, Settings, Tag, UploadCloud, Plus, Wand2, X } from "lucide-react";
 import { AdminNav } from "@/components/admin/AdminNav";
+import { classifyDeal, type DealTab } from "../tabs";
 import styles from "./manager.module.css";
 
 type Entry = { id: string; name: string; slug: string; parentId?: string | null; websiteUrl?: string };
@@ -116,6 +117,9 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
   const [page, setPage] = useState(1);
+  // Active / Expired / Deleted: the list is fetched per tab, and a deal moves between them by itself (end date passes, or it is deleted).
+  const [dealTab, setDealTab] = useState<DealTab>("active");
+  const [tabCounts, setTabCounts] = useState({ active: 0, expired: 0, deleted: 0 });
   const [importFile, setImportFile] = useState<File | null>(null);
   const [importPreview, setImportPreview] = useState<string>("");
   const [taxonomy, setTaxonomy] = useState({
@@ -1177,23 +1181,50 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
     }
   }
 
-  async function load(currentPage = page) {
+  async function load(currentPage = page, tab = dealTab) {
     const [deals, cats, stores, directory] = await Promise.all([
-      request<{ data: Row[] }>(`deals?page=${currentPage}`),
+      request<{ data: Row[]; counts?: { active: number; expired: number; deleted: number } }>(`deals?page=${currentPage}&tab=${tab}`),
       request<{ data: Entry[] }>("categories"),
       request<{ data: Entry[] }>("merchants"),
       loadMerchantDirectory(),
     ]);
     setRows(deals.data);
+    if (deals.counts) setTabCounts(deals.counts);
     setCategories(cats.data);
     setMerchants(stores.data);
     setDirectoryMerchants(directory);
   }
 
+  function switchTab(tab: DealTab) {
+    if (tab === dealTab) return;
+    setDealTab(tab);
+    setPage(1);
+    void run(async () => { await load(1, tab); });
+  }
+
+  /** Delete = move to the Deleted tab. The deal is kept (archived) and can be restored. */
+  function archiveRow(row: Row) {
+    if (!window.confirm(`Move "${row.title}" to the Deleted tab? It disappears from the site and can be restored later.`)) return;
+    void run(async () => {
+      await request<{ data: Row }>(`deals/${row.id}/archive`, "POST", { version: row.version });
+      if (selected?.id === row.id) closeEditModal();
+      await load();
+      setMessage(`"${row.title}" moved to the Deleted tab.`);
+    });
+  }
+
+  function restoreRow(row: Row) {
+    void run(async () => {
+      await request<{ data: Row }>(`deals/${row.id}/restore`, "POST", { version: row.version });
+      await load();
+      setMessage(`"${row.title}" restored as a draft. Publish it again when it is ready.`);
+    });
+  }
+
   useEffect(() => {
     let live = true;
     Promise.all([
-      request<{ data: Row[] }>("deals"),
+      request<{ data: Row[]; counts?: { active: number; expired: number; deleted: number } }>("deals?page=1&tab=active"),
       request<{ data: Entry[] }>("categories"),
       request<{ data: Entry[] }>("merchants"),
       loadMerchantDirectory(),
@@ -1201,6 +1232,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
       .then(([d, c, m, directory]) => {
         if (live) {
           setRows(d.data);
+          if (d.counts) setTabCounts(d.counts);
           setCategories(c.data);
           setMerchants(m.data);
           setDirectoryMerchants(directory);
@@ -1224,6 +1256,11 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
     } finally {
       setBusy(false);
     }
+  }
+
+  function field<K extends keyof AdminDealForm>(key: K, value: AdminDealForm[K]) {
+    setForm((old) => ({ ...old, [key]: value }));
+    setPreview(null);
   }
 
   function uploadFormImage(file: File) {
@@ -1281,6 +1318,18 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
       setRows((current) => current.map((item) => item.id === row.id ? result.data : item));
       if (selected?.id === row.id) setSelected(result.data);
     });
+  }
+
+  /** Clears the form and any selected deal, ready for a new one. */
+  function resetToNewDeal() {
+    setSelected(null);
+    setForm(empty);
+    setSelectedParentCategoryId("");
+    setPreview(null);
+    setDetectedRetailer(null);
+    setShowPreviewModal(false);
+    setExtractionResult(null);
+    setExtractProgress("");
   }
 
   function closeEditModal() {
@@ -1359,11 +1408,6 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
         }
       })
       .catch(() => {});
-  }
-
-  function field<K extends keyof AdminDealForm>(key: K, value: AdminDealForm[K]) {
-    setForm((old) => ({ ...old, [key]: value }));
-    setPreview(null);
   }
 
   async function save(event: FormEvent) {
@@ -1462,9 +1506,8 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
     if (!editModal) return;
     const onKey = (event: KeyboardEvent) => { if (event.key === "Escape" && !busy) closeEditModal(); };
     document.addEventListener("keydown", onKey);
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => { document.removeEventListener("keydown", onKey); document.body.style.overflow = previous; };
+    document.body.classList.add("md-modal-open");
+    return () => { document.removeEventListener("keydown", onKey); document.body.classList.remove("md-modal-open"); };
     // closeEditModal only sets state, so it is safe to leave out of the list.
   }, [editModal, busy]);
 
@@ -2373,6 +2416,11 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
                     <X size={18} aria-hidden="true" />
                   </button>
                 )}
+                {!editModal && (
+                  <button type="button" className={styles.headNew} disabled={busy} onClick={resetToNewDeal}>
+                    <Plus size={16} aria-hidden="true" /> New deal
+                  </button>
+                )}
                 <button type="submit" form="deal-form" className={styles.headSave} disabled={busy || selected?.status === "ARCHIVED"} onClick={() => { publishAfterSave.current = false; }}>
                   <Save size={16} aria-hidden="true" /> Save as Draft
                 </button>
@@ -2828,6 +2876,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
             )}
               </div>
             </section>
+            {!editModal && (<>
             <section className={styles.addCard}>
               <div className={styles.cardHead}>
                 <span className={styles.cardIcon}><Calendar size={18} aria-hidden="true" /></span>
@@ -2893,7 +2942,9 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
             </label>
               </div>
             </section>
+            </>)}
 
+            {!editModal && (<>
             {/* YouTube Review Videos Configuration in Form */}
             <div className={styles.ytDiscoveryCard}>
               <div className={styles.ytDiscoveryHeader}>
@@ -2969,28 +3020,8 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
                 </label>
               </div>
             </div>
+            </>)}
 
-            <div className={styles.formFooterActions}>
-              <button type="submit" className={styles.saveDraftBtn}>
-                Save draft / review
-              </button>
-              <button
-                type="button"
-                className={styles.newDealBtn}
-                onClick={() => {
-                  setSelected(null);
-                  setForm(empty);
-                  setSelectedParentCategoryId("");
-                  setPreview(null);
-                  setDetectedRetailer(null);
-                  setShowPreviewModal(false);
-                  setExtractionResult(null);
-                  setExtractProgress("");
-                }}
-              >
-                New deal
-              </button>
-            </div>
             </div>
             <aside className={styles.addSide}>
               <section className={styles.addCard}>
@@ -3059,6 +3090,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
                 </label>
               </section>
 
+            {!editModal && (<>
               <section className={styles.addCard}>
                 <div className={styles.cardHead}>
                   <span className={styles.cardIcon}><UploadCloud size={18} aria-hidden="true" /></span>
@@ -3116,6 +3148,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
                   <pre style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere", maxHeight: 220, overflow: "auto" }}>{importPreview}</pre>
                 )}
               </section>
+            </>)}
             </aside>
           </fieldset>
         </form>
@@ -3131,24 +3164,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
             </button>
             {can({ role, permissions }, "deal:archive") && (
               <>
-                <button
-                  disabled={busy}
-                  onClick={() =>
-                    void run(async () => {
-                      const result = await request<{ data: Row }>(
-                        `deals/${selected.id}/archive`,
-                        "POST",
-                        { version: selected.version }
-                      );
-                      setSelected(result.data);
-                      setPreview(null);
-                      await load();
-                    })
-                  }
-                >
-                  Archive
-                </button>
-                <button disabled={busy} onClick={() => removeDeal(selected)}>
+                <button disabled={busy} onClick={() => archiveRow(selected)}>
                     Delete deal
                   </button>
               </>
@@ -3203,6 +3219,14 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
         {!rows.length && (
           <p>No deals yet. Add a category, merchant and product image to create the first draft.</p>
         )}
+        <div className={styles.dealTabsBar} role="tablist" aria-label="Deal lists">
+          {(["active", "expired", "deleted"] as DealTab[]).map((tab) => (
+            <button key={tab} type="button" role="tab" aria-selected={dealTab === tab} className={`${styles.dealTabBtn} ${dealTab === tab ? styles.dealTabBtnActive : ""}`} onClick={() => switchTab(tab)} disabled={busy && dealTab !== tab}>
+              {tab === "active" ? "Active" : tab === "expired" ? "Expired" : "Deleted"} <span>{tabCounts[tab]}</span>
+            </button>
+          ))}
+        </div>
+        {rows.length === 0 && <p className={styles.dealTabEmpty}>{dealTab === "active" ? "No active deals." : dealTab === "expired" ? "No expired deals." : "No deleted deals."}</p>}
         {rows.length > 0 && (
           <div className={styles.dealTableScroll}>
             <table className={styles.dealTable}>
@@ -3219,7 +3243,8 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
               </thead>
               <tbody>
                 {rows.map((row) => {
-                  const live = row.everPublished && ["PUBLISHED", "EXPIRED"].includes(row.status);
+                  const live = row.everPublished && ["PUBLISHED", "EXPIRED"].includes(row.status) && dealTab !== "deleted";
+                  const expiredNow = classifyDeal(row) === "expired";
                   const canPublishNow = ["DRAFT", "PENDING_REVIEW"].includes(row.status) && can({ role, permissions }, "deal:publish");
                   return (
                     <tr key={row.id}>
@@ -3233,12 +3258,17 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
                         {live && (
                           <button
                             type="button"
-                            className={`${styles.dealActiveButton} ${row.status === "EXPIRED" ? styles.dealActiveButtonDisabled : ""}`}
-                            disabled={busy || row.status === "EXPIRED" || !can({ role, permissions }, "deal:publish")}
-                            aria-disabled={row.status === "EXPIRED"}
-                            title={row.status === "EXPIRED" ? "Expired deals cannot be active until you clear the expired checkbox" : "Deal is active"}
+                            className={`${styles.dealActiveButton} ${expiredNow ? styles.dealActiveButtonDisabled : ""}`}
+                            disabled={busy || expiredNow || !can({ role, permissions }, "deal:publish")}
+                            aria-disabled={expiredNow}
+                            title={expiredNow ? "Expired deals cannot be active until you clear the expired checkbox" : "Deal is active"}
                           >
                             Active
+                          </button>
+                        )}
+                        {dealTab === "deleted" && can({ role, permissions }, "deal:archive") && (
+                          <button type="button" className={styles.dealCardEdit} disabled={busy} onClick={() => restoreRow(row)} aria-label={`Restore ${row.title}`}>
+                            ↩ Restore
                           </button>
                         )}
                         {canPublishNow && (
@@ -3248,14 +3278,16 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
                         )}
                       </td>
                       <td>
-                        <button type="button" className={`${styles.dealCardEdit} ${styles.dealIconButton}`} onClick={() => { edit(row); setModalDealId(row.id); }} aria-label={`Edit ${row.title}`} title="Edit">
-                          ✏️
-                        </button>
+                        {dealTab !== "deleted" && (
+                          <button type="button" className={`${styles.dealCardEdit} ${styles.dealIconButton}`} onClick={() => { edit(row); setModalDealId(row.id); }} aria-label={`Edit ${row.title}`} title="Edit">
+                            ✏️
+                          </button>
+                        )}
                       </td>
                       <td>
                         {can({ role, permissions }, "deal:archive") && (
-                          <button type="button" className={`${styles.dealCardEdit} ${styles.dealDeleteButton}`} style={{ background: "var(--md-red-700)", color: "var(--md-white)" }} disabled={busy} onClick={() => removeDeal(row)} aria-label={`Delete ${row.title}`}>
-                            🗑 Delete
+                          <button type="button" className={`${styles.dealCardEdit} ${styles.dealDeleteButton}`} style={{ background: "var(--md-red-700)", color: "var(--md-white)" }} disabled={busy} onClick={() => (dealTab === "deleted" ? removeDeal(row) : archiveRow(row))} aria-label={dealTab === "deleted" ? `Delete ${row.title} permanently` : `Delete ${row.title}`} title={dealTab === "deleted" ? "Delete permanently (cannot be undone)" : "Move to the Deleted tab"}>
+                            🗑 {dealTab === "deleted" ? "Delete forever" : "Delete"}
                           </button>
                         )}
                       </td>
@@ -3266,7 +3298,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
                             className={styles.expiredCheckbox}
                             aria-label={`Expired: ${row.title}`}
                             title="Expired Deal"
-                            checked={row.status === "EXPIRED"}
+                            checked={expiredNow}
                             disabled={busy || !can({ role, permissions }, "deal:publish")}
                             onChange={(event) => updateExpired(row, event.target.checked)}
                           />

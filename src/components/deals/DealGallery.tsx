@@ -12,6 +12,8 @@ interface DealGalleryProps {
   primaryImage: string;
   images?: string[];
   discountPercent: number;
+  /** Same "Expired" overlay as the deal card on the home page. */
+  expired?: boolean;
 }
 
 const PLACEHOLDER_SVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400" fill="%23f1f5f9"><rect width="400" height="400" fill="%23f8fafc"/><path d="M140 180l40-40 80 80 40-40 60 60H100z" fill="%23cbd5e1"/><circle cx="160" cy="140" r="20" fill="%23cbd5e1"/><text x="50%25" y="75%25" text-anchor="middle" fill="%2394a3b8" font-size="14" font-family="sans-serif">Product Image Verified</text></svg>`;
@@ -22,6 +24,7 @@ export function DealGallery({
   primaryImage,
   images: additionalImages = [],
   discountPercent,
+  expired = false,
 }: DealGalleryProps) {
   const saved = useSavedDeals();
   const isSaved = saved.ids.includes(dealId);
@@ -86,6 +89,12 @@ export function DealGallery({
           style={{ objectFit: "contain", padding: 16 }}
           onError={() => setFailedImages((current) => current.includes(activeImage) ? current : [...current, activeImage])}
         />
+
+        {expired && (
+          <div className="deal-expired-overlay" aria-label="This deal has expired">
+            <span>Expired</span>
+          </div>
+        )}
 
         {galleryImages.length > 1 && (
           <>

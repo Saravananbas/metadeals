@@ -91,7 +91,7 @@ export function validPreview(token: string, actorId: string, dealId: string, ver
     return data.actorId === actorId && data.dealId === dealId && data.version === version && data.expires > now;
   } catch { return false; }
 }
-export async function changeDealState(db: DealDatabase, actor: DealActor, id: string, action: "publish" | "archive" | "delete", version: number, token?: string) {
+export async function changeDealState(db: DealDatabase, actor: DealActor, id: string, action: "publish" | "archive" | "delete" | "restore", version: number, token?: string) {
   await assertDealPermission(db, actor, action === "publish" ? "deal:publish" : "deal:archive");
   const before = await getAdminDeal(db, id);
   if (before.version !== version) throw new DealError("This deal changed. Reload first.", 409);
@@ -103,6 +103,15 @@ export async function changeDealState(db: DealDatabase, actor: DealActor, id: st
     return null;
   }
   const now = new Date();
+  if (action === "restore") {
+    // Deleted (archived) deals can be brought back. They return as a draft, so nothing goes live again until someone publishes it.
+    if (before.status !== "ARCHIVED") throw new DealError("Only a deleted deal can be restored.", 409);
+    const restored = await db.deal.updateMany({ where: { id, version }, data: { status: "DRAFT", updatedById: actor.id, version: { increment: 1 } } });
+    if (restored.count !== 1) throw new DealError("Concurrent edit. Reload first.", 409);
+    const after = await getAdminDeal(db, id);
+    await audit(db, actor, "deal.restored", id, before, after);
+    return after;
+  }
   if (action === "publish") {
     if (!["DRAFT", "PENDING_REVIEW"].includes(before.status)) throw new DealError("Only a draft or pending review can be published.", 409);
     if (!token || !validPreview(token, actor.id, id, version)) throw new DealError("Preview the saved version before publishing.", 409);

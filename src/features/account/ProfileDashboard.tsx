@@ -1,8 +1,7 @@
 "use client";
 import { useCallback, useEffect, useState, type FormEvent, type ReactNode } from "react";
 import Link from "next/link";
-import { signOut } from "next-auth/react";
-import { Activity, Bell, BookmarkCheck, Calendar, Camera, ChevronRight, Eye, Heart, Lock, Mail, MapPin, PenLine, Settings, ShieldCheck, Tag, Trophy, User, UserRound, Zap, CircleCheck, LayoutGrid, Users } from "lucide-react";
+import { Activity, Bell, BookmarkCheck, Calendar, Camera, Eye, Heart, Lock, Mail, MapPin, PenLine, ShieldCheck, Tag, Trophy, User, UserRound, Zap, CircleCheck, LayoutGrid, Users } from "lucide-react";
 import { CustomerProfile } from "@/features/customer/CustomerProfile";
 import { MyActivity } from "@/features/community/components/MyActivity";
 import { EditProfile } from "@/features/profile/EditProfile";
@@ -12,7 +11,7 @@ import { useSavedDeals } from "@/features/home/saved-store";
 import { SEX_LABELS, SEX_VALUES } from "@/features/customer/profile-validation";
 import styles from "./dashboard.module.css";
 
-export type Tab = "profile" | "deals" | "activity" | "saved" | "notifications" | "settings";
+export type Tab = "profile" | "deals" | "activity" | "saved" | "notifications";
 type Dashboard = {
   account: { name: string; email: string; emailVerified: boolean; hasPassword: boolean; sex: string | null; dateOfBirth: string | null; location: string | null; memberSince: string; daysSinceJoining: number };
   forum: { handle: string; displayName: string | null; bio: string | null; location: string | null; hasAvatar: boolean; verified: boolean } | null;
@@ -35,8 +34,8 @@ const number = (n: number) => n.toLocaleString("en-IN");
 const Notice = ({ say }: { say: Say }) => (say ? <p className={say.ok ? styles.ok : styles.err} role={say.ok ? "status" : "alert"}>{say.text}</p> : null);
 
 const TABS: { key: Tab; label: string; icon: typeof User }[] = [
-  { key: "profile", label: "Profile", icon: User }, { key: "deals", label: "My Deals", icon: Tag }, { key: "activity", label: "My Activity", icon: Activity },
-  { key: "saved", label: "Saved Deals", icon: BookmarkCheck }, { key: "notifications", label: "Notifications", icon: Bell }, { key: "settings", label: "Settings & Security", icon: Settings },
+  { key: "profile", label: "Profile", icon: User }, { key: "deals", label: "Post Deal", icon: Tag }, { key: "activity", label: "My Activity", icon: Activity },
+  { key: "saved", label: "Saved Deals", icon: BookmarkCheck }, { key: "notifications", label: "Notifications", icon: Bell },
 ];
 
 export function ProfileDashboard({ tab, edit = false }: { tab: Tab; edit?: boolean }) {
@@ -106,34 +105,19 @@ export function ProfileDashboard({ tab, edit = false }: { tab: Tab; edit?: boole
           {tab === "profile" && <>
             {editing && forum && <section className={styles.card} aria-label="Edit profile"><div className={styles.cardHead}><h2>Edit Profile</h2><button type="button" className={styles.link} onClick={() => { setEditing(false); void load(); }}>Done</button></div><EditProfile /></section>}
             <AboutMe data={data} onSaved={load} />
-            <div className={styles.grid2}>
-              <div className={styles.content}>
-                <section className={styles.card} aria-label="Badges">
-                  <div className={styles.cardHead}><h2>My Badges ({stats.badges})</h2></div>
-                  <p className={styles.badgeEmpty}>{stats.badges ? "" : "No badges yet. Badges will appear here once MetaDeals4U defines how they are earned."}</p>
-                </section>
-                <Preferences data={data} onSaved={load} />
-              </div>
-              <div className={styles.content}>
-                <Security data={data} compact />
-                <Highlights data={data} />
-              </div>
-            </div>
+            <section className={styles.card} aria-label="Badges">
+              <div className={styles.cardHead}><h2>My Badges ({stats.badges})</h2></div>
+              <p className={styles.badgeEmpty}>{stats.badges ? "" : "No badges yet. Badges will appear here once MetaDeals4U defines how they are earned."}</p>
+            </section>
+            <Security data={data} />
+            <Blocked />
+            <Highlights data={data} />
+            <Privacy data={data} />
           </>}
           {tab === "deals" && <CustomerProfile section="deals" embedded />}
           {tab === "activity" && <MyActivity />}
           {tab === "saved" && <SavedDeals />}
           {tab === "notifications" && <><Notifications onChange={load} /><Preferences data={data} onSaved={load} /></>}
-          {tab === "settings" && <>
-            <Security data={data} />
-            <Preferences data={data} onSaved={load} />
-            <Privacy data={data} />
-            <Blocked />
-            <section className={styles.card}><div className={styles.cardHead}><h2>Account data</h2></div>
-              <p className={styles.badgeEmpty}>Your data is described in our <Link href="/privacy">Privacy Policy</Link>. Self-service account deletion and data download are being added; until then, write to us through the contact details there and we will act on your request.</p>
-              <div className={styles.row} style={{ marginTop: 12 }}><button type="button" className={styles.btnGhost} onClick={() => void signOut({ callbackUrl: "/" })}>Sign out</button></div>
-            </section>
-          </>}
         </div>
       </div>
     </div>
@@ -185,7 +169,7 @@ function AboutMe({ data, onSaved }: { data: Dashboard; onSaved: () => Promise<vo
   );
 }
 
-function Security({ data, compact = false }: { data: Dashboard; compact?: boolean }) {
+function Security({ data }: { data: Dashboard }) {
   const { account } = data;
   const [open, setOpen] = useState(false), [busy, setBusy] = useState(false), [say, setSay] = useState<Say>(null);
   async function change(e: FormEvent<HTMLFormElement>) {
@@ -212,7 +196,6 @@ function Security({ data, compact = false }: { data: Dashboard; compact?: boolea
         <div className={styles.row}><button className={styles.btn} disabled={busy}>{busy ? "Saving…" : "Change password"}</button></div>
       </form>}
       <Notice say={say} />
-      {compact && <p className={styles.hint} style={{ marginTop: 10 }}><Link href="/account?tab=settings">More security and privacy settings <ChevronRight size={12} aria-hidden /></Link></p>}
     </section>
   );
 }

@@ -12,10 +12,14 @@ type Activity = {
   following: { slug: string; name: string }[]; reports: { id: string; targetType: string; category: string; status: string; createdAt: string }[];
 };
 
+type Submitted = { id: string; title: string; merchantName: string | null; priceMinor: number; submittedAt: string; rejectionReason: string | null; stage: "PENDING_REVIEW" | "APPROVED" | "LIVE" | "REJECTED"; dealSlug: string | null };
+type Submissions = { data: Submitted[]; counts: { total: number; pendingReview: number; live: number; rejected: number } };
+const STAGE_LABEL = { PENDING_REVIEW: "Awaiting review", APPROVED: "Approved, going live soon", LIVE: "Live on MetaDeals4U", REJECTED: "Not approved" } as const;
+
 export function MyActivity() {
   const [data, setData] = useState<Activity | null>(null);
   const [state, setState] = useState<"loading" | "signin" | "off" | "ok">("loading");
-  const [say, setSay] = useState<{ ok: boolean; text: string } | null>(null);
+  const [subs, setSubs] = useState<Submissions | null>(null);
 
   useEffect(() => {
     let alive = true;
@@ -26,6 +30,10 @@ export function MyActivity() {
       const body = await response.json();
       setData(body.data); setState("ok");
     }).catch(() => alive && setState("off"));
+    fetch("/api/v1/customer/submissions", { cache: "no-store" }).then(async (response) => {
+      if (!alive) return;
+      setSubs(response.ok ? await response.json() : { data: [], counts: { total: 0, pendingReview: 0, live: 0, rejected: 0 } });
+    }).catch(() => alive && setSubs({ data: [], counts: { total: 0, pendingReview: 0, live: 0, rejected: 0 } }));
     return () => { alive = false; };
   }, []);
 
@@ -42,22 +50,21 @@ export function MyActivity() {
       </section>
       {data.profile.status === "SUSPENDED" && <div className={styles.err}>Your community access is paused{data.profile.suspendedUntil ? ` until ${new Date(data.profile.suspendedUntil).toLocaleDateString("en-IN")}` : ""}. Write to us if you think this is a mistake.</div>}
 
-      <section className={styles.card}>
-        <h2>Your community name</h2>
-        <form className={styles.form} onSubmit={async (e) => {
-          e.preventDefault();
-          const values = Object.fromEntries(new FormData(e.currentTarget)) as Record<string, string>;
-          const response = await fetch("/api/v1/customer/community/profile", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ handle: values.handle, bio: values.bio || null }) });
-          const body = await response.json().catch(() => ({}));
-          if (response.ok) { setData({ ...data, profile: { ...data.profile, ...body.data } }); setSay({ ok: true, text: "Saved." }); } else setSay({ ok: false, text: body?.error ?? "Could not save" });
-        }}>
-          <div className={styles.row}>
-            <label>Public name<input name="handle" defaultValue={data.profile.handle} required pattern="[a-zA-Z0-9_]{3,30}" /></label>
-            <label>About you (optional)<input name="bio" defaultValue={data.profile.bio ?? ""} maxLength={280} /></label>
-          </div>
-          <p className={styles.notice}>This is the only name others see. Your email, real name and profile details stay private.</p>
-          <div className={styles.actions}><button className={`${styles.btn} ${styles.btnPrimary}`}>Save</button>{say && <span className={say.ok ? styles.ok : styles.err} role="status">{say.text}</span>}</div>
-        </form>
+      <section className={styles.card} aria-label="Deals you submitted">
+        <h2>Deals you submitted</h2>
+        {subs === null ? <p className={styles.notice}>Loading…</p> : (
+          <>
+            <p className={styles.notice}>{subs.counts.total} submitted · {subs.counts.pendingReview} awaiting review · {subs.counts.live} live · {subs.counts.rejected} not approved</p>
+            {subs.data.map((d) => (
+              <div key={d.id} style={{ padding: "8px 0", borderBottom: "1px solid var(--md-neutral-100)" }}>
+                {d.dealSlug ? <Link href={`/deal/${d.dealSlug}`}>{d.title}</Link> : <strong>{d.title}</strong>}
+                <div className={styles.meta}><span>{STAGE_LABEL[d.stage]}</span><span>₹{(d.priceMinor / 100).toLocaleString("en-IN")}</span>{d.merchantName && <span>{d.merchantName}</span>}<span>sent {ago(d.submittedAt)}</span></div>
+                {d.stage === "REJECTED" && d.rejectionReason && <p className={styles.notice}>Why it was not approved: {d.rejectionReason}</p>}
+              </div>
+            ))}
+            {!subs.data.length && <p className={styles.notice}>You have not submitted a deal yet. Use the Post Deal tab to share one.</p>}
+          </>
+        )}
       </section>
 
       <section className={styles.card}>

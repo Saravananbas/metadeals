@@ -626,3 +626,6 @@ body { background: radial-gradient(ellipse at 12% 18%, color-mix(in srgb, var(--
   body.md-notify-dock { --admin-notify-w: 320px; padding-right: 320px; }
   body.md-notify-rail { --admin-notify-w: 52px; padding-right: 52px; }
 }
+
+/* Set while a full-screen pop-up (the deal edit window) is open, so the page behind it does not scroll. */
+body.md-modal-open { overflow: hidden; }

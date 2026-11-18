@@ -3,6 +3,7 @@ import { z } from "zod";
 import { getDatabase } from "@/server/db/client";
 import { getCurrentAuthContext } from "@/server/auth/session";
 import { can, type Permission } from "@/server/auth/permissions";
+import { DEAL_TABS, dealTabWhere, type DealTab } from "@/features/deals/tabs";
 import { DELEGABLE_PERMISSIONS } from "@/server/auth/modules";
 import { MerchantDirectoryStatus, MerchantDirectoryVerification } from "@/generated/prisma/client";
 import { assertSameOrigin, readJson } from "@/server/auth/request";
@@ -738,8 +739,19 @@ async function handle(request: Request, { params }: { params: Promise<{ path: st
     }
     if (request.method === "GET") {
       if (id) return json({ data: await getAdminDeal(db, id) });
-      const page = z.coerce.number().int().min(1).max(1000).parse(new URL(request.url).searchParams.get("page") ?? 1);
-      return json({ data: await db.deal.findMany({ take: 50, skip: (page - 1) * 50, orderBy: { updatedAt: "desc" }, include: dealInclude }), page });
+      const query = new URL(request.url).searchParams;
+      const page = z.coerce.number().int().min(1).max(1000).parse(query.get("page") ?? 1);
+      // Without a tab the list is unchanged (every deal), so other callers keep working.
+      const tab = z.enum(DEAL_TABS as unknown as [DealTab, ...DealTab[]]).optional().parse(query.get("tab") ?? undefined);
+      const now = new Date();
+      const where = tab ? dealTabWhere(tab, now) : undefined;
+      const [data, active, expired, deleted] = await Promise.all([
+        db.deal.findMany({ where, take: 50, skip: (page - 1) * 50, orderBy: { updatedAt: "desc" }, include: dealInclude }),
+        db.deal.count({ where: dealTabWhere("active", now) }),
+        db.deal.count({ where: dealTabWhere("expired", now) }),
+        db.deal.count({ where: dealTabWhere("deleted", now) }),
+      ]);
+      return json({ data, page, counts: { active, expired, deleted } });
     }
     const body = await readJson(request);
     if (id && action === "preview" && request.method === "POST") { const deal = await getAdminDeal(db, id); return json({ data: deal, previewToken: previewToken(actor.id, id, deal.version) }); }
@@ -747,9 +759,9 @@ async function handle(request: Request, { params }: { params: Promise<{ path: st
       const input = z.object({ version: z.number().int().positive(), expired: z.boolean() }).strict().parse(body);
       return json({ data: await db.$transaction((tx) => setDealExpired(tx, actor, id, input.expired, input.version)) });
     }
-    if (id && (action === "publish" || action === "archive" || request.method === "DELETE")) {
+    if (id && (action === "publish" || action === "archive" || action === "restore" || request.method === "DELETE")) {
       const input = z.object({ version: z.number().int().positive(), previewToken: z.string().max(2000).optional() }).parse(body);
-      const changed = await db.$transaction((tx) => changeDealState(tx, actor, id, request.method === "DELETE" ? "delete" : action as "publish" | "archive", input.version, input.previewToken));
+      const changed = await db.$transaction((tx) => changeDealState(tx, actor, id, request.method === "DELETE" ? "delete" : action as "publish" | "archive" | "restore", input.version, input.previewToken));
       if (action === "publish" && request.method !== "DELETE") await autoPostToTelegram(db, actor, id);
       return json({ data: changed });
     }

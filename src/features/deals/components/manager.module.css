@@ -1007,9 +1007,9 @@
 .addHead h2 { margin: 0; font-size: 24px; font-weight: 800; color: var(--md-purple-950); }
 .addHead p { margin: 4px 0 0; font-size: 13px; color: var(--md-color-text-secondary); }
 .addHeadActions { display: flex; gap: 10px; flex-wrap: wrap; }
-.headSave, .headPublish { display: inline-flex; align-items: center; gap: 8px; min-height: 42px; padding: 0 18px; border-radius: 10px; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; }
-.headSave { background: var(--md-white); color: var(--md-purple-800); border: 1px solid var(--md-purple-200); }
-.headSave:hover:not(:disabled) { background: var(--md-purple-50); }
+.headNew, .headSave, .headPublish { display: inline-flex; align-items: center; gap: 8px; min-height: 42px; padding: 0 18px; border-radius: 10px; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; }
+.headNew, .headSave { background: var(--md-white); color: var(--md-purple-800); border: 1px solid var(--md-purple-200); }
+.headNew:hover:not(:disabled), .headSave:hover:not(:disabled) { background: var(--md-purple-50); }
 .headPublish { background: var(--md-purple-600); color: var(--md-white); border: 1px solid var(--md-purple-600); }
 .headPublish:hover:not(:disabled) { background: var(--md-purple-700); }
 .headSave:disabled, .headPublish:disabled { opacity: .55; cursor: not-allowed; }
@@ -1114,7 +1114,16 @@
 
 /* Edit pop-up: the same form as Add New Deal, opened from the Edit button in the deals table. */
 .editBackdrop { position: fixed; inset: 0; z-index: 300; overflow-y: auto; padding: 24px 16px; background: color-mix(in srgb, var(--md-purple-950) 74%, transparent); }
-.editModal { width: min(1180px, 100%); margin: 0 auto; box-shadow: var(--md-shadow-popover); }
+.editModal { width: min(1180px, 100%); margin: 0 auto; padding: 20px; background: var(--md-white); border-radius: 16px; box-shadow: var(--md-shadow-popover); }
 .editClose { display: grid; place-items: center; width: 40px; height: 40px; padding: 0; border: 1px solid var(--md-color-border); border-radius: 10px; background: var(--md-white); color: var(--md-color-text); cursor: pointer; }
 @media (max-width: 760px) { .editBackdrop { padding: 0; } .editModal { border-radius: 0; min-height: 100dvh; } }
 .bulkNote { margin: 0 0 8px; font-size: 12px; line-height: 1.5; color: var(--md-color-text-secondary); overflow-wrap: anywhere; }
+
+/* Active / Expired / Deleted tabs above the deals table. The selectors are doubled up on purpose: the generic button style of this page would otherwise win. */
+.dealTabsBar { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 12px; }
+.dealTabsBar .dealTabBtn { display: inline-flex; align-items: center; gap: 8px; min-height: 38px; padding: 0 14px 0 16px; border: 1px solid var(--md-purple-200); border-radius: 999px; background: var(--md-white); color: var(--md-purple-800); font-weight: 700; font-size: 13.5px; cursor: pointer; }
+.dealTabsBar .dealTabBtn span { min-width: 24px; padding: 1px 8px; border-radius: 999px; background: var(--md-purple-100); color: var(--md-purple-900); font-size: 12.5px; font-weight: 800; text-align: center; }
+.dealTabsBar .dealTabBtn:not(.dealTabBtnActive):hover:not(:disabled) { background: var(--md-purple-50); color: var(--md-purple-900); }
+.dealTabsBar .dealTabBtn.dealTabBtnActive, .dealTabsBar .dealTabBtn.dealTabBtnActive:hover:not(:disabled) { background: var(--md-purple-700); border-color: var(--md-purple-700); color: var(--md-white); }
+.dealTabsBar .dealTabBtnActive span { background: var(--md-white); color: var(--md-purple-800); }
+.dealTabEmpty { margin: 8px 2px; color: var(--md-color-text-secondary); }

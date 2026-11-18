@@ -305,20 +305,16 @@ export function DealCard({
           >
             Post Details
           </a>
-          {deal.expiry === "expired" ? (
-            <span className="deal-buy-now-disabled" aria-label={`Offer expired for ${deal.name}`}>Expired</span>
-          ) : (
-            <a
-              href={`/go/${deal.id}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="deal-buy-now-btn"
-              aria-label={`Buy ${deal.name} now`}
-              onClick={(e) => e.stopPropagation()}
-            >
-              Buy Now <ExternalLink size={12} />
-            </a>
-          )}
+          <a
+            href={`/go/${deal.id}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="deal-buy-now-btn"
+            aria-label={`Buy ${deal.name} now`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            Buy Now <ExternalLink size={12} />
+          </a>
         </div>
 
         {/* ROW 7: Social Interaction Row (Views, Like, Share, Comment) */}

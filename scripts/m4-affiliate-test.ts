@@ -149,12 +149,15 @@ async function runAffiliateIntegration() {
     assert.equal(optionRedirect.optionId, optionId);
     assert.equal(await db.affiliateClick.count({ where: { dealId } }), 2);
 
-    // 9. Test inactive / expired deal rejection
+    // 9. An expired deal still opens the retailer so people can check it for themselves; an archived deal does not.
     await db.deal.update({ where: { id: dealId }, data: { status: "EXPIRED" } });
+    const expiredRedirect = await resolveDealRedirect(db, deal.id, null, { ip: "203.0.113.60", userAgent: "Mozilla/5.0 Safari/605.1.15", prefetch: "prefetch" });
+    assert.ok(expiredRedirect.destinationUrl, "Expired deal still redirects");
+    await db.deal.update({ where: { id: dealId }, data: { status: "ARCHIVED" } });
     await assert.rejects(
       resolveDealRedirect(db, deal.id, null),
       (err: AffiliateError) => err.status === 410,
-      "Expired deal must return 410"
+      "Archived deal must return 410"
     );
 
     // 10. Test open redirect rejection (untrusted merchant host)

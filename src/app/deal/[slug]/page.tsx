@@ -227,6 +227,7 @@ export default async function DealDetailPage({
             primaryImage={deal.image.url}
             images={deal.imageGallery.map((image) => image.url)}
             discountPercent={deal.discountPercent}
+            expired={deal.status === "EXPIRED"}
           />
 
           {/* Column B: Product Information */}

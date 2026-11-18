@@ -8,9 +8,9 @@ import { emailMode } from "@/server/customer/email";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "My Profile | MetaDeals4U", robots: { index: false, follow: false } };
-const TABS: Tab[] = ["profile", "deals", "activity", "saved", "notifications", "settings"];
+const TABS: Tab[] = ["profile", "deals", "activity", "saved", "notifications"];
 
-/** Signed-in members get their profile, deals, activity, saved deals, notifications and security in one place; visitors get sign-in. */
+/** Signed-in members get their profile, deals, activity, saved deals, and notifications in one place; visitors get sign-in. */
 export default async function AccountPage({ searchParams }: { searchParams: Promise<{ error?: string; tab?: string; edit?: string }> }) {
   const { error, tab, edit } = await searchParams;
   let signedIn = false;

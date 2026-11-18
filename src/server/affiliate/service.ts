@@ -77,10 +77,10 @@ export async function resolveDealRedirect(
   }
 
   const now = new Date();
+  // An expired deal still opens the retailer page so people can check it for themselves; drafts, archived and not-yet-started deals do not.
   if (
-    deal.status !== "PUBLISHED" ||
-    (deal.startsAt && deal.startsAt > now) ||
-    (deal.expiresAt && deal.expiresAt <= now)
+    (deal.status !== "PUBLISHED" && deal.status !== "EXPIRED") ||
+    (deal.status === "PUBLISHED" && deal.startsAt && deal.startsAt > now)
   ) {
     throw new AffiliateError("This deal is no longer active.", 410);
   }
