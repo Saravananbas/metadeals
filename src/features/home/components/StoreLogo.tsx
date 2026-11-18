@@ -3,10 +3,12 @@ import Image from "next/image";
 
 export function StoreLogo({ store, name, logoUrl, logoOnly = false }: { store: StoreId; name?: string; logoUrl?: string | null; logoOnly?: boolean }) {
   if (logoUrl) {
+    // Shown at most 80x24 px: ask for a small copy instead of the stored original (SVG logos are returned as they are).
+    const src = logoUrl.startsWith("/api/v1/media/") && !logoUrl.includes("?") ? `${logoUrl}?w=240` : logoUrl;
     return (
       <span className="store-logo" aria-label={name ?? store} style={{ display: "inline-flex", alignItems: "center" }}>
         <Image
-          src={logoUrl}
+          src={src}
           alt={logoOnly ? (name ?? store) : ""}
           width={80}
           height={24}

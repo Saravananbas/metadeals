@@ -8,6 +8,7 @@ import { listingSchema } from "@/features/deals/validation";
 import { readImage } from "@/server/storage/media";
 import { api, json } from "@/server/http";
 
+const THUMB_WIDTHS = [240, 320, 400, 480, 640];
 const thumbCache = new Map<string, Buffer>();
 
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -30,7 +31,8 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
       || Boolean(await db.merchantWebsiteDirectory.findFirst({ where: { logoMediaId: id, status: "ACTIVE" }, select: { id: true } }));
     if (!isPublic && !await getCurrentAuthContext()) return json({ error: { code: "NOT_FOUND", message: "Image unavailable." } }, 404);
     const width = Number(new URL(request.url).searchParams.get("w"));
-    const thumbWidth = width === 320 || width === 640 ? width : 0;
+    // Only these widths are served (they are cached by id and width), so a caller cannot make the server resize to arbitrary sizes.
+    const thumbWidth = THUMB_WIDTHS.includes(width) ? width : 0;
     // Image ids are unique and stored bytes never change, so public images can be cached for a year.
     const cacheControl = isPublic ? "public, max-age=31536000, immutable" : "private, no-store";
     const etag = `"${media.id}${thumbWidth ? `-w${thumbWidth}` : ""}"`;

@@ -24,6 +24,8 @@ import { StoreLogo } from "./StoreLogo";
 import dynamic from "next/dynamic";
 const DealCommentsDialog = dynamic(() => import("@/components/deals/DealCommentsDialog").then((m) => m.DealCommentsDialog));
 
+const CARD_WIDTHS = [240, 320, 400, 480, 640];
+
 function formatPostedDate(dateStr?: string | null): string {
   if (!dateStr) return "";
   try {
@@ -113,6 +115,7 @@ export function DealCard({
   const currentImageIndex = imageIndex % Math.max(1, galleryImages.length);
   const currentImage = galleryImages[currentImageIndex] || "/images/placeholder.svg";
   const imageSrc = failedImage === currentImage ? "/images/placeholder.svg" : currentImage;
+  const isMediaImage = imageSrc.startsWith("/api/v1/media/") && !imageSrc.includes("?");
 
   const postedDate = formatPostedDate(deal.publishedAt);
   const viewCount = deal.viewCount && deal.viewCount > 0 ? deal.viewCount : 0;
@@ -186,19 +189,38 @@ export function DealCard({
           <Heart size={18} fill={saved ? "currentColor" : "none"} />
         </button>
         <div className="product-image-button" aria-label={`Preview ${deal.name}`}>
-          <Image
-            key={`${deal.id}-${currentImageIndex}`}
-            src={imageSrc.startsWith("/api/v1/media/") && !imageSrc.includes("?") ? `${imageSrc}?w=640` : imageSrc}
-            alt=""
-            aria-hidden="true"
-            className="deal-gallery-image"
-            fill
-            loading={priority ? "eager" : undefined}
-            fetchPriority={priority ? "high" : undefined}
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 20vw"
-            onError={() => setFailedImage(currentImage)}
-            unoptimized
-          />
+          {isMediaImage ? (
+            // Our own images come in several widths (see the media API); the browser picks the smallest one that is sharp enough for the card.
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              key={`${deal.id}-${currentImageIndex}`}
+              src={`${imageSrc}?w=640`}
+              srcSet={CARD_WIDTHS.map((w) => `${imageSrc}?w=${w} ${w}w`).join(", ")}
+              sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 16vw"
+              alt=""
+              aria-hidden="true"
+              className="deal-gallery-image"
+              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", color: "transparent" }}
+              decoding="async"
+              loading={priority ? "eager" : "lazy"}
+              fetchPriority={priority ? "high" : undefined}
+              onError={() => setFailedImage(currentImage)}
+            />
+          ) : (
+            <Image
+              key={`${deal.id}-${currentImageIndex}`}
+              src={imageSrc}
+              alt=""
+              aria-hidden="true"
+              className="deal-gallery-image"
+              fill
+              loading={priority ? "eager" : undefined}
+              fetchPriority={priority ? "high" : undefined}
+              sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 16vw"
+              onError={() => setFailedImage(currentImage)}
+              unoptimized
+            />
+          )}
         </div>
         {deal.expiry === "expired" && (
           <div className="deal-expired-overlay" aria-label="This deal has expired">

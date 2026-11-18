@@ -37,6 +37,8 @@ const nextConfig: NextConfig = {
   // strict: a page loads only the CSS of the modules it imports (the default merges CSS across routes, so the homepage was loading community and profile styles).
   experimental: { cpus: 2, cssChunking: "strict" },
   reactStrictMode: true,
+  // The hero pictures never change under the same name, so the optimiser keeps its WebP copies for a week instead of the default 4 hours (less CPU on the host, faster repeat views).
+  images: { minimumCacheTTL: 604800 },
   // Keep the dev watcher scoped to this app instead of inferring a drive-wide root.
   turbopack: { root: process.cwd() },
   // Images shipped with the deploy (seed-media/) must be traced into the server output.

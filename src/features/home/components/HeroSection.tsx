@@ -16,7 +16,7 @@ export function HeroSection({ onSearch }: { onSearch: (query: string) => void })
       <span className="hero-stage" aria-hidden="true" />
       <span className="hero-bag" aria-hidden="true" />
       <Image className="hero-product hero-product-headphones" src="/images/products/headphones.png" alt="" width={500} height={500} sizes="(max-width: 767px) 28vw, 15vw" />
-      <Image className="hero-product hero-product-laptop" src="/images/products/laptop.png" alt="" width={500} height={500} sizes="(max-width: 767px) 44vw, 23vw" loading="eager" />
+      <Image className="hero-product hero-product-laptop" src="/images/products/laptop.png" alt="" width={500} height={500} sizes="(max-width: 767px) 44vw, 23vw" loading="eager" fetchPriority="high" />
       <Image className="hero-product hero-product-watch" src="/images/products/watch.png" alt="" width={500} height={500} sizes="(max-width: 767px) 17vw, 9vw" />
       <Image className="hero-product hero-product-phone" src="/images/products/phone.png" alt="" width={500} height={500} sizes="(max-width: 767px) 22vw, 12vw" />
       <div className="hero-dots" aria-hidden="true"><i /><i /><i /><i /></div>
