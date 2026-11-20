@@ -6,6 +6,7 @@ import { CommunityShell } from "@/features/community/components/Shell";
 import { PostCard, ago, rupees } from "@/features/community/components/parts";
 import { CopyProfileLink, ProfileActions } from "@/features/profile/ProfileActions";
 import { VerifiedBadge } from "@/features/profile/VerifiedBadge";
+import { BadgeStrip } from "@/features/badges/BadgeStrip";
 import { CustomerError } from "@/server/customer/service";
 import { getMemberProfile, PROFILE_TABS, type ProfileTab } from "@/server/community/profile";
 import { communityPageViewer } from "@/server/community/session";
@@ -83,6 +84,7 @@ export default async function MemberPage({ params, searchParams }: { params: Pro
             </div>
             <ProfileActions handle={p.handle} isOwner={p.isOwner} signedIn={Boolean(viewer)} messaging={messagesEnabled()} following={p.viewer?.following ?? false} />
             {p.bio && <p className={styles.bio}>{p.bio}</p>}
+            <BadgeStrip top={p.badges.top} total={p.badges.total} />
             <div className={styles.facts}>
               {p.location && <span><MapPin size={15} aria-hidden /> {p.location}</span>}
               <span>{p.followers} {p.followers === 1 ? "follower" : "followers"} · {p.following} following</span>

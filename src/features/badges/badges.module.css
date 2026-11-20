@@ -1,0 +1,48 @@
+/* Member badges. Colours only through the design tokens. Tier colours climb blue, green, gold, orange, purple; locked tiers are grey. */
+.board { display: grid; gap: 18px; }
+.summary { margin: 0; color: var(--md-color-text-secondary); font-size: 14px; }
+.summary b { color: var(--md-color-text); font-size: 16px; }
+.group { margin: 0 0 10px; font-size: 15px; font-weight: 800; color: var(--md-color-text); }
+.grid { display: grid; gap: 12px; grid-template-columns: 1fr; }
+@media (min-width: 760px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1500px) { .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+
+.card { display: grid; gap: 10px; min-width: 0; padding: 14px; border: 1px solid var(--md-purple-100); border-radius: 16px; background: var(--md-white); }
+.head { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.titles { min-width: 0; }
+.titles h3 { margin: 0; font-size: 15px; font-weight: 800; color: var(--md-color-text); }
+.level { margin: 2px 0 0; font-size: 12.5px; color: var(--md-color-text-secondary); }
+.level b { color: var(--md-color-text); }
+
+.big, .small { display: inline-grid; place-items: center; flex: none; position: relative; border-radius: 14px; background: var(--md-neutral-50); }
+.big { width: 52px; height: 52px; }
+.small { width: 40px; height: 40px; border-radius: 12px; }
+.t1 { color: var(--md-blue-600); background: var(--md-blue-50); }
+.t2 { color: var(--md-green-600); background: var(--md-green-50); }
+.t3 { color: var(--md-amber-600); background: var(--md-amber-50); }
+.t4 { color: var(--md-orange-600); background: var(--md-orange-50); }
+.t5 { color: var(--md-purple-600); background: var(--md-purple-50); }
+.locked { color: var(--md-neutral-400); background: var(--md-neutral-50); }
+.lock { position: absolute; right: -2px; bottom: -2px; padding: 2px; border-radius: 999px; background: var(--md-white); color: var(--md-neutral-500); box-sizing: content-box; }
+
+.bar { height: 6px; border-radius: 999px; background: var(--md-neutral-100); overflow: hidden; }
+.bar span { display: block; height: 100%; border-radius: 999px; background: var(--md-orange-600); }
+.next { margin: 0; font-size: 12.5px; line-height: 1.45; color: var(--md-color-text-secondary); }
+.next b { color: var(--md-color-text); }
+.next span { display: block; color: var(--md-neutral-600); }
+
+/* Five tiers in one row; on a narrow card the row scrolls sideways instead of squeezing the names. */
+.tiers { display: grid; grid-template-columns: repeat(5, minmax(68px, 1fr)); gap: 6px; margin: 2px 0 0; padding: 0 0 4px; list-style: none; overflow-x: auto; scroll-snap-type: x proximity; }
+.tiers li { display: grid; justify-items: center; align-content: start; gap: 3px; text-align: center; min-width: 0; scroll-snap-align: start; }
+.tiers b { font-size: 11px; line-height: 1.2; font-weight: 700; color: var(--md-color-text); overflow-wrap: break-word; }
+.tiers small { font-size: 10.5px; color: var(--md-neutral-600); }
+.todo b { color: var(--md-neutral-600); }
+
+/* Public profile strip */
+.strip { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 10px 0 0; padding: 0; list-style: none; }
+.pill { display: inline-flex; align-items: center; gap: 8px; padding: 5px 12px 5px 6px; border: 1px solid var(--md-purple-100); border-radius: 999px; background: var(--md-white); }
+.pill > span:last-child { display: grid; line-height: 1.15; }
+.pill b { font-size: 12.5px; font-weight: 800; color: var(--md-color-text); }
+.pill small { font-size: 10.5px; color: var(--md-neutral-600); }
+.pillIcon { display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 999px; }
+.more { font-size: 12px; font-weight: 700; color: var(--md-neutral-600); }

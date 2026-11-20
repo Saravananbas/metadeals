@@ -4,6 +4,8 @@ import Link from "next/link";
 import { Activity, Bell, BookmarkCheck, Calendar, Camera, Eye, Heart, Lock, Mail, MapPin, PenLine, ShieldCheck, Tag, Trophy, User, UserRound, Zap, CircleCheck, LayoutGrid, Users } from "lucide-react";
 import { CustomerProfile } from "@/features/customer/CustomerProfile";
 import { MyActivity } from "@/features/community/components/MyActivity";
+import { BadgeBoard } from "@/features/badges/BadgeBoard";
+import type { BadgeBoard as Board } from "@/features/badges/catalog";
 import { EditProfile } from "@/features/profile/EditProfile";
 import { VerifiedBadge } from "@/features/profile/VerifiedBadge";
 import { notificationText, type NotificationType } from "@/features/community/notification-text";
@@ -16,6 +18,7 @@ type Dashboard = {
   account: { name: string; email: string; emailVerified: boolean; hasPassword: boolean; sex: string | null; dateOfBirth: string | null; location: string | null; memberSince: string; daysSinceJoining: number };
   forum: { handle: string; displayName: string | null; bio: string | null; location: string | null; hasAvatar: boolean; verified: boolean } | null;
   stats: { submitted: number; approved: number; live: number; views: number; helpfulVotes: number; badges: number };
+  badgeBoard: Board;
   preferences: { dealAlerts: boolean; emailUpdates: boolean; frequency: "IMMEDIATE" | "DAILY" | "WEEKLY" | "OFF"; categorySlugs: string[] };
   unreadNotifications: number;
   highlights: { daysSinceJoining: number; discussions: number; comments: number; dealsContributed: number };
@@ -55,7 +58,7 @@ export function ProfileDashboard({ tab, edit = false }: { tab: Tab; edit?: boole
     { icon: Zap, tone: "amber", value: number(stats.live), label: "Live Deals" },
     { icon: Eye, tone: "blue", value: number(stats.views), label: "Total Views" },
     { icon: Heart, tone: "red", value: number(stats.helpfulVotes), label: "Helpful Votes" },
-    { icon: Trophy, tone: "amber", value: stats.badges ? number(stats.badges) : "0", label: "Helper Badges" },
+    { icon: Trophy, tone: "amber", value: stats.badges ? number(stats.badges) : "0", label: "Badges" },
   ];
   const editHref = tab === "profile" ? undefined : "/account?edit=1";
 
@@ -107,7 +110,7 @@ export function ProfileDashboard({ tab, edit = false }: { tab: Tab; edit?: boole
             <AboutMe data={data} onSaved={load} />
             <section className={styles.card} aria-label="Badges">
               <div className={styles.cardHead}><h2>My Badges ({stats.badges})</h2></div>
-              <p className={styles.badgeEmpty}>{stats.badges ? "" : "No badges yet. Badges will appear here once MetaDeals4U defines how they are earned."}</p>
+              <BadgeBoard board={data.badgeBoard} />
             </section>
             <Security data={data} />
             <Blocked />

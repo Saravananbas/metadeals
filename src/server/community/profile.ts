@@ -1,3 +1,5 @@
+import { getBadgeBoard } from "@/server/badges/counts";
+import { topBadges } from "@/features/badges/catalog";
 import "server-only";
 import { z } from "zod";
 import { Prisma } from "@/generated/prisma/client";
@@ -87,6 +89,8 @@ export async function getMemberProfile(handle: string, viewerCustomerId: string 
   return {
     handle: profile.handle, displayName: profile.displayName, bio: profile.bio, location: profile.location, verified: Boolean(profile.verifiedAt),
     followers, following, viewer: viewerProfile ? { following: Boolean(iFollow) } : null,
+    // Badges show on the public profile for everyone (names and tiers only, never the counts behind them).
+    badges: topBadges(await getBadgeBoard(profile.customerId), 3),
     avatarUrl: profile.avatarKey ? `/api/v1/avatars/${profile.handle}` : null,
     memberSince: profile.customer.createdAt.toISOString().slice(0, 7), profileUrl: `/@${profile.handle}`, isOwner,
     stats: { dealsShared: isOwner ? (submitted as number) : publishedDeals, publishedDeals, discussions: discussionCount, comments: commentCount, likesReceived: (postLikes._sum.likeCount ?? 0) + (commentLikes._sum.likeCount ?? 0), ...(isOwner ? { saved: savedCount as number } : {}) },

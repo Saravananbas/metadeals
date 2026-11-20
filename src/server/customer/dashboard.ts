@@ -6,6 +6,7 @@ import { listingSchema } from "@/features/deals/validation";
 import { publicWhere } from "@/server/deals/repository";
 import { communityEnabled } from "@/server/community/config";
 import { ensureProfile } from "@/server/community/service";
+import { getBadgeBoard } from "@/server/badges/counts";
 import { CustomerError, limitCustomerRequests } from "./service";
 import { assertActiveCustomer } from "./session";
 
@@ -18,7 +19,7 @@ export const FREQUENCIES = ["IMMEDIATE", "DAILY", "WEEKLY", "OFF"] as const;
  * - live: approved submissions whose deal is published right now.
  * - views: the stored view counter of those deals, each deal once (a submission owns at most one deal).
  * - helpfulVotes: likes other members gave the member's published posts and comments (their own likes are not counted).
- * - badges: 0. No badge rules exist, and nothing is awarded automatically.
+ * - badges: how many badge tiers are unlocked (see src/server/badges/counts.ts); filled in by getDashboard.
  */
 export async function getStats(customerId: string) {
   const db = getDatabase();
@@ -76,8 +77,9 @@ export async function getDashboard(customerId: string) {
   const row = await db.customer.findUniqueOrThrow({ where: { id: customer.id }, select: { name: true, email: true, emailVerifiedAt: true, sex: true, dateOfBirth: true, location: true, createdAt: true, passwordHash: true, forumProfile: { select: { handle: true, displayName: true, bio: true, location: true, avatarKey: true, verifiedAt: true } } } });
   const forum = communityEnabled() ? await ensureProfile(customer.id).then((p) => ({ handle: p.handle, displayName: p.displayName, bio: p.bio, location: p.location, hasAvatar: Boolean(p.avatarKey), verified: Boolean(p.verifiedAt) })).catch(() => null) : null;
   const profileId = forum ? (await db.forumProfile.findUnique({ where: { customerId: customer.id }, select: { id: true } }))?.id : undefined;
-  const [stats, preferences, posts, comments, unread] = await Promise.all([
+  const [stats, badgeBoard, preferences, posts, comments, unread] = await Promise.all([
     getStats(customer.id),
+    getBadgeBoard(customer.id),
     getPreferences(customer.id),
     profileId ? db.forumPost.count({ where: { authorId: profileId, status: { in: ["PUBLISHED", "PENDING_REVIEW"] } } }) : 0,
     profileId ? db.forumComment.count({ where: { authorId: profileId, status: "PUBLISHED" } }) : 0,
@@ -86,7 +88,7 @@ export async function getDashboard(customerId: string) {
   const days = Math.max(0, Math.floor((Date.now() - row.createdAt.getTime()) / 86_400_000));
   return {
     account: { name: row.name, email: row.email, emailVerified: Boolean(row.emailVerifiedAt), hasPassword: Boolean(row.passwordHash), sex: row.sex, dateOfBirth: row.dateOfBirth ? row.dateOfBirth.toISOString().slice(0, 10) : null, location: row.forumProfile?.location ?? row.location, memberSince: row.createdAt.toISOString(), daysSinceJoining: days },
-    forum, stats, preferences, unreadNotifications: unread,
+    forum, stats: { ...stats, badges: badgeBoard.earned }, badgeBoard, preferences, unreadNotifications: unread,
     highlights: { daysSinceJoining: days, discussions: posts, comments, dealsContributed: stats.submitted },
   };
 }
