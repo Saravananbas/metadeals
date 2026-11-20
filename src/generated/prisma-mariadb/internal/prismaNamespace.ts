@@ -477,7 +477,9 @@ export const ModelName = {
   DealVote: 'DealVote',
   DealNote: 'DealNote',
   MemberStar: 'MemberStar',
-  DealCommentLike: 'DealCommentLike'
+  DealCommentLike: 'DealCommentLike',
+  CommunityDealSubmissionImage: 'CommunityDealSubmissionImage',
+  Brand: 'Brand'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -493,7 +495,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "account" | "session" | "verificationToken" | "authSession" | "recoveryCode" | "authToken" | "authRateLimit" | "bootstrapState" | "auditEvent" | "category" | "merchant" | "affiliateClick" | "affiliateTransaction" | "media" | "deal" | "purchaseOption" | "dealGalleryImage" | "customer" | "customerIdentity" | "customerSignupChallenge" | "customerPasswordReset" | "customerRateLimit" | "distributionDestination" | "distributionPost" | "dealCandidate" | "priceObservation" | "scraperJob" | "productExtractionLog" | "dealVideoReview" | "youTubeQuotaLedger" | "merchantWebsiteDirectory" | "productMaster" | "productVariant" | "productOffer" | "priceObservationRecord" | "sourceHealthRecord" | "publicationAuthorization" | "shadowCandidate" | "dealLifecycleEvent" | "dealComment" | "analyticsSession" | "analyticsEvent" | "analyticsDaily" | "communityDealSubmission" | "forumCommunity" | "forumProfile" | "forumPost" | "forumComment" | "forumPostVote" | "forumCommentVote" | "forumPostLike" | "forumCommentLike" | "forumSave" | "forumFollow" | "forumPostImage" | "forumPostDraft" | "forumNotification" | "forumAnnouncement" | "staffPermissionGrant" | "forumReport" | "forumModerationAction" | "dmThread" | "dmMessage" | "dmBlock" | "dmReport" | "customerAppToken" | "forumMemberFollow" | "devicePushToken" | "moderatorAppointment" | "moderatorAppointmentEvent" | "memberWarning" | "memberRestriction" | "moderationAppeal" | "moderationEscalation" | "customerPreference" | "savedDeal" | "dealVote" | "dealNote" | "memberStar" | "dealCommentLike"
+    modelProps: "user" | "account" | "session" | "verificationToken" | "authSession" | "recoveryCode" | "authToken" | "authRateLimit" | "bootstrapState" | "auditEvent" | "category" | "merchant" | "affiliateClick" | "affiliateTransaction" | "media" | "deal" | "purchaseOption" | "dealGalleryImage" | "customer" | "customerIdentity" | "customerSignupChallenge" | "customerPasswordReset" | "customerRateLimit" | "distributionDestination" | "distributionPost" | "dealCandidate" | "priceObservation" | "scraperJob" | "productExtractionLog" | "dealVideoReview" | "youTubeQuotaLedger" | "merchantWebsiteDirectory" | "productMaster" | "productVariant" | "productOffer" | "priceObservationRecord" | "sourceHealthRecord" | "publicationAuthorization" | "shadowCandidate" | "dealLifecycleEvent" | "dealComment" | "analyticsSession" | "analyticsEvent" | "analyticsDaily" | "communityDealSubmission" | "forumCommunity" | "forumProfile" | "forumPost" | "forumComment" | "forumPostVote" | "forumCommentVote" | "forumPostLike" | "forumCommentLike" | "forumSave" | "forumFollow" | "forumPostImage" | "forumPostDraft" | "forumNotification" | "forumAnnouncement" | "staffPermissionGrant" | "forumReport" | "forumModerationAction" | "dmThread" | "dmMessage" | "dmBlock" | "dmReport" | "customerAppToken" | "forumMemberFollow" | "devicePushToken" | "moderatorAppointment" | "moderatorAppointmentEvent" | "memberWarning" | "memberRestriction" | "moderationAppeal" | "moderationEscalation" | "customerPreference" | "savedDeal" | "dealVote" | "dealNote" | "memberStar" | "dealCommentLike" | "communityDealSubmissionImage" | "brand"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -5843,6 +5845,138 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    CommunityDealSubmissionImage: {
+      payload: Prisma.$CommunityDealSubmissionImagePayload<ExtArgs>
+      fields: Prisma.CommunityDealSubmissionImageFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CommunityDealSubmissionImageFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommunityDealSubmissionImagePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CommunityDealSubmissionImageFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommunityDealSubmissionImagePayload>
+        }
+        findFirst: {
+          args: Prisma.CommunityDealSubmissionImageFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommunityDealSubmissionImagePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CommunityDealSubmissionImageFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommunityDealSubmissionImagePayload>
+        }
+        findMany: {
+          args: Prisma.CommunityDealSubmissionImageFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommunityDealSubmissionImagePayload>[]
+        }
+        create: {
+          args: Prisma.CommunityDealSubmissionImageCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommunityDealSubmissionImagePayload>
+        }
+        createMany: {
+          args: Prisma.CommunityDealSubmissionImageCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.CommunityDealSubmissionImageDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommunityDealSubmissionImagePayload>
+        }
+        update: {
+          args: Prisma.CommunityDealSubmissionImageUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommunityDealSubmissionImagePayload>
+        }
+        deleteMany: {
+          args: Prisma.CommunityDealSubmissionImageDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CommunityDealSubmissionImageUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.CommunityDealSubmissionImageUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommunityDealSubmissionImagePayload>
+        }
+        aggregate: {
+          args: Prisma.CommunityDealSubmissionImageAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCommunityDealSubmissionImage>
+        }
+        groupBy: {
+          args: Prisma.CommunityDealSubmissionImageGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CommunityDealSubmissionImageGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CommunityDealSubmissionImageCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CommunityDealSubmissionImageCountAggregateOutputType> | number
+        }
+      }
+    }
+    Brand: {
+      payload: Prisma.$BrandPayload<ExtArgs>
+      fields: Prisma.BrandFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.BrandFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrandPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.BrandFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrandPayload>
+        }
+        findFirst: {
+          args: Prisma.BrandFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrandPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.BrandFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrandPayload>
+        }
+        findMany: {
+          args: Prisma.BrandFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrandPayload>[]
+        }
+        create: {
+          args: Prisma.BrandCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrandPayload>
+        }
+        createMany: {
+          args: Prisma.BrandCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.BrandDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrandPayload>
+        }
+        update: {
+          args: Prisma.BrandUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrandPayload>
+        }
+        deleteMany: {
+          args: Prisma.BrandDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.BrandUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.BrandUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrandPayload>
+        }
+        aggregate: {
+          args: Prisma.BrandAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateBrand>
+        }
+        groupBy: {
+          args: Prisma.BrandGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BrandGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.BrandCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BrandCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -7196,6 +7330,32 @@ export const DealCommentLikeScalarFieldEnum = {
 export type DealCommentLikeScalarFieldEnum = (typeof DealCommentLikeScalarFieldEnum)[keyof typeof DealCommentLikeScalarFieldEnum]
 
 
+export const CommunityDealSubmissionImageScalarFieldEnum = {
+  id: 'id',
+  submissionId: 'submissionId',
+  position: 'position',
+  imageKey: 'imageKey',
+  imageProvider: 'imageProvider',
+  imageMime: 'imageMime',
+  imageBytes: 'imageBytes',
+  imageWidth: 'imageWidth',
+  imageHeight: 'imageHeight',
+  createdAt: 'createdAt'
+} as const
+
+export type CommunityDealSubmissionImageScalarFieldEnum = (typeof CommunityDealSubmissionImageScalarFieldEnum)[keyof typeof CommunityDealSubmissionImageScalarFieldEnum]
+
+
+export const BrandScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  createdAt: 'createdAt'
+} as const
+
+export type BrandScalarFieldEnum = (typeof BrandScalarFieldEnum)[keyof typeof BrandScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -8227,6 +8387,26 @@ export const DealCommentLikeOrderByRelevanceFieldEnum = {
 export type DealCommentLikeOrderByRelevanceFieldEnum = (typeof DealCommentLikeOrderByRelevanceFieldEnum)[keyof typeof DealCommentLikeOrderByRelevanceFieldEnum]
 
 
+export const CommunityDealSubmissionImageOrderByRelevanceFieldEnum = {
+  id: 'id',
+  submissionId: 'submissionId',
+  imageKey: 'imageKey',
+  imageProvider: 'imageProvider',
+  imageMime: 'imageMime'
+} as const
+
+export type CommunityDealSubmissionImageOrderByRelevanceFieldEnum = (typeof CommunityDealSubmissionImageOrderByRelevanceFieldEnum)[keyof typeof CommunityDealSubmissionImageOrderByRelevanceFieldEnum]
+
+
+export const BrandOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug'
+} as const
+
+export type BrandOrderByRelevanceFieldEnum = (typeof BrandOrderByRelevanceFieldEnum)[keyof typeof BrandOrderByRelevanceFieldEnum]
+
+
 
 /**
  * Field references
@@ -8660,6 +8840,8 @@ export type GlobalOmitConfig = {
   dealNote?: Prisma.DealNoteOmit
   memberStar?: Prisma.MemberStarOmit
   dealCommentLike?: Prisma.DealCommentLikeOmit
+  communityDealSubmissionImage?: Prisma.CommunityDealSubmissionImageOmit
+  brand?: Prisma.BrandOmit
 }
 
 /* Types for Logging */

@@ -12,7 +12,7 @@ export const dealInclude = {
   media: true,
   galleryImages: { orderBy: { position: "asc" }, include: { media: true } },
   options: { include: { merchant: { select: merchantSelect } } },
-  _count: { select: { videoReviews: { where: { isActive: true } }, comments: true } },
+  _count: { select: { videoReviews: { where: { isActive: true } }, comments: true, votes: { where: { value: 1 } } } },
 } as const;
 export type DealRecord = Prisma.DealGetPayload<{ include: typeof dealInclude }>;
 
@@ -104,6 +104,7 @@ export function publicDeal(record: DealRecord, merchantLogoUrl: string | null = 
     viewCount: record.viewCount ?? 0,
     shareCount: record.shareCount ?? 0,
     commentCount: record._count?.comments ?? 0,
+    likeCount: record._count?.votes ?? 0,
     productUrl: record.productUrl, destinationUrl: record.affiliateUrl ?? record.productUrl,
     couponCode: record.couponCode ?? null,
     editorNotes: (record.editorNotes ?? "").split(String.fromCharCode(10)).filter(Boolean), editorNotesBy: record.editorNotesBy ?? null,

@@ -5,7 +5,7 @@ import { DISLIKE_REASONS, type DislikeReason } from "@/features/deals/vote-reaso
 import styles from "./DealExtras.module.css";
 
 /** "Why are you downvoting this deal?" Choosing a reason sends the vote straight away. Escape or a click outside closes it. */
-export function DislikeMenu({ onPick, onClose }: { onPick: (reason: DislikeReason) => void; onClose: () => void }) {
+export function DislikeMenu({ onPick, onClose, down = false }: { onPick: (reason: DislikeReason) => void; onClose: () => void; down?: boolean }) {
   const ref = useRef<HTMLFieldSetElement>(null);
   useEffect(() => {
     ref.current?.querySelector<HTMLInputElement>("input")?.focus();
@@ -16,7 +16,7 @@ export function DislikeMenu({ onPick, onClose }: { onPick: (reason: DislikeReaso
     return () => { document.removeEventListener("keydown", key); document.removeEventListener("mousedown", away); };
   }, [onClose]);
   return (
-    <fieldset ref={ref} className={styles.dislikeMenu} onClick={(e) => e.stopPropagation()}>
+    <fieldset ref={ref} className={`${styles.dislikeMenu} ${down ? styles.dislikeMenuDown : ""}`} onClick={(e) => e.stopPropagation()}>
       <legend>Why are you downvoting this deal?</legend>
       {DISLIKE_REASONS.map((reason) => (
         <label key={reason}><input type="radio" name="dislike-reason" value={reason} onChange={() => onPick(reason)} /> {reason}</label>

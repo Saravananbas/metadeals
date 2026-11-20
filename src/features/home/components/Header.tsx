@@ -6,7 +6,6 @@ import {
   ChevronRight,
   Grid2X2,
   Heart,
-  House,
   Menu,
   MessagesSquare,
   PlusCircle,
@@ -16,6 +15,8 @@ import {
 } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { SignInDialog } from "@/features/customer/SignInDialog";
 import dynamic from "next/dynamic";
 import { BrandLogo } from "@/components/BrandLogo";
 import { MessagesLink } from "@/features/messages/MessagesLink";
@@ -64,6 +65,14 @@ export function Header({
     return () => { alive = false; };
   }, []);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [signInOpen, setSignInOpen] = useState(false);
+  const router = useRouter();
+  // A visitor gets the sign-in pop-up; if the page has not noticed an existing session yet, check once before asking.
+  const postDealClick = async () => {
+    closeMenu();
+    const live = await fetch("/api/v1/customer/session", { cache: "no-store" }).then((r) => r.json()).then((b) => Boolean(b?.user)).catch(() => false);
+    if (live) router.push("/post-deal"); else setSignInOpen(true);
+  };
   const [activeParentId, setActiveParentId] = useState<string | null>(null);
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const categoryDetailsRef = useRef<HTMLDetailsElement>(null);
@@ -121,18 +130,6 @@ export function Header({
           className={`main-nav ${mobileOpen ? "is-open" : ""}`}
           id="main-navigation"
         >
-          <Link
-            className="nav-home"
-            href="/"
-            onClick={() => {
-              onHome();
-              closeMenu();
-            }}
-          >
-            <House size={19} fill="currentColor" />
-            Home
-          </Link>
-
           {/* Deals dropdown */}
           <details className="nav-dropdown">
             <summary>
@@ -264,11 +261,16 @@ export function Header({
               Forum
             </Link>
           )}
-          {signedIn && (
+          {signedIn ? (
             <Link href="/post-deal" onClick={closeMenu}>
               <PlusCircle size={19} />
               Post a Deal
             </Link>
+          ) : (
+            <button type="button" className="nav-post-deal" onClick={postDealClick}>
+              <PlusCircle size={19} />
+              Post a Deal
+            </button>
           )}
         </nav>
 
@@ -327,6 +329,7 @@ export function Header({
           </button>
         </div>
       </div>
+      {signInOpen && <SignInDialog redirectTo="/post-deal" onClose={() => setSignInOpen(false)} />}
     </header>
   );
 }

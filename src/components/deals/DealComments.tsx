@@ -3,11 +3,23 @@
 import { useEffect, useMemo, useRef } from "react";
 import { Calendar, ImagePlus, MessageCircle, Send, ThumbsUp, User, X } from "lucide-react";
 import { ACCEPTED_IMAGES, useDealComments, type DealComment } from "./useDealComments";
+import Link from "next/link";
 import { MemberMenu } from "./MemberMenu";
+import { MentionTextarea } from "./MentionTextarea";
 import styles from "./DealComments.module.css";
 
 const compact = (n: number) => (n >= 1000 ? `${(n / 1000).toFixed(1).replace(/\.0$/, "")}K` : String(n));
 const when = (iso: string) => new Date(iso).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" });
+
+/** The comment text with @user names that belong to a member shown as links to their profile. */
+function Text({ comment }: { comment: DealComment }) {
+  const real = new Set(comment.mentions ?? []);
+  if (!real.size) return <>{comment.content}</>;
+  return <>{comment.content.split(/(@[a-z0-9_]{3,30})/gi).map((part, i) => {
+    const handle = part.startsWith("@") ? part.slice(1).toLowerCase() : "";
+    return real.has(handle) ? <Link key={i} className={styles.mention} href={`/community/u/${handle}`}>{part}</Link> : part;
+  })}</>;
+}
 
 function Avatar({ comment }: { comment: DealComment }) {
   return (
@@ -44,7 +56,6 @@ export function DealComments({ dealIdOrSlug, messaging = false }: { dealIdOrSlug
   function reply(comment: DealComment) {
     const name = comment.member?.handle ?? comment.authorName;
     c.setReplyTo({ id: comment.parentId ?? comment.id, name });
-    if (!c.content) c.setContent(`@${name} `);
     document.getElementById("deal-comment-text")?.focus();
   }
 
@@ -63,7 +74,7 @@ export function DealComments({ dealIdOrSlug, messaging = false }: { dealIdOrSlug
               <span><Calendar size={14} aria-hidden="true" /> Joined {comment.member.joined}</span>
             </div>
           )}
-          <p>{comment.content}</p>
+          <p><Text comment={comment} /></p>
           {comment.hasImage && (
             <a href={`${c.endpoint}/${comment.id}/image`} target="_blank" rel="noopener noreferrer">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -101,7 +112,7 @@ export function DealComments({ dealIdOrSlug, messaging = false }: { dealIdOrSlug
         )}
         <label>
           Comment
-          <textarea id="deal-comment-text" value={c.content} onChange={(e) => c.setContent(e.target.value)} maxLength={1000} rows={3} required placeholder="Share your thoughts about this deal" />
+          <MentionTextarea id="deal-comment-text" value={c.content} onChange={c.setContent} maxLength={1000} rows={3} required placeholder="Share your thoughts about this deal. Type @ to mention a member." />
           <span className={styles.counter}>{c.content.length}/1000</span>
         </label>
         <div className={styles.attach}>

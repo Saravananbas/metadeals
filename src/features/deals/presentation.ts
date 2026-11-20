@@ -7,5 +7,5 @@ export function toCard(deal: PublicDeal): Deal {
     storeName: deal.merchant.name, storeLogoUrl: deal.merchant.logoUrl, retailerUrl: `/go/${deal.id}`,
     expiry: deal.status === "EXPIRED" ? "expired" : deal.expiresAt ? "active" : "unknown",
     expiresAt: deal.expiresAt, featured: deal.featured, publishedAt: deal.publishedAt ?? "",
-    viewCount: deal.viewCount ?? 0, shareCount: deal.shareCount ?? 0, commentCount: deal.commentCount ?? 0, couponCode: deal.couponCode ?? null, source: "database" };
+    viewCount: deal.viewCount ?? 0, shareCount: deal.shareCount ?? 0, commentCount: deal.commentCount ?? 0, likeCount: deal.likeCount ?? 0, couponCode: deal.couponCode ?? null, source: "database" };
 }

@@ -60,7 +60,8 @@ export function DealProductInfo({
               ({reviewCount.toLocaleString("en-IN")} reviews)
             </span>
           )}
-          {ratingSource && (
+          {/* Internal tool names (python_extractor and the like) are not shown to visitors. */}
+          {ratingSource && !/extractor|scraper|python/i.test(ratingSource) && (
             <span style={{ color: "var(--md-color-text-muted)", fontSize: 12 }}>
               · Source: {ratingSource}
             </span>

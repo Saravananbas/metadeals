@@ -152,7 +152,7 @@ a { text-decoration: none; }
 /* ROW 7: Social Interaction Row */
 .deal-row-social { display: flex; align-items: center; justify-content: space-between; padding-top: 8px; border-top: 1px solid var(--md-color-surface-muted); min-height: 28px; }
 .deal-social-views { display: flex; align-items: center; gap: 4px; color: var(--md-color-text-secondary); font-size: 11.5px; font-weight: 600; padding: 4px 6px; }
-.deal-social-btn { background: transparent; border: none; display: flex; align-items: center; gap: 4px; color: var(--md-color-text-secondary); font-size: 11.5px; font-weight: 600; cursor: pointer; padding: 4px 6px; border-radius: 6px; transition: all 0.15s ease; }
+.deal-social-btn { white-space: nowrap; background: transparent; border: none; display: flex; align-items: center; gap: 4px; color: var(--md-color-text-secondary); font-size: 11.5px; font-weight: 600; cursor: pointer; padding: 4px 6px; border-radius: 6px; transition: all 0.15s ease; }
 .deal-social-btn:hover { color: var(--md-color-primary); background: var(--md-color-primary-subtle); }
 .deal-social-liked { color: var(--md-color-primary) !important; }
 .deal-bottom { display: flex; align-items: center; justify-content: space-between; gap: 4px; margin-top: 8px; min-height: 24px; }

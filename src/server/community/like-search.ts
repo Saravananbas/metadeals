@@ -49,3 +49,10 @@ export async function searchMembersMariaDb(text: string, limit: number): Promise
   const p = `%${escapeLike(text)}%`, starts = `${escapeLike(text)}%`;
   return raw().$queryRaw(Prisma.sql`SELECT f.handle, f.displayName, f.avatarKey, f.customerId FROM ForumProfile f JOIN Customer c ON c.id = f.customerId WHERE c.disabledAt IS NULL AND c.emailVerifiedAt IS NOT NULL AND f.status <> 'SUSPENDED' AND (f.handle LIKE ${p} OR f.displayName LIKE ${p}) ORDER BY (f.handle LIKE ${starts}) DESC, f.handle ASC LIMIT ${limit}`);
 }
+
+/** Ids of deals whose product link contains the fragment (an Amazon ASIN path or a Flipkart pid). */
+export async function dealIdsByUrlFragmentMariaDb(fragment: string): Promise<string[]> {
+  const p = `%${escapeLike(fragment)}%`;
+  const rows = await raw().$queryRaw<{ id: string }[]>(Prisma.sql`SELECT id FROM Deal WHERE productUrl LIKE ${p} OR affiliateUrl LIKE ${p} LIMIT 20`);
+  return rows.map((r) => r.id);
+}

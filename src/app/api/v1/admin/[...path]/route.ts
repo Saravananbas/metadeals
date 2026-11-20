@@ -455,7 +455,7 @@ async function handle(request: Request, { params }: { params: Promise<{ path: st
     if (resource === "submissions") {
       const reviewer = { id: context.user.id, role: context.user.role, permissions: context.user.permissions };
       if (request.method === "GET" && id && action === "image") {
-        const { bytes, mimeType } = await getSubmissionImage(reviewer, id);
+        const { bytes, mimeType } = await getSubmissionImage(reviewer, id, Math.min(9, Math.max(0, Number(new URL(request.url).searchParams.get("n")) || 0)));
         return new Response(new Uint8Array(bytes), { headers: { "Content-Type": mimeType, "X-Content-Type-Options": "nosniff", "Cache-Control": "private, no-store" } });
       }
       if (request.method === "GET" && !id) {

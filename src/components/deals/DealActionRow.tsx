@@ -29,6 +29,11 @@ export function DealActionRow({ dealId, slug }: { dealId: string; slug: string }
   }, [api]);
 
   const [menu, setMenu] = useState(false);
+  useEffect(() => {
+    const on = (e: Event) => { const d = (e as CustomEvent<{ slug: string; score: number; mine: number }>).detail; if (d.slug === slug) setVotes({ score: d.score, mine: d.mine }); };
+    window.addEventListener("deal-vote", on);
+    return () => window.removeEventListener("deal-vote", on);
+  }, [slug]);
   async function vote(value: 1 | -1 | 0, reason?: DislikeReason) {
     setNeedSignIn(false); setMenu(false);
     const result = await sendDealVote(slug, value, reason);

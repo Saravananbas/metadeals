@@ -3,7 +3,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 
 export type CommentMember = { handle: string; hasAvatar: boolean; online?: boolean; joined: string; comments: number };
-export type DealComment = { id: string; parentId?: string | null; authorName: string; content: string; createdAt: string; hasImage?: boolean; likes?: number; liked?: boolean; member?: CommentMember | null };
+export type DealComment = { id: string; parentId?: string | null; authorName: string; content: string; createdAt: string; hasImage?: boolean; mentions?: string[]; likes?: number; liked?: boolean; member?: CommentMember | null };
 export const ACCEPTED_IMAGES = "image/jpeg,image/png,image/gif,image/webp,image/avif";
 
 type CommentsResponse = {

@@ -115,7 +115,11 @@
     grid-template-columns: minmax(300px, 400px) minmax(0, 1fr);
     grid-template-areas: "gallery info" "buy info";
     gap: 24px 28px;
+    align-items: stretch;
   }
+  /* The picture card and the details card are the same height. */
+  .areaGallery > *, .areaInfo > * { height: 100%; box-sizing: border-box; }
+  .productGridSolo { grid-template-areas: "gallery info"; }
 }
 
 @media (min-width: 1280px) {

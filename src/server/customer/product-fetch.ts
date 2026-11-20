@@ -6,6 +6,7 @@ import { fetchPublicImageBytes } from "@/server/product-extraction/security/safe
 import { MAX_IMAGE_BYTES } from "@/server/storage/media";
 import { CustomerError, limitCustomerRequests } from "./service";
 import { assertActiveCustomer } from "./session";
+import { findBrand } from "@/server/brands";
 
 // Stores all serve https, so a pasted http:// link is upgraded instead of refused.
 const fetchSchema = z.object({ url: z.string().trim().max(2048).transform((u) => u.replace(/^http:\/\//i, "https://")).pipe(z.string().url()) }).strict();
@@ -18,19 +19,23 @@ export async function fetchProductDetails(customerId: string, raw: unknown) {
   await limitCustomerRequests(`product-fetch-day:${customer.id}`, 40, 86_400);
   const result = await productExtractionService.extractProduct({ url, importImage: false });
   const d = result.data;
-  const images = [d.media.primaryImageUrl.value, ...(d.media.additionalImageUrls?.value ?? [])].filter((u): u is string => Boolean(u)).map((u) => u.replace(/^http:/i, "https:")).slice(0, 8);
+  const images = [d.media.primaryImageUrl.value, ...(d.media.additionalImageUrls?.value ?? [])].filter((u): u is string => Boolean(u)).map((u) => u.replace(/^http:/i, "https:")).slice(0, 10);
   const domain = (() => { try { return new URL(result.canonicalUrl || url).hostname.toLowerCase().replace(/^www\./, ""); } catch { return ""; } })();
   const directoryMerchant = domain ? await getDatabase().merchantWebsiteDirectory.findFirst({
     where: { domain: { in: [domain, `www.${domain}`] }, status: "ACTIVE" },
     select: { name: true, logoMediaId: true, logoUrl: true },
   }) : null;
+  const fetchedBrand = result.suggestedFormValues?.brand || d.identity.brand.value || "";
+  // A brand we already know comes back spelled our way (and the form can say so).
+  const knownBrand = fetchedBrand ? await findBrand(fetchedBrand) : null;
   return {
     logoUrl: directoryMerchant?.logoMediaId ? `/api/v1/media/${directoryMerchant.logoMediaId}` : directoryMerchant?.logoUrl ?? null,
     status: result.status,
     store: directoryMerchant?.name ?? result.matchedTaxonomy?.merchantName ?? result.retailer,
     productUrl: result.canonicalUrl || url,
     title: result.suggestedFormValues?.title || d.identity.title.value || "",
-    brand: result.suggestedFormValues?.brand || d.identity.brand.value || "",
+    brand: knownBrand?.name ?? fetchedBrand,
+    brandKnown: Boolean(knownBrand),
     description: (result.suggestedFormValues?.description || d.content.description.value || "").slice(0, 2000),
     priceRupees: result.suggestedFormValues?.priceRupees || "",
     mrpRupees: result.suggestedFormValues?.mrpRupees || "",

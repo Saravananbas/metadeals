@@ -131,7 +131,9 @@ export const ModelName = {
   DealVote: 'DealVote',
   DealNote: 'DealNote',
   MemberStar: 'MemberStar',
-  DealCommentLike: 'DealCommentLike'
+  DealCommentLike: 'DealCommentLike',
+  CommunityDealSubmissionImage: 'CommunityDealSubmissionImage',
+  Brand: 'Brand'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1462,6 +1464,32 @@ export const DealCommentLikeScalarFieldEnum = {
 } as const
 
 export type DealCommentLikeScalarFieldEnum = (typeof DealCommentLikeScalarFieldEnum)[keyof typeof DealCommentLikeScalarFieldEnum]
+
+
+export const CommunityDealSubmissionImageScalarFieldEnum = {
+  id: 'id',
+  submissionId: 'submissionId',
+  position: 'position',
+  imageKey: 'imageKey',
+  imageProvider: 'imageProvider',
+  imageMime: 'imageMime',
+  imageBytes: 'imageBytes',
+  imageWidth: 'imageWidth',
+  imageHeight: 'imageHeight',
+  createdAt: 'createdAt'
+} as const
+
+export type CommunityDealSubmissionImageScalarFieldEnum = (typeof CommunityDealSubmissionImageScalarFieldEnum)[keyof typeof CommunityDealSubmissionImageScalarFieldEnum]
+
+
+export const BrandScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  createdAt: 'createdAt'
+} as const
+
+export type BrandScalarFieldEnum = (typeof BrandScalarFieldEnum)[keyof typeof BrandScalarFieldEnum]
 
 
 export const SortOrder = {

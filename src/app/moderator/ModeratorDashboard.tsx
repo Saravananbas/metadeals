@@ -11,7 +11,7 @@ type Report = { id: string; targetType: string; category: string; details: strin
   post: { id: string; slug: string; title: string; status: string; version: number; locked: boolean; author: { id: string; handle: string } } | null;
   comment: { id: string; body: string; status: string; author: { id: string; handle: string } } | null;
   targetProfile: { id: string; handle: string } | null };
-type Submission = { id: string; title: string; brand: string | null; description: string; productUrl: string; merchantName: string | null; priceMinor: number; mrpMinor: number | null; version: number; submittedAt: string; customer: { name: string }; imageUrl: string };
+type Submission = { id: string; title: string; brand: string | null; description: string; productUrl: string; merchantName: string | null; priceMinor: number; mrpMinor: number | null; version: number; submittedAt: string; customer: { name: string }; imageUrl: string; _count?: { extraImages: number } };
 type Catalog = { categories: { id: string; name: string }[]; merchants: { id: string; name: string }[] };
 type History = { actions: { id: string; action: string; reason: string; at: string }[]; activeRestrictions: { id: string; handle: string; reason: string; expiresAt: string }[] };
 type Me = { status: string; probationEndsAt: string | null; daysLeft?: number | null };
@@ -119,6 +119,7 @@ export function ModeratorDashboard() {
               <div className={styles.row}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img className={styles.thumb} src={s.imageUrl} alt="" loading="lazy" />
+                {(s._count?.extraImages ?? 0) > 0 && <small>+{s._count?.extraImages} more picture{s._count?.extraImages === 1 ? "" : "s"}</small>}
                 <div style={{ flex: 1, minWidth: 200 }}><h2>{s.title}</h2><div className={styles.meta}>by {s.customer.name} · {s.merchantName ?? "store not given"} · {rupees(s.priceMinor)}{s.mrpMinor ? ` (MRP ${rupees(s.mrpMinor)})` : ""} · {when(s.submittedAt)}</div><p className={styles.body}>{s.description.slice(0, 300)}</p></div>
               </div>
               <div className={styles.grid}>

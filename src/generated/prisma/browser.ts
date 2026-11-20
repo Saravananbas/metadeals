@@ -422,3 +422,13 @@ export type MemberStar = Prisma.MemberStarModel
  * A member's like on a deal-page comment. One per member per comment.
  */
 export type DealCommentLike = Prisma.DealCommentLikeModel
+/**
+ * Model CommunityDealSubmissionImage
+ * Pictures after the first one on a member's submission (position 1 to 9); the first picture stays in the columns on the submission itself.
+ */
+export type CommunityDealSubmissionImage = Prisma.CommunityDealSubmissionImageModel
+/**
+ * Model Brand
+ * A product brand ("ASUS", "Ninja"). Used to match a fetched brand to a known one; grows when staff approve a deal with a new brand.
+ */
+export type Brand = Prisma.BrandModel

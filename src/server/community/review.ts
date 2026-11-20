@@ -6,6 +6,7 @@ import { canCreateDealsDirectly, canReviewSubmissions } from "@/server/auth/perm
 import { DealError, saveDeal } from "@/server/deals/service";
 import { publicUrl } from "@/features/deals/validation";
 import { readImage } from "@/server/storage/media";
+import { brandSlug } from "@/server/brands";
 import type { AdminRole } from "@/server/auth/permissions";
 
 type Db = ReturnType<typeof getDatabase>;
@@ -20,6 +21,7 @@ const listSelect = {
   priceMinor: true, mrpMinor: true, couponCode: true, version: true, resubmissions: true, submittedAt: true, reviewedAt: true, rejectionReason: true, dealId: true,
   customer: { select: { id: true, name: true, email: true, forumProfile: { select: { handle: true } } } },
   deal: { select: { status: true, everPublished: true } },
+  _count: { select: { extraImages: true } },
 } as const;
 
 export async function listSubmissions(actor: ReviewActor, status: "PENDING_REVIEW" | "APPROVED" | "REJECTED", page = 1) {
@@ -38,8 +40,13 @@ export async function listSubmissions(actor: ReviewActor, status: "PENDING_REVIE
   };
 }
 
-export async function getSubmissionImage(actor: ReviewActor, id: string) {
+export async function getSubmissionImage(actor: ReviewActor, id: string, n = 0) {
   assertCanReview(actor);
+  if (n > 0) {
+    const extra = await getDatabase().communityDealSubmissionImage.findUnique({ where: { submissionId_position: { submissionId: id, position: n } }, select: { imageKey: true, imageProvider: true, imageMime: true } });
+    if (!extra) throw new DealError("Picture not found.", 404);
+    return { bytes: await readImage(extra.imageProvider, extra.imageKey), mimeType: extra.imageMime };
+  }
   const row = await getDatabase().communityDealSubmission.findUnique({ where: { id }, select: { imageKey: true, imageProvider: true, imageMime: true } });
   if (!row) throw new DealError("Submission not found.", 404);
   return { bytes: await readImage(row.imageProvider, row.imageKey), mimeType: row.imageMime };
@@ -81,12 +88,20 @@ export async function approveSubmission(actor: ReviewActor, id: string, raw: unk
         width: submission.imageWidth, height: submission.imageHeight, alt: input.title.slice(0, 240), uploadedById: actor.id,
       },
     });
+    // Extra pictures become the deal's gallery.
+    const extras = await tx.communityDealSubmissionImage.findMany({ where: { submissionId: id }, orderBy: { position: "asc" } });
+    const galleryMediaIds: string[] = [];
+    for (const extra of extras) {
+      const m = await tx.media.create({ data: { storageKey: extra.imageKey, provider: extra.imageProvider, mimeType: extra.imageMime, byteSize: extra.imageBytes, width: extra.imageWidth, height: extra.imageHeight, alt: input.title.slice(0, 240), uploadedById: actor.id } });
+      galleryMediaIds.push(m.id);
+    }
     const deal = await saveDeal(tx, actor, {
       slug: slugFor(input.title), title: input.title, brand: input.brand, description: input.description, categoryId: input.categoryId, merchantId: input.merchantId,
-      mediaId: media.id, mrpMinor: input.mrpMinor, priceMinor: input.priceMinor, currency: "INR", rating: null, reviewCount: null, ratingSource: null,
+      mediaId: media.id, ...(galleryMediaIds.length ? { galleryMediaIds } : {}), mrpMinor: input.mrpMinor, priceMinor: input.priceMinor, currency: "INR", rating: null, reviewCount: null, ratingSource: null,
       productUrl: input.productUrl, affiliateUrl: null, couponCode: input.couponCode || null, status: "DRAFT", publishedAt: null, startsAt: null, expiresAt: null,
       featured: false, trending: false, options: [],
     }, undefined, undefined, { moderatorDraft: !canCreateDealsDirectly(actor) });
+    if (input.brand && brandSlug(input.brand)) await tx.brand.createMany({ data: [{ name: input.brand.slice(0, 100), slug: brandSlug(input.brand) }], skipDuplicates: true });
     const changed = await tx.communityDealSubmission.updateMany({
       where: { id, version: input.version, status: "PENDING_REVIEW" },
       data: { status: "APPROVED", dealId: deal.id, reviewedById: actor.id, reviewedAt: new Date(), rejectionReason: null, version: { increment: 1 } },

@@ -14,6 +14,6 @@ export const GET = (request: Request, { params }: Context) =>
 export const PATCH = (request: Request, { params }: Context) =>
   customerApi(request, async (customerId) => {
     const { id } = await params;
-    const { data, version, image } = await readSubmissionForm(request);
-    return customerJson({ data: await resubmit(customerId, id, data, version, image), counts: await getSubmissionCounts(customerId) });
+    const { data, version, image, extras } = await readSubmissionForm(request);
+    return customerJson({ data: await resubmit(customerId, id, data, version, image, extras), counts: await getSubmissionCounts(customerId) });
   });

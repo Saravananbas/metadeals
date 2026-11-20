@@ -42,9 +42,10 @@ export function assertDeclaredUploadSize(request: Request, maxBytes: number, mes
   if (Number(declared) > maxBytes) throw new CustomerError(message, 413);
 }
 
-export async function readSubmissionForm(request: Request): Promise<{ data: unknown; version: unknown; image: Buffer | null }> {
+export async function readSubmissionForm(request: Request): Promise<{ data: unknown; version: unknown; image: Buffer | null; extras: Buffer[] }> {
   if (!request.headers.get("content-type")?.toLowerCase().startsWith("multipart/form-data")) throw new CustomerError("Send the form as multipart/form-data.", 415);
-  assertDeclaredUploadSize(request, MAX_UPLOAD, "The upload is too large (5 MB image limit).");
+  // Up to ten pictures of 5 MB each in one request.
+  assertDeclaredUploadSize(request, 10 * MAX_UPLOAD, "The upload is too large (up to 10 pictures, 5 MB each).");
   const form = await request.formData();
   let data: unknown;
   try { data = JSON.parse(String(form.get("data") ?? "")); } catch { throw new CustomerError("The deal details could not be read."); }
@@ -54,6 +55,12 @@ export async function readSubmissionForm(request: Request): Promise<{ data: unkn
     if (file.size > 5 * 1024 * 1024) throw new CustomerError("The image must be 5 MB or smaller.", 413);
     image = Buffer.from(await file.arrayBuffer());
   }
+  const extras: Buffer[] = [];
+  for (const extra of form.getAll("images").slice(0, 9)) {
+    if (!(extra instanceof File) || extra.size === 0) continue;
+    if (extra.size > 5 * 1024 * 1024) throw new CustomerError("Each picture must be 5 MB or smaller.", 413);
+    extras.push(Buffer.from(await extra.arrayBuffer()));
+  }
   const version = form.get("version");
-  return { data, version: version === null ? undefined : Number(version), image };
+  return { data, version: version === null ? undefined : Number(version), image, extras };
 }

@@ -233,7 +233,7 @@ export default async function DealDetailPage({
   return (
     <div className={styles.pageWrapper}>
       <DealViewTracker slug={slug} />
-      {deal.status !== "EXPIRED" && <StickyBuyBar title={deal.title} price={formatINR(deal.priceMinor / 100)} merchantName={deal.merchant.name} imageUrl={`${deal.image.url}?w=80`} href={`/go/${deal.id}`} />}
+      {deal.status !== "EXPIRED" && <StickyBuyBar title={deal.title} price={formatINR(deal.priceMinor / 100)} mrp={deal.mrpMinor > deal.priceMinor ? formatINR(deal.mrpMinor / 100) : undefined} savings={deal.savingsMinor > 0 ? `Save ${formatINR(deal.savingsMinor / 100)} (${deal.discountPercent}% OFF)` : undefined} slug={deal.slug} merchantName={deal.merchant.name} imageUrl={`${deal.image.url}?w=80`} href={`/go/${deal.id}`} />}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd([jsonLd, breadcrumbJsonLd]) }}
@@ -269,7 +269,7 @@ export default async function DealDetailPage({
         )}
 
         {/* 3-Column Desktop Product Grid */}
-        <div className={styles.productGrid}>
+        <div className={`${styles.productGrid} ${deal.options.length === 0 ? styles.productGridSolo : ""}`}>
           <div className={styles.areaGallery}>
           <DealGallery
             dealId={deal.id}
@@ -288,21 +288,23 @@ export default async function DealDetailPage({
           <DealTabs tabs={tabs} />
           </div>
 
-          <div className={styles.areaBuy}>
-          <DealPurchasePanel
-            dealId={deal.id}
-            priceMinor={deal.priceMinor}
-            mrpMinor={deal.mrpMinor}
-            discountPercent={deal.discountPercent}
-            savingsMinor={deal.savingsMinor}
-            merchantName={deal.merchant.name}
-            merchantWebsite={row.merchant.websiteUrl}
-            destinationUrl={deal.destinationUrl}
-            expiresAt={deal.expiresAt}
-            publishedAt={deal.publishedAt}
-            options={deal.options}
-          />
-          </div>
+          {deal.options.length > 0 && (
+            <div className={styles.areaBuy}>
+            <DealPurchasePanel
+              dealId={deal.id}
+              priceMinor={deal.priceMinor}
+              mrpMinor={deal.mrpMinor}
+              discountPercent={deal.discountPercent}
+              savingsMinor={deal.savingsMinor}
+              merchantName={deal.merchant.name}
+              merchantWebsite={row.merchant.websiteUrl}
+              destinationUrl={deal.destinationUrl}
+              expiresAt={deal.expiresAt}
+              publishedAt={deal.publishedAt}
+              options={deal.options}
+            />
+            </div>
+          )}
         </div>
 
         {/* YouTube Video Reviews Section (Workstream 2 & 3) */}

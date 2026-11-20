@@ -9,7 +9,7 @@ type Status = "PENDING_REVIEW" | "APPROVED" | "REJECTED";
 type Item = {
   id: string; status: Status; title: string; brand: string | null; description: string; productUrl: string; merchantName: string | null; categoryHint: string | null;
   priceMinor: number; mrpMinor: number | null; couponCode: string | null; version: number; resubmissions: number; submittedAt: string; rejectionReason: string | null;
-  dealId: string | null; imageUrl: string; customer: { name: string; email: string }; deal: { status: string; everPublished: boolean } | null;
+  dealId: string | null; imageUrl: string; customer: { name: string; email: string }; deal: { status: string; everPublished: boolean } | null; _count?: { extraImages: number };
 };
 type Option = { id: string; name: string; slug?: string; websiteUrl?: string };
 const host = (u: string) => { try { return new URL(u.startsWith("http") ? u : `https://${u}`).hostname.toLowerCase().replace(/^www\./, ""); } catch { return ""; } };
@@ -136,6 +136,14 @@ export function SubmissionsReview() {
             <article key={item.id} className={styles.card}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img className={styles.thumb} src={item.imageUrl} alt={item.title} />
+              {(item._count?.extraImages ?? 0) > 0 && <div style={{ display: "flex", flexWrap: "wrap", gap: 6, gridColumn: "1 / -1" }} aria-label={`${item._count?.extraImages} more pictures`}>
+                {Array.from({ length: item._count?.extraImages ?? 0 }, (_, i) => (
+                  <a key={i} href={`${item.imageUrl}?n=${i + 1}`} target="_blank" rel="noopener noreferrer">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={`${item.imageUrl}?n=${i + 1}`} alt={`Extra picture ${i + 1}`} width={56} height={56} style={{ objectFit: "cover", borderRadius: 8 }} loading="lazy" />
+                  </a>
+                ))}
+              </div>}
               <div>
                 <h2 className={styles.title}>{item.title}</h2>
                 <div className={styles.meta}>

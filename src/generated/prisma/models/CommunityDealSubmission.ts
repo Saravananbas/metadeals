@@ -427,6 +427,7 @@ export type CommunityDealSubmissionWhereInput = {
   customer?: Prisma.XOR<Prisma.CustomerScalarRelationFilter, Prisma.CustomerWhereInput>
   reviewedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   deal?: Prisma.XOR<Prisma.DealNullableScalarRelationFilter, Prisma.DealWhereInput> | null
+  extraImages?: Prisma.CommunityDealSubmissionImageListRelationFilter
 }
 
 export type CommunityDealSubmissionOrderByWithRelationInput = {
@@ -461,6 +462,7 @@ export type CommunityDealSubmissionOrderByWithRelationInput = {
   customer?: Prisma.CustomerOrderByWithRelationInput
   reviewedBy?: Prisma.UserOrderByWithRelationInput
   deal?: Prisma.DealOrderByWithRelationInput
+  extraImages?: Prisma.CommunityDealSubmissionImageOrderByRelationAggregateInput
 }
 
 export type CommunityDealSubmissionWhereUniqueInput = Prisma.AtLeast<{
@@ -499,6 +501,7 @@ export type CommunityDealSubmissionWhereUniqueInput = Prisma.AtLeast<{
   customer?: Prisma.XOR<Prisma.CustomerScalarRelationFilter, Prisma.CustomerWhereInput>
   reviewedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   deal?: Prisma.XOR<Prisma.DealNullableScalarRelationFilter, Prisma.DealWhereInput> | null
+  extraImages?: Prisma.CommunityDealSubmissionImageListRelationFilter
 }, "id" | "dealId" | "customerId_urlHash">
 
 export type CommunityDealSubmissionOrderByWithAggregationInput = {
@@ -600,6 +603,7 @@ export type CommunityDealSubmissionCreateInput = {
   customer: Prisma.CustomerCreateNestedOneWithoutSubmissionsInput
   reviewedBy?: Prisma.UserCreateNestedOneWithoutReviewedSubmissionsInput
   deal?: Prisma.DealCreateNestedOneWithoutCommunitySubmissionInput
+  extraImages?: Prisma.CommunityDealSubmissionImageCreateNestedManyWithoutSubmissionInput
 }
 
 export type CommunityDealSubmissionUncheckedCreateInput = {
@@ -631,6 +635,7 @@ export type CommunityDealSubmissionUncheckedCreateInput = {
   dealId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  extraImages?: Prisma.CommunityDealSubmissionImageUncheckedCreateNestedManyWithoutSubmissionInput
 }
 
 export type CommunityDealSubmissionUpdateInput = {
@@ -662,6 +667,7 @@ export type CommunityDealSubmissionUpdateInput = {
   customer?: Prisma.CustomerUpdateOneRequiredWithoutSubmissionsNestedInput
   reviewedBy?: Prisma.UserUpdateOneWithoutReviewedSubmissionsNestedInput
   deal?: Prisma.DealUpdateOneWithoutCommunitySubmissionNestedInput
+  extraImages?: Prisma.CommunityDealSubmissionImageUpdateManyWithoutSubmissionNestedInput
 }
 
 export type CommunityDealSubmissionUncheckedUpdateInput = {
@@ -693,6 +699,7 @@ export type CommunityDealSubmissionUncheckedUpdateInput = {
   dealId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  extraImages?: Prisma.CommunityDealSubmissionImageUncheckedUpdateManyWithoutSubmissionNestedInput
 }
 
 export type CommunityDealSubmissionCreateManyInput = {
@@ -918,6 +925,11 @@ export type CommunityDealSubmissionSumOrderByAggregateInput = {
   resubmissions?: Prisma.SortOrder
 }
 
+export type CommunityDealSubmissionScalarRelationFilter = {
+  is?: Prisma.CommunityDealSubmissionWhereInput
+  isNot?: Prisma.CommunityDealSubmissionWhereInput
+}
+
 export type CommunityDealSubmissionCreateNestedManyWithoutReviewedByInput = {
   create?: Prisma.XOR<Prisma.CommunityDealSubmissionCreateWithoutReviewedByInput, Prisma.CommunityDealSubmissionUncheckedCreateWithoutReviewedByInput> | Prisma.CommunityDealSubmissionCreateWithoutReviewedByInput[] | Prisma.CommunityDealSubmissionUncheckedCreateWithoutReviewedByInput[]
   connectOrCreate?: Prisma.CommunityDealSubmissionCreateOrConnectWithoutReviewedByInput | Prisma.CommunityDealSubmissionCreateOrConnectWithoutReviewedByInput[]
@@ -1038,6 +1050,20 @@ export type EnumSubmissionStatusFieldUpdateOperationsInput = {
   set?: $Enums.SubmissionStatus
 }
 
+export type CommunityDealSubmissionCreateNestedOneWithoutExtraImagesInput = {
+  create?: Prisma.XOR<Prisma.CommunityDealSubmissionCreateWithoutExtraImagesInput, Prisma.CommunityDealSubmissionUncheckedCreateWithoutExtraImagesInput>
+  connectOrCreate?: Prisma.CommunityDealSubmissionCreateOrConnectWithoutExtraImagesInput
+  connect?: Prisma.CommunityDealSubmissionWhereUniqueInput
+}
+
+export type CommunityDealSubmissionUpdateOneRequiredWithoutExtraImagesNestedInput = {
+  create?: Prisma.XOR<Prisma.CommunityDealSubmissionCreateWithoutExtraImagesInput, Prisma.CommunityDealSubmissionUncheckedCreateWithoutExtraImagesInput>
+  connectOrCreate?: Prisma.CommunityDealSubmissionCreateOrConnectWithoutExtraImagesInput
+  upsert?: Prisma.CommunityDealSubmissionUpsertWithoutExtraImagesInput
+  connect?: Prisma.CommunityDealSubmissionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CommunityDealSubmissionUpdateToOneWithWhereWithoutExtraImagesInput, Prisma.CommunityDealSubmissionUpdateWithoutExtraImagesInput>, Prisma.CommunityDealSubmissionUncheckedUpdateWithoutExtraImagesInput>
+}
+
 export type CommunityDealSubmissionCreateWithoutReviewedByInput = {
   id?: string
   status?: $Enums.SubmissionStatus
@@ -1066,6 +1092,7 @@ export type CommunityDealSubmissionCreateWithoutReviewedByInput = {
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutSubmissionsInput
   deal?: Prisma.DealCreateNestedOneWithoutCommunitySubmissionInput
+  extraImages?: Prisma.CommunityDealSubmissionImageCreateNestedManyWithoutSubmissionInput
 }
 
 export type CommunityDealSubmissionUncheckedCreateWithoutReviewedByInput = {
@@ -1096,6 +1123,7 @@ export type CommunityDealSubmissionUncheckedCreateWithoutReviewedByInput = {
   dealId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  extraImages?: Prisma.CommunityDealSubmissionImageUncheckedCreateNestedManyWithoutSubmissionInput
 }
 
 export type CommunityDealSubmissionCreateOrConnectWithoutReviewedByInput = {
@@ -1186,6 +1214,7 @@ export type CommunityDealSubmissionCreateWithoutDealInput = {
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutSubmissionsInput
   reviewedBy?: Prisma.UserCreateNestedOneWithoutReviewedSubmissionsInput
+  extraImages?: Prisma.CommunityDealSubmissionImageCreateNestedManyWithoutSubmissionInput
 }
 
 export type CommunityDealSubmissionUncheckedCreateWithoutDealInput = {
@@ -1216,6 +1245,7 @@ export type CommunityDealSubmissionUncheckedCreateWithoutDealInput = {
   rejectionReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  extraImages?: Prisma.CommunityDealSubmissionImageUncheckedCreateNestedManyWithoutSubmissionInput
 }
 
 export type CommunityDealSubmissionCreateOrConnectWithoutDealInput = {
@@ -1262,6 +1292,7 @@ export type CommunityDealSubmissionUpdateWithoutDealInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutSubmissionsNestedInput
   reviewedBy?: Prisma.UserUpdateOneWithoutReviewedSubmissionsNestedInput
+  extraImages?: Prisma.CommunityDealSubmissionImageUpdateManyWithoutSubmissionNestedInput
 }
 
 export type CommunityDealSubmissionUncheckedUpdateWithoutDealInput = {
@@ -1292,6 +1323,7 @@ export type CommunityDealSubmissionUncheckedUpdateWithoutDealInput = {
   rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  extraImages?: Prisma.CommunityDealSubmissionImageUncheckedUpdateManyWithoutSubmissionNestedInput
 }
 
 export type CommunityDealSubmissionCreateWithoutCustomerInput = {
@@ -1322,6 +1354,7 @@ export type CommunityDealSubmissionCreateWithoutCustomerInput = {
   updatedAt?: Date | string
   reviewedBy?: Prisma.UserCreateNestedOneWithoutReviewedSubmissionsInput
   deal?: Prisma.DealCreateNestedOneWithoutCommunitySubmissionInput
+  extraImages?: Prisma.CommunityDealSubmissionImageCreateNestedManyWithoutSubmissionInput
 }
 
 export type CommunityDealSubmissionUncheckedCreateWithoutCustomerInput = {
@@ -1352,6 +1385,7 @@ export type CommunityDealSubmissionUncheckedCreateWithoutCustomerInput = {
   dealId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  extraImages?: Prisma.CommunityDealSubmissionImageUncheckedCreateNestedManyWithoutSubmissionInput
 }
 
 export type CommunityDealSubmissionCreateOrConnectWithoutCustomerInput = {
@@ -1378,6 +1412,146 @@ export type CommunityDealSubmissionUpdateWithWhereUniqueWithoutCustomerInput = {
 export type CommunityDealSubmissionUpdateManyWithWhereWithoutCustomerInput = {
   where: Prisma.CommunityDealSubmissionScalarWhereInput
   data: Prisma.XOR<Prisma.CommunityDealSubmissionUpdateManyMutationInput, Prisma.CommunityDealSubmissionUncheckedUpdateManyWithoutCustomerInput>
+}
+
+export type CommunityDealSubmissionCreateWithoutExtraImagesInput = {
+  id?: string
+  status?: $Enums.SubmissionStatus
+  title: string
+  brand?: string | null
+  description: string
+  productUrl: string
+  urlHash: string
+  merchantName?: string | null
+  categoryHint?: string | null
+  priceMinor: number
+  mrpMinor?: number | null
+  couponCode?: string | null
+  imageKey: string
+  imageProvider: string
+  imageMime: string
+  imageBytes: number
+  imageWidth: number
+  imageHeight: number
+  version?: number
+  resubmissions?: number
+  submittedAt?: Date | string
+  reviewedAt?: Date | string | null
+  rejectionReason?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  customer: Prisma.CustomerCreateNestedOneWithoutSubmissionsInput
+  reviewedBy?: Prisma.UserCreateNestedOneWithoutReviewedSubmissionsInput
+  deal?: Prisma.DealCreateNestedOneWithoutCommunitySubmissionInput
+}
+
+export type CommunityDealSubmissionUncheckedCreateWithoutExtraImagesInput = {
+  id?: string
+  customerId: string
+  status?: $Enums.SubmissionStatus
+  title: string
+  brand?: string | null
+  description: string
+  productUrl: string
+  urlHash: string
+  merchantName?: string | null
+  categoryHint?: string | null
+  priceMinor: number
+  mrpMinor?: number | null
+  couponCode?: string | null
+  imageKey: string
+  imageProvider: string
+  imageMime: string
+  imageBytes: number
+  imageWidth: number
+  imageHeight: number
+  version?: number
+  resubmissions?: number
+  submittedAt?: Date | string
+  reviewedById?: string | null
+  reviewedAt?: Date | string | null
+  rejectionReason?: string | null
+  dealId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type CommunityDealSubmissionCreateOrConnectWithoutExtraImagesInput = {
+  where: Prisma.CommunityDealSubmissionWhereUniqueInput
+  create: Prisma.XOR<Prisma.CommunityDealSubmissionCreateWithoutExtraImagesInput, Prisma.CommunityDealSubmissionUncheckedCreateWithoutExtraImagesInput>
+}
+
+export type CommunityDealSubmissionUpsertWithoutExtraImagesInput = {
+  update: Prisma.XOR<Prisma.CommunityDealSubmissionUpdateWithoutExtraImagesInput, Prisma.CommunityDealSubmissionUncheckedUpdateWithoutExtraImagesInput>
+  create: Prisma.XOR<Prisma.CommunityDealSubmissionCreateWithoutExtraImagesInput, Prisma.CommunityDealSubmissionUncheckedCreateWithoutExtraImagesInput>
+  where?: Prisma.CommunityDealSubmissionWhereInput
+}
+
+export type CommunityDealSubmissionUpdateToOneWithWhereWithoutExtraImagesInput = {
+  where?: Prisma.CommunityDealSubmissionWhereInput
+  data: Prisma.XOR<Prisma.CommunityDealSubmissionUpdateWithoutExtraImagesInput, Prisma.CommunityDealSubmissionUncheckedUpdateWithoutExtraImagesInput>
+}
+
+export type CommunityDealSubmissionUpdateWithoutExtraImagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumSubmissionStatusFieldUpdateOperationsInput | $Enums.SubmissionStatus
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  brand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  productUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  urlHash?: Prisma.StringFieldUpdateOperationsInput | string
+  merchantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  categoryHint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  mrpMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageKey?: Prisma.StringFieldUpdateOperationsInput | string
+  imageProvider?: Prisma.StringFieldUpdateOperationsInput | string
+  imageMime?: Prisma.StringFieldUpdateOperationsInput | string
+  imageBytes?: Prisma.IntFieldUpdateOperationsInput | number
+  imageWidth?: Prisma.IntFieldUpdateOperationsInput | number
+  imageHeight?: Prisma.IntFieldUpdateOperationsInput | number
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  resubmissions?: Prisma.IntFieldUpdateOperationsInput | number
+  submittedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutSubmissionsNestedInput
+  reviewedBy?: Prisma.UserUpdateOneWithoutReviewedSubmissionsNestedInput
+  deal?: Prisma.DealUpdateOneWithoutCommunitySubmissionNestedInput
+}
+
+export type CommunityDealSubmissionUncheckedUpdateWithoutExtraImagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumSubmissionStatusFieldUpdateOperationsInput | $Enums.SubmissionStatus
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  brand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  productUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  urlHash?: Prisma.StringFieldUpdateOperationsInput | string
+  merchantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  categoryHint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  mrpMinor?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageKey?: Prisma.StringFieldUpdateOperationsInput | string
+  imageProvider?: Prisma.StringFieldUpdateOperationsInput | string
+  imageMime?: Prisma.StringFieldUpdateOperationsInput | string
+  imageBytes?: Prisma.IntFieldUpdateOperationsInput | number
+  imageWidth?: Prisma.IntFieldUpdateOperationsInput | number
+  imageHeight?: Prisma.IntFieldUpdateOperationsInput | number
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  resubmissions?: Prisma.IntFieldUpdateOperationsInput | number
+  submittedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dealId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type CommunityDealSubmissionCreateManyReviewedByInput = {
@@ -1438,6 +1612,7 @@ export type CommunityDealSubmissionUpdateWithoutReviewedByInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutSubmissionsNestedInput
   deal?: Prisma.DealUpdateOneWithoutCommunitySubmissionNestedInput
+  extraImages?: Prisma.CommunityDealSubmissionImageUpdateManyWithoutSubmissionNestedInput
 }
 
 export type CommunityDealSubmissionUncheckedUpdateWithoutReviewedByInput = {
@@ -1468,6 +1643,7 @@ export type CommunityDealSubmissionUncheckedUpdateWithoutReviewedByInput = {
   dealId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  extraImages?: Prisma.CommunityDealSubmissionImageUncheckedUpdateManyWithoutSubmissionNestedInput
 }
 
 export type CommunityDealSubmissionUncheckedUpdateManyWithoutReviewedByInput = {
@@ -1558,6 +1734,7 @@ export type CommunityDealSubmissionUpdateWithoutCustomerInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reviewedBy?: Prisma.UserUpdateOneWithoutReviewedSubmissionsNestedInput
   deal?: Prisma.DealUpdateOneWithoutCommunitySubmissionNestedInput
+  extraImages?: Prisma.CommunityDealSubmissionImageUpdateManyWithoutSubmissionNestedInput
 }
 
 export type CommunityDealSubmissionUncheckedUpdateWithoutCustomerInput = {
@@ -1588,6 +1765,7 @@ export type CommunityDealSubmissionUncheckedUpdateWithoutCustomerInput = {
   dealId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  extraImages?: Prisma.CommunityDealSubmissionImageUncheckedUpdateManyWithoutSubmissionNestedInput
 }
 
 export type CommunityDealSubmissionUncheckedUpdateManyWithoutCustomerInput = {
@@ -1620,6 +1798,35 @@ export type CommunityDealSubmissionUncheckedUpdateManyWithoutCustomerInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+
+/**
+ * Count Type CommunityDealSubmissionCountOutputType
+ */
+
+export type CommunityDealSubmissionCountOutputType = {
+  extraImages: number
+}
+
+export type CommunityDealSubmissionCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  extraImages?: boolean | CommunityDealSubmissionCountOutputTypeCountExtraImagesArgs
+}
+
+/**
+ * CommunityDealSubmissionCountOutputType without action
+ */
+export type CommunityDealSubmissionCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CommunityDealSubmissionCountOutputType
+   */
+  select?: Prisma.CommunityDealSubmissionCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * CommunityDealSubmissionCountOutputType without action
+ */
+export type CommunityDealSubmissionCountOutputTypeCountExtraImagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CommunityDealSubmissionImageWhereInput
+}
 
 
 export type CommunityDealSubmissionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1654,6 +1861,8 @@ export type CommunityDealSubmissionSelect<ExtArgs extends runtime.Types.Extensio
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
   reviewedBy?: boolean | Prisma.CommunityDealSubmission$reviewedByArgs<ExtArgs>
   deal?: boolean | Prisma.CommunityDealSubmission$dealArgs<ExtArgs>
+  extraImages?: boolean | Prisma.CommunityDealSubmission$extraImagesArgs<ExtArgs>
+  _count?: boolean | Prisma.CommunityDealSubmissionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["communityDealSubmission"]>
 
 export type CommunityDealSubmissionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1760,6 +1969,8 @@ export type CommunityDealSubmissionInclude<ExtArgs extends runtime.Types.Extensi
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
   reviewedBy?: boolean | Prisma.CommunityDealSubmission$reviewedByArgs<ExtArgs>
   deal?: boolean | Prisma.CommunityDealSubmission$dealArgs<ExtArgs>
+  extraImages?: boolean | Prisma.CommunityDealSubmission$extraImagesArgs<ExtArgs>
+  _count?: boolean | Prisma.CommunityDealSubmissionCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CommunityDealSubmissionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
@@ -1778,6 +1989,7 @@ export type $CommunityDealSubmissionPayload<ExtArgs extends runtime.Types.Extens
     customer: Prisma.$CustomerPayload<ExtArgs>
     reviewedBy: Prisma.$UserPayload<ExtArgs> | null
     deal: Prisma.$DealPayload<ExtArgs> | null
+    extraImages: Prisma.$CommunityDealSubmissionImagePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2205,6 +2417,7 @@ export interface Prisma__CommunityDealSubmissionClient<T, Null = never, ExtArgs 
   customer<T extends Prisma.CustomerDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CustomerDefaultArgs<ExtArgs>>): Prisma.Prisma__CustomerClient<runtime.Types.Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   reviewedBy<T extends Prisma.CommunityDealSubmission$reviewedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CommunityDealSubmission$reviewedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   deal<T extends Prisma.CommunityDealSubmission$dealArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CommunityDealSubmission$dealArgs<ExtArgs>>): Prisma.Prisma__DealClient<runtime.Types.Result.GetResult<Prisma.$DealPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  extraImages<T extends Prisma.CommunityDealSubmission$extraImagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CommunityDealSubmission$extraImagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommunityDealSubmissionImagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2698,6 +2911,30 @@ export type CommunityDealSubmission$dealArgs<ExtArgs extends runtime.Types.Exten
    */
   include?: Prisma.DealInclude<ExtArgs> | null
   where?: Prisma.DealWhereInput
+}
+
+/**
+ * CommunityDealSubmission.extraImages
+ */
+export type CommunityDealSubmission$extraImagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CommunityDealSubmissionImage
+   */
+  select?: Prisma.CommunityDealSubmissionImageSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CommunityDealSubmissionImage
+   */
+  omit?: Prisma.CommunityDealSubmissionImageOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CommunityDealSubmissionImageInclude<ExtArgs> | null
+  where?: Prisma.CommunityDealSubmissionImageWhereInput
+  orderBy?: Prisma.CommunityDealSubmissionImageOrderByWithRelationInput | Prisma.CommunityDealSubmissionImageOrderByWithRelationInput[]
+  cursor?: Prisma.CommunityDealSubmissionImageWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CommunityDealSubmissionImageScalarFieldEnum | Prisma.CommunityDealSubmissionImageScalarFieldEnum[]
 }
 
 /**

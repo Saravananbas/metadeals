@@ -87,6 +87,7 @@ export function DealCard({
   const [vote, setVote] = useState<0 | 1 | -1>(0);
   const [dislikeOpen, setDislikeOpen] = useState(false);
   const [voteNote, setVoteNote] = useState("");
+  const [likes, setLikes] = useState<number>(deal.likeCount ?? 0);
   const liked = vote === 1;
 
   useEffect(() => {
@@ -142,6 +143,7 @@ export function DealCard({
     setDislikeOpen(false);
     const result = await sendDealVote(deal.slug || deal.id, value, reason);
     if (result.status === 401) { setVoteNote("Sign in to vote"); setTimeout(() => setVoteNote(""), 3000); return; }
+    if (result.status === 200) setLikes(result.up ?? likes);
     if (result.status === 200) setVote(result.mine === 1 ? 1 : result.mine === -1 ? -1 : 0);
   };
 
@@ -371,10 +373,12 @@ export function DealCard({
             type="button"
             className={`deal-social-btn ${liked ? "deal-social-liked" : ""}`}
             onClick={handleToggleLike}
-            title="Like deal"
+            aria-pressed={liked}
+            aria-label={`${liked ? "Remove your like" : "Like this deal"}${likes ? `, ${likes} likes` : ""}`}
+            title={liked ? "Remove your like" : "Like deal"}
           >
             <ThumbsUp size={13} fill={liked ? "currentColor" : "none"} />
-            <span>{liked ? "Liked" : "Like"}</span>
+            {likes > 0 && <span>{formatCompactNumber(likes)}</span>}
           </button>
 
           <span style={{ position: "relative", display: "inline-flex" }}>
@@ -396,10 +400,11 @@ export function DealCard({
             type="button"
             className="deal-social-btn"
             onClick={handleShare}
+            aria-label={`${copiedShare ? "Link copied" : "Share this deal"}${shareCount ? `, shared ${shareCount} times` : ""}`}
             title={copiedShare ? "Link copied to clipboard!" : "Share deal"}
           >
-            <Share2 size={13} />
-            <span>{copiedShare ? "Copied" : shareCount > 0 ? formatCompactNumber(shareCount) : "Share"}</span>
+            {copiedShare ? <Check size={13} /> : <Share2 size={13} />}
+            {shareCount > 0 && <span>{formatCompactNumber(shareCount)}</span>}
           </button>
 
           <button
@@ -410,11 +415,11 @@ export function DealCard({
               trackEvent("COMMENT", deal.slug || deal.id);
               setCommentsOpen(true);
             }}
-            aria-label={`View comments for ${deal.name}`}
-            title="View comments"
+            aria-label={`View comments for ${deal.name}${deal.commentCount ? ` (${deal.commentCount})` : ""}`}
+            title={deal.commentCount ? `${deal.commentCount} comment${deal.commentCount === 1 ? "" : "s"}` : "View comments"}
           >
             <MessageCircle size={13} />
-            <span>{deal.commentCount ? `Comment (${formatCompactNumber(deal.commentCount)})` : "Comment"}</span>
+            {deal.commentCount ? <span>{formatCompactNumber(deal.commentCount)}</span> : null}
           </button>
         </div>
         {voteNote && <p role="status" style={{ margin: "6px 0 0", fontSize: 12, color: "var(--md-color-text-secondary)" }}>{voteNote} — <a href="/account" style={{ color: "var(--md-purple-700)", fontWeight: 700 }}>Sign in</a></p>}

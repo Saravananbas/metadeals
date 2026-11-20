@@ -37,7 +37,7 @@ async function handle(request: Request, { params }: { params: Promise<{ path: st
       if (resource === "history") return json({ data: await myHistory(actor) });
       if (resource === "submissions" && !id) return json({ data: await listSubmissions(actor, z.enum(["PENDING_REVIEW", "APPROVED", "REJECTED"]).parse(search.get("status") ?? "PENDING_REVIEW"), page) });
       if (resource === "submissions" && id && action === "image") {
-        const { bytes, mimeType } = await getSubmissionImage(actor, id);
+        const { bytes, mimeType } = await getSubmissionImage(actor, id, Math.min(9, Math.max(0, Number(new URL(request.url).searchParams.get("n")) || 0)));
         return new Response(new Uint8Array(bytes), { headers: { "Content-Type": mimeType, "X-Content-Type-Options": "nosniff", "Cache-Control": "private, no-store" } });
       }
     }

@@ -10,6 +10,6 @@ export const GET = (request: Request) =>
 
 export const POST = (request: Request) =>
   customerApi(request, async (customerId) => {
-    const { data, image } = await readSubmissionForm(request);
-    return customerJson({ data: await createSubmission(customerId, data, image), counts: await getSubmissionCounts(customerId) }, 201);
+    const { data, image, extras } = await readSubmissionForm(request);
+    return customerJson({ data: await createSubmission(customerId, data, image, extras), counts: await getSubmissionCounts(customerId) }, 201);
   });

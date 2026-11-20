@@ -5,6 +5,9 @@ import { signOut } from "next-auth/react";
 import { SEX_LABELS, SEX_VALUES } from "./profile-validation";
 import styles from "./profile.module.css";
 import { IdentityCard, UserNamePrompt } from "./IdentityCard";
+import { ProgressPanel } from "./deal-form/ProgressPanel";
+import { SameLinkNotice, SimilarDeals, useDealCheck } from "./deal-form/SimilarDeals";
+import { PreviewDialog } from "./deal-form/PreviewDialog";
 
 type Counts = { total: number; pendingReview: number; approvedAwaitingPublication: number; rejected: number; live: number };
 type Profile = { name: string; email: string; sex: string | null; dateOfBirth: string | null; location: string | null; counts: Counts };
@@ -15,6 +18,10 @@ type Submission = {
 };
 type MerchantWebsite = { id: string; name: string; domain: string; logoUrl: string | null };
 const STAGE_LABEL = { PENDING_REVIEW: "Awaiting review", APPROVED: "Approved, going live soon", LIVE: "Live on MetaDeals4U", REJECTED: "Not approved" } as const;
+type Picture = { id: string } & ({ kind: "url"; url: string } | { kind: "file"; file: File; preview: string });
+const MAX_PICTURES = 10;
+const newId = () => Math.random().toString(36).slice(2);
+const proxied = (src: string) => `/api/v1/customer/image-proxy?src=${encodeURIComponent(src)}`;
 const emptyForm = { title: "", productUrl: "", merchantName: "", categoryHint: "", price: "", mrp: "", couponCode: "", brand: "", description: "" };
 
 async function api<T>(url: string, init?: RequestInit): Promise<T> {
@@ -49,36 +56,31 @@ export function CustomerProfile({ section = "profile", embedded = false }: { sec
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [form, setForm] = useState(emptyForm);
   const [editing, setEditing] = useState<Submission | null>(null);
-  const [image, setImage] = useState<File | null>(null);
-  const [uploadedPreview, setUploadedPreview] = useState("");
+  // Up to 10 pictures; the first is the main one. Each is a link found on the product page or a file the member added.
+  const [pictures, setPictures] = useState<Picture[]>([]);
+  const image = pictures[0]?.kind === "file" ? pictures[0].file : null;
+  const pickedImage = pictures[0]?.kind === "url" ? pictures[0].url : "";
+  const uploadedPreview = pictures[0]?.kind === "file" ? pictures[0].preview : "";
   const [fetched, setFetched] = useState<{ logoUrl?: string | null; store: string; images: string[]; notes: string[]; category: string; status: string } | null>(null);
-  const [pickedImage, setPickedImage] = useState("");
   const [fetching, setFetching] = useState(false);
+  const [autoFilled, setAutoFilled] = useState<string[]>([]);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const lastAutoUrl = useRef("");
   const [profileMsg, setProfileMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [submitMsg, setSubmitMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [busy, setBusy] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
   const titleInput = useRef<HTMLInputElement>(null);
   useEffect(() => {
-    if (!image) return;
-    const reader = new FileReader();
-    reader.addEventListener("load", () => setUploadedPreview(typeof reader.result === "string" ? reader.result : ""), { once: true });
-    reader.readAsDataURL(image);
-    return () => reader.abort();
-  }, [image]);
-  useEffect(() => {
     if (!deals) return;
     const onPaste = (e: ClipboardEvent) => {
       const f = Array.from(e.clipboardData?.files ?? []).find((x) => x.type.startsWith("image/"));
       if (!f) return;
-      if (!["image/jpeg", "image/png", "image/webp"].includes(f.type) || f.size > 5 * 1024 * 1024) {
-        setSubmitMsg({ ok: false, text: "Use a JPEG, PNG or WebP image up to 5 MB." });
-        return;
-      }
-      setImage(f); setPickedImage(""); setSubmitMsg(null);
+      addFile(f);
     };
     window.addEventListener("paste", onPaste);
     return () => window.removeEventListener("paste", onPaste);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- addFile only uses state setters, so the first copy keeps working
   }, [deals]);
   const [categories, setCategories] = useState<{ id: string; name: string; parentId: string | null }[]>([]);
   const [merchantWebsites, setMerchantWebsites] = useState<MerchantWebsite[]>([]);
@@ -123,7 +125,7 @@ export function CustomerProfile({ section = "profile", embedded = false }: { sec
 
   function startEdit(item: Submission) {
     setEditing(item);
-    setImage(null);
+    clearPictures();
     setSubmitMsg(null);
     setForm({
       title: item.title, productUrl: item.productUrl, merchantName: item.merchantName ?? "", categoryHint: item.categoryHint ?? "", price: String(item.priceMinor / 100),
@@ -133,25 +135,39 @@ export function CustomerProfile({ section = "profile", embedded = false }: { sec
   }
 
   function resetDealForm() {
-    setForm(emptyForm); setImage(null); setEditing(null); setFetched(null); setPickedImage(""); setSubmitMsg(null);
+    setForm(emptyForm); clearPictures(); setEditing(null); setFetched(null); setSubmitMsg(null);
     try { if (profile?.email) localStorage.removeItem(`metadeals:deal-draft:${profile.email.trim().toLowerCase()}`); } catch { /* storage may be disabled */ }
     if (fileInput.current) fileInput.current.value = "";
   }
 
-  function chooseUpload(file: File | undefined) {
+  function addFile(file: File | undefined) {
     if (!file) return;
-    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type) || file.size > 5 * 1024 * 1024) {
-      setSubmitMsg({ ok: false, text: "Use a JPEG, PNG or WebP image up to 5 MB." });
+    if (!["image/jpeg", "image/png", "image/webp", "image/gif", "image/avif"].includes(file.type) || file.size > 5 * 1024 * 1024) {
+      setSubmitMsg({ ok: false, text: "Use a JPEG, PNG, WebP, GIF or AVIF picture up to 5 MB." });
       return;
     }
-    setImage(file); setPickedImage(""); setSubmitMsg(null);
+    setSubmitMsg(null);
+    // The limit is checked on the latest list (this also runs from the paste listener, which would otherwise see an old list).
+    setPictures((list) => (list.length >= MAX_PICTURES ? list : [...list, { id: newId(), kind: "file", file, preview: URL.createObjectURL(file) }]));
+  }
+  /** + or tick on a picture found on the product page. */
+  function toggleFound(url: string) {
+    setPictures((list) => list.some((p) => p.kind === "url" && p.url === url) ? list.filter((p) => !(p.kind === "url" && p.url === url)) : list.length >= MAX_PICTURES ? list : [...list, { id: newId(), kind: "url", url }]);
+  }
+  function removePicture(id: string) {
+    setPictures((list) => { const gone = list.find((p) => p.id === id); if (gone?.kind === "file") URL.revokeObjectURL(gone.preview); return list.filter((p) => p.id !== id); });
+  }
+  const makeFirst = (id: string) => setPictures((list) => { const hit = list.find((p) => p.id === id); return hit ? [hit, ...list.filter((p) => p.id !== id)] : list; });
+  function clearPictures() {
+    setPictures((list) => { for (const p of list) if (p.kind === "file") URL.revokeObjectURL(p.preview); return []; });
+    if (fileInput.current) fileInput.current.value = "";
   }
 
   // Same extractor as the admin "Fetch" button: fills the form from the store page; everything stays editable.
-  async function fetchFromLink() {
+  async function fetchFromLink(auto = false) {
     setSubmitMsg(null);
     const link = form.productUrl.trim().replace(/^http:\/\//i, "https://");
-    if (!/^https:\/\//i.test(link)) return setSubmitMsg({ ok: false, text: "Paste the store's product link first (it must start with http:// or https://)." });
+    if (!/^https:\/\//i.test(link)) return auto ? undefined : setSubmitMsg({ ok: false, text: "Paste the store's product link first (it must start with http:// or https://)." });
     setFetching(true);
     try {
       const body = await api<{ data: { logoUrl: string | null; status: string; store: string; productUrl: string; title: string; brand: string; description: string; priceRupees: string; mrpRupees: string; category: string; images: string[]; notes: string[] } }>(
@@ -163,12 +179,28 @@ export function CustomerProfile({ section = "profile", embedded = false }: { sec
       const detectedMerchant = matchedWebsite?.name || d.store;
       setForm((f) => ({ ...f, title: d.title || f.title, brand: d.brand || f.brand, description: d.description || f.description, price: d.priceRupees || f.price, mrp: d.mrpRupees || f.mrp, merchantName: detectedMerchant || f.merchantName, categoryHint: guessCategory(categories.map((c) => c.name), d.category, d.title, d.brand) || f.categoryHint, productUrl: d.productUrl || f.productUrl }));
       setFetched({ logoUrl: matchedWebsite?.logoUrl || d.logoUrl, store: detectedMerchant, images: d.images, notes: d.notes, category: d.category, status: d.status });
-      setPickedImage(d.images[0] ?? "");
-      setSubmitMsg({ ok: true, text: d.title || d.priceRupees ? "Details fetched. Please check every field below before you submit." : "We could not read this page automatically. Please fill in the details yourself." });
+      // The first picture found is chosen for the member; they can add more or swap it.
+      setPictures((list) => [...list.filter((p) => p.kind === "file"), ...(d.images[0] ? [{ id: newId(), kind: "url" as const, url: d.images[0] }] : [])]);
+      setAutoFilled([d.title && "title", d.priceRupees && "price", d.mrpRupees && "mrp", d.brand && "brand", d.description && "description", detectedMerchant && "merchantName"].filter((k): k is string => Boolean(k)));
+      // The blue notice below the link box says details were filled in; only a page we could not read needs an error here.
+      setSubmitMsg(d.title || d.priceRupees ? null : { ok: false, text: "We could not read this page automatically. Please fill in the details yourself." });
     } catch (error) {
       setSubmitMsg({ ok: false, text: error instanceof Error ? error.message : "Could not fetch the details. Please fill them in yourself." });
     } finally { setFetching(false); }
   }
+
+  // Details fill in by themselves a moment after a new link is pasted (one fetch per link). "Try again" runs it by hand.
+  useEffect(() => {
+    if (!deals || editing) return;
+    const link = form.productUrl.trim().replace(/^http:\/\//i, "https://");
+    if (!/^https:\/\/[^\s/]+\.[^\s/]+\//i.test(link) || link === lastAutoUrl.current) return;
+    const timer = setTimeout(() => { lastAutoUrl.current = link; void fetchFromLink(true); }, 600);
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- fetchFromLink reads the latest form; only a new link should restart the timer
+  }, [form.productUrl, deals, editing]);
+  const dealCheck = useDealCheck(form.productUrl, form.title, Boolean(deals) && !editing);
+  const progressValues = { productUrl: form.productUrl, title: form.title, price: form.price, mrp: form.mrp, description: form.description, categoryHint: form.categoryHint, merchantName: form.merchantName, brand: form.brand, hasImage: Boolean(image || pickedImage) };
+  const auto = (k: string) => (autoFilled.includes(k) ? <em className={styles.auto}>auto-filled</em> : null);
 
   async function submitDeal(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -185,15 +217,17 @@ export function CustomerProfile({ section = "profile", embedded = false }: { sec
         brand: form.brand || null, merchantName: form.merchantName || null, categoryHint: form.categoryHint || null,
         mrpMinor: form.mrp ? toMinor(form.mrp) : null, couponCode: form.couponCode || null,
         ...(!image && pickedImage ? { imageUrl: pickedImage } : {}),
+        // Pictures after the main one: found links travel in the details, files are attached below.
+        ...(pictures.slice(1).some((p) => p.kind === "url") ? { extraImageUrls: pictures.slice(1).flatMap((p) => (p.kind === "url" ? [p.url] : [])) } : {}),
       };
       const body = new FormData();
       body.set("data", JSON.stringify(data));
       if (image) body.set("image", image);
+      for (const p of pictures.slice(1)) if (p.kind === "file") body.append("images", p.file);
       if (editing) body.set("version", String(editing.version));
       await api(editing ? `/api/v1/customer/submissions/${editing.id}` : "/api/v1/customer/submissions", { method: editing ? "PATCH" : "POST", body });
       try { if (profile?.email) localStorage.removeItem(`metadeals:deal-draft:${profile.email.trim().toLowerCase()}`); } catch { /* submission already succeeded */ }
-      setForm(emptyForm); setImage(null); setEditing(null); setFetched(null); setPickedImage("");
-      if (fileInput.current) fileInput.current.value = "";
+      setForm(emptyForm); clearPictures(); setEditing(null); setFetched(null);
       await refresh();
       setSubmitMsg({ ok: true, text: editing ? "Sent back for review." : "Thank you! Your deal was sent for review. It stays private until our team approves and publishes it." });
     } catch (error) {
@@ -201,7 +235,7 @@ export function CustomerProfile({ section = "profile", embedded = false }: { sec
     } finally { setBusy(false); }
   }
 
-  const set = (key: keyof typeof emptyForm) => (e: { target: { value: string } }) => setForm((f) => ({ ...f, [key]: e.target.value }));
+  const set = (key: keyof typeof emptyForm) => (e: { target: { value: string } }) => { setAutoFilled((a) => a.filter((k) => k !== key)); setForm((f) => ({ ...f, [key]: e.target.value })); };
   const selectedCat = categories.find((x) => x.name === form.categoryHint);
   const mainCat = selectedCat ? (selectedCat.parentId ? categories.find((x) => x.id === selectedCat.parentId) : selectedCat) : undefined;
   const subCats = mainCat ? categories.filter((x) => x.parentId === mainCat.id) : [];
@@ -231,7 +265,7 @@ export function CustomerProfile({ section = "profile", embedded = false }: { sec
       const draft = JSON.parse(raw) as { form?: typeof emptyForm; pickedImage?: string };
       if (!draft.form || typeof draft.form.title !== "string" || typeof draft.form.productUrl !== "string") throw new Error("Invalid draft");
       setForm({ ...emptyForm, ...draft.form });
-      setPickedImage(typeof draft.pickedImage === "string" ? draft.pickedImage : "");
+      setPictures(typeof draft.pickedImage === "string" && draft.pickedImage ? [{ id: newId(), kind: "url", url: draft.pickedImage }] : []);
       setEditing(null);
       setSubmitMsg({ ok: true, text: "Draft restored from this device. Please check the details and add any missing product image." });
     } catch { setSubmitMsg({ ok: false, text: "The saved draft could not be restored." }); }
@@ -281,27 +315,31 @@ export function CustomerProfile({ section = "profile", embedded = false }: { sec
       {deals && <div className={styles.dealLayout}>
         <section className={`${styles.card} ${styles.dealFormCard}`} id="submit-deal">
           <form className={styles.dealForm} onSubmit={submitDeal}>
+            <ProgressPanel values={progressValues} compact />
             <div className={styles.dealStep}>
               <h2><span>1</span> Product Link</h2>
               <p>Paste the product page link and we’ll fetch the details for you.</p>
               <label className={styles.dealWide}>Product URL<input type="url" value={form.productUrl} onChange={set("productUrl")} required placeholder="https://www.store.com/product..." /></label>
               <div className={styles.dealActions}>
-                <button type="button" className={styles.primary} disabled={busy || fetching || !form.productUrl} onClick={() => void fetchFromLink()}>{fetching ? "Fetching details…" : "↻ Fetch details"}</button>
+                <button type="button" className={styles.primary} disabled={busy || fetching || !form.productUrl} onClick={() => void fetchFromLink()}>{fetching ? "Fetching details…" : fetched ? "↻ Try again" : "↻ Fetch details"}</button>
                 <span className={styles.hint}>or</span>
                 <button type="button" className={styles.secondary} disabled={busy || fetching} onClick={() => titleInput.current?.focus()}>✎ Add details manually</button>
                 <button type="button" className={styles.secondary} disabled={busy || fetching} onClick={resetDealForm}>Reset</button>
                 {profile?.email && <button type="button" className={styles.secondary} onClick={restoreLocalDraft}>Restore draft</button>}
               </div>
               {submitMsg && <div className={submitMsg.ok ? styles.ok : styles.err} role="status">{submitMsg.text}</div>}
-              {fetched && <div className={styles.fetchNotice}>Fetched from {fetched.store || "the product page"}. {fetched.notes.join(" ")}</div>}
+              {fetching && <div className={styles.autoNotice} role="status">Fetching details from the link…</div>}
+              {fetched && !fetching && <div className={styles.autoNotice} role="status">We&apos;ve filled in as much information as possible from {fetched.store || "the product page"}. Please double check for accuracy. {fetched.notes.join(" ")}</div>}
+              <SameLinkNotice check={dealCheck} />
             </div>
             {editing?.rejectionReason && <p className={styles.reason}>Why it was not approved: {editing.rejectionReason}</p>}
             <div className={styles.dealStep}>
               <h2><span>2</span> Deal Details</h2>
-              <label className={styles.dealWide}>Deal title <b aria-hidden="true">*</b><input ref={titleInput} value={form.title} onChange={set("title")} required minLength={3} maxLength={200} placeholder="e.g. Wireless headphones — 60% off" /></label>
+              <label className={styles.dealWide}>Deal title <b aria-hidden="true">*</b>{auto("title")}<input ref={titleInput} value={form.title} onChange={set("title")} required minLength={3} maxLength={200} placeholder="e.g. Wireless headphones — 60% off" /></label>
+              <SimilarDeals check={dealCheck} />
               <div className={styles.dealGrid3}>
-                <label>Deal price (₹) <b aria-hidden="true">*</b><input inputMode="decimal" value={form.price} onChange={set("price")} required pattern="[0-9]+(\.[0-9]{1,2})?" placeholder="e.g. 1,499" /></label>
-                <label>MRP (₹, optional)<input inputMode="decimal" value={form.mrp} onChange={set("mrp")} pattern="[0-9]+(\.[0-9]{1,2})?" placeholder="e.g. 4,999" /></label>
+                <label>Deal price (₹) <b aria-hidden="true">*</b>{auto("price")}<input inputMode="decimal" value={form.price} onChange={set("price")} required pattern="[0-9]+(\.[0-9]{1,2})?" placeholder="e.g. 1,499" /></label>
+                <label>MRP (₹, optional){auto("mrp")}<input inputMode="decimal" value={form.mrp} onChange={set("mrp")} pattern="[0-9]+(\.[0-9]{1,2})?" placeholder="e.g. 4,999" /></label>
                 <label>Discount<div className={styles.discountField}>{discount === null ? "—" : `${discount}% off`}</div></label>
                 <label className={styles.merchantLabel}>Store / Merchant
                   <span className={styles.merchantControl}>
@@ -341,7 +379,7 @@ export function CustomerProfile({ section = "profile", embedded = false }: { sec
                   </span>
                   {selectedMerchant && <small className={styles.merchantMapped}>✓ Matched to {selectedMerchant.domain}; merchant logo will be available to reviewers.</small>}
                 </label>
-                <label>Brand (optional)<input value={form.brand} onChange={set("brand")} maxLength={100} placeholder="e.g. boAt" /></label>
+                <label>Brand (optional){auto("brand")}<input value={form.brand} onChange={set("brand")} maxLength={100} placeholder="e.g. boAt" /></label>
                 <label>Coupon code (optional)<input value={form.couponCode} onChange={set("couponCode")} maxLength={50} placeholder="e.g. BOAT20" /></label>
               </div>
               <div className={styles.dealGrid2}>
@@ -351,26 +389,40 @@ export function CustomerProfile({ section = "profile", embedded = false }: { sec
             </div>
             <div className={styles.dealStep}>
               <h2><span>3</span> Description</h2>
-              <label className={styles.dealWide}>Deal details<textarea rows={5} value={form.description} onChange={set("description")} required minLength={10} maxLength={2000} placeholder="Add key details, offer terms, validity, or why it’s a good buy..." /><small className={styles.counter}>{form.description.length} / 2,000</small></label>
+              <label className={styles.dealWide}>Deal details{auto("description")}<textarea rows={5} value={form.description} onChange={set("description")} required minLength={10} maxLength={2000} placeholder="Add key details, offer terms, validity, or why it’s a good buy..." /><small className={styles.counter}>{form.description.length} / 2,000</small></label>
             </div>
             <div className={styles.dealStep}>
               <h2><span>4</span> Product Images</h2>
-              {fetched?.images?.length ? <div className={styles.imageChoices} aria-label="Choose a fetched product image">{[...new Set(fetched.images)].slice(0, 4).map((src) => <button type="button" key={src} aria-pressed={pickedImage === src} onClick={() => { setPickedImage(src); setImage(null); }} title="Use this product image">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={src} alt="Fetched product option" referrerPolicy="no-referrer" />
-              </button>)}</div> : <p className={styles.hint}>Choose a product image, or upload one from your device.</p>}
               <div className={styles.uploadRow}>
-                <button type="button" className={styles.uploadBox} onClick={() => fileInput.current?.click()} onDragOver={(e) => e.preventDefault()} onDrop={(e) => { e.preventDefault(); chooseUpload(e.dataTransfer.files[0]); }}><span aria-hidden="true">▧</span><strong>{image ? "Replace image" : "Upload image"}</strong><small>JPEG, PNG or WebP · up to 5 MB</small><small>Drag a file here or paste with Ctrl+V</small></button>
-                {(image || pickedImage) && <div className={styles.imagePreview}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={image ? uploadedPreview : pickedImage} alt="Selected product" />
-                  <button type="button" onClick={() => { setImage(null); setPickedImage(""); if (fileInput.current) fileInput.current.value = ""; }} aria-label="Remove selected image">×</button>
-                </div>}
+                <button type="button" className={styles.uploadBox} onClick={() => fileInput.current?.click()} onDragOver={(e) => e.preventDefault()} onDrop={(e) => { e.preventDefault(); for (const f of Array.from(e.dataTransfer.files).slice(0, MAX_PICTURES)) addFile(f); }}><span aria-hidden="true">▧</span><strong>Add pictures</strong><small>JPEG, PNG, WebP, GIF or AVIF · up to 5 MB each · up to {MAX_PICTURES}</small><small>Drag files here or paste with Ctrl+V</small></button>
               </div>
-              <input ref={fileInput} type="file" accept="image/png,image/jpeg,image/webp" hidden onChange={(e) => chooseUpload(e.target.files?.[0])} />
+              <input ref={fileInput} type="file" multiple accept="image/png,image/jpeg,image/webp,image/gif,image/avif" hidden onChange={(e) => { for (const f of Array.from(e.target.files ?? [])) addFile(f); e.target.value = ""; }} />
+              {pictures.length > 0 && <div className={styles.addedImages} aria-label="Added pictures">
+                <p className={styles.hint}>{pictures.length} of {MAX_PICTURES} added. The first picture is the main one.</p>
+                <ul>{pictures.map((p, i) => (
+                  <li key={p.id}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={p.kind === "file" ? p.preview : proxied(p.url)} alt={`Picture ${i + 1}`} />
+                    {i === 0 ? <b>Main</b> : <button type="button" onClick={() => makeFirst(p.id)}>Make main</button>}
+                    <button type="button" className={styles.removePic} onClick={() => removePicture(p.id)} aria-label={`Remove picture ${i + 1}`}>×</button>
+                  </li>
+                ))}</ul>
+              </div>}
+              {fetched?.images?.length ? <div aria-label="Pictures found on the product page">
+                <p className={styles.hint}>We found these pictures on the product page. Tap + to add one.</p>
+                <div className={styles.imageChoices}>{[...new Set(fetched.images)].slice(0, 10).map((src) => {
+                  const on = pictures.some((p) => p.kind === "url" && p.url === src);
+                  return <button type="button" key={src} aria-pressed={on} onClick={() => toggleFound(src)} title={on ? "Remove this picture" : "Add this picture"}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={proxied(src)} alt="Found on the product page" onError={(e) => { if (e.currentTarget.dataset.fb !== "1") { e.currentTarget.dataset.fb = "1"; e.currentTarget.src = src; e.currentTarget.referrerPolicy = "no-referrer"; } }} />
+                    <span className={styles.plus} aria-hidden="true">{on ? "✓" : "+"}</span>
+                  </button>;
+                })}</div>
+              </div> : <p className={styles.hint}>Paste the product link above and we will look for its pictures, or add your own.</p>}
             </div>
             <div className={styles.dealSubmit}>
               <button type="button" className={styles.secondary} onClick={saveLocalDraft}>▣ Save as Draft</button>
+              <button type="button" className={styles.secondary} onClick={() => setPreviewOpen(true)}>👁 Preview Deal</button>
               <div className={styles.dealActions}>
                 {editing && <button type="button" className={styles.secondary} onClick={() => { setEditing(null); setForm(emptyForm); }}>Cancel</button>}
                 <button className={styles.primary} disabled={busy}>{busy ? "Sending…" : editing ? "Submit changes for review" : "➤ Submit for Review"}</button>
@@ -379,11 +431,13 @@ export function CustomerProfile({ section = "profile", embedded = false }: { sec
           </form>
         </section>
         <aside className={styles.dealSidebar}>
+          <ProgressPanel values={progressValues} />
           <section className={styles.sideCard}><h2>💡 Tips for a great deal</h2><ul><li>Use the product page link from the retailer.</li><li>Add a clear, concise title.</li><li>Include the deal price and MRP when available.</li><li>Mention coupon codes and offer terms.</li><li>Upload a clear product image.</li><li>Share a genuine, current offer.</li></ul></section>
           <section className={styles.sideCard}><h2>♧ How it works</h2><ol><li><b>Post your deal</b><small>Share the link and available details.</small></li><li><b>Our team reviews it</b><small>We verify the information before publication.</small></li><li><b>Get it published</b><small>Approved deals are published by our team.</small></li></ol></section>
           <p className={styles.privateNote}>Your submission stays private until approved. Your email is never shown publicly.</p>
         </aside>
       </div>}
+      {previewOpen && <PreviewDialog title={form.title} price={form.price} mrp={form.mrp} store={form.merchantName} brand={form.brand} coupon={form.couponCode} description={form.description} imageSrc={image ? uploadedPreview : pickedImage} onClose={() => setPreviewOpen(false)} />}
 
       {deals && <section className={styles.card} id="my-submissions">
         <h2>My submissions</h2>

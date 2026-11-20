@@ -52,12 +52,28 @@ async function decodeImage(bytes: Buffer | null | undefined) {
   }
 }
 
+type Decoded = Awaited<ReturnType<typeof decodeImage>>;
+/** Pictures after the first: links from the product page (downloaded here) and uploaded files, at most 9 in all. Anything stored is removed again if one fails. */
+async function decodeExtras(urls: string[] | undefined, files: Buffer[]): Promise<Decoded[]> {
+  if ((urls?.length ?? 0) + files.length > 9) throw new CustomerError("You can add up to 10 pictures in all.");
+  const done: Decoded[] = [];
+  try {
+    for (const url of urls ?? []) done.push(await decodeImage(await downloadImageFromUrl(url)));
+    for (const bytes of files) done.push(await decodeImage(bytes));
+    return done;
+  } catch (error) {
+    await Promise.all(done.map((d) => removeStoredImage(d.storage.provider, d.storage.storageKey).catch(() => {})));
+    throw error;
+  }
+}
+const extraRows = (list: Decoded[]) => list.map((d, i) => ({ position: i + 1, imageKey: d.storage.storageKey, imageProvider: d.storage.provider, imageMime: d.normalized.mimeType, imageBytes: d.normalized.bytes.length, imageWidth: d.normalized.width, imageHeight: d.normalized.height }));
+
 async function assertNotAlreadyListed(productUrl: string) {
   const listed = await getDatabase().deal.findFirst({ where: { productUrl, status: "PUBLISHED" }, select: { id: true } });
   if (listed) throw new CustomerError("This deal is already listed on MetaDeals4U.", 409);
 }
 
-export async function createSubmission(customerId: string, rawFields: unknown, imageBytes: Buffer | null) {
+export async function createSubmission(customerId: string, rawFields: unknown, imageBytes: Buffer | null, extraFiles: Buffer[] = []) {
   const customer = await assertActiveCustomer(customerId);
   await assertNotRestrictedByCustomer(customer.id); // a moderator's posting restriction also covers community deal submissions
   const input: SubmissionInput = submissionSchema.parse(rawFields); // invalid payloads are cheap and do not use up the quota
@@ -73,6 +89,8 @@ export async function createSubmission(customerId: string, rawFields: unknown, i
   await assertNotAlreadyListed(input.productUrl);
 
   const { storage, normalized } = await decodeImage(imageBytes?.length ? imageBytes : input.imageUrl ? await downloadImageFromUrl(input.imageUrl) : null);
+  let extras: Decoded[] = [];
+  try { extras = await decodeExtras(input.extraImageUrls, extraFiles); } catch (error) { await removeStoredImage(storage.provider, storage.storageKey); throw error; }
   try {
     const row = await db.communityDealSubmission.create({
       data: {
@@ -81,12 +99,14 @@ export async function createSubmission(customerId: string, rawFields: unknown, i
         couponCode: input.couponCode ? input.couponCode.toUpperCase() : null,
         imageKey: storage.storageKey, imageProvider: storage.provider, imageMime: normalized.mimeType, imageBytes: normalized.bytes.length,
         imageWidth: normalized.width, imageHeight: normalized.height,
+        ...(extras.length ? { extraImages: { create: extraRows(extras) } } : {}),
       },
       select: publicFields,
     });
     return present(row);
   } catch (error) {
     await removeStoredImage(storage.provider, storage.storageKey);
+    await Promise.all(extras.map((d) => removeStoredImage(d.storage.provider, d.storage.storageKey).catch(() => {})));
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") throw new CustomerError("You have already submitted this link.", 409);
     throw error;
   }
@@ -114,7 +134,7 @@ export async function getOwnSubmissionImage(customerId: string, id: string) {
 }
 
 /** Only a rejected submission can be fixed and sent again; it goes back to the review queue. */
-export async function resubmit(customerId: string, id: string, rawFields: unknown, rawVersion: unknown, imageBytes: Buffer | null) {
+export async function resubmit(customerId: string, id: string, rawFields: unknown, rawVersion: unknown, imageBytes: Buffer | null, extraFiles: Buffer[] = []) {
   const customer = await assertActiveCustomer(customerId);
   await assertNotRestrictedByCustomer(customer.id);
   const { version } = resubmitSchema.parse({ version: rawVersion });
@@ -131,6 +151,9 @@ export async function resubmit(customerId: string, id: string, rawFields: unknow
     await assertNotAlreadyListed(input.productUrl);
   }
   const image = imageBytes?.length ? await decodeImage(imageBytes) : input.imageUrl ? await decodeImage(await downloadImageFromUrl(input.imageUrl)) : null;
+  // Pictures are replaced only when the member sent new ones.
+  let extras: Decoded[] = [];
+  try { extras = await decodeExtras(input.extraImageUrls, extraFiles); } catch (error) { if (image) await removeStoredImage(image.storage.provider, image.storage.storageKey); throw error; }
   try {
     const changed = await db.communityDealSubmission.updateMany({
       where: { id, customerId: customer.id, status: "REJECTED", version },
@@ -144,8 +167,10 @@ export async function resubmit(customerId: string, id: string, rawFields: unknow
       },
     });
     if (changed.count !== 1) throw new CustomerError("This submission changed. Reload and try again.", 409);
+    if (extras.length) await db.$transaction([db.communityDealSubmissionImage.deleteMany({ where: { submissionId: id } }), db.communityDealSubmissionImage.createMany({ data: extraRows(extras).map((r) => ({ ...r, submissionId: id })) })]);
   } catch (error) {
     if (image) await removeStoredImage(image.storage.provider, image.storage.storageKey);
+    await Promise.all(extras.map((d) => removeStoredImage(d.storage.provider, d.storage.storageKey).catch(() => {})));
     throw error;
   }
   return getOwnSubmission(customer.id, id);

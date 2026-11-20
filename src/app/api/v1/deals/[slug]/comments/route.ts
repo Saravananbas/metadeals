@@ -7,7 +7,6 @@ import { hashRateLimitSubject } from "@/server/auth/crypto";
 import { readJson, RequestBodyError } from "@/server/auth/request";
 import { publicWhere } from "@/server/deals/repository";
 import { clientIpFromHeaders } from "@/server/client-ip";
-import { looksLikeStaffName } from "@/features/community/validation";
 import { getServerSession } from "next-auth";
 import { getCustomerAuthOptions } from "@/server/customer/options";
 import { assertDeclaredUploadSize } from "@/server/customer/http";
@@ -39,12 +38,17 @@ async function toDto(rows: Row[], viewer: string | null) {
     viewer && ids.length ? db.dealCommentLike.findMany({ where: { customerId: viewer, commentId: { in: ids } }, select: { commentId: true } }) : [],
     memberIds.length ? db.dealComment.groupBy({ by: ["customerId"], where: { customerId: { in: memberIds } }, _count: { _all: true } }) : [],
   ]);
+  // @user names in the text that belong to a real member (only those become links).
+  const MENTION = /(?:^|\s)@([a-z0-9_]{3,30})/gi;
+  const tokens = [...new Set(rows.flatMap((r) => [...r.content.matchAll(MENTION)].map((m) => m[1].toLowerCase())))].slice(0, 100);
+  const real = new Set(tokens.length ? (await db.forumProfile.findMany({ where: { handle: { in: tokens } }, select: { handle: true } })).map((p) => p.handle) : []);
   const likedSet = new Set(liked.map((l) => l.commentId));
   const countOf = new Map(counts.map((c) => [c.customerId, c._count._all]));
   return rows.map((r) => {
     const profile = r.customer?.forumProfile ?? null;
     return {
-      id: r.id, parentId: r.parentId, authorName: r.authorName, content: r.content, createdAt: r.createdAt.toISOString(),
+      id: r.id, parentId: r.parentId, authorName: r.authorName, content: r.content,
+      mentions: [...new Set([...r.content.matchAll(MENTION)].map((m) => m[1].toLowerCase()))].filter((h) => real.has(h)), createdAt: r.createdAt.toISOString(),
       hasImage: Boolean(r.imageKey), likes: r._count.likes, liked: likedSet.has(r.id),
       member: r.customer && profile ? { handle: profile.handle, hasAvatar: Boolean(profile.avatarKey), online: Boolean(profile.lastSeenAt && Date.now() - profile.lastSeenAt.getTime() < ONLINE_MS), joined: r.customer.createdAt.toLocaleDateString("en-IN", { month: "short", year: "numeric" }), comments: countOf.get(r.customerId ?? "") ?? 1 } : null,
     };

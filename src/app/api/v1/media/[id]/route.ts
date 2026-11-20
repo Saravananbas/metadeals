@@ -64,6 +64,8 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
         },
       });
     } catch {
+      // Logos ask for no placeholder (nf=1): a missing file is a real 404, so the page can show the store's name or built-in logo instead of a grey picture icon.
+      if (new URL(request.url).searchParams.get("nf") === "1") return new Response(null, { status: 404, headers: { "Cache-Control": "private, no-store" } });
       // Graceful fallback placeholder so broken or missing images never disrupt layout
       const fallbackBytes = await readFile(join(process.cwd(), "public", "images", "placeholder.svg"));
       return new Response(new Uint8Array(fallbackBytes), {

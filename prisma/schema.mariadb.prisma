@@ -978,6 +978,7 @@ model CommunityDealSubmission {
   @@unique([customerId, urlHash])
   @@index([status, submittedAt])
   @@index([customerId, status])
+  extraImages     CommunityDealSubmissionImage[]
 }
 
 enum ForumPostType {
@@ -1698,4 +1699,29 @@ model DealCommentLike {
 
   @@unique([commentId, customerId])
   @@index([customerId])
+}
+
+/// Pictures after the first one on a member's submission (position 1 to 9); the first picture stays in the columns on the submission itself.
+model CommunityDealSubmissionImage {
+  id            String                @id @default(cuid())
+  submissionId  String
+  submission    CommunityDealSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  position      Int
+  imageKey      String                @db.VarChar(160)
+  imageProvider String                @db.VarChar(10)
+  imageMime     String                @db.VarChar(40)
+  imageBytes    Int
+  imageWidth    Int
+  imageHeight   Int
+  createdAt     DateTime              @default(now())
+
+  @@unique([submissionId, position])
+}
+
+/// A product brand ("ASUS", "Ninja"). Used to match a fetched brand to a known one; grows when staff approve a deal with a new brand.
+model Brand {
+  id        String   @id @default(cuid())
+  name      String   @db.VarChar(100)
+  slug      String   @unique @db.VarChar(120)
+  createdAt DateTime @default(now())
 }

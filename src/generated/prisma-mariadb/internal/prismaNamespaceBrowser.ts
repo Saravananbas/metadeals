@@ -131,7 +131,9 @@ export const ModelName = {
   DealVote: 'DealVote',
   DealNote: 'DealNote',
   MemberStar: 'MemberStar',
-  DealCommentLike: 'DealCommentLike'
+  DealCommentLike: 'DealCommentLike',
+  CommunityDealSubmissionImage: 'CommunityDealSubmissionImage',
+  Brand: 'Brand'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1464,6 +1466,32 @@ export const DealCommentLikeScalarFieldEnum = {
 export type DealCommentLikeScalarFieldEnum = (typeof DealCommentLikeScalarFieldEnum)[keyof typeof DealCommentLikeScalarFieldEnum]
 
 
+export const CommunityDealSubmissionImageScalarFieldEnum = {
+  id: 'id',
+  submissionId: 'submissionId',
+  position: 'position',
+  imageKey: 'imageKey',
+  imageProvider: 'imageProvider',
+  imageMime: 'imageMime',
+  imageBytes: 'imageBytes',
+  imageWidth: 'imageWidth',
+  imageHeight: 'imageHeight',
+  createdAt: 'createdAt'
+} as const
+
+export type CommunityDealSubmissionImageScalarFieldEnum = (typeof CommunityDealSubmissionImageScalarFieldEnum)[keyof typeof CommunityDealSubmissionImageScalarFieldEnum]
+
+
+export const BrandScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  createdAt: 'createdAt'
+} as const
+
+export type BrandScalarFieldEnum = (typeof BrandScalarFieldEnum)[keyof typeof BrandScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -2493,4 +2521,24 @@ export const DealCommentLikeOrderByRelevanceFieldEnum = {
 } as const
 
 export type DealCommentLikeOrderByRelevanceFieldEnum = (typeof DealCommentLikeOrderByRelevanceFieldEnum)[keyof typeof DealCommentLikeOrderByRelevanceFieldEnum]
+
+
+export const CommunityDealSubmissionImageOrderByRelevanceFieldEnum = {
+  id: 'id',
+  submissionId: 'submissionId',
+  imageKey: 'imageKey',
+  imageProvider: 'imageProvider',
+  imageMime: 'imageMime'
+} as const
+
+export type CommunityDealSubmissionImageOrderByRelevanceFieldEnum = (typeof CommunityDealSubmissionImageOrderByRelevanceFieldEnum)[keyof typeof CommunityDealSubmissionImageOrderByRelevanceFieldEnum]
+
+
+export const BrandOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug'
+} as const
+
+export type BrandOrderByRelevanceFieldEnum = (typeof BrandOrderByRelevanceFieldEnum)[keyof typeof BrandOrderByRelevanceFieldEnum]
 

@@ -321,7 +321,7 @@ export function DealDetailsModal({
                       ({activeDeal.reviewCount.toLocaleString("en-IN")} reviews)
                     </span>
                   )}
-                  {activeDeal.ratingSource && (
+                  {activeDeal.ratingSource && !/extractor|scraper|python/i.test(activeDeal.ratingSource) && (
                     <span className={styles.ratingSource}>
                       · {activeDeal.ratingSource}
                     </span>

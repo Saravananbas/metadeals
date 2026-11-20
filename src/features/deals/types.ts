@@ -26,6 +26,7 @@ export type Deal = {
   viewCount?: number;
   shareCount?: number;
   commentCount?: number;
+  likeCount?: number;
   couponCode?: string | null;
 };
 
