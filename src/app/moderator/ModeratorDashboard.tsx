@@ -117,9 +117,11 @@ export function ModeratorDashboard() {
           {subs.map((s) => (
             <article key={s.id} className={styles.card}>
               <div className={styles.row}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img className={styles.thumb} src={s.imageUrl} alt="" loading="lazy" />
-                {(s._count?.extraImages ?? 0) > 0 && <small>+{s._count?.extraImages} more picture{s._count?.extraImages === 1 ? "" : "s"}</small>}
+                <div style={{ display: "grid", gap: 4, justifyItems: "center" }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img className={styles.thumb} src={s.imageUrl} alt="" loading="lazy" />
+                  {(s._count?.extraImages ?? 0) > 0 && <small>+{s._count?.extraImages} more picture{s._count?.extraImages === 1 ? "" : "s"}</small>}
+                </div>
                 <div style={{ flex: 1, minWidth: 200 }}><h2>{s.title}</h2><div className={styles.meta}>by {s.customer.name} · {s.merchantName ?? "store not given"} · {rupees(s.priceMinor)}{s.mrpMinor ? ` (MRP ${rupees(s.mrpMinor)})` : ""} · {when(s.submittedAt)}</div><p className={styles.body}>{s.description.slice(0, 300)}</p></div>
               </div>
               <div className={styles.grid}>
