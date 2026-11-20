@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
+import { Check, Compass, Hourglass, Megaphone, Send, X } from "lucide-react";
 import { SEX_LABELS, SEX_VALUES } from "./profile-validation";
 import styles from "./profile.module.css";
 import { IdentityCard, UserNamePrompt } from "./IdentityCard";
@@ -80,7 +81,6 @@ export function CustomerProfile({ section = "profile", embedded = false }: { sec
     };
     window.addEventListener("paste", onPaste);
     return () => window.removeEventListener("paste", onPaste);
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- addFile only uses state setters, so the first copy keeps working
   }, [deals]);
   const [categories, setCategories] = useState<{ id: string; name: string; parentId: string | null }[]>([]);
   const [merchantWebsites, setMerchantWebsites] = useState<MerchantWebsite[]>([]);
@@ -273,8 +273,21 @@ export function CustomerProfile({ section = "profile", embedded = false }: { sec
 
   return (
     <div className={`${styles.wrap} ${deals ? styles.dealPage : ""}`} style={embedded ? { maxWidth: "none", margin: 0, padding: 0, width: "100%" } : undefined}>
-      {!embedded && <div className={deals ? styles.dealHero : styles.head}>
-        <div><h1>{deals ? "Post a Deal" : "Your profile"}</h1><p className={styles.sub}>{deals ? "Found a great offer? Share it with the MetaDeals4U community and help others save!" : profile?.email}</p></div>
+      {!embedded && deals && (
+        <section className={styles.dealStrip} aria-label="Post a Deal and your deal counts">
+          <span className={styles.stripIcon} aria-hidden="true"><Megaphone size={36} /></span>
+          <div className={styles.stripText}><h1>Post a Deal</h1><p>Found a great offer? Share it with the community & help others save</p></div>
+          <dl className={styles.stripStats}>
+            <div><span className={`${styles.stripStatIcon} ${styles.toneSent}`} aria-hidden="true"><Send size={20} /></span><span><dt>Submitted</dt><dd>{c?.total ?? "–"}</dd></span></div>
+            <div><span className={`${styles.stripStatIcon} ${styles.toneWait}`} aria-hidden="true"><Hourglass size={20} /></span><span><dt>Awaiting Review</dt><dd>{c?.pendingReview ?? "–"}</dd></span></div>
+            <div><span className={`${styles.stripStatIcon} ${styles.toneNo}`} aria-hidden="true"><X size={20} /></span><span><dt>Not Approved</dt><dd>{c?.rejected ?? "–"}</dd></span></div>
+            <div><span className={`${styles.stripStatIcon} ${styles.toneLive}`} aria-hidden="true"><Check size={20} /></span><span><dt>Live</dt><dd>{c?.live ?? "–"}</dd>{!!c?.approvedAwaitingPublication && <small>{c.approvedAwaitingPublication} approved, going live soon</small>}</span></div>
+          </dl>
+          <Link href="/" className={styles.stripCta}><Compass size={20} aria-hidden="true" /> Explore Deals</Link>
+        </section>
+      )}
+      {!embedded && !deals && <div className={styles.head}>
+        <div><h1>{deals ? "Post a Deal" : "Your profile"}</h1><p className={styles.sub}>{deals ? "Found a great offer? Share it with the community & help others save" : profile?.email}</p></div>
         <div className={styles.actions}>
           {deals ? <Link href="/account" className={styles.secondary}>My profile</Link> : <Link href="/post-deal" className={styles.secondary}>Post a Deal</Link>}
           <Link href="/" className={styles.secondary}>Explore deals</Link>
@@ -285,12 +298,12 @@ export function CustomerProfile({ section = "profile", embedded = false }: { sec
       {!embedded && <UserNamePrompt />}
       {!deals && <IdentityCard />}
 
-      <section className={`${styles.tiles} ${deals ? styles.dealStats : ""}`} aria-label="Your deal submissions">
+      {!(deals && !embedded) && <section className={`${styles.tiles} ${deals ? styles.dealStats : ""}`} aria-label="Your deal submissions">
         <div className={styles.tile}>{deals && <span className={styles.statIcon} aria-hidden="true">➤</span>}<span><small>Submitted</small><strong>{c?.total ?? "–"}</strong></span></div>
         <div className={styles.tile}>{deals && <span className={styles.statIcon} aria-hidden="true">⌛</span>}<span><small>Awaiting {deals ? "Review" : "review"}</small><strong>{c?.pendingReview ?? "–"}</strong></span></div>
         <div className={styles.tile}>{deals && <span className={styles.statIcon} aria-hidden="true">✕</span>}<span><small>{deals ? "Not Approved" : "Not approved"}</small><strong>{c?.rejected ?? "–"}</strong></span></div>
         <div className={styles.tile}>{deals && <span className={styles.statIcon} aria-hidden="true">✓</span>}<span><small>Live</small><strong>{c?.live ?? "–"}</strong>{!!c?.approvedAwaitingPublication && <em>{c.approvedAwaitingPublication} approved, going live soon</em>}</span></div>
-      </section>
+      </section>}
 
       {!deals && <section className={styles.card}>
         <h2>About you</h2>
@@ -318,7 +331,7 @@ export function CustomerProfile({ section = "profile", embedded = false }: { sec
             <ProgressPanel values={progressValues} compact />
             <div className={styles.dealStep}>
               <h2><span>1</span> Product Link</h2>
-              <p>Paste the product page link and we’ll fetch the details for you.</p>
+              <p>Paste the product page link and wait for few seconds, we’ll fetch the details for you.</p>
               <label className={styles.dealWide}>Product URL<input type="url" value={form.productUrl} onChange={set("productUrl")} required placeholder="https://www.store.com/product..." /></label>
               <div className={styles.dealActions}>
                 <button type="button" className={styles.primary} disabled={busy || fetching || !form.productUrl} onClick={() => void fetchFromLink()}>{fetching ? "Fetching details…" : fetched ? "↻ Try again" : "↻ Fetch details"}</button>

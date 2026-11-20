@@ -165,3 +165,48 @@
 .imageChoices button{position:relative}
 .plus{position:absolute;right:6px;bottom:6px;display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--md-purple-700);color:var(--md-white);font-weight:800;font-size:16px}
 .imageChoices button[aria-pressed="true"] .plus{background:var(--md-green-600)}
+
+/* Post a Deal: one strip card with the title, your four counts and Explore Deals */
+.dealStrip{display:flex;align-items:center;gap:20px;padding:20px 24px;border:1px solid var(--md-c-e7dcff);border-radius:22px;background:linear-gradient(105deg,var(--md-c-f4edff) 0%,var(--md-c-fff) 55%);box-shadow:0 10px 30px color-mix(in srgb,var(--md-purple-700) 10%,transparent)}
+.stripIcon{display:grid;place-items:center;flex:none;width:78px;height:78px;border-radius:20px;background:var(--md-purple-100);color:var(--md-purple-700)}
+.stripText{flex:1 1 220px;min-width:0;padding-right:20px;border-right:1px solid var(--md-neutral-200)}
+.stripText h1{margin:0;color:var(--md-c-21124b);font-size:30px;line-height:1.15;font-weight:850}
+.stripText p{margin:6px 0 0;color:var(--md-c-4f4770);font-size:14.5px;line-height:1.4}
+.stripStats{display:flex;flex:2 1 auto;align-items:center;gap:6px;margin:0}
+.stripStats>div{display:flex;align-items:center;gap:12px;padding:6px 16px;border-right:1px solid var(--md-neutral-200)}
+.stripStats>div:last-child{border-right:0}
+.stripStats dt{font-size:13px;font-weight:700;color:var(--md-c-21124b);white-space:nowrap}
+.stripStats dd{margin:2px 0 0;font-size:26px;font-weight:850;color:var(--md-c-21124b);line-height:1}
+.stripStats small{display:block;margin-top:4px;font-size:12px;color:var(--md-c-4f4770);white-space:nowrap}
+.stripStatIcon{display:grid;place-items:center;flex:none;width:44px;height:44px;border-radius:50%}
+.toneSent{background:var(--md-c-eeeaff);color:var(--md-c-5222c4)}
+.toneWait{background:var(--md-c-fff3e4);color:var(--md-c-d97706)}
+.toneNo{background:var(--md-c-ffecee);color:var(--md-c-dc2626)}
+.toneLive{background:var(--md-c-e7f7ec);color:var(--md-c-16853b)}
+.stripCta{display:inline-flex;align-items:center;justify-content:center;gap:10px;flex:none;min-height:52px;padding:0 26px;border-radius:14px;background:var(--md-purple-700);color:var(--md-white);font-size:16px;font-weight:800;text-decoration:none}
+.stripCta:hover{background:var(--md-purple-800)}
+@media(max-width:1100px){.dealStrip{flex-wrap:wrap}.stripText{border-right:0;padding-right:0;flex-basis:calc(100% - 100px)}.stripStats{order:3;flex:1 1 100%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.stripStats>div{border:1px solid var(--md-neutral-200);border-radius:14px;padding:10px 14px}.stripCta{order:2;flex:1 1 100%}}
+@media(max-width:520px){.stripIcon{width:56px;height:56px}.stripIcon svg{width:28px;height:28px}.stripText{flex-basis:calc(100% - 76px)}.stripText h1{font-size:24px}}
+
+/* The shared side-card list draws its own number badge; this list has its own, so switch the shared one off. */
+.sideCard .steps{gap:0}
+.sideCard .steps li{counter-increment:none;padding-left:2px;gap:2px 10px;font-size:14px}
+.sideCard .steps li:before{content:none;display:none}
+.sideCard .steps small{font-size:12.5px}
+
+/* Post a Deal strip: compact, one row (about 110px tall) on desktop, like the design */
+.dealStrip{gap:16px;padding:14px 20px;border-radius:20px}
+.stripIcon{width:64px;height:64px;border-radius:18px}
+.stripIcon svg{width:30px;height:30px}
+.stripText{flex:0 1 300px;padding-right:16px}
+.stripText h1{font-size:26px}
+.stripText p{margin-top:4px;font-size:13.5px;line-height:1.35}
+.stripStats{flex:1 1 auto;gap:0;justify-content:space-between}
+.stripStats>div{gap:10px;padding:2px 14px}
+.stripStatIcon{width:40px;height:40px}
+.stripStats dt{font-size:12.5px}
+.stripStats dd{margin-top:1px;font-size:24px}
+.stripStats small{margin-top:2px;font-size:11.5px}
+.stripCta{min-height:46px;padding:0 20px;border-radius:12px;font-size:15px}
+@media(max-width:1060px){.dealStrip{flex-wrap:wrap;padding:14px 16px}.stripText{flex:1 1 calc(100% - 90px);border-right:0;padding-right:0}.stripStats{order:3;flex:1 1 100%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.stripStats>div{border:1px solid var(--md-neutral-200);border-radius:14px;padding:8px 12px}.stripCta{order:2;flex:1 1 100%}}
+@media(max-width:520px){.stripIcon{width:52px;height:52px}.stripIcon svg{width:26px;height:26px}.stripText{flex-basis:calc(100% - 68px)}.stripText h1{font-size:22px}}
