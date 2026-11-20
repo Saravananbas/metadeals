@@ -13,7 +13,7 @@ type DealCommentsDialogProps = {
 };
 
 export function DealCommentsDialog({ dealIdOrSlug, dealTitle, onClose }: DealCommentsDialogProps) {
-  const { comments, count, authorName, setAuthorName, content, setContent, website, setWebsite, loading, submitting, error, notice, submit } = useDealComments(dealIdOrSlug);
+  const { comments, count, signedIn, content, setContent, website, setWebsite, loading, submitting, error, notice, submit } = useDealComments(dealIdOrSlug);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -55,7 +55,7 @@ export function DealCommentsDialog({ dealIdOrSlug, dealTitle, onClose }: DealCom
           {comments.map((comment) => (
             <article className={styles.comment} key={comment.id}>
               <div className={styles.commentMeta}>
-                <strong>{comment.authorName}</strong> <span className={styles.guestTag}>Guest</span>
+                <strong>{comment.member?.handle ?? comment.authorName}</strong>{!comment.member && <> <span className={styles.guestTag}>Guest</span></>}
                 <time dateTime={comment.createdAt}>{new Date(comment.createdAt).toLocaleString()}</time>
               </div>
               <p>{comment.content}</p>
@@ -63,31 +63,32 @@ export function DealCommentsDialog({ dealIdOrSlug, dealTitle, onClose }: DealCom
           ))}
         </div>
 
+        {signedIn === false && (
+          <p className={styles.privacyNote}>Please <a href="/account">sign in</a> to join the conversation. {count} {count === 1 ? "comment" : "comments"} so far.</p>
+        )}
+        {signedIn && (
         <form className={styles.form} onSubmit={submit}>
-          <div className={styles.formHeading}>
-            <strong>Leave a comment</strong>
-            <span>{count} {count === 1 ? "comment" : "comments"}</span>
-          </div>
-          <label className={styles.label}>
-            Name <span>(optional)</span>
-            <input value={authorName} onChange={(event) => setAuthorName(event.target.value)} maxLength={80} autoComplete="name" placeholder="Guest" />
-          </label>
-          <label className={styles.label}>
-            Comment
-            <textarea value={content} onChange={(event) => setContent(event.target.value)} maxLength={1000} rows={3} required placeholder="Share your thoughts about this deal" />
-            <span className={styles.counter}>{content.length}/1000</span>
-          </label>
-          <label className={styles.honeypot} aria-hidden="true" tabIndex={-1}>
-            Website
-            <input value={website} onChange={(event) => setWebsite(event.target.value)} tabIndex={-1} autoComplete="off" />
-          </label>
-          {error && <p className={styles.error} role="alert">{error}</p>}
-          {notice && <p className={styles.notice} role="status">{notice}</p>}
-          <button className={styles.submitButton} type="submit" disabled={submitting || !content.trim()}>
-            <Send size={16} /> {submitting ? "Posting…" : "Post comment"}
-          </button>
-          <p className={styles.privacyNote}>No account is required. Please keep comments respectful.</p>
-        </form>
+            <div className={styles.formHeading}>
+              <strong>Leave a comment</strong>
+              <span>{count} {count === 1 ? "comment" : "comments"}</span>
+            </div>
+            <label className={styles.label}>
+              Comment
+              <textarea value={content} onChange={(event) => setContent(event.target.value)} maxLength={1000} rows={3} required placeholder="Share your thoughts about this deal" />
+              <span className={styles.counter}>{content.length}/1000</span>
+            </label>
+            <label className={styles.honeypot} aria-hidden="true" tabIndex={-1}>
+              Website
+              <input value={website} onChange={(event) => setWebsite(event.target.value)} tabIndex={-1} autoComplete="off" />
+            </label>
+            {error && <p className={styles.error} role="alert">{error}</p>}
+            {notice && <p className={styles.notice} role="status">{notice}</p>}
+            <button className={styles.submitButton} type="submit" disabled={submitting || !content.trim()}>
+              <Send size={16} /> {submitting ? "Posting…" : "Post comment"}
+            </button>
+            <p className={styles.privacyNote}>Please keep comments respectful.</p>
+          </form>
+        )}
       </section>
     </div>,
     document.body,

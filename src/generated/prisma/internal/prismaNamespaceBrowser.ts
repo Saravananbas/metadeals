@@ -816,6 +816,7 @@ export const DealCommentScalarFieldEnum = {
   id: 'id',
   dealId: 'dealId',
   customerId: 'customerId',
+  parentId: 'parentId',
   imageKey: 'imageKey',
   imageProvider: 'imageProvider',
   authorName: 'authorName',

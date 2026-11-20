@@ -414,7 +414,7 @@ export function DealCard({
             title="View comments"
           >
             <MessageCircle size={13} />
-            <span>Comment</span>
+            <span>{deal.commentCount ? `Comment (${formatCompactNumber(deal.commentCount)})` : "Comment"}</span>
           </button>
         </div>
         {voteNote && <p role="status" style={{ margin: "6px 0 0", fontSize: 12, color: "var(--md-color-text-secondary)" }}>{voteNote} — <a href="/account" style={{ color: "var(--md-purple-700)", fontWeight: 700 }}>Sign in</a></p>}

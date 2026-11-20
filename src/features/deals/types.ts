@@ -25,6 +25,7 @@ export type Deal = {
   publishedAt: string;
   viewCount?: number;
   shareCount?: number;
+  commentCount?: number;
   couponCode?: string | null;
 };
 

@@ -849,6 +849,10 @@ model DealComment {
   customer     Customer? @relation("DealCommentAuthor", fields: [customerId], references: [id], onDelete: SetNull)
   likes        DealCommentLike[]
   /// Picture attached by a signed-in member (re-encoded WebP, same storage as deal media).
+  /// Set on a reply: the top-level comment it answers (replies are one level deep).
+  parentId     String? @db.VarChar(191)
+  parent       DealComment?  @relation("DealCommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies      DealComment[] @relation("DealCommentReplies")
   imageKey      String?  @db.VarChar(160)
   imageProvider String?  @db.VarChar(10)
   authorName   String   @default("Guest") @db.VarChar(80)
@@ -859,6 +863,7 @@ model DealComment {
   @@index([dealId, createdAt])
   @@index([authorIpHash, createdAt])
   @@index([customerId])
+  @@index([parentId])
 }
 
 

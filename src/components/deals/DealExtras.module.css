@@ -106,3 +106,6 @@
 .toneDeal { background: var(--md-green-600); }
 .toneComment { background: var(--md-amber-600); }
 @media (min-width: 640px) { .statGrid { grid-template-columns: 1fr 1fr; } }
+
+.avatarBox { position: relative; display: inline-block; flex: none; }
+.onlineDot { position: absolute; right: 2px; bottom: 2px; width: 14px; height: 14px; border-radius: 50%; background: var(--md-green-600); border: 2px solid var(--md-white); }

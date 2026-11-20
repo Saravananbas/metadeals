@@ -16,16 +16,19 @@ import { CustomerError } from "@/server/customer/service";
 import { DealError } from "@/server/deals/service";
 
 const commentSelect = {
-  id: true, authorName: true, content: true, createdAt: true, imageKey: true, customerId: true,
-  customer: { select: { createdAt: true, forumProfile: { select: { handle: true, avatarKey: true } } } },
+  id: true, authorName: true, content: true, createdAt: true, imageKey: true, customerId: true, parentId: true,
+  customer: { select: { createdAt: true, forumProfile: { select: { handle: true, avatarKey: true, lastSeenAt: true } } } },
   _count: { select: { likes: true } },
 } as const;
+
+// Same rule as the messages screen: online only while the member has a live connection open (seen in the last 90 seconds).
+const ONLINE_MS = 90_000;
 
 async function viewerId(): Promise<string | null> {
   try { return (await getServerSession(getCustomerAuthOptions()))?.user?.id ?? null; } catch { return null; }
 }
 
-type Row = { id: string; authorName: string; content: string; createdAt: Date; imageKey: string | null; customerId: string | null; customer: { createdAt: Date; forumProfile: { handle: string; avatarKey: string | null } | null } | null; _count: { likes: number } };
+type Row = { id: string; authorName: string; content: string; createdAt: Date; imageKey: string | null; customerId: string | null; parentId: string | null; customer: { createdAt: Date; forumProfile: { handle: string; avatarKey: string | null; lastSeenAt: Date | null } | null } | null; _count: { likes: number } };
 
 /** What the page needs for each comment. A member's comment shows their chosen user name, join month and comment count, never their real name or email. */
 async function toDto(rows: Row[], viewer: string | null) {
@@ -41,9 +44,9 @@ async function toDto(rows: Row[], viewer: string | null) {
   return rows.map((r) => {
     const profile = r.customer?.forumProfile ?? null;
     return {
-      id: r.id, authorName: r.authorName, content: r.content, createdAt: r.createdAt.toISOString(),
+      id: r.id, parentId: r.parentId, authorName: r.authorName, content: r.content, createdAt: r.createdAt.toISOString(),
       hasImage: Boolean(r.imageKey), likes: r._count.likes, liked: likedSet.has(r.id),
-      member: r.customer && profile ? { handle: profile.handle, hasAvatar: Boolean(profile.avatarKey), joined: r.customer.createdAt.toLocaleDateString("en-IN", { month: "short", year: "numeric" }), comments: countOf.get(r.customerId ?? "") ?? 1 } : null,
+      member: r.customer && profile ? { handle: profile.handle, hasAvatar: Boolean(profile.avatarKey), online: Boolean(profile.lastSeenAt && Date.now() - profile.lastSeenAt.getTime() < ONLINE_MS), joined: r.customer.createdAt.toLocaleDateString("en-IN", { month: "short", year: "numeric" }), comments: countOf.get(r.customerId ?? "") ?? 1 } : null,
     };
   });
 }
@@ -58,6 +61,7 @@ const inputSchema = z.object({
   authorName: z.string().trim().max(80).optional().default("Guest"),
   content: z.string().trim().min(1).max(1000),
   website: z.string().max(200).optional().default(""),
+  parentId: z.string().max(191).optional(),
 }).strict();
 
 function reply(data: unknown, status = 200) {
@@ -105,19 +109,19 @@ export async function POST(request: Request, { params }: { params: Promise<{ slu
       const form = await request.formData();
       const file = form.get("image");
       if (file instanceof File && file.size) image = Buffer.from(await file.arrayBuffer());
-      raw = { authorName: String(form.get("authorName") ?? ""), content: String(form.get("content") ?? ""), website: String(form.get("website") ?? "") };
+      raw = { authorName: String(form.get("authorName") ?? ""), content: String(form.get("content") ?? ""), website: String(form.get("website") ?? ""), parentId: String(form.get("parentId") ?? "") || undefined };
     } else raw = await readJson(request);
     const payload = inputSchema.parse(raw);
     const viewer = await viewerId();
-    if (image && !viewer) return reply({ ok: false, error: { message: "Please sign in to attach a picture." } }, 401);
-    if (looksLikeStaffName(payload.authorName)) return reply({ ok: false, error: { message: "Please choose a different name." } }, 400);
+    // Only signed-in members can comment (older guest comments stay visible).
+    if (!viewer) return reply({ ok: false, error: { message: "Please sign in to comment." } }, 401);
     if (payload.website) return reply({ ok: true, data: { comment: null, count: null } });
     const deal = await findPublicDeal(slug);
     if (!deal) return reply({ ok: false, error: { message: "Deal unavailable." } }, 404);
 
     const address = clientIpFromHeaders(request.headers) ?? "unknown";
     const { AUTH_SESSION_SECRET } = getAuthEnv();
-    const key = `public-comment:${hashRateLimitSubject(address.slice(0, 200), AUTH_SESSION_SECRET)}`;
+    const key = `public-comment:${hashRateLimitSubject(`${viewer}:${address.slice(0, 200)}`, AUTH_SESSION_SECRET)}`;
     let allowed = false;
     if (isRedisConfigured()) {
       const redis = new Redis(getRedisEnv().REDIS_URL, { lazyConnect: true, maxRetriesPerRequest: 1, connectTimeout: 3000 });
@@ -142,13 +146,20 @@ export async function POST(request: Request, { params }: { params: Promise<{ slu
     if (!allowed) return reply({ ok: false, error: { message: "Too many comments. Please try again later." } }, 429);
 
     const db = getDatabase();
+    // A reply is attached to the top-level comment it answers (one level deep), and only within this deal.
+    let parentId: string | null = null;
+    if (payload.parentId) {
+      const parent = await db.dealComment.findFirst({ where: { id: payload.parentId, dealId: deal.id }, select: { id: true, parentId: true } });
+      if (!parent) return reply({ ok: false, error: { message: "The comment you are replying to is no longer available." } }, 404);
+      parentId = parent.parentId ?? parent.id;
+    }
     let stored: { storageKey: string; provider: string } | null = null;
     if (image) stored = await storeImage((await normalizeImage(image)).bytes);
     // A signed-in member's comment is tied to their account and shows their user name; a guest's shows the name they typed.
     const member = viewer ? await db.customer.findUnique({ where: { id: viewer }, select: { disabledAt: true, forumProfile: { select: { handle: true } } } }) : null;
     if (member?.disabledAt) return reply({ ok: false, error: { message: "This account cannot comment." } }, 403);
     const created = await db.dealComment.create({
-      data: { dealId: deal.id, customerId: member ? viewer : null, authorName: member ? member.forumProfile?.handle ?? "Member" : payload.authorName || "Guest", content: payload.content, imageKey: stored?.storageKey ?? null, imageProvider: stored?.provider ?? null },
+      data: { dealId: deal.id, parentId, customerId: viewer, authorName: member?.forumProfile?.handle ?? "Member", content: payload.content, imageKey: stored?.storageKey ?? null, imageProvider: stored?.provider ?? null },
       select: commentSelect,
     });
     const count = await db.dealComment.count({ where: { dealId: deal.id } });

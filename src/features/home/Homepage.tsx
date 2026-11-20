@@ -12,7 +12,6 @@ import { formatINR } from "@/features/deals/pricing";
 import { categories, stores } from "./catalog";
 import { Header, type Panel } from "./components/Header";
 import { HeroSection } from "./components/HeroSection";
-import { CategorySection } from "./components/CategorySection";
 import { TopDealsSection } from "./components/TopDealsSection";
 import { FeaturedDeals } from "./components/FeaturedDeals";
 import { LatestDeals } from "./components/LatestDeals";
@@ -194,23 +193,6 @@ export function Homepage({
         onSelect={(category) => { applyFilters({ ...defaults, category }); setQuery(""); scrollToDeals(); }}
       />
       <HeroSection onSearch={search} />
-      <CategorySection
-        items={
-          mainCategories.length
-            ? mainCategories.map((c) => ({
-                id: c.slug,
-                label: c.name,
-                icon: categories.find((x) => x.id === c.slug)?.icon ?? "◇",
-              }))
-            : categories
-        }
-        selected={filters.category}
-        onSelect={(category) => {
-          applyFilters({ ...defaults, category });
-          setQuery("");
-          scrollToDeals();
-        }}
-      />
       <div className="deals-showcase" id="deals-showcase">
         {filters.view === "featured" ? <FeaturedDeals {...sectionProps} /> : filters.view === "latest" ? <LatestDeals {...sectionProps} /> : <TopDealsSection {...sectionProps} />}
         <div className="page-container" aria-live="polite">

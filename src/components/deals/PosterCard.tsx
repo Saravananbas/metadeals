@@ -8,6 +8,7 @@ import styles from "./DealExtras.module.css";
 export type Poster = {
   handle: string;
   hasAvatar: boolean;
+  online: boolean;
   memberSince: string;
   stats: { reputation: number; votes: number; deals: number; comments: number };
   badges: { top: TopBadge[]; total: number };
@@ -29,17 +30,20 @@ export function PosterCard({ poster }: { poster: Poster | null }) {
   return (
     <>
       <div className={styles.poster}>
-        {poster.hasAvatar
-          // eslint-disable-next-line @next/next/no-img-element
-          ? <img className={styles.avatar} src={`/api/v1/avatars/${poster.handle}`} alt="" width={56} height={56} />
-          : <span className={styles.avatarFallback} aria-hidden="true">{poster.handle.slice(0, 1).toUpperCase() || <User size={24} />}</span>}
+        <span className={styles.avatarBox}>
+          {poster.hasAvatar
+            // eslint-disable-next-line @next/next/no-img-element
+            ? <img className={styles.avatar} src={`/api/v1/avatars/${poster.handle}`} alt="" width={56} height={56} />
+            : <span className={styles.avatarFallback} aria-hidden="true">{poster.handle.slice(0, 1).toUpperCase() || <User size={24} />}</span>}
+          {poster.online && <span className={styles.onlineDot} role="img" aria-label="Online now" title="Online now" />}
+        </span>
         <div className={styles.posterInfo}>
           <strong>@{poster.handle}</strong>
           <span>Joined in {poster.memberSince}</span>
         </div>
         <div className={styles.posterButtons}>
           <PosterActions handle={poster.handle} viewer={poster.viewer} messaging={poster.messaging} />
-          <Link className={styles.profileLink} href={`/community/u/${poster.handle}`}>View profile</Link>
+          <Link className={styles.chip} href={`/community/u/${poster.handle}`}>View profile</Link>
         </div>
       </div>
       <dl className={styles.statGrid}>

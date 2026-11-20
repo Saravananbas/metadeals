@@ -9,7 +9,7 @@ const disposableDatabase = process.env.NODE_ENV === "test" &&
   databaseUrl.includes("metadeals_test") &&
   databaseUrl.startsWith("postgresql://metadeals_test:");
 
-test("public comments allow guests, return only public deal comments, and enforce a Redis rate limit", {
+test("comments need a signed-in member, guests cannot post, and the public list still shows older guest comments", {
   skip: disposableDatabase ? false : "requires the disposable Docker PostgreSQL/Redis test profile",
 }, async () => {
   const db = getDatabase();
@@ -57,38 +57,21 @@ test("public comments allow guests, return only public deal comments, and enforc
     assert.equal(preflight.status, 204);
     assert.equal(preflight.headers.get("access-control-allow-origin"), "*");
 
-    const honeypot = await POST(new Request("http://localhost/api/comments", {
-      method: "POST", headers: { "content-type": "application/json", "x-forwarded-for": `${rateLimitSubject}-honeypot` },
-      body: JSON.stringify({ authorName: "Bot", content: "ignored", website: "filled" }),
-    }), { params: Promise.resolve({ slug: deal.slug }) });
-    assert.equal(honeypot.status, 200);
-    assert.equal((await honeypot.json() as { data: { comment: unknown } }).data.comment, null);
-
-    for (let index = 1; index <= 5; index += 1) {
-      const response = await POST(new Request("http://localhost/api/comments", {
-        method: "POST", headers: { "content-type": "application/json", "x-forwarded-for": rateLimitSubject },
-        body: JSON.stringify({ authorName: "", content: `Guest comment ${index}` }),
-      }), { params: Promise.resolve({ slug: deal.slug }) });
-      assert.equal(response.status, 201, `guest comment ${index} should post without a session`);
-      const result = await response.json() as { ok: boolean; data: { comment: { authorName: string }; count: number } };
-      assert.equal(result.ok, true);
-      assert.equal(result.data.comment.authorName, "Guest");
-      assert.equal(result.data.count, index);
-    }
-
-    const rateLimited = await POST(new Request("http://localhost/api/comments", {
+    // Only signed-in members can comment: a guest is refused, with or without a picture.
+    const refused = await POST(new Request("http://localhost/api/comments", {
       method: "POST", headers: { "content-type": "application/json", "x-forwarded-for": rateLimitSubject },
-      body: JSON.stringify({ content: "Over the limit" }),
+      body: JSON.stringify({ authorName: "Guest", content: "A guest tries to comment" }),
     }), { params: Promise.resolve({ slug: deal.slug }) });
-    assert.equal(rateLimited.status, 429);
+    assert.equal(refused.status, 401);
 
+    // Older guest comments stay visible in the public list.
+    for (let index = 1; index <= 3; index += 1) await db.dealComment.create({ data: { dealId: deal.id, authorName: "Guest", content: `Guest comment ${index}` } });
     const listing = await GET(new Request("http://localhost/api/comments"), { params: Promise.resolve({ slug: deal.slug }) });
     assert.equal(listing.status, 200);
-    const result = await listing.json() as { ok: boolean; data: { comments: Array<{ content: string }>; count: number } };
+    const result = await listing.json() as { ok: boolean; data: { comments: Array<{ content: string; member: unknown }>; count: number } };
     assert.equal(result.ok, true);
-    assert.equal(result.data.count, 5);
-    assert.equal(result.data.comments.length, 5);
-    assert.ok(result.data.comments.every((comment) => comment.content.startsWith("Guest comment ")));
+    assert.equal(result.data.count, 3);
+    assert.ok(result.data.comments.every((comment) => comment.content.startsWith("Guest comment ") && comment.member === null));
   } finally {
     if (dealId) await db.dealComment.deleteMany({ where: { dealId } });
     if (dealId) await db.deal.deleteMany({ where: { id: dealId } });

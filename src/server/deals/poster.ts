@@ -13,7 +13,7 @@ export async function getPoster(dealId: string): Promise<Poster | null> {
   const db = getDatabase();
   const submission = await db.communityDealSubmission.findFirst({
     where: { dealId, status: "APPROVED" },
-    select: { customerId: true, customer: { select: { createdAt: true, forumProfile: { select: { id: true, handle: true, avatarKey: true } } } } },
+    select: { customerId: true, customer: { select: { createdAt: true, forumProfile: { select: { id: true, handle: true, avatarKey: true, lastSeenAt: true } } } } },
   });
   const profile = submission?.customer.forumProfile;
   if (!submission || !profile) return null;
@@ -39,6 +39,7 @@ export async function getPoster(dealId: string): Promise<Poster | null> {
   return {
     handle: profile.handle,
     hasAvatar: Boolean(profile.avatarKey),
+    online: Boolean(profile.lastSeenAt && Date.now() - profile.lastSeenAt.getTime() < 90_000),
     memberSince: submission.customer.createdAt.toLocaleDateString("en-IN", { month: "short", year: "numeric" }),
     stats: { reputation: stars, votes: dealVotes + postVotes + commentVotes, deals: dealsPosted, comments: comments + dealComments },
     badges: board ? topBadges(board) : { top: [], total: 0 },

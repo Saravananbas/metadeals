@@ -40,3 +40,11 @@
 .previewBox img { display: block; max-width: 220px; max-height: 160px; border-radius: 12px; border: 1px solid var(--md-purple-200); }
 .previewBox button { position: absolute; top: 6px; right: 6px; display: grid; place-items: center; width: 28px; height: 28px; border: 0; border-radius: 50%; background: var(--md-white); color: var(--md-color-text); cursor: pointer; }
 @media (max-width: 520px) { .avatar, .avatarFallback { width: 40px; height: 40px; } }
+
+.avatarWrap { position: relative; display: inline-block; flex: none; align-self: flex-start; }
+.online { position: absolute; right: 2px; bottom: 2px; width: 14px; height: 14px; border-radius: 50%; background: var(--md-green-600); border: 2px solid var(--md-white); }
+.replyItem { margin-top: 10px; background: var(--md-white); }
+.replying { display: flex; align-items: center; gap: 8px; margin: 0; padding: 8px 12px; border-radius: 10px; background: var(--md-purple-50); font-size: 13px; color: var(--md-color-text-secondary); }
+.replying button { display: grid; place-items: center; width: 24px; height: 24px; border: 0; border-radius: 50%; background: var(--md-white); cursor: pointer; }
+.signin { margin: 0; padding: 14px; border-radius: 12px; background: var(--md-purple-50); font-size: 14px; color: var(--md-color-text); }
+.signin a { color: var(--md-purple-700); font-weight: 700; }

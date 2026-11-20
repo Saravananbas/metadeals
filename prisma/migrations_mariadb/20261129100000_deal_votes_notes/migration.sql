@@ -72,3 +72,7 @@ ALTER TABLE `DealCommentLike` ADD CONSTRAINT `DealCommentLike_commentId_fkey` FO
 ALTER TABLE `DealCommentLike` ADD CONSTRAINT `DealCommentLike_customerId_fkey` FOREIGN KEY (`customerId`) REFERENCES `Customer`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `DealComment` ADD COLUMN `imageKey` VARCHAR(160) NULL, ADD COLUMN `imageProvider` VARCHAR(10) NULL;
+
+ALTER TABLE `DealComment` ADD COLUMN `parentId` VARCHAR(191) NULL;
+CREATE INDEX `DealComment_parentId_idx` ON `DealComment`(`parentId`);
+ALTER TABLE `DealComment` ADD CONSTRAINT `DealComment_parentId_fkey` FOREIGN KEY (`parentId`) REFERENCES `DealComment`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;

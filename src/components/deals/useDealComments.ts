@@ -2,8 +2,8 @@
 
 import { useEffect, useState, type FormEvent } from "react";
 
-export type CommentMember = { handle: string; hasAvatar: boolean; joined: string; comments: number };
-export type DealComment = { id: string; authorName: string; content: string; createdAt: string; hasImage?: boolean; likes?: number; liked?: boolean; member?: CommentMember | null };
+export type CommentMember = { handle: string; hasAvatar: boolean; online?: boolean; joined: string; comments: number };
+export type DealComment = { id: string; parentId?: string | null; authorName: string; content: string; createdAt: string; hasImage?: boolean; likes?: number; liked?: boolean; member?: CommentMember | null };
 export const ACCEPTED_IMAGES = "image/jpeg,image/png,image/gif,image/webp,image/avif";
 
 type CommentsResponse = {
@@ -27,8 +27,10 @@ export function useDealComments(dealIdOrSlug: string) {
   const [authorName, setAuthorName] = useState("");
   const [content, setContent] = useState("");
   const [website, setWebsite] = useState("");
+  const [replyTo, setReplyTo] = useState<{ id: string; name: string } | null>(null);
   const [image, setImageFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(true);
+  const [signedIn, setSignedIn] = useState<boolean | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
@@ -69,6 +71,13 @@ export function useDealComments(dealIdOrSlug: string) {
     if (response?.ok && body?.data) setComments((list) => list.map((c) => (c.id === id ? { ...c, liked: body.data.liked, likes: body.data.likes } : c)));
   }
 
+  // Signed-in members comment under their user name, so the form hides the name box for them.
+  useEffect(() => {
+    let alive = true;
+    fetch("/api/v1/customer/session", { cache: "no-store" }).then((r) => r.json()).then((b) => { if (alive) setSignedIn(Boolean(b?.user)); }).catch(() => {});
+    return () => { alive = false; };
+  }, []);
+
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!content.trim() || submitting) return;
@@ -80,18 +89,20 @@ export function useDealComments(dealIdOrSlug: string) {
       if (image) {
         const form = new FormData();
         form.set("authorName", authorName); form.set("content", content); form.set("website", website); form.set("image", image);
+        if (replyTo) form.set("parentId", replyTo.id);
         init = { method: "POST", headers: { Accept: "application/json" }, body: form };
-      } else init = { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify({ authorName, content, website }) };
+      } else init = { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify({ authorName, content, website, ...(replyTo ? { parentId: replyTo.id } : {}) }) };
       const response = await fetch(endpoint, init);
       const result = await readCommentsResponse(response);
       if (!response.ok || !result.ok) throw new Error(result.error?.message || "Your comment could not be posted.");
       const postedComment = result.data?.comment;
       if (postedComment) {
-        setComments((current) => [postedComment, ...current].slice(0, 100));
+        setComments((current) => [postedComment, ...current].slice(0, 200));
         setCount(result.data?.count ?? 0);
         setContent("");
         setWebsite("");
         setImageFile(null);
+        setReplyTo(null);
         setNotice("Your comment has been posted.");
       }
     } catch (cause: unknown) {
@@ -101,5 +112,5 @@ export function useDealComments(dealIdOrSlug: string) {
     }
   }
 
-  return { comments, count, image, setImage, toggleLike, endpoint, authorName, setAuthorName, content, setContent, website, setWebsite, loading, submitting, error, notice, submit };
+  return { comments, count, replyTo, setReplyTo, signedIn, image, setImage, toggleLike, endpoint, authorName, setAuthorName, content, setContent, website, setWebsite, loading, submitting, error, notice, submit };
 }
