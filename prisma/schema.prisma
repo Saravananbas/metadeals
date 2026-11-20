@@ -304,6 +304,9 @@ model Deal {
   productUrl     String     @db.VarChar(2048)
   affiliateUrl   String?    @db.VarChar(2048)
   couponCode     String?    @db.VarChar(50)
+  /// One point per line, written by staff; shown on the deal page under Editor's Notes.
+  editorNotes    String?    @db.VarChar(2800)
+  editorNotesBy  String?    @db.VarChar(80)
   status         DealStatus @default(DRAFT)
   publishedAt    DateTime?
   startsAt       DateTime?
@@ -324,6 +327,8 @@ model Deal {
   videoReviews   DealVideoReview[]
   communitySubmission CommunityDealSubmission?
   savedBy         SavedDeal[]
+  votes           DealVote[]
+  notes           DealNote[]
   comments       DealComment[]
   youtubeReviewStatus String   @default("NOT_REQUESTED") @db.VarChar(50)
   youtubeLastSearchedAt DateTime?
@@ -385,6 +390,10 @@ model Customer {
   pushTokens      DevicePushToken[]
   preference      CustomerPreference?
   savedDeals      SavedDeal[]
+  dealVotes       DealVote[]
+  dealNotes       DealNote[]
+  dealComments    DealComment[] @relation("DealCommentAuthor")
+  dealCommentLikes DealCommentLike[]
   createdAt       DateTime           @default(now())
   updatedAt       DateTime           @updatedAt
 }
@@ -836,6 +845,12 @@ model DealComment {
   id           String   @id @default(cuid())
   dealId       String
   deal         Deal     @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  customerId   String?
+  customer     Customer? @relation("DealCommentAuthor", fields: [customerId], references: [id], onDelete: SetNull)
+  likes        DealCommentLike[]
+  /// Picture attached by a signed-in member (re-encoded WebP, same storage as deal media).
+  imageKey      String?  @db.VarChar(160)
+  imageProvider String?  @db.VarChar(10)
   authorName   String   @default("Guest") @db.VarChar(80)
   content      String   @db.VarChar(1000)
   authorIpHash String?  @db.Char(64)
@@ -843,6 +858,7 @@ model DealComment {
 
   @@index([dealId, createdAt])
   @@index([authorIpHash, createdAt])
+  @@index([customerId])
 }
 
 
@@ -1034,6 +1050,8 @@ model ForumProfile {
   verifiedAt       DateTime?
   verifiedById     String?           @db.VarChar(191)
   followers        ForumMemberFollow[] @relation("MemberFollowed")
+  starsGiven       MemberStar[]        @relation("StarGiver")
+  starsReceived    MemberStar[]        @relation("StarReceiver")
   warnings         MemberWarning[]     @relation("WarningTarget")
   restrictions     MemberRestriction[] @relation("RestrictionTarget")
   appeals          ModerationAppeal[]  @relation("AppealAppellant")
@@ -1622,4 +1640,62 @@ model SavedDeal {
 
   @@unique([customerId, dealId])
   @@index([customerId, createdAt])
+}
+
+/// A member's Good Deal vote: +1 or -1, one per member per deal (changing it updates the row, clearing it deletes the row).
+model DealVote {
+  id         String   @id @default(cuid())
+  dealId     String
+  deal       Deal     @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  value      Int
+  /// Why a member voted down (one of DISLIKE_REASONS); null for up votes.
+  reason     String?  @db.VarChar(30)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([customerId, dealId])
+  @@index([dealId, value])
+}
+
+/// A short tip from a member about a deal (works with a card, price dropped...). Separate from comments.
+model DealNote {
+  id         String    @id @default(cuid())
+  dealId     String
+  deal       Deal      @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  customerId String
+  customer   Customer  @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  content    String    @db.VarChar(500)
+  removedAt  DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([dealId, createdAt])
+  @@index([customerId])
+}
+
+/// A star one member gives another ("Give Star" on the deal page poster card). One per pair; the receiver's stars are their Reputation Points.
+model MemberStar {
+  id         String       @id @default(cuid())
+  giverId    String
+  giver      ForumProfile @relation("StarGiver", fields: [giverId], references: [id], onDelete: Cascade)
+  receiverId String
+  receiver   ForumProfile @relation("StarReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+  createdAt  DateTime     @default(now())
+
+  @@unique([giverId, receiverId])
+  @@index([receiverId])
+}
+
+/// A member's like on a deal-page comment. One per member per comment.
+model DealCommentLike {
+  id         String      @id @default(cuid())
+  commentId  String
+  comment    DealComment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  customerId String
+  customer   Customer    @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  createdAt  DateTime    @default(now())
+
+  @@unique([commentId, customerId])
+  @@index([customerId])
 }

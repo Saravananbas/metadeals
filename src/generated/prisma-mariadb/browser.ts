@@ -402,3 +402,23 @@ export type CustomerPreference = Prisma.CustomerPreferenceModel
  * A deal the member bookmarked (server-side, so it follows them across devices).
  */
 export type SavedDeal = Prisma.SavedDealModel
+/**
+ * Model DealVote
+ * A member's Good Deal vote: +1 or -1, one per member per deal (changing it updates the row, clearing it deletes the row).
+ */
+export type DealVote = Prisma.DealVoteModel
+/**
+ * Model DealNote
+ * A short tip from a member about a deal (works with a card, price dropped...). Separate from comments.
+ */
+export type DealNote = Prisma.DealNoteModel
+/**
+ * Model MemberStar
+ * A star one member gives another ("Give Star" on the deal page poster card). One per pair; the receiver's stars are their Reputation Points.
+ */
+export type MemberStar = Prisma.MemberStarModel
+/**
+ * Model DealCommentLike
+ * A member's like on a deal-page comment. One per member per comment.
+ */
+export type DealCommentLike = Prisma.DealCommentLikeModel

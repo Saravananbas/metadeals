@@ -1,0 +1,108 @@
+/* Deal page extras: action row, tabs, coupon chip, notes, poster card. Design tokens only; mobile first. */
+.actions { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 8px; padding-top: 12px; margin-top: 12px; border-top: 1px solid var(--md-purple-100); }
+.act { display: grid; justify-items: center; gap: 4px; min-width: 56px; background: none; border: 0; padding: 0; color: var(--md-color-text-secondary); font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; text-decoration: none; }
+.round { display: inline-grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--md-purple-200); background: var(--md-white); color: var(--md-purple-700); }
+.act:hover .round, .act:focus-visible .round { background: var(--md-purple-50); }
+.on .round { background: var(--md-purple-700); color: var(--md-white); border-color: var(--md-purple-700); }
+.vote { display: grid; justify-items: center; gap: 4px; }
+.voteBox { display: inline-flex; align-items: center; height: 44px; border: 1px solid var(--md-purple-200); border-radius: 999px; background: var(--md-white); }
+.voteBtn { display: grid; place-items: center; width: 40px; height: 44px; border: 0; border-radius: 999px; background: none; color: var(--md-purple-700); cursor: pointer; }
+.voteBtn:hover, .voteBtn:focus-visible { background: var(--md-purple-50); }
+.voteBtn[aria-pressed="true"] { background: var(--md-purple-700); color: var(--md-white); }
+.score { min-width: 28px; text-align: center; font-weight: 800; font-size: 15px; color: var(--md-color-text); }
+.label { font-size: 12px; font-weight: 600; color: var(--md-color-text-secondary); }
+.hint { margin: 6px 0 0; font-size: 12px; color: var(--md-color-text-secondary); width: 100%; }
+.hint a { color: var(--md-purple-700); font-weight: 700; }
+
+.tabs { background: var(--md-white); border: 1px solid var(--md-purple-100); border-radius: 20px; overflow: hidden; }
+.tabList { display: flex; gap: 4px; padding: 0 12px; border-bottom: 1px solid var(--md-purple-100); overflow-x: auto; scrollbar-width: none; }
+.tab { flex: none; min-height: 48px; padding: 0 14px; background: none; border: 0; border-bottom: 3px solid transparent; font: inherit; font-weight: 700; font-size: 14px; color: var(--md-color-text-secondary); cursor: pointer; white-space: nowrap; }
+.tab[aria-selected="true"] { color: var(--md-purple-700); border-bottom-color: var(--md-purple-700); }
+.panel { display: grid; gap: 14px; padding: 18px; }
+.panel h3 { margin: 0; font-size: 16px; color: var(--md-color-text); }
+.muted { margin: 0; font-size: 14px; color: var(--md-color-text-secondary); }
+
+.coupon { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.code { padding: 8px 14px; border: 2px dashed var(--md-purple-300); border-radius: 12px; background: var(--md-purple-50); font-family: ui-monospace, monospace; font-weight: 800; letter-spacing: .06em; color: var(--md-purple-800); overflow-wrap: anywhere; }
+.copy { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 14px; border: 0; border-radius: 12px; background: var(--md-purple-700); color: var(--md-white); font: inherit; font-weight: 700; font-size: 14px; cursor: pointer; }
+
+.thanks { margin: 0; font-size: 14px; color: var(--md-color-text); }
+.valid { margin: 0; font-size: 14px; color: var(--md-color-text-secondary); }
+.editor { display: grid; gap: 8px; padding: 14px 16px; border: 1px solid var(--md-purple-100); border-radius: 14px; background: var(--md-purple-50); }
+.editor ul { margin: 0; padding-left: 20px; display: grid; gap: 6px; font-size: 14.5px; line-height: 1.5; color: var(--md-color-text); overflow-wrap: anywhere; }
+.by { margin: 0; font-size: 12px; color: var(--md-color-text-secondary); }
+.staff { display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 999px; background: var(--md-purple-700); color: var(--md-white); font-size: 11px; font-weight: 700; }
+
+.noteList { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.note { padding: 12px 14px; border: 1px solid var(--md-purple-100); border-radius: 14px; background: var(--md-purple-50); }
+.note p { margin: 4px 0 0; font-size: 14.5px; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; color: var(--md-color-text); }
+.noteMeta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 12px; color: var(--md-color-text-secondary); }
+.noteMeta strong { font-size: 13px; color: var(--md-color-text); }
+.link { margin-left: auto; background: none; border: 0; padding: 4px 0; font: inherit; font-size: 12px; font-weight: 700; color: var(--md-red-700); cursor: pointer; }
+.form { display: grid; gap: 8px; }
+.form textarea { width: 100%; box-sizing: border-box; min-height: 84px; padding: 10px 12px; font: inherit; border: 1px solid var(--md-purple-200); border-radius: 12px; background: var(--md-white); color: var(--md-color-text); resize: vertical; }
+.submit { justify-self: start; min-height: 44px; padding: 0 18px; border: 0; border-radius: 12px; background: var(--md-purple-700); color: var(--md-white); font: inherit; font-weight: 700; cursor: pointer; }
+.submit:disabled { opacity: .55; cursor: not-allowed; }
+.error { margin: 0; font-size: 13px; color: var(--md-red-700); }
+.error a { color: inherit; font-weight: 700; }
+
+.poster { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
+.avatar { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; flex: none; }
+.avatarFallback { display: inline-grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: var(--md-purple-100); color: var(--md-purple-700); font-weight: 800; font-size: 22px; flex: none; }
+.posterInfo { display: grid; gap: 2px; min-width: 0; }
+.posterInfo strong { font-size: 16px; color: var(--md-color-text); overflow-wrap: anywhere; }
+.posterInfo span { font-size: 13px; color: var(--md-color-text-secondary); }
+.profileLink { margin-left: auto; display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border: 1px solid var(--md-purple-700); border-radius: 12px; color: var(--md-purple-700); font-weight: 700; font-size: 14px; text-decoration: none; }
+.profileLink:hover { background: var(--md-purple-50); }
+
+@media (min-width: 640px) { .panel { padding: 22px 24px; } }
+
+/* Sticky Buy Now bar: slides in over the header once the main Buy Now button has scrolled out of view. */
+.sticky { position: fixed; inset: 0 0 auto 0; z-index: 120; display: flex; align-items: center; gap: 12px; padding: 8px 12px; background: var(--md-white); border-bottom: 1px solid var(--md-purple-100); box-shadow: 0 4px 16px color-mix(in srgb, var(--md-black) 12%, transparent); transform: translateY(-110%); transition: transform .2s ease; visibility: hidden; }
+.stickyShown { transform: none; visibility: visible; }
+.stickyInner { display: flex; align-items: center; gap: 12px; width: 100%; max-width: 1360px; margin: 0 auto; }
+.stickyThumb { width: 40px; height: 40px; object-fit: contain; border-radius: 8px; border: 1px solid var(--md-purple-100); flex: none; background: var(--md-white); }
+.stickyTitle { flex: 1; min-width: 0; display: grid; }
+.stickyTitle strong { font-size: 14px; color: var(--md-color-text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.stickyTitle span { font-size: 12px; color: var(--md-color-text-secondary); }
+.stickyPrice { font-size: 20px; font-weight: 800; color: var(--md-color-text); white-space: nowrap; }
+.stickyBuy { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 22px; border-radius: 12px; background: var(--md-purple-700); color: var(--md-white); font-weight: 800; text-decoration: none; white-space: nowrap; }
+.stickyBuy:hover { background: var(--md-purple-800); }
+@media (max-width: 520px) { .stickyThumb, .stickyTitle span { display: none; } .stickyPrice { font-size: 17px; } }
+@media (prefers-reduced-motion: reduce) { .sticky { transition: none; } }
+
+/* Down-vote reasons popover (deal cards and deal page). Opens upwards so the card edge never clips it. */
+.dislikeMenu { position: absolute; bottom: calc(100% + 6px); left: 0; z-index: 30; display: grid; gap: 2px; min-width: 230px; margin: 0; padding: 0 0 6px; border: 1px solid var(--md-purple-100); border-radius: 12px; background: var(--md-white); box-shadow: 0 10px 28px color-mix(in srgb, var(--md-black) 18%, transparent); }
+.dislikeMenu legend { float: left; width: 100%; box-sizing: border-box; margin: 0 0 4px; padding: 10px 14px; border-radius: 12px 12px 0 0; background: var(--md-purple-50); font-size: 13px; font-weight: 700; color: var(--md-color-text); }
+.dislikeMenu label { display: flex; align-items: center; gap: 8px; min-height: 36px; padding: 0 14px; font-size: 14px; color: var(--md-color-text); cursor: pointer; }
+.dislikeMenu label:hover { background: var(--md-purple-50); }
+.dislikeMenu input { accent-color: var(--md-purple-700); }
+
+/* Member menu beside a name (comments) */
+.memberMenu { position: relative; display: inline-block; }
+.memberName { display: inline-flex; align-items: center; gap: 4px; padding: 0; background: none; border: 0; font: inherit; color: var(--md-color-text); cursor: pointer; }
+.memberName strong { font-size: 15px; }
+.menuList { position: absolute; top: calc(100% + 6px); left: 0; z-index: 30; display: grid; min-width: 210px; padding: 6px 0; border: 1px solid var(--md-purple-100); border-radius: 12px; background: var(--md-white); box-shadow: 0 10px 28px color-mix(in srgb, var(--md-black) 18%, transparent); }
+.menuList button, .menuList a { display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 16px; background: none; border: 0; font: inherit; font-size: 14px; color: var(--md-color-text); text-decoration: none; cursor: pointer; text-align: left; }
+.menuList button:hover, .menuList a:hover { background: var(--md-purple-50); }
+.menuSay { margin: 0; padding: 6px 16px 8px; font-size: 12px; color: var(--md-color-text-secondary); }
+.menuSay a { display: inline; min-height: 0; padding: 0; color: var(--md-purple-700); font-weight: 700; }
+
+/* About the Poster: action buttons and the four counters */
+.posterButtons { margin-left: auto; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.posterButtons .profileLink { margin-left: 0; }
+.chip { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 14px; border: 1px solid var(--md-neutral-600); border-radius: 999px; background: var(--md-white); color: var(--md-color-text); font: inherit; font-size: 14px; font-weight: 600; text-decoration: none; cursor: pointer; }
+.chip:hover { background: var(--md-purple-50); }
+.chip[aria-pressed="true"] { border-color: var(--md-purple-700); color: var(--md-purple-700); }
+.say { flex-basis: 100%; font-size: 12px; color: var(--md-color-text-secondary); }
+.say a { color: var(--md-purple-700); font-weight: 700; }
+.statGrid { display: grid; grid-template-columns: 1fr; gap: 12px; margin: 0; }
+.stat { display: flex; align-items: center; gap: 12px; padding: 16px; border-radius: 14px; background: var(--md-purple-50); }
+.stat dd { margin: 0; font-size: 20px; font-weight: 800; color: var(--md-color-text); }
+.stat dt { font-size: 14px; color: var(--md-color-text-secondary); }
+.statIcon { display: inline-grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; color: var(--md-white); flex: none; }
+.toneStar { background: var(--md-purple-600); }
+.toneVote { background: var(--md-red-600); }
+.toneDeal { background: var(--md-green-600); }
+.toneComment { background: var(--md-amber-600); }
+@media (min-width: 640px) { .statGrid { grid-template-columns: 1fr 1fr; } }

@@ -248,6 +248,10 @@ export type CustomerWhereInput = {
   pushTokens?: Prisma.DevicePushTokenListRelationFilter
   preference?: Prisma.XOR<Prisma.CustomerPreferenceNullableScalarRelationFilter, Prisma.CustomerPreferenceWhereInput> | null
   savedDeals?: Prisma.SavedDealListRelationFilter
+  dealVotes?: Prisma.DealVoteListRelationFilter
+  dealNotes?: Prisma.DealNoteListRelationFilter
+  dealComments?: Prisma.DealCommentListRelationFilter
+  dealCommentLikes?: Prisma.DealCommentLikeListRelationFilter
 }
 
 export type CustomerOrderByWithRelationInput = {
@@ -273,6 +277,10 @@ export type CustomerOrderByWithRelationInput = {
   pushTokens?: Prisma.DevicePushTokenOrderByRelationAggregateInput
   preference?: Prisma.CustomerPreferenceOrderByWithRelationInput
   savedDeals?: Prisma.SavedDealOrderByRelationAggregateInput
+  dealVotes?: Prisma.DealVoteOrderByRelationAggregateInput
+  dealNotes?: Prisma.DealNoteOrderByRelationAggregateInput
+  dealComments?: Prisma.DealCommentOrderByRelationAggregateInput
+  dealCommentLikes?: Prisma.DealCommentLikeOrderByRelationAggregateInput
   _relevance?: Prisma.CustomerOrderByRelevanceInput
 }
 
@@ -302,6 +310,10 @@ export type CustomerWhereUniqueInput = Prisma.AtLeast<{
   pushTokens?: Prisma.DevicePushTokenListRelationFilter
   preference?: Prisma.XOR<Prisma.CustomerPreferenceNullableScalarRelationFilter, Prisma.CustomerPreferenceWhereInput> | null
   savedDeals?: Prisma.SavedDealListRelationFilter
+  dealVotes?: Prisma.DealVoteListRelationFilter
+  dealNotes?: Prisma.DealNoteListRelationFilter
+  dealComments?: Prisma.DealCommentListRelationFilter
+  dealCommentLikes?: Prisma.DealCommentLikeListRelationFilter
 }, "id" | "email">
 
 export type CustomerOrderByWithAggregationInput = {
@@ -363,6 +375,10 @@ export type CustomerCreateInput = {
   pushTokens?: Prisma.DevicePushTokenCreateNestedManyWithoutCustomerInput
   preference?: Prisma.CustomerPreferenceCreateNestedOneWithoutCustomerInput
   savedDeals?: Prisma.SavedDealCreateNestedManyWithoutCustomerInput
+  dealVotes?: Prisma.DealVoteCreateNestedManyWithoutCustomerInput
+  dealNotes?: Prisma.DealNoteCreateNestedManyWithoutCustomerInput
+  dealComments?: Prisma.DealCommentCreateNestedManyWithoutCustomerInput
+  dealCommentLikes?: Prisma.DealCommentLikeCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerUncheckedCreateInput = {
@@ -388,6 +404,10 @@ export type CustomerUncheckedCreateInput = {
   pushTokens?: Prisma.DevicePushTokenUncheckedCreateNestedManyWithoutCustomerInput
   preference?: Prisma.CustomerPreferenceUncheckedCreateNestedOneWithoutCustomerInput
   savedDeals?: Prisma.SavedDealUncheckedCreateNestedManyWithoutCustomerInput
+  dealVotes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutCustomerInput
+  dealNotes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutCustomerInput
+  dealComments?: Prisma.DealCommentUncheckedCreateNestedManyWithoutCustomerInput
+  dealCommentLikes?: Prisma.DealCommentLikeUncheckedCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerUpdateInput = {
@@ -413,6 +433,10 @@ export type CustomerUpdateInput = {
   pushTokens?: Prisma.DevicePushTokenUpdateManyWithoutCustomerNestedInput
   preference?: Prisma.CustomerPreferenceUpdateOneWithoutCustomerNestedInput
   savedDeals?: Prisma.SavedDealUpdateManyWithoutCustomerNestedInput
+  dealVotes?: Prisma.DealVoteUpdateManyWithoutCustomerNestedInput
+  dealNotes?: Prisma.DealNoteUpdateManyWithoutCustomerNestedInput
+  dealComments?: Prisma.DealCommentUpdateManyWithoutCustomerNestedInput
+  dealCommentLikes?: Prisma.DealCommentLikeUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerUncheckedUpdateInput = {
@@ -438,6 +462,10 @@ export type CustomerUncheckedUpdateInput = {
   pushTokens?: Prisma.DevicePushTokenUncheckedUpdateManyWithoutCustomerNestedInput
   preference?: Prisma.CustomerPreferenceUncheckedUpdateOneWithoutCustomerNestedInput
   savedDeals?: Prisma.SavedDealUncheckedUpdateManyWithoutCustomerNestedInput
+  dealVotes?: Prisma.DealVoteUncheckedUpdateManyWithoutCustomerNestedInput
+  dealNotes?: Prisma.DealNoteUncheckedUpdateManyWithoutCustomerNestedInput
+  dealComments?: Prisma.DealCommentUncheckedUpdateManyWithoutCustomerNestedInput
+  dealCommentLikes?: Prisma.DealCommentLikeUncheckedUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerCreateManyInput = {
@@ -590,6 +618,22 @@ export type CustomerUpdateOneRequiredWithoutPasswordResetsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CustomerUpdateToOneWithWhereWithoutPasswordResetsInput, Prisma.CustomerUpdateWithoutPasswordResetsInput>, Prisma.CustomerUncheckedUpdateWithoutPasswordResetsInput>
 }
 
+export type CustomerCreateNestedOneWithoutDealCommentsInput = {
+  create?: Prisma.XOR<Prisma.CustomerCreateWithoutDealCommentsInput, Prisma.CustomerUncheckedCreateWithoutDealCommentsInput>
+  connectOrCreate?: Prisma.CustomerCreateOrConnectWithoutDealCommentsInput
+  connect?: Prisma.CustomerWhereUniqueInput
+}
+
+export type CustomerUpdateOneWithoutDealCommentsNestedInput = {
+  create?: Prisma.XOR<Prisma.CustomerCreateWithoutDealCommentsInput, Prisma.CustomerUncheckedCreateWithoutDealCommentsInput>
+  connectOrCreate?: Prisma.CustomerCreateOrConnectWithoutDealCommentsInput
+  upsert?: Prisma.CustomerUpsertWithoutDealCommentsInput
+  disconnect?: Prisma.CustomerWhereInput | boolean
+  delete?: Prisma.CustomerWhereInput | boolean
+  connect?: Prisma.CustomerWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CustomerUpdateToOneWithWhereWithoutDealCommentsInput, Prisma.CustomerUpdateWithoutDealCommentsInput>, Prisma.CustomerUncheckedUpdateWithoutDealCommentsInput>
+}
+
 export type CustomerCreateNestedOneWithoutSubmissionsInput = {
   create?: Prisma.XOR<Prisma.CustomerCreateWithoutSubmissionsInput, Prisma.CustomerUncheckedCreateWithoutSubmissionsInput>
   connectOrCreate?: Prisma.CustomerCreateOrConnectWithoutSubmissionsInput
@@ -688,6 +732,48 @@ export type CustomerUpdateOneRequiredWithoutSavedDealsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CustomerUpdateToOneWithWhereWithoutSavedDealsInput, Prisma.CustomerUpdateWithoutSavedDealsInput>, Prisma.CustomerUncheckedUpdateWithoutSavedDealsInput>
 }
 
+export type CustomerCreateNestedOneWithoutDealVotesInput = {
+  create?: Prisma.XOR<Prisma.CustomerCreateWithoutDealVotesInput, Prisma.CustomerUncheckedCreateWithoutDealVotesInput>
+  connectOrCreate?: Prisma.CustomerCreateOrConnectWithoutDealVotesInput
+  connect?: Prisma.CustomerWhereUniqueInput
+}
+
+export type CustomerUpdateOneRequiredWithoutDealVotesNestedInput = {
+  create?: Prisma.XOR<Prisma.CustomerCreateWithoutDealVotesInput, Prisma.CustomerUncheckedCreateWithoutDealVotesInput>
+  connectOrCreate?: Prisma.CustomerCreateOrConnectWithoutDealVotesInput
+  upsert?: Prisma.CustomerUpsertWithoutDealVotesInput
+  connect?: Prisma.CustomerWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CustomerUpdateToOneWithWhereWithoutDealVotesInput, Prisma.CustomerUpdateWithoutDealVotesInput>, Prisma.CustomerUncheckedUpdateWithoutDealVotesInput>
+}
+
+export type CustomerCreateNestedOneWithoutDealNotesInput = {
+  create?: Prisma.XOR<Prisma.CustomerCreateWithoutDealNotesInput, Prisma.CustomerUncheckedCreateWithoutDealNotesInput>
+  connectOrCreate?: Prisma.CustomerCreateOrConnectWithoutDealNotesInput
+  connect?: Prisma.CustomerWhereUniqueInput
+}
+
+export type CustomerUpdateOneRequiredWithoutDealNotesNestedInput = {
+  create?: Prisma.XOR<Prisma.CustomerCreateWithoutDealNotesInput, Prisma.CustomerUncheckedCreateWithoutDealNotesInput>
+  connectOrCreate?: Prisma.CustomerCreateOrConnectWithoutDealNotesInput
+  upsert?: Prisma.CustomerUpsertWithoutDealNotesInput
+  connect?: Prisma.CustomerWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CustomerUpdateToOneWithWhereWithoutDealNotesInput, Prisma.CustomerUpdateWithoutDealNotesInput>, Prisma.CustomerUncheckedUpdateWithoutDealNotesInput>
+}
+
+export type CustomerCreateNestedOneWithoutDealCommentLikesInput = {
+  create?: Prisma.XOR<Prisma.CustomerCreateWithoutDealCommentLikesInput, Prisma.CustomerUncheckedCreateWithoutDealCommentLikesInput>
+  connectOrCreate?: Prisma.CustomerCreateOrConnectWithoutDealCommentLikesInput
+  connect?: Prisma.CustomerWhereUniqueInput
+}
+
+export type CustomerUpdateOneRequiredWithoutDealCommentLikesNestedInput = {
+  create?: Prisma.XOR<Prisma.CustomerCreateWithoutDealCommentLikesInput, Prisma.CustomerUncheckedCreateWithoutDealCommentLikesInput>
+  connectOrCreate?: Prisma.CustomerCreateOrConnectWithoutDealCommentLikesInput
+  upsert?: Prisma.CustomerUpsertWithoutDealCommentLikesInput
+  connect?: Prisma.CustomerWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CustomerUpdateToOneWithWhereWithoutDealCommentLikesInput, Prisma.CustomerUpdateWithoutDealCommentLikesInput>, Prisma.CustomerUncheckedUpdateWithoutDealCommentLikesInput>
+}
+
 export type CustomerCreateWithoutLinkedStaffInput = {
   id?: string
   name: string
@@ -710,6 +796,10 @@ export type CustomerCreateWithoutLinkedStaffInput = {
   pushTokens?: Prisma.DevicePushTokenCreateNestedManyWithoutCustomerInput
   preference?: Prisma.CustomerPreferenceCreateNestedOneWithoutCustomerInput
   savedDeals?: Prisma.SavedDealCreateNestedManyWithoutCustomerInput
+  dealVotes?: Prisma.DealVoteCreateNestedManyWithoutCustomerInput
+  dealNotes?: Prisma.DealNoteCreateNestedManyWithoutCustomerInput
+  dealComments?: Prisma.DealCommentCreateNestedManyWithoutCustomerInput
+  dealCommentLikes?: Prisma.DealCommentLikeCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerUncheckedCreateWithoutLinkedStaffInput = {
@@ -734,6 +824,10 @@ export type CustomerUncheckedCreateWithoutLinkedStaffInput = {
   pushTokens?: Prisma.DevicePushTokenUncheckedCreateNestedManyWithoutCustomerInput
   preference?: Prisma.CustomerPreferenceUncheckedCreateNestedOneWithoutCustomerInput
   savedDeals?: Prisma.SavedDealUncheckedCreateNestedManyWithoutCustomerInput
+  dealVotes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutCustomerInput
+  dealNotes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutCustomerInput
+  dealComments?: Prisma.DealCommentUncheckedCreateNestedManyWithoutCustomerInput
+  dealCommentLikes?: Prisma.DealCommentLikeUncheckedCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerCreateOrConnectWithoutLinkedStaffInput = {
@@ -774,6 +868,10 @@ export type CustomerUpdateWithoutLinkedStaffInput = {
   pushTokens?: Prisma.DevicePushTokenUpdateManyWithoutCustomerNestedInput
   preference?: Prisma.CustomerPreferenceUpdateOneWithoutCustomerNestedInput
   savedDeals?: Prisma.SavedDealUpdateManyWithoutCustomerNestedInput
+  dealVotes?: Prisma.DealVoteUpdateManyWithoutCustomerNestedInput
+  dealNotes?: Prisma.DealNoteUpdateManyWithoutCustomerNestedInput
+  dealComments?: Prisma.DealCommentUpdateManyWithoutCustomerNestedInput
+  dealCommentLikes?: Prisma.DealCommentLikeUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerUncheckedUpdateWithoutLinkedStaffInput = {
@@ -798,6 +896,10 @@ export type CustomerUncheckedUpdateWithoutLinkedStaffInput = {
   pushTokens?: Prisma.DevicePushTokenUncheckedUpdateManyWithoutCustomerNestedInput
   preference?: Prisma.CustomerPreferenceUncheckedUpdateOneWithoutCustomerNestedInput
   savedDeals?: Prisma.SavedDealUncheckedUpdateManyWithoutCustomerNestedInput
+  dealVotes?: Prisma.DealVoteUncheckedUpdateManyWithoutCustomerNestedInput
+  dealNotes?: Prisma.DealNoteUncheckedUpdateManyWithoutCustomerNestedInput
+  dealComments?: Prisma.DealCommentUncheckedUpdateManyWithoutCustomerNestedInput
+  dealCommentLikes?: Prisma.DealCommentLikeUncheckedUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerCreateWithoutIdentitiesInput = {
@@ -822,6 +924,10 @@ export type CustomerCreateWithoutIdentitiesInput = {
   pushTokens?: Prisma.DevicePushTokenCreateNestedManyWithoutCustomerInput
   preference?: Prisma.CustomerPreferenceCreateNestedOneWithoutCustomerInput
   savedDeals?: Prisma.SavedDealCreateNestedManyWithoutCustomerInput
+  dealVotes?: Prisma.DealVoteCreateNestedManyWithoutCustomerInput
+  dealNotes?: Prisma.DealNoteCreateNestedManyWithoutCustomerInput
+  dealComments?: Prisma.DealCommentCreateNestedManyWithoutCustomerInput
+  dealCommentLikes?: Prisma.DealCommentLikeCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerUncheckedCreateWithoutIdentitiesInput = {
@@ -846,6 +952,10 @@ export type CustomerUncheckedCreateWithoutIdentitiesInput = {
   pushTokens?: Prisma.DevicePushTokenUncheckedCreateNestedManyWithoutCustomerInput
   preference?: Prisma.CustomerPreferenceUncheckedCreateNestedOneWithoutCustomerInput
   savedDeals?: Prisma.SavedDealUncheckedCreateNestedManyWithoutCustomerInput
+  dealVotes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutCustomerInput
+  dealNotes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutCustomerInput
+  dealComments?: Prisma.DealCommentUncheckedCreateNestedManyWithoutCustomerInput
+  dealCommentLikes?: Prisma.DealCommentLikeUncheckedCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerCreateOrConnectWithoutIdentitiesInput = {
@@ -886,6 +996,10 @@ export type CustomerUpdateWithoutIdentitiesInput = {
   pushTokens?: Prisma.DevicePushTokenUpdateManyWithoutCustomerNestedInput
   preference?: Prisma.CustomerPreferenceUpdateOneWithoutCustomerNestedInput
   savedDeals?: Prisma.SavedDealUpdateManyWithoutCustomerNestedInput
+  dealVotes?: Prisma.DealVoteUpdateManyWithoutCustomerNestedInput
+  dealNotes?: Prisma.DealNoteUpdateManyWithoutCustomerNestedInput
+  dealComments?: Prisma.DealCommentUpdateManyWithoutCustomerNestedInput
+  dealCommentLikes?: Prisma.DealCommentLikeUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerUncheckedUpdateWithoutIdentitiesInput = {
@@ -910,6 +1024,10 @@ export type CustomerUncheckedUpdateWithoutIdentitiesInput = {
   pushTokens?: Prisma.DevicePushTokenUncheckedUpdateManyWithoutCustomerNestedInput
   preference?: Prisma.CustomerPreferenceUncheckedUpdateOneWithoutCustomerNestedInput
   savedDeals?: Prisma.SavedDealUncheckedUpdateManyWithoutCustomerNestedInput
+  dealVotes?: Prisma.DealVoteUncheckedUpdateManyWithoutCustomerNestedInput
+  dealNotes?: Prisma.DealNoteUncheckedUpdateManyWithoutCustomerNestedInput
+  dealComments?: Prisma.DealCommentUncheckedUpdateManyWithoutCustomerNestedInput
+  dealCommentLikes?: Prisma.DealCommentLikeUncheckedUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerCreateWithoutPasswordResetsInput = {
@@ -934,6 +1052,10 @@ export type CustomerCreateWithoutPasswordResetsInput = {
   pushTokens?: Prisma.DevicePushTokenCreateNestedManyWithoutCustomerInput
   preference?: Prisma.CustomerPreferenceCreateNestedOneWithoutCustomerInput
   savedDeals?: Prisma.SavedDealCreateNestedManyWithoutCustomerInput
+  dealVotes?: Prisma.DealVoteCreateNestedManyWithoutCustomerInput
+  dealNotes?: Prisma.DealNoteCreateNestedManyWithoutCustomerInput
+  dealComments?: Prisma.DealCommentCreateNestedManyWithoutCustomerInput
+  dealCommentLikes?: Prisma.DealCommentLikeCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerUncheckedCreateWithoutPasswordResetsInput = {
@@ -958,6 +1080,10 @@ export type CustomerUncheckedCreateWithoutPasswordResetsInput = {
   pushTokens?: Prisma.DevicePushTokenUncheckedCreateNestedManyWithoutCustomerInput
   preference?: Prisma.CustomerPreferenceUncheckedCreateNestedOneWithoutCustomerInput
   savedDeals?: Prisma.SavedDealUncheckedCreateNestedManyWithoutCustomerInput
+  dealVotes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutCustomerInput
+  dealNotes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutCustomerInput
+  dealComments?: Prisma.DealCommentUncheckedCreateNestedManyWithoutCustomerInput
+  dealCommentLikes?: Prisma.DealCommentLikeUncheckedCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerCreateOrConnectWithoutPasswordResetsInput = {
@@ -998,6 +1124,10 @@ export type CustomerUpdateWithoutPasswordResetsInput = {
   pushTokens?: Prisma.DevicePushTokenUpdateManyWithoutCustomerNestedInput
   preference?: Prisma.CustomerPreferenceUpdateOneWithoutCustomerNestedInput
   savedDeals?: Prisma.SavedDealUpdateManyWithoutCustomerNestedInput
+  dealVotes?: Prisma.DealVoteUpdateManyWithoutCustomerNestedInput
+  dealNotes?: Prisma.DealNoteUpdateManyWithoutCustomerNestedInput
+  dealComments?: Prisma.DealCommentUpdateManyWithoutCustomerNestedInput
+  dealCommentLikes?: Prisma.DealCommentLikeUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerUncheckedUpdateWithoutPasswordResetsInput = {
@@ -1022,6 +1152,138 @@ export type CustomerUncheckedUpdateWithoutPasswordResetsInput = {
   pushTokens?: Prisma.DevicePushTokenUncheckedUpdateManyWithoutCustomerNestedInput
   preference?: Prisma.CustomerPreferenceUncheckedUpdateOneWithoutCustomerNestedInput
   savedDeals?: Prisma.SavedDealUncheckedUpdateManyWithoutCustomerNestedInput
+  dealVotes?: Prisma.DealVoteUncheckedUpdateManyWithoutCustomerNestedInput
+  dealNotes?: Prisma.DealNoteUncheckedUpdateManyWithoutCustomerNestedInput
+  dealComments?: Prisma.DealCommentUncheckedUpdateManyWithoutCustomerNestedInput
+  dealCommentLikes?: Prisma.DealCommentLikeUncheckedUpdateManyWithoutCustomerNestedInput
+}
+
+export type CustomerCreateWithoutDealCommentsInput = {
+  id?: string
+  name: string
+  email: string
+  image?: string | null
+  passwordHash?: string | null
+  sex?: string | null
+  dateOfBirth?: Date | string | null
+  location?: string | null
+  emailVerifiedAt?: Date | string | null
+  disabledAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  submissions?: Prisma.CommunityDealSubmissionCreateNestedManyWithoutCustomerInput
+  forumProfile?: Prisma.ForumProfileCreateNestedOneWithoutCustomerInput
+  identities?: Prisma.CustomerIdentityCreateNestedManyWithoutCustomerInput
+  passwordResets?: Prisma.CustomerPasswordResetCreateNestedManyWithoutCustomerInput
+  appTokens?: Prisma.CustomerAppTokenCreateNestedManyWithoutCustomerInput
+  linkedStaff?: Prisma.UserCreateNestedOneWithoutLinkedCustomerInput
+  moderatorAppointments?: Prisma.ModeratorAppointmentCreateNestedManyWithoutCustomerInput
+  pushTokens?: Prisma.DevicePushTokenCreateNestedManyWithoutCustomerInput
+  preference?: Prisma.CustomerPreferenceCreateNestedOneWithoutCustomerInput
+  savedDeals?: Prisma.SavedDealCreateNestedManyWithoutCustomerInput
+  dealVotes?: Prisma.DealVoteCreateNestedManyWithoutCustomerInput
+  dealNotes?: Prisma.DealNoteCreateNestedManyWithoutCustomerInput
+  dealCommentLikes?: Prisma.DealCommentLikeCreateNestedManyWithoutCustomerInput
+}
+
+export type CustomerUncheckedCreateWithoutDealCommentsInput = {
+  id?: string
+  name: string
+  email: string
+  image?: string | null
+  passwordHash?: string | null
+  sex?: string | null
+  dateOfBirth?: Date | string | null
+  location?: string | null
+  emailVerifiedAt?: Date | string | null
+  disabledAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  submissions?: Prisma.CommunityDealSubmissionUncheckedCreateNestedManyWithoutCustomerInput
+  forumProfile?: Prisma.ForumProfileUncheckedCreateNestedOneWithoutCustomerInput
+  identities?: Prisma.CustomerIdentityUncheckedCreateNestedManyWithoutCustomerInput
+  passwordResets?: Prisma.CustomerPasswordResetUncheckedCreateNestedManyWithoutCustomerInput
+  appTokens?: Prisma.CustomerAppTokenUncheckedCreateNestedManyWithoutCustomerInput
+  linkedStaff?: Prisma.UserUncheckedCreateNestedOneWithoutLinkedCustomerInput
+  moderatorAppointments?: Prisma.ModeratorAppointmentUncheckedCreateNestedManyWithoutCustomerInput
+  pushTokens?: Prisma.DevicePushTokenUncheckedCreateNestedManyWithoutCustomerInput
+  preference?: Prisma.CustomerPreferenceUncheckedCreateNestedOneWithoutCustomerInput
+  savedDeals?: Prisma.SavedDealUncheckedCreateNestedManyWithoutCustomerInput
+  dealVotes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutCustomerInput
+  dealNotes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutCustomerInput
+  dealCommentLikes?: Prisma.DealCommentLikeUncheckedCreateNestedManyWithoutCustomerInput
+}
+
+export type CustomerCreateOrConnectWithoutDealCommentsInput = {
+  where: Prisma.CustomerWhereUniqueInput
+  create: Prisma.XOR<Prisma.CustomerCreateWithoutDealCommentsInput, Prisma.CustomerUncheckedCreateWithoutDealCommentsInput>
+}
+
+export type CustomerUpsertWithoutDealCommentsInput = {
+  update: Prisma.XOR<Prisma.CustomerUpdateWithoutDealCommentsInput, Prisma.CustomerUncheckedUpdateWithoutDealCommentsInput>
+  create: Prisma.XOR<Prisma.CustomerCreateWithoutDealCommentsInput, Prisma.CustomerUncheckedCreateWithoutDealCommentsInput>
+  where?: Prisma.CustomerWhereInput
+}
+
+export type CustomerUpdateToOneWithWhereWithoutDealCommentsInput = {
+  where?: Prisma.CustomerWhereInput
+  data: Prisma.XOR<Prisma.CustomerUpdateWithoutDealCommentsInput, Prisma.CustomerUncheckedUpdateWithoutDealCommentsInput>
+}
+
+export type CustomerUpdateWithoutDealCommentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sex?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  submissions?: Prisma.CommunityDealSubmissionUpdateManyWithoutCustomerNestedInput
+  forumProfile?: Prisma.ForumProfileUpdateOneWithoutCustomerNestedInput
+  identities?: Prisma.CustomerIdentityUpdateManyWithoutCustomerNestedInput
+  passwordResets?: Prisma.CustomerPasswordResetUpdateManyWithoutCustomerNestedInput
+  appTokens?: Prisma.CustomerAppTokenUpdateManyWithoutCustomerNestedInput
+  linkedStaff?: Prisma.UserUpdateOneWithoutLinkedCustomerNestedInput
+  moderatorAppointments?: Prisma.ModeratorAppointmentUpdateManyWithoutCustomerNestedInput
+  pushTokens?: Prisma.DevicePushTokenUpdateManyWithoutCustomerNestedInput
+  preference?: Prisma.CustomerPreferenceUpdateOneWithoutCustomerNestedInput
+  savedDeals?: Prisma.SavedDealUpdateManyWithoutCustomerNestedInput
+  dealVotes?: Prisma.DealVoteUpdateManyWithoutCustomerNestedInput
+  dealNotes?: Prisma.DealNoteUpdateManyWithoutCustomerNestedInput
+  dealCommentLikes?: Prisma.DealCommentLikeUpdateManyWithoutCustomerNestedInput
+}
+
+export type CustomerUncheckedUpdateWithoutDealCommentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sex?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  submissions?: Prisma.CommunityDealSubmissionUncheckedUpdateManyWithoutCustomerNestedInput
+  forumProfile?: Prisma.ForumProfileUncheckedUpdateOneWithoutCustomerNestedInput
+  identities?: Prisma.CustomerIdentityUncheckedUpdateManyWithoutCustomerNestedInput
+  passwordResets?: Prisma.CustomerPasswordResetUncheckedUpdateManyWithoutCustomerNestedInput
+  appTokens?: Prisma.CustomerAppTokenUncheckedUpdateManyWithoutCustomerNestedInput
+  linkedStaff?: Prisma.UserUncheckedUpdateOneWithoutLinkedCustomerNestedInput
+  moderatorAppointments?: Prisma.ModeratorAppointmentUncheckedUpdateManyWithoutCustomerNestedInput
+  pushTokens?: Prisma.DevicePushTokenUncheckedUpdateManyWithoutCustomerNestedInput
+  preference?: Prisma.CustomerPreferenceUncheckedUpdateOneWithoutCustomerNestedInput
+  savedDeals?: Prisma.SavedDealUncheckedUpdateManyWithoutCustomerNestedInput
+  dealVotes?: Prisma.DealVoteUncheckedUpdateManyWithoutCustomerNestedInput
+  dealNotes?: Prisma.DealNoteUncheckedUpdateManyWithoutCustomerNestedInput
+  dealCommentLikes?: Prisma.DealCommentLikeUncheckedUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerCreateWithoutSubmissionsInput = {
@@ -1046,6 +1308,10 @@ export type CustomerCreateWithoutSubmissionsInput = {
   pushTokens?: Prisma.DevicePushTokenCreateNestedManyWithoutCustomerInput
   preference?: Prisma.CustomerPreferenceCreateNestedOneWithoutCustomerInput
   savedDeals?: Prisma.SavedDealCreateNestedManyWithoutCustomerInput
+  dealVotes?: Prisma.DealVoteCreateNestedManyWithoutCustomerInput
+  dealNotes?: Prisma.DealNoteCreateNestedManyWithoutCustomerInput
+  dealComments?: Prisma.DealCommentCreateNestedManyWithoutCustomerInput
+  dealCommentLikes?: Prisma.DealCommentLikeCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerUncheckedCreateWithoutSubmissionsInput = {
@@ -1070,6 +1336,10 @@ export type CustomerUncheckedCreateWithoutSubmissionsInput = {
   pushTokens?: Prisma.DevicePushTokenUncheckedCreateNestedManyWithoutCustomerInput
   preference?: Prisma.CustomerPreferenceUncheckedCreateNestedOneWithoutCustomerInput
   savedDeals?: Prisma.SavedDealUncheckedCreateNestedManyWithoutCustomerInput
+  dealVotes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutCustomerInput
+  dealNotes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutCustomerInput
+  dealComments?: Prisma.DealCommentUncheckedCreateNestedManyWithoutCustomerInput
+  dealCommentLikes?: Prisma.DealCommentLikeUncheckedCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerCreateOrConnectWithoutSubmissionsInput = {
@@ -1110,6 +1380,10 @@ export type CustomerUpdateWithoutSubmissionsInput = {
   pushTokens?: Prisma.DevicePushTokenUpdateManyWithoutCustomerNestedInput
   preference?: Prisma.CustomerPreferenceUpdateOneWithoutCustomerNestedInput
   savedDeals?: Prisma.SavedDealUpdateManyWithoutCustomerNestedInput
+  dealVotes?: Prisma.DealVoteUpdateManyWithoutCustomerNestedInput
+  dealNotes?: Prisma.DealNoteUpdateManyWithoutCustomerNestedInput
+  dealComments?: Prisma.DealCommentUpdateManyWithoutCustomerNestedInput
+  dealCommentLikes?: Prisma.DealCommentLikeUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerUncheckedUpdateWithoutSubmissionsInput = {
@@ -1134,6 +1408,10 @@ export type CustomerUncheckedUpdateWithoutSubmissionsInput = {
   pushTokens?: Prisma.DevicePushTokenUncheckedUpdateManyWithoutCustomerNestedInput
   preference?: Prisma.CustomerPreferenceUncheckedUpdateOneWithoutCustomerNestedInput
   savedDeals?: Prisma.SavedDealUncheckedUpdateManyWithoutCustomerNestedInput
+  dealVotes?: Prisma.DealVoteUncheckedUpdateManyWithoutCustomerNestedInput
+  dealNotes?: Prisma.DealNoteUncheckedUpdateManyWithoutCustomerNestedInput
+  dealComments?: Prisma.DealCommentUncheckedUpdateManyWithoutCustomerNestedInput
+  dealCommentLikes?: Prisma.DealCommentLikeUncheckedUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerCreateWithoutForumProfileInput = {
@@ -1158,6 +1436,10 @@ export type CustomerCreateWithoutForumProfileInput = {
   pushTokens?: Prisma.DevicePushTokenCreateNestedManyWithoutCustomerInput
   preference?: Prisma.CustomerPreferenceCreateNestedOneWithoutCustomerInput
   savedDeals?: Prisma.SavedDealCreateNestedManyWithoutCustomerInput
+  dealVotes?: Prisma.DealVoteCreateNestedManyWithoutCustomerInput
+  dealNotes?: Prisma.DealNoteCreateNestedManyWithoutCustomerInput
+  dealComments?: Prisma.DealCommentCreateNestedManyWithoutCustomerInput
+  dealCommentLikes?: Prisma.DealCommentLikeCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerUncheckedCreateWithoutForumProfileInput = {
@@ -1182,6 +1464,10 @@ export type CustomerUncheckedCreateWithoutForumProfileInput = {
   pushTokens?: Prisma.DevicePushTokenUncheckedCreateNestedManyWithoutCustomerInput
   preference?: Prisma.CustomerPreferenceUncheckedCreateNestedOneWithoutCustomerInput
   savedDeals?: Prisma.SavedDealUncheckedCreateNestedManyWithoutCustomerInput
+  dealVotes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutCustomerInput
+  dealNotes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutCustomerInput
+  dealComments?: Prisma.DealCommentUncheckedCreateNestedManyWithoutCustomerInput
+  dealCommentLikes?: Prisma.DealCommentLikeUncheckedCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerCreateOrConnectWithoutForumProfileInput = {
@@ -1222,6 +1508,10 @@ export type CustomerUpdateWithoutForumProfileInput = {
   pushTokens?: Prisma.DevicePushTokenUpdateManyWithoutCustomerNestedInput
   preference?: Prisma.CustomerPreferenceUpdateOneWithoutCustomerNestedInput
   savedDeals?: Prisma.SavedDealUpdateManyWithoutCustomerNestedInput
+  dealVotes?: Prisma.DealVoteUpdateManyWithoutCustomerNestedInput
+  dealNotes?: Prisma.DealNoteUpdateManyWithoutCustomerNestedInput
+  dealComments?: Prisma.DealCommentUpdateManyWithoutCustomerNestedInput
+  dealCommentLikes?: Prisma.DealCommentLikeUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerUncheckedUpdateWithoutForumProfileInput = {
@@ -1246,6 +1536,10 @@ export type CustomerUncheckedUpdateWithoutForumProfileInput = {
   pushTokens?: Prisma.DevicePushTokenUncheckedUpdateManyWithoutCustomerNestedInput
   preference?: Prisma.CustomerPreferenceUncheckedUpdateOneWithoutCustomerNestedInput
   savedDeals?: Prisma.SavedDealUncheckedUpdateManyWithoutCustomerNestedInput
+  dealVotes?: Prisma.DealVoteUncheckedUpdateManyWithoutCustomerNestedInput
+  dealNotes?: Prisma.DealNoteUncheckedUpdateManyWithoutCustomerNestedInput
+  dealComments?: Prisma.DealCommentUncheckedUpdateManyWithoutCustomerNestedInput
+  dealCommentLikes?: Prisma.DealCommentLikeUncheckedUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerCreateWithoutAppTokensInput = {
@@ -1270,6 +1564,10 @@ export type CustomerCreateWithoutAppTokensInput = {
   pushTokens?: Prisma.DevicePushTokenCreateNestedManyWithoutCustomerInput
   preference?: Prisma.CustomerPreferenceCreateNestedOneWithoutCustomerInput
   savedDeals?: Prisma.SavedDealCreateNestedManyWithoutCustomerInput
+  dealVotes?: Prisma.DealVoteCreateNestedManyWithoutCustomerInput
+  dealNotes?: Prisma.DealNoteCreateNestedManyWithoutCustomerInput
+  dealComments?: Prisma.DealCommentCreateNestedManyWithoutCustomerInput
+  dealCommentLikes?: Prisma.DealCommentLikeCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerUncheckedCreateWithoutAppTokensInput = {
@@ -1294,6 +1592,10 @@ export type CustomerUncheckedCreateWithoutAppTokensInput = {
   pushTokens?: Prisma.DevicePushTokenUncheckedCreateNestedManyWithoutCustomerInput
   preference?: Prisma.CustomerPreferenceUncheckedCreateNestedOneWithoutCustomerInput
   savedDeals?: Prisma.SavedDealUncheckedCreateNestedManyWithoutCustomerInput
+  dealVotes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutCustomerInput
+  dealNotes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutCustomerInput
+  dealComments?: Prisma.DealCommentUncheckedCreateNestedManyWithoutCustomerInput
+  dealCommentLikes?: Prisma.DealCommentLikeUncheckedCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerCreateOrConnectWithoutAppTokensInput = {
@@ -1334,6 +1636,10 @@ export type CustomerUpdateWithoutAppTokensInput = {
   pushTokens?: Prisma.DevicePushTokenUpdateManyWithoutCustomerNestedInput
   preference?: Prisma.CustomerPreferenceUpdateOneWithoutCustomerNestedInput
   savedDeals?: Prisma.SavedDealUpdateManyWithoutCustomerNestedInput
+  dealVotes?: Prisma.DealVoteUpdateManyWithoutCustomerNestedInput
+  dealNotes?: Prisma.DealNoteUpdateManyWithoutCustomerNestedInput
+  dealComments?: Prisma.DealCommentUpdateManyWithoutCustomerNestedInput
+  dealCommentLikes?: Prisma.DealCommentLikeUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerUncheckedUpdateWithoutAppTokensInput = {
@@ -1358,6 +1664,10 @@ export type CustomerUncheckedUpdateWithoutAppTokensInput = {
   pushTokens?: Prisma.DevicePushTokenUncheckedUpdateManyWithoutCustomerNestedInput
   preference?: Prisma.CustomerPreferenceUncheckedUpdateOneWithoutCustomerNestedInput
   savedDeals?: Prisma.SavedDealUncheckedUpdateManyWithoutCustomerNestedInput
+  dealVotes?: Prisma.DealVoteUncheckedUpdateManyWithoutCustomerNestedInput
+  dealNotes?: Prisma.DealNoteUncheckedUpdateManyWithoutCustomerNestedInput
+  dealComments?: Prisma.DealCommentUncheckedUpdateManyWithoutCustomerNestedInput
+  dealCommentLikes?: Prisma.DealCommentLikeUncheckedUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerCreateWithoutPushTokensInput = {
@@ -1382,6 +1692,10 @@ export type CustomerCreateWithoutPushTokensInput = {
   moderatorAppointments?: Prisma.ModeratorAppointmentCreateNestedManyWithoutCustomerInput
   preference?: Prisma.CustomerPreferenceCreateNestedOneWithoutCustomerInput
   savedDeals?: Prisma.SavedDealCreateNestedManyWithoutCustomerInput
+  dealVotes?: Prisma.DealVoteCreateNestedManyWithoutCustomerInput
+  dealNotes?: Prisma.DealNoteCreateNestedManyWithoutCustomerInput
+  dealComments?: Prisma.DealCommentCreateNestedManyWithoutCustomerInput
+  dealCommentLikes?: Prisma.DealCommentLikeCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerUncheckedCreateWithoutPushTokensInput = {
@@ -1406,6 +1720,10 @@ export type CustomerUncheckedCreateWithoutPushTokensInput = {
   moderatorAppointments?: Prisma.ModeratorAppointmentUncheckedCreateNestedManyWithoutCustomerInput
   preference?: Prisma.CustomerPreferenceUncheckedCreateNestedOneWithoutCustomerInput
   savedDeals?: Prisma.SavedDealUncheckedCreateNestedManyWithoutCustomerInput
+  dealVotes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutCustomerInput
+  dealNotes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutCustomerInput
+  dealComments?: Prisma.DealCommentUncheckedCreateNestedManyWithoutCustomerInput
+  dealCommentLikes?: Prisma.DealCommentLikeUncheckedCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerCreateOrConnectWithoutPushTokensInput = {
@@ -1446,6 +1764,10 @@ export type CustomerUpdateWithoutPushTokensInput = {
   moderatorAppointments?: Prisma.ModeratorAppointmentUpdateManyWithoutCustomerNestedInput
   preference?: Prisma.CustomerPreferenceUpdateOneWithoutCustomerNestedInput
   savedDeals?: Prisma.SavedDealUpdateManyWithoutCustomerNestedInput
+  dealVotes?: Prisma.DealVoteUpdateManyWithoutCustomerNestedInput
+  dealNotes?: Prisma.DealNoteUpdateManyWithoutCustomerNestedInput
+  dealComments?: Prisma.DealCommentUpdateManyWithoutCustomerNestedInput
+  dealCommentLikes?: Prisma.DealCommentLikeUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerUncheckedUpdateWithoutPushTokensInput = {
@@ -1470,6 +1792,10 @@ export type CustomerUncheckedUpdateWithoutPushTokensInput = {
   moderatorAppointments?: Prisma.ModeratorAppointmentUncheckedUpdateManyWithoutCustomerNestedInput
   preference?: Prisma.CustomerPreferenceUncheckedUpdateOneWithoutCustomerNestedInput
   savedDeals?: Prisma.SavedDealUncheckedUpdateManyWithoutCustomerNestedInput
+  dealVotes?: Prisma.DealVoteUncheckedUpdateManyWithoutCustomerNestedInput
+  dealNotes?: Prisma.DealNoteUncheckedUpdateManyWithoutCustomerNestedInput
+  dealComments?: Prisma.DealCommentUncheckedUpdateManyWithoutCustomerNestedInput
+  dealCommentLikes?: Prisma.DealCommentLikeUncheckedUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerCreateWithoutModeratorAppointmentsInput = {
@@ -1494,6 +1820,10 @@ export type CustomerCreateWithoutModeratorAppointmentsInput = {
   pushTokens?: Prisma.DevicePushTokenCreateNestedManyWithoutCustomerInput
   preference?: Prisma.CustomerPreferenceCreateNestedOneWithoutCustomerInput
   savedDeals?: Prisma.SavedDealCreateNestedManyWithoutCustomerInput
+  dealVotes?: Prisma.DealVoteCreateNestedManyWithoutCustomerInput
+  dealNotes?: Prisma.DealNoteCreateNestedManyWithoutCustomerInput
+  dealComments?: Prisma.DealCommentCreateNestedManyWithoutCustomerInput
+  dealCommentLikes?: Prisma.DealCommentLikeCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerUncheckedCreateWithoutModeratorAppointmentsInput = {
@@ -1518,6 +1848,10 @@ export type CustomerUncheckedCreateWithoutModeratorAppointmentsInput = {
   pushTokens?: Prisma.DevicePushTokenUncheckedCreateNestedManyWithoutCustomerInput
   preference?: Prisma.CustomerPreferenceUncheckedCreateNestedOneWithoutCustomerInput
   savedDeals?: Prisma.SavedDealUncheckedCreateNestedManyWithoutCustomerInput
+  dealVotes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutCustomerInput
+  dealNotes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutCustomerInput
+  dealComments?: Prisma.DealCommentUncheckedCreateNestedManyWithoutCustomerInput
+  dealCommentLikes?: Prisma.DealCommentLikeUncheckedCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerCreateOrConnectWithoutModeratorAppointmentsInput = {
@@ -1558,6 +1892,10 @@ export type CustomerUpdateWithoutModeratorAppointmentsInput = {
   pushTokens?: Prisma.DevicePushTokenUpdateManyWithoutCustomerNestedInput
   preference?: Prisma.CustomerPreferenceUpdateOneWithoutCustomerNestedInput
   savedDeals?: Prisma.SavedDealUpdateManyWithoutCustomerNestedInput
+  dealVotes?: Prisma.DealVoteUpdateManyWithoutCustomerNestedInput
+  dealNotes?: Prisma.DealNoteUpdateManyWithoutCustomerNestedInput
+  dealComments?: Prisma.DealCommentUpdateManyWithoutCustomerNestedInput
+  dealCommentLikes?: Prisma.DealCommentLikeUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerUncheckedUpdateWithoutModeratorAppointmentsInput = {
@@ -1582,6 +1920,10 @@ export type CustomerUncheckedUpdateWithoutModeratorAppointmentsInput = {
   pushTokens?: Prisma.DevicePushTokenUncheckedUpdateManyWithoutCustomerNestedInput
   preference?: Prisma.CustomerPreferenceUncheckedUpdateOneWithoutCustomerNestedInput
   savedDeals?: Prisma.SavedDealUncheckedUpdateManyWithoutCustomerNestedInput
+  dealVotes?: Prisma.DealVoteUncheckedUpdateManyWithoutCustomerNestedInput
+  dealNotes?: Prisma.DealNoteUncheckedUpdateManyWithoutCustomerNestedInput
+  dealComments?: Prisma.DealCommentUncheckedUpdateManyWithoutCustomerNestedInput
+  dealCommentLikes?: Prisma.DealCommentLikeUncheckedUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerCreateWithoutPreferenceInput = {
@@ -1606,6 +1948,10 @@ export type CustomerCreateWithoutPreferenceInput = {
   moderatorAppointments?: Prisma.ModeratorAppointmentCreateNestedManyWithoutCustomerInput
   pushTokens?: Prisma.DevicePushTokenCreateNestedManyWithoutCustomerInput
   savedDeals?: Prisma.SavedDealCreateNestedManyWithoutCustomerInput
+  dealVotes?: Prisma.DealVoteCreateNestedManyWithoutCustomerInput
+  dealNotes?: Prisma.DealNoteCreateNestedManyWithoutCustomerInput
+  dealComments?: Prisma.DealCommentCreateNestedManyWithoutCustomerInput
+  dealCommentLikes?: Prisma.DealCommentLikeCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerUncheckedCreateWithoutPreferenceInput = {
@@ -1630,6 +1976,10 @@ export type CustomerUncheckedCreateWithoutPreferenceInput = {
   moderatorAppointments?: Prisma.ModeratorAppointmentUncheckedCreateNestedManyWithoutCustomerInput
   pushTokens?: Prisma.DevicePushTokenUncheckedCreateNestedManyWithoutCustomerInput
   savedDeals?: Prisma.SavedDealUncheckedCreateNestedManyWithoutCustomerInput
+  dealVotes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutCustomerInput
+  dealNotes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutCustomerInput
+  dealComments?: Prisma.DealCommentUncheckedCreateNestedManyWithoutCustomerInput
+  dealCommentLikes?: Prisma.DealCommentLikeUncheckedCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerCreateOrConnectWithoutPreferenceInput = {
@@ -1670,6 +2020,10 @@ export type CustomerUpdateWithoutPreferenceInput = {
   moderatorAppointments?: Prisma.ModeratorAppointmentUpdateManyWithoutCustomerNestedInput
   pushTokens?: Prisma.DevicePushTokenUpdateManyWithoutCustomerNestedInput
   savedDeals?: Prisma.SavedDealUpdateManyWithoutCustomerNestedInput
+  dealVotes?: Prisma.DealVoteUpdateManyWithoutCustomerNestedInput
+  dealNotes?: Prisma.DealNoteUpdateManyWithoutCustomerNestedInput
+  dealComments?: Prisma.DealCommentUpdateManyWithoutCustomerNestedInput
+  dealCommentLikes?: Prisma.DealCommentLikeUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerUncheckedUpdateWithoutPreferenceInput = {
@@ -1694,6 +2048,10 @@ export type CustomerUncheckedUpdateWithoutPreferenceInput = {
   moderatorAppointments?: Prisma.ModeratorAppointmentUncheckedUpdateManyWithoutCustomerNestedInput
   pushTokens?: Prisma.DevicePushTokenUncheckedUpdateManyWithoutCustomerNestedInput
   savedDeals?: Prisma.SavedDealUncheckedUpdateManyWithoutCustomerNestedInput
+  dealVotes?: Prisma.DealVoteUncheckedUpdateManyWithoutCustomerNestedInput
+  dealNotes?: Prisma.DealNoteUncheckedUpdateManyWithoutCustomerNestedInput
+  dealComments?: Prisma.DealCommentUncheckedUpdateManyWithoutCustomerNestedInput
+  dealCommentLikes?: Prisma.DealCommentLikeUncheckedUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerCreateWithoutSavedDealsInput = {
@@ -1718,6 +2076,10 @@ export type CustomerCreateWithoutSavedDealsInput = {
   moderatorAppointments?: Prisma.ModeratorAppointmentCreateNestedManyWithoutCustomerInput
   pushTokens?: Prisma.DevicePushTokenCreateNestedManyWithoutCustomerInput
   preference?: Prisma.CustomerPreferenceCreateNestedOneWithoutCustomerInput
+  dealVotes?: Prisma.DealVoteCreateNestedManyWithoutCustomerInput
+  dealNotes?: Prisma.DealNoteCreateNestedManyWithoutCustomerInput
+  dealComments?: Prisma.DealCommentCreateNestedManyWithoutCustomerInput
+  dealCommentLikes?: Prisma.DealCommentLikeCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerUncheckedCreateWithoutSavedDealsInput = {
@@ -1742,6 +2104,10 @@ export type CustomerUncheckedCreateWithoutSavedDealsInput = {
   moderatorAppointments?: Prisma.ModeratorAppointmentUncheckedCreateNestedManyWithoutCustomerInput
   pushTokens?: Prisma.DevicePushTokenUncheckedCreateNestedManyWithoutCustomerInput
   preference?: Prisma.CustomerPreferenceUncheckedCreateNestedOneWithoutCustomerInput
+  dealVotes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutCustomerInput
+  dealNotes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutCustomerInput
+  dealComments?: Prisma.DealCommentUncheckedCreateNestedManyWithoutCustomerInput
+  dealCommentLikes?: Prisma.DealCommentLikeUncheckedCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerCreateOrConnectWithoutSavedDealsInput = {
@@ -1782,6 +2148,10 @@ export type CustomerUpdateWithoutSavedDealsInput = {
   moderatorAppointments?: Prisma.ModeratorAppointmentUpdateManyWithoutCustomerNestedInput
   pushTokens?: Prisma.DevicePushTokenUpdateManyWithoutCustomerNestedInput
   preference?: Prisma.CustomerPreferenceUpdateOneWithoutCustomerNestedInput
+  dealVotes?: Prisma.DealVoteUpdateManyWithoutCustomerNestedInput
+  dealNotes?: Prisma.DealNoteUpdateManyWithoutCustomerNestedInput
+  dealComments?: Prisma.DealCommentUpdateManyWithoutCustomerNestedInput
+  dealCommentLikes?: Prisma.DealCommentLikeUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerUncheckedUpdateWithoutSavedDealsInput = {
@@ -1806,6 +2176,394 @@ export type CustomerUncheckedUpdateWithoutSavedDealsInput = {
   moderatorAppointments?: Prisma.ModeratorAppointmentUncheckedUpdateManyWithoutCustomerNestedInput
   pushTokens?: Prisma.DevicePushTokenUncheckedUpdateManyWithoutCustomerNestedInput
   preference?: Prisma.CustomerPreferenceUncheckedUpdateOneWithoutCustomerNestedInput
+  dealVotes?: Prisma.DealVoteUncheckedUpdateManyWithoutCustomerNestedInput
+  dealNotes?: Prisma.DealNoteUncheckedUpdateManyWithoutCustomerNestedInput
+  dealComments?: Prisma.DealCommentUncheckedUpdateManyWithoutCustomerNestedInput
+  dealCommentLikes?: Prisma.DealCommentLikeUncheckedUpdateManyWithoutCustomerNestedInput
+}
+
+export type CustomerCreateWithoutDealVotesInput = {
+  id?: string
+  name: string
+  email: string
+  image?: string | null
+  passwordHash?: string | null
+  sex?: string | null
+  dateOfBirth?: Date | string | null
+  location?: string | null
+  emailVerifiedAt?: Date | string | null
+  disabledAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  submissions?: Prisma.CommunityDealSubmissionCreateNestedManyWithoutCustomerInput
+  forumProfile?: Prisma.ForumProfileCreateNestedOneWithoutCustomerInput
+  identities?: Prisma.CustomerIdentityCreateNestedManyWithoutCustomerInput
+  passwordResets?: Prisma.CustomerPasswordResetCreateNestedManyWithoutCustomerInput
+  appTokens?: Prisma.CustomerAppTokenCreateNestedManyWithoutCustomerInput
+  linkedStaff?: Prisma.UserCreateNestedOneWithoutLinkedCustomerInput
+  moderatorAppointments?: Prisma.ModeratorAppointmentCreateNestedManyWithoutCustomerInput
+  pushTokens?: Prisma.DevicePushTokenCreateNestedManyWithoutCustomerInput
+  preference?: Prisma.CustomerPreferenceCreateNestedOneWithoutCustomerInput
+  savedDeals?: Prisma.SavedDealCreateNestedManyWithoutCustomerInput
+  dealNotes?: Prisma.DealNoteCreateNestedManyWithoutCustomerInput
+  dealComments?: Prisma.DealCommentCreateNestedManyWithoutCustomerInput
+  dealCommentLikes?: Prisma.DealCommentLikeCreateNestedManyWithoutCustomerInput
+}
+
+export type CustomerUncheckedCreateWithoutDealVotesInput = {
+  id?: string
+  name: string
+  email: string
+  image?: string | null
+  passwordHash?: string | null
+  sex?: string | null
+  dateOfBirth?: Date | string | null
+  location?: string | null
+  emailVerifiedAt?: Date | string | null
+  disabledAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  submissions?: Prisma.CommunityDealSubmissionUncheckedCreateNestedManyWithoutCustomerInput
+  forumProfile?: Prisma.ForumProfileUncheckedCreateNestedOneWithoutCustomerInput
+  identities?: Prisma.CustomerIdentityUncheckedCreateNestedManyWithoutCustomerInput
+  passwordResets?: Prisma.CustomerPasswordResetUncheckedCreateNestedManyWithoutCustomerInput
+  appTokens?: Prisma.CustomerAppTokenUncheckedCreateNestedManyWithoutCustomerInput
+  linkedStaff?: Prisma.UserUncheckedCreateNestedOneWithoutLinkedCustomerInput
+  moderatorAppointments?: Prisma.ModeratorAppointmentUncheckedCreateNestedManyWithoutCustomerInput
+  pushTokens?: Prisma.DevicePushTokenUncheckedCreateNestedManyWithoutCustomerInput
+  preference?: Prisma.CustomerPreferenceUncheckedCreateNestedOneWithoutCustomerInput
+  savedDeals?: Prisma.SavedDealUncheckedCreateNestedManyWithoutCustomerInput
+  dealNotes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutCustomerInput
+  dealComments?: Prisma.DealCommentUncheckedCreateNestedManyWithoutCustomerInput
+  dealCommentLikes?: Prisma.DealCommentLikeUncheckedCreateNestedManyWithoutCustomerInput
+}
+
+export type CustomerCreateOrConnectWithoutDealVotesInput = {
+  where: Prisma.CustomerWhereUniqueInput
+  create: Prisma.XOR<Prisma.CustomerCreateWithoutDealVotesInput, Prisma.CustomerUncheckedCreateWithoutDealVotesInput>
+}
+
+export type CustomerUpsertWithoutDealVotesInput = {
+  update: Prisma.XOR<Prisma.CustomerUpdateWithoutDealVotesInput, Prisma.CustomerUncheckedUpdateWithoutDealVotesInput>
+  create: Prisma.XOR<Prisma.CustomerCreateWithoutDealVotesInput, Prisma.CustomerUncheckedCreateWithoutDealVotesInput>
+  where?: Prisma.CustomerWhereInput
+}
+
+export type CustomerUpdateToOneWithWhereWithoutDealVotesInput = {
+  where?: Prisma.CustomerWhereInput
+  data: Prisma.XOR<Prisma.CustomerUpdateWithoutDealVotesInput, Prisma.CustomerUncheckedUpdateWithoutDealVotesInput>
+}
+
+export type CustomerUpdateWithoutDealVotesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sex?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  submissions?: Prisma.CommunityDealSubmissionUpdateManyWithoutCustomerNestedInput
+  forumProfile?: Prisma.ForumProfileUpdateOneWithoutCustomerNestedInput
+  identities?: Prisma.CustomerIdentityUpdateManyWithoutCustomerNestedInput
+  passwordResets?: Prisma.CustomerPasswordResetUpdateManyWithoutCustomerNestedInput
+  appTokens?: Prisma.CustomerAppTokenUpdateManyWithoutCustomerNestedInput
+  linkedStaff?: Prisma.UserUpdateOneWithoutLinkedCustomerNestedInput
+  moderatorAppointments?: Prisma.ModeratorAppointmentUpdateManyWithoutCustomerNestedInput
+  pushTokens?: Prisma.DevicePushTokenUpdateManyWithoutCustomerNestedInput
+  preference?: Prisma.CustomerPreferenceUpdateOneWithoutCustomerNestedInput
+  savedDeals?: Prisma.SavedDealUpdateManyWithoutCustomerNestedInput
+  dealNotes?: Prisma.DealNoteUpdateManyWithoutCustomerNestedInput
+  dealComments?: Prisma.DealCommentUpdateManyWithoutCustomerNestedInput
+  dealCommentLikes?: Prisma.DealCommentLikeUpdateManyWithoutCustomerNestedInput
+}
+
+export type CustomerUncheckedUpdateWithoutDealVotesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sex?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  submissions?: Prisma.CommunityDealSubmissionUncheckedUpdateManyWithoutCustomerNestedInput
+  forumProfile?: Prisma.ForumProfileUncheckedUpdateOneWithoutCustomerNestedInput
+  identities?: Prisma.CustomerIdentityUncheckedUpdateManyWithoutCustomerNestedInput
+  passwordResets?: Prisma.CustomerPasswordResetUncheckedUpdateManyWithoutCustomerNestedInput
+  appTokens?: Prisma.CustomerAppTokenUncheckedUpdateManyWithoutCustomerNestedInput
+  linkedStaff?: Prisma.UserUncheckedUpdateOneWithoutLinkedCustomerNestedInput
+  moderatorAppointments?: Prisma.ModeratorAppointmentUncheckedUpdateManyWithoutCustomerNestedInput
+  pushTokens?: Prisma.DevicePushTokenUncheckedUpdateManyWithoutCustomerNestedInput
+  preference?: Prisma.CustomerPreferenceUncheckedUpdateOneWithoutCustomerNestedInput
+  savedDeals?: Prisma.SavedDealUncheckedUpdateManyWithoutCustomerNestedInput
+  dealNotes?: Prisma.DealNoteUncheckedUpdateManyWithoutCustomerNestedInput
+  dealComments?: Prisma.DealCommentUncheckedUpdateManyWithoutCustomerNestedInput
+  dealCommentLikes?: Prisma.DealCommentLikeUncheckedUpdateManyWithoutCustomerNestedInput
+}
+
+export type CustomerCreateWithoutDealNotesInput = {
+  id?: string
+  name: string
+  email: string
+  image?: string | null
+  passwordHash?: string | null
+  sex?: string | null
+  dateOfBirth?: Date | string | null
+  location?: string | null
+  emailVerifiedAt?: Date | string | null
+  disabledAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  submissions?: Prisma.CommunityDealSubmissionCreateNestedManyWithoutCustomerInput
+  forumProfile?: Prisma.ForumProfileCreateNestedOneWithoutCustomerInput
+  identities?: Prisma.CustomerIdentityCreateNestedManyWithoutCustomerInput
+  passwordResets?: Prisma.CustomerPasswordResetCreateNestedManyWithoutCustomerInput
+  appTokens?: Prisma.CustomerAppTokenCreateNestedManyWithoutCustomerInput
+  linkedStaff?: Prisma.UserCreateNestedOneWithoutLinkedCustomerInput
+  moderatorAppointments?: Prisma.ModeratorAppointmentCreateNestedManyWithoutCustomerInput
+  pushTokens?: Prisma.DevicePushTokenCreateNestedManyWithoutCustomerInput
+  preference?: Prisma.CustomerPreferenceCreateNestedOneWithoutCustomerInput
+  savedDeals?: Prisma.SavedDealCreateNestedManyWithoutCustomerInput
+  dealVotes?: Prisma.DealVoteCreateNestedManyWithoutCustomerInput
+  dealComments?: Prisma.DealCommentCreateNestedManyWithoutCustomerInput
+  dealCommentLikes?: Prisma.DealCommentLikeCreateNestedManyWithoutCustomerInput
+}
+
+export type CustomerUncheckedCreateWithoutDealNotesInput = {
+  id?: string
+  name: string
+  email: string
+  image?: string | null
+  passwordHash?: string | null
+  sex?: string | null
+  dateOfBirth?: Date | string | null
+  location?: string | null
+  emailVerifiedAt?: Date | string | null
+  disabledAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  submissions?: Prisma.CommunityDealSubmissionUncheckedCreateNestedManyWithoutCustomerInput
+  forumProfile?: Prisma.ForumProfileUncheckedCreateNestedOneWithoutCustomerInput
+  identities?: Prisma.CustomerIdentityUncheckedCreateNestedManyWithoutCustomerInput
+  passwordResets?: Prisma.CustomerPasswordResetUncheckedCreateNestedManyWithoutCustomerInput
+  appTokens?: Prisma.CustomerAppTokenUncheckedCreateNestedManyWithoutCustomerInput
+  linkedStaff?: Prisma.UserUncheckedCreateNestedOneWithoutLinkedCustomerInput
+  moderatorAppointments?: Prisma.ModeratorAppointmentUncheckedCreateNestedManyWithoutCustomerInput
+  pushTokens?: Prisma.DevicePushTokenUncheckedCreateNestedManyWithoutCustomerInput
+  preference?: Prisma.CustomerPreferenceUncheckedCreateNestedOneWithoutCustomerInput
+  savedDeals?: Prisma.SavedDealUncheckedCreateNestedManyWithoutCustomerInput
+  dealVotes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutCustomerInput
+  dealComments?: Prisma.DealCommentUncheckedCreateNestedManyWithoutCustomerInput
+  dealCommentLikes?: Prisma.DealCommentLikeUncheckedCreateNestedManyWithoutCustomerInput
+}
+
+export type CustomerCreateOrConnectWithoutDealNotesInput = {
+  where: Prisma.CustomerWhereUniqueInput
+  create: Prisma.XOR<Prisma.CustomerCreateWithoutDealNotesInput, Prisma.CustomerUncheckedCreateWithoutDealNotesInput>
+}
+
+export type CustomerUpsertWithoutDealNotesInput = {
+  update: Prisma.XOR<Prisma.CustomerUpdateWithoutDealNotesInput, Prisma.CustomerUncheckedUpdateWithoutDealNotesInput>
+  create: Prisma.XOR<Prisma.CustomerCreateWithoutDealNotesInput, Prisma.CustomerUncheckedCreateWithoutDealNotesInput>
+  where?: Prisma.CustomerWhereInput
+}
+
+export type CustomerUpdateToOneWithWhereWithoutDealNotesInput = {
+  where?: Prisma.CustomerWhereInput
+  data: Prisma.XOR<Prisma.CustomerUpdateWithoutDealNotesInput, Prisma.CustomerUncheckedUpdateWithoutDealNotesInput>
+}
+
+export type CustomerUpdateWithoutDealNotesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sex?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  submissions?: Prisma.CommunityDealSubmissionUpdateManyWithoutCustomerNestedInput
+  forumProfile?: Prisma.ForumProfileUpdateOneWithoutCustomerNestedInput
+  identities?: Prisma.CustomerIdentityUpdateManyWithoutCustomerNestedInput
+  passwordResets?: Prisma.CustomerPasswordResetUpdateManyWithoutCustomerNestedInput
+  appTokens?: Prisma.CustomerAppTokenUpdateManyWithoutCustomerNestedInput
+  linkedStaff?: Prisma.UserUpdateOneWithoutLinkedCustomerNestedInput
+  moderatorAppointments?: Prisma.ModeratorAppointmentUpdateManyWithoutCustomerNestedInput
+  pushTokens?: Prisma.DevicePushTokenUpdateManyWithoutCustomerNestedInput
+  preference?: Prisma.CustomerPreferenceUpdateOneWithoutCustomerNestedInput
+  savedDeals?: Prisma.SavedDealUpdateManyWithoutCustomerNestedInput
+  dealVotes?: Prisma.DealVoteUpdateManyWithoutCustomerNestedInput
+  dealComments?: Prisma.DealCommentUpdateManyWithoutCustomerNestedInput
+  dealCommentLikes?: Prisma.DealCommentLikeUpdateManyWithoutCustomerNestedInput
+}
+
+export type CustomerUncheckedUpdateWithoutDealNotesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sex?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  submissions?: Prisma.CommunityDealSubmissionUncheckedUpdateManyWithoutCustomerNestedInput
+  forumProfile?: Prisma.ForumProfileUncheckedUpdateOneWithoutCustomerNestedInput
+  identities?: Prisma.CustomerIdentityUncheckedUpdateManyWithoutCustomerNestedInput
+  passwordResets?: Prisma.CustomerPasswordResetUncheckedUpdateManyWithoutCustomerNestedInput
+  appTokens?: Prisma.CustomerAppTokenUncheckedUpdateManyWithoutCustomerNestedInput
+  linkedStaff?: Prisma.UserUncheckedUpdateOneWithoutLinkedCustomerNestedInput
+  moderatorAppointments?: Prisma.ModeratorAppointmentUncheckedUpdateManyWithoutCustomerNestedInput
+  pushTokens?: Prisma.DevicePushTokenUncheckedUpdateManyWithoutCustomerNestedInput
+  preference?: Prisma.CustomerPreferenceUncheckedUpdateOneWithoutCustomerNestedInput
+  savedDeals?: Prisma.SavedDealUncheckedUpdateManyWithoutCustomerNestedInput
+  dealVotes?: Prisma.DealVoteUncheckedUpdateManyWithoutCustomerNestedInput
+  dealComments?: Prisma.DealCommentUncheckedUpdateManyWithoutCustomerNestedInput
+  dealCommentLikes?: Prisma.DealCommentLikeUncheckedUpdateManyWithoutCustomerNestedInput
+}
+
+export type CustomerCreateWithoutDealCommentLikesInput = {
+  id?: string
+  name: string
+  email: string
+  image?: string | null
+  passwordHash?: string | null
+  sex?: string | null
+  dateOfBirth?: Date | string | null
+  location?: string | null
+  emailVerifiedAt?: Date | string | null
+  disabledAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  submissions?: Prisma.CommunityDealSubmissionCreateNestedManyWithoutCustomerInput
+  forumProfile?: Prisma.ForumProfileCreateNestedOneWithoutCustomerInput
+  identities?: Prisma.CustomerIdentityCreateNestedManyWithoutCustomerInput
+  passwordResets?: Prisma.CustomerPasswordResetCreateNestedManyWithoutCustomerInput
+  appTokens?: Prisma.CustomerAppTokenCreateNestedManyWithoutCustomerInput
+  linkedStaff?: Prisma.UserCreateNestedOneWithoutLinkedCustomerInput
+  moderatorAppointments?: Prisma.ModeratorAppointmentCreateNestedManyWithoutCustomerInput
+  pushTokens?: Prisma.DevicePushTokenCreateNestedManyWithoutCustomerInput
+  preference?: Prisma.CustomerPreferenceCreateNestedOneWithoutCustomerInput
+  savedDeals?: Prisma.SavedDealCreateNestedManyWithoutCustomerInput
+  dealVotes?: Prisma.DealVoteCreateNestedManyWithoutCustomerInput
+  dealNotes?: Prisma.DealNoteCreateNestedManyWithoutCustomerInput
+  dealComments?: Prisma.DealCommentCreateNestedManyWithoutCustomerInput
+}
+
+export type CustomerUncheckedCreateWithoutDealCommentLikesInput = {
+  id?: string
+  name: string
+  email: string
+  image?: string | null
+  passwordHash?: string | null
+  sex?: string | null
+  dateOfBirth?: Date | string | null
+  location?: string | null
+  emailVerifiedAt?: Date | string | null
+  disabledAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  submissions?: Prisma.CommunityDealSubmissionUncheckedCreateNestedManyWithoutCustomerInput
+  forumProfile?: Prisma.ForumProfileUncheckedCreateNestedOneWithoutCustomerInput
+  identities?: Prisma.CustomerIdentityUncheckedCreateNestedManyWithoutCustomerInput
+  passwordResets?: Prisma.CustomerPasswordResetUncheckedCreateNestedManyWithoutCustomerInput
+  appTokens?: Prisma.CustomerAppTokenUncheckedCreateNestedManyWithoutCustomerInput
+  linkedStaff?: Prisma.UserUncheckedCreateNestedOneWithoutLinkedCustomerInput
+  moderatorAppointments?: Prisma.ModeratorAppointmentUncheckedCreateNestedManyWithoutCustomerInput
+  pushTokens?: Prisma.DevicePushTokenUncheckedCreateNestedManyWithoutCustomerInput
+  preference?: Prisma.CustomerPreferenceUncheckedCreateNestedOneWithoutCustomerInput
+  savedDeals?: Prisma.SavedDealUncheckedCreateNestedManyWithoutCustomerInput
+  dealVotes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutCustomerInput
+  dealNotes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutCustomerInput
+  dealComments?: Prisma.DealCommentUncheckedCreateNestedManyWithoutCustomerInput
+}
+
+export type CustomerCreateOrConnectWithoutDealCommentLikesInput = {
+  where: Prisma.CustomerWhereUniqueInput
+  create: Prisma.XOR<Prisma.CustomerCreateWithoutDealCommentLikesInput, Prisma.CustomerUncheckedCreateWithoutDealCommentLikesInput>
+}
+
+export type CustomerUpsertWithoutDealCommentLikesInput = {
+  update: Prisma.XOR<Prisma.CustomerUpdateWithoutDealCommentLikesInput, Prisma.CustomerUncheckedUpdateWithoutDealCommentLikesInput>
+  create: Prisma.XOR<Prisma.CustomerCreateWithoutDealCommentLikesInput, Prisma.CustomerUncheckedCreateWithoutDealCommentLikesInput>
+  where?: Prisma.CustomerWhereInput
+}
+
+export type CustomerUpdateToOneWithWhereWithoutDealCommentLikesInput = {
+  where?: Prisma.CustomerWhereInput
+  data: Prisma.XOR<Prisma.CustomerUpdateWithoutDealCommentLikesInput, Prisma.CustomerUncheckedUpdateWithoutDealCommentLikesInput>
+}
+
+export type CustomerUpdateWithoutDealCommentLikesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sex?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  submissions?: Prisma.CommunityDealSubmissionUpdateManyWithoutCustomerNestedInput
+  forumProfile?: Prisma.ForumProfileUpdateOneWithoutCustomerNestedInput
+  identities?: Prisma.CustomerIdentityUpdateManyWithoutCustomerNestedInput
+  passwordResets?: Prisma.CustomerPasswordResetUpdateManyWithoutCustomerNestedInput
+  appTokens?: Prisma.CustomerAppTokenUpdateManyWithoutCustomerNestedInput
+  linkedStaff?: Prisma.UserUpdateOneWithoutLinkedCustomerNestedInput
+  moderatorAppointments?: Prisma.ModeratorAppointmentUpdateManyWithoutCustomerNestedInput
+  pushTokens?: Prisma.DevicePushTokenUpdateManyWithoutCustomerNestedInput
+  preference?: Prisma.CustomerPreferenceUpdateOneWithoutCustomerNestedInput
+  savedDeals?: Prisma.SavedDealUpdateManyWithoutCustomerNestedInput
+  dealVotes?: Prisma.DealVoteUpdateManyWithoutCustomerNestedInput
+  dealNotes?: Prisma.DealNoteUpdateManyWithoutCustomerNestedInput
+  dealComments?: Prisma.DealCommentUpdateManyWithoutCustomerNestedInput
+}
+
+export type CustomerUncheckedUpdateWithoutDealCommentLikesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sex?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  submissions?: Prisma.CommunityDealSubmissionUncheckedUpdateManyWithoutCustomerNestedInput
+  forumProfile?: Prisma.ForumProfileUncheckedUpdateOneWithoutCustomerNestedInput
+  identities?: Prisma.CustomerIdentityUncheckedUpdateManyWithoutCustomerNestedInput
+  passwordResets?: Prisma.CustomerPasswordResetUncheckedUpdateManyWithoutCustomerNestedInput
+  appTokens?: Prisma.CustomerAppTokenUncheckedUpdateManyWithoutCustomerNestedInput
+  linkedStaff?: Prisma.UserUncheckedUpdateOneWithoutLinkedCustomerNestedInput
+  moderatorAppointments?: Prisma.ModeratorAppointmentUncheckedUpdateManyWithoutCustomerNestedInput
+  pushTokens?: Prisma.DevicePushTokenUncheckedUpdateManyWithoutCustomerNestedInput
+  preference?: Prisma.CustomerPreferenceUncheckedUpdateOneWithoutCustomerNestedInput
+  savedDeals?: Prisma.SavedDealUncheckedUpdateManyWithoutCustomerNestedInput
+  dealVotes?: Prisma.DealVoteUncheckedUpdateManyWithoutCustomerNestedInput
+  dealNotes?: Prisma.DealNoteUncheckedUpdateManyWithoutCustomerNestedInput
+  dealComments?: Prisma.DealCommentUncheckedUpdateManyWithoutCustomerNestedInput
 }
 
 
@@ -1821,6 +2579,10 @@ export type CustomerCountOutputType = {
   moderatorAppointments: number
   pushTokens: number
   savedDeals: number
+  dealVotes: number
+  dealNotes: number
+  dealComments: number
+  dealCommentLikes: number
 }
 
 export type CustomerCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1831,6 +2593,10 @@ export type CustomerCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensio
   moderatorAppointments?: boolean | CustomerCountOutputTypeCountModeratorAppointmentsArgs
   pushTokens?: boolean | CustomerCountOutputTypeCountPushTokensArgs
   savedDeals?: boolean | CustomerCountOutputTypeCountSavedDealsArgs
+  dealVotes?: boolean | CustomerCountOutputTypeCountDealVotesArgs
+  dealNotes?: boolean | CustomerCountOutputTypeCountDealNotesArgs
+  dealComments?: boolean | CustomerCountOutputTypeCountDealCommentsArgs
+  dealCommentLikes?: boolean | CustomerCountOutputTypeCountDealCommentLikesArgs
 }
 
 /**
@@ -1892,6 +2658,34 @@ export type CustomerCountOutputTypeCountSavedDealsArgs<ExtArgs extends runtime.T
   where?: Prisma.SavedDealWhereInput
 }
 
+/**
+ * CustomerCountOutputType without action
+ */
+export type CustomerCountOutputTypeCountDealVotesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DealVoteWhereInput
+}
+
+/**
+ * CustomerCountOutputType without action
+ */
+export type CustomerCountOutputTypeCountDealNotesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DealNoteWhereInput
+}
+
+/**
+ * CustomerCountOutputType without action
+ */
+export type CustomerCountOutputTypeCountDealCommentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DealCommentWhereInput
+}
+
+/**
+ * CustomerCountOutputType without action
+ */
+export type CustomerCountOutputTypeCountDealCommentLikesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DealCommentLikeWhereInput
+}
+
 
 export type CustomerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1916,6 +2710,10 @@ export type CustomerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   pushTokens?: boolean | Prisma.Customer$pushTokensArgs<ExtArgs>
   preference?: boolean | Prisma.Customer$preferenceArgs<ExtArgs>
   savedDeals?: boolean | Prisma.Customer$savedDealsArgs<ExtArgs>
+  dealVotes?: boolean | Prisma.Customer$dealVotesArgs<ExtArgs>
+  dealNotes?: boolean | Prisma.Customer$dealNotesArgs<ExtArgs>
+  dealComments?: boolean | Prisma.Customer$dealCommentsArgs<ExtArgs>
+  dealCommentLikes?: boolean | Prisma.Customer$dealCommentLikesArgs<ExtArgs>
   _count?: boolean | Prisma.CustomerCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["customer"]>
 
@@ -1948,6 +2746,10 @@ export type CustomerInclude<ExtArgs extends runtime.Types.Extensions.InternalArg
   pushTokens?: boolean | Prisma.Customer$pushTokensArgs<ExtArgs>
   preference?: boolean | Prisma.Customer$preferenceArgs<ExtArgs>
   savedDeals?: boolean | Prisma.Customer$savedDealsArgs<ExtArgs>
+  dealVotes?: boolean | Prisma.Customer$dealVotesArgs<ExtArgs>
+  dealNotes?: boolean | Prisma.Customer$dealNotesArgs<ExtArgs>
+  dealComments?: boolean | Prisma.Customer$dealCommentsArgs<ExtArgs>
+  dealCommentLikes?: boolean | Prisma.Customer$dealCommentLikesArgs<ExtArgs>
   _count?: boolean | Prisma.CustomerCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -1964,6 +2766,10 @@ export type $CustomerPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     pushTokens: Prisma.$DevicePushTokenPayload<ExtArgs>[]
     preference: Prisma.$CustomerPreferencePayload<ExtArgs> | null
     savedDeals: Prisma.$SavedDealPayload<ExtArgs>[]
+    dealVotes: Prisma.$DealVotePayload<ExtArgs>[]
+    dealNotes: Prisma.$DealNotePayload<ExtArgs>[]
+    dealComments: Prisma.$DealCommentPayload<ExtArgs>[]
+    dealCommentLikes: Prisma.$DealCommentLikePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2328,6 +3134,10 @@ export interface Prisma__CustomerClient<T, Null = never, ExtArgs extends runtime
   pushTokens<T extends Prisma.Customer$pushTokensArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Customer$pushTokensArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DevicePushTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   preference<T extends Prisma.Customer$preferenceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Customer$preferenceArgs<ExtArgs>>): Prisma.Prisma__CustomerPreferenceClient<runtime.Types.Result.GetResult<Prisma.$CustomerPreferencePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   savedDeals<T extends Prisma.Customer$savedDealsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Customer$savedDealsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SavedDealPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  dealVotes<T extends Prisma.Customer$dealVotesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Customer$dealVotesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DealVotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  dealNotes<T extends Prisma.Customer$dealNotesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Customer$dealNotesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DealNotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  dealComments<T extends Prisma.Customer$dealCommentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Customer$dealCommentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DealCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  dealCommentLikes<T extends Prisma.Customer$dealCommentLikesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Customer$dealCommentLikesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DealCommentLikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2939,6 +3749,102 @@ export type Customer$savedDealsArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.SavedDealScalarFieldEnum | Prisma.SavedDealScalarFieldEnum[]
+}
+
+/**
+ * Customer.dealVotes
+ */
+export type Customer$dealVotesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DealVote
+   */
+  select?: Prisma.DealVoteSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DealVote
+   */
+  omit?: Prisma.DealVoteOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DealVoteInclude<ExtArgs> | null
+  where?: Prisma.DealVoteWhereInput
+  orderBy?: Prisma.DealVoteOrderByWithRelationInput | Prisma.DealVoteOrderByWithRelationInput[]
+  cursor?: Prisma.DealVoteWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DealVoteScalarFieldEnum | Prisma.DealVoteScalarFieldEnum[]
+}
+
+/**
+ * Customer.dealNotes
+ */
+export type Customer$dealNotesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DealNote
+   */
+  select?: Prisma.DealNoteSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DealNote
+   */
+  omit?: Prisma.DealNoteOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DealNoteInclude<ExtArgs> | null
+  where?: Prisma.DealNoteWhereInput
+  orderBy?: Prisma.DealNoteOrderByWithRelationInput | Prisma.DealNoteOrderByWithRelationInput[]
+  cursor?: Prisma.DealNoteWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DealNoteScalarFieldEnum | Prisma.DealNoteScalarFieldEnum[]
+}
+
+/**
+ * Customer.dealComments
+ */
+export type Customer$dealCommentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DealComment
+   */
+  select?: Prisma.DealCommentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DealComment
+   */
+  omit?: Prisma.DealCommentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DealCommentInclude<ExtArgs> | null
+  where?: Prisma.DealCommentWhereInput
+  orderBy?: Prisma.DealCommentOrderByWithRelationInput | Prisma.DealCommentOrderByWithRelationInput[]
+  cursor?: Prisma.DealCommentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DealCommentScalarFieldEnum | Prisma.DealCommentScalarFieldEnum[]
+}
+
+/**
+ * Customer.dealCommentLikes
+ */
+export type Customer$dealCommentLikesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DealCommentLike
+   */
+  select?: Prisma.DealCommentLikeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DealCommentLike
+   */
+  omit?: Prisma.DealCommentLikeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DealCommentLikeInclude<ExtArgs> | null
+  where?: Prisma.DealCommentLikeWhereInput
+  orderBy?: Prisma.DealCommentLikeOrderByWithRelationInput | Prisma.DealCommentLikeOrderByWithRelationInput[]
+  cursor?: Prisma.DealCommentLikeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DealCommentLikeScalarFieldEnum | Prisma.DealCommentLikeScalarFieldEnum[]
 }
 
 /**

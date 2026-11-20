@@ -272,6 +272,8 @@ export type ForumProfileWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"ForumProfile"> | Date | string
   customer?: Prisma.XOR<Prisma.CustomerScalarRelationFilter, Prisma.CustomerWhereInput>
   followers?: Prisma.ForumMemberFollowListRelationFilter
+  starsGiven?: Prisma.MemberStarListRelationFilter
+  starsReceived?: Prisma.MemberStarListRelationFilter
   warnings?: Prisma.MemberWarningListRelationFilter
   restrictions?: Prisma.MemberRestrictionListRelationFilter
   appeals?: Prisma.ModerationAppealListRelationFilter
@@ -316,6 +318,8 @@ export type ForumProfileOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   customer?: Prisma.CustomerOrderByWithRelationInput
   followers?: Prisma.ForumMemberFollowOrderByRelationAggregateInput
+  starsGiven?: Prisma.MemberStarOrderByRelationAggregateInput
+  starsReceived?: Prisma.MemberStarOrderByRelationAggregateInput
   warnings?: Prisma.MemberWarningOrderByRelationAggregateInput
   restrictions?: Prisma.MemberRestrictionOrderByRelationAggregateInput
   appeals?: Prisma.ModerationAppealOrderByRelationAggregateInput
@@ -364,6 +368,8 @@ export type ForumProfileWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"ForumProfile"> | Date | string
   customer?: Prisma.XOR<Prisma.CustomerScalarRelationFilter, Prisma.CustomerWhereInput>
   followers?: Prisma.ForumMemberFollowListRelationFilter
+  starsGiven?: Prisma.MemberStarListRelationFilter
+  starsReceived?: Prisma.MemberStarListRelationFilter
   warnings?: Prisma.MemberWarningListRelationFilter
   restrictions?: Prisma.MemberRestrictionListRelationFilter
   appeals?: Prisma.ModerationAppealListRelationFilter
@@ -451,6 +457,8 @@ export type ForumProfileCreateInput = {
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
   followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
@@ -494,6 +502,8 @@ export type ForumProfileUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarUncheckedCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarUncheckedCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
@@ -537,6 +547,8 @@ export type ForumProfileUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
   followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
@@ -580,6 +592,8 @@ export type ForumProfileUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUncheckedUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUncheckedUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
@@ -1110,6 +1124,34 @@ export type ForumProfileUpdateOneRequiredWithoutAppealsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ForumProfileUpdateToOneWithWhereWithoutAppealsInput, Prisma.ForumProfileUpdateWithoutAppealsInput>, Prisma.ForumProfileUncheckedUpdateWithoutAppealsInput>
 }
 
+export type ForumProfileCreateNestedOneWithoutStarsGivenInput = {
+  create?: Prisma.XOR<Prisma.ForumProfileCreateWithoutStarsGivenInput, Prisma.ForumProfileUncheckedCreateWithoutStarsGivenInput>
+  connectOrCreate?: Prisma.ForumProfileCreateOrConnectWithoutStarsGivenInput
+  connect?: Prisma.ForumProfileWhereUniqueInput
+}
+
+export type ForumProfileCreateNestedOneWithoutStarsReceivedInput = {
+  create?: Prisma.XOR<Prisma.ForumProfileCreateWithoutStarsReceivedInput, Prisma.ForumProfileUncheckedCreateWithoutStarsReceivedInput>
+  connectOrCreate?: Prisma.ForumProfileCreateOrConnectWithoutStarsReceivedInput
+  connect?: Prisma.ForumProfileWhereUniqueInput
+}
+
+export type ForumProfileUpdateOneRequiredWithoutStarsGivenNestedInput = {
+  create?: Prisma.XOR<Prisma.ForumProfileCreateWithoutStarsGivenInput, Prisma.ForumProfileUncheckedCreateWithoutStarsGivenInput>
+  connectOrCreate?: Prisma.ForumProfileCreateOrConnectWithoutStarsGivenInput
+  upsert?: Prisma.ForumProfileUpsertWithoutStarsGivenInput
+  connect?: Prisma.ForumProfileWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ForumProfileUpdateToOneWithWhereWithoutStarsGivenInput, Prisma.ForumProfileUpdateWithoutStarsGivenInput>, Prisma.ForumProfileUncheckedUpdateWithoutStarsGivenInput>
+}
+
+export type ForumProfileUpdateOneRequiredWithoutStarsReceivedNestedInput = {
+  create?: Prisma.XOR<Prisma.ForumProfileCreateWithoutStarsReceivedInput, Prisma.ForumProfileUncheckedCreateWithoutStarsReceivedInput>
+  connectOrCreate?: Prisma.ForumProfileCreateOrConnectWithoutStarsReceivedInput
+  upsert?: Prisma.ForumProfileUpsertWithoutStarsReceivedInput
+  connect?: Prisma.ForumProfileWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ForumProfileUpdateToOneWithWhereWithoutStarsReceivedInput, Prisma.ForumProfileUpdateWithoutStarsReceivedInput>, Prisma.ForumProfileUncheckedUpdateWithoutStarsReceivedInput>
+}
+
 export type ForumProfileCreateWithoutCustomerInput = {
   id?: string
   handle: string
@@ -1127,6 +1169,8 @@ export type ForumProfileCreateWithoutCustomerInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
@@ -1169,6 +1213,8 @@ export type ForumProfileUncheckedCreateWithoutCustomerInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarUncheckedCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarUncheckedCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
@@ -1227,6 +1273,8 @@ export type ForumProfileUpdateWithoutCustomerInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
@@ -1269,6 +1317,8 @@ export type ForumProfileUncheckedUpdateWithoutCustomerInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUncheckedUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUncheckedUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
@@ -1312,6 +1362,8 @@ export type ForumProfileCreateWithoutPostsInput = {
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
   followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
@@ -1354,6 +1406,8 @@ export type ForumProfileUncheckedCreateWithoutPostsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarUncheckedCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarUncheckedCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
@@ -1412,6 +1466,8 @@ export type ForumProfileUpdateWithoutPostsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
   followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
@@ -1454,6 +1510,8 @@ export type ForumProfileUncheckedUpdateWithoutPostsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUncheckedUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUncheckedUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
@@ -1496,6 +1554,8 @@ export type ForumProfileCreateWithoutCommentsInput = {
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
   followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
@@ -1538,6 +1598,8 @@ export type ForumProfileUncheckedCreateWithoutCommentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarUncheckedCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarUncheckedCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
@@ -1596,6 +1658,8 @@ export type ForumProfileUpdateWithoutCommentsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
   followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
@@ -1638,6 +1702,8 @@ export type ForumProfileUncheckedUpdateWithoutCommentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUncheckedUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUncheckedUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
@@ -1680,6 +1746,8 @@ export type ForumProfileCreateWithoutPostVotesInput = {
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
   followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
@@ -1722,6 +1790,8 @@ export type ForumProfileUncheckedCreateWithoutPostVotesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarUncheckedCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarUncheckedCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
@@ -1780,6 +1850,8 @@ export type ForumProfileUpdateWithoutPostVotesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
   followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
@@ -1822,6 +1894,8 @@ export type ForumProfileUncheckedUpdateWithoutPostVotesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUncheckedUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUncheckedUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
@@ -1864,6 +1938,8 @@ export type ForumProfileCreateWithoutCommentVotesInput = {
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
   followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
@@ -1906,6 +1982,8 @@ export type ForumProfileUncheckedCreateWithoutCommentVotesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarUncheckedCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarUncheckedCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
@@ -1964,6 +2042,8 @@ export type ForumProfileUpdateWithoutCommentVotesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
   followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
@@ -2006,6 +2086,8 @@ export type ForumProfileUncheckedUpdateWithoutCommentVotesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUncheckedUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUncheckedUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
@@ -2048,6 +2130,8 @@ export type ForumProfileCreateWithoutPostLikesInput = {
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
   followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
@@ -2090,6 +2174,8 @@ export type ForumProfileUncheckedCreateWithoutPostLikesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarUncheckedCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarUncheckedCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
@@ -2148,6 +2234,8 @@ export type ForumProfileUpdateWithoutPostLikesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
   followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
@@ -2190,6 +2278,8 @@ export type ForumProfileUncheckedUpdateWithoutPostLikesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUncheckedUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUncheckedUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
@@ -2232,6 +2322,8 @@ export type ForumProfileCreateWithoutCommentLikesInput = {
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
   followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
@@ -2274,6 +2366,8 @@ export type ForumProfileUncheckedCreateWithoutCommentLikesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarUncheckedCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarUncheckedCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
@@ -2332,6 +2426,8 @@ export type ForumProfileUpdateWithoutCommentLikesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
   followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
@@ -2374,6 +2470,8 @@ export type ForumProfileUncheckedUpdateWithoutCommentLikesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUncheckedUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUncheckedUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
@@ -2416,6 +2514,8 @@ export type ForumProfileCreateWithoutSavesInput = {
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
   followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
@@ -2458,6 +2558,8 @@ export type ForumProfileUncheckedCreateWithoutSavesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarUncheckedCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarUncheckedCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
@@ -2516,6 +2618,8 @@ export type ForumProfileUpdateWithoutSavesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
   followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
@@ -2558,6 +2662,8 @@ export type ForumProfileUncheckedUpdateWithoutSavesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUncheckedUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUncheckedUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
@@ -2600,6 +2706,8 @@ export type ForumProfileCreateWithoutFollowsInput = {
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
   followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
@@ -2642,6 +2750,8 @@ export type ForumProfileUncheckedCreateWithoutFollowsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarUncheckedCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarUncheckedCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
@@ -2700,6 +2810,8 @@ export type ForumProfileUpdateWithoutFollowsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
   followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
@@ -2742,6 +2854,8 @@ export type ForumProfileUncheckedUpdateWithoutFollowsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUncheckedUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUncheckedUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
@@ -2784,6 +2898,8 @@ export type ForumProfileCreateWithoutPostImagesInput = {
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
   followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
@@ -2826,6 +2942,8 @@ export type ForumProfileUncheckedCreateWithoutPostImagesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarUncheckedCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarUncheckedCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
@@ -2884,6 +3002,8 @@ export type ForumProfileUpdateWithoutPostImagesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
   followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
@@ -2926,6 +3046,8 @@ export type ForumProfileUncheckedUpdateWithoutPostImagesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUncheckedUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUncheckedUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
@@ -2968,6 +3090,8 @@ export type ForumProfileCreateWithoutDraftInput = {
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
   followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
@@ -3010,6 +3134,8 @@ export type ForumProfileUncheckedCreateWithoutDraftInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarUncheckedCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarUncheckedCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
@@ -3068,6 +3194,8 @@ export type ForumProfileUpdateWithoutDraftInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
   followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
@@ -3110,6 +3238,8 @@ export type ForumProfileUncheckedUpdateWithoutDraftInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUncheckedUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUncheckedUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
@@ -3152,6 +3282,8 @@ export type ForumProfileCreateWithoutNotificationsInput = {
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
   followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
@@ -3194,6 +3326,8 @@ export type ForumProfileUncheckedCreateWithoutNotificationsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarUncheckedCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarUncheckedCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
@@ -3241,6 +3375,8 @@ export type ForumProfileCreateWithoutNotificationsMadeInput = {
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
   followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
@@ -3283,6 +3419,8 @@ export type ForumProfileUncheckedCreateWithoutNotificationsMadeInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarUncheckedCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarUncheckedCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
@@ -3341,6 +3479,8 @@ export type ForumProfileUpdateWithoutNotificationsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
   followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
@@ -3383,6 +3523,8 @@ export type ForumProfileUncheckedUpdateWithoutNotificationsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUncheckedUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUncheckedUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
@@ -3436,6 +3578,8 @@ export type ForumProfileUpdateWithoutNotificationsMadeInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
   followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
@@ -3478,6 +3622,8 @@ export type ForumProfileUncheckedUpdateWithoutNotificationsMadeInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUncheckedUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUncheckedUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
@@ -3520,6 +3666,8 @@ export type ForumProfileCreateWithoutReportsMadeInput = {
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
   followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
@@ -3562,6 +3710,8 @@ export type ForumProfileUncheckedCreateWithoutReportsMadeInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarUncheckedCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarUncheckedCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
@@ -3609,6 +3759,8 @@ export type ForumProfileCreateWithoutReportsAgainstInput = {
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
   followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
@@ -3651,6 +3803,8 @@ export type ForumProfileUncheckedCreateWithoutReportsAgainstInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarUncheckedCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarUncheckedCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
@@ -3709,6 +3863,8 @@ export type ForumProfileUpdateWithoutReportsMadeInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
   followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
@@ -3751,6 +3907,8 @@ export type ForumProfileUncheckedUpdateWithoutReportsMadeInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUncheckedUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUncheckedUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
@@ -3804,6 +3962,8 @@ export type ForumProfileUpdateWithoutReportsAgainstInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
   followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
@@ -3846,6 +4006,8 @@ export type ForumProfileUncheckedUpdateWithoutReportsAgainstInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUncheckedUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUncheckedUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
@@ -3888,6 +4050,8 @@ export type ForumProfileCreateWithoutDmThreadsLowInput = {
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
   followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
@@ -3930,6 +4094,8 @@ export type ForumProfileUncheckedCreateWithoutDmThreadsLowInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarUncheckedCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarUncheckedCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
@@ -3977,6 +4143,8 @@ export type ForumProfileCreateWithoutDmThreadsHighInput = {
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
   followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
@@ -4019,6 +4187,8 @@ export type ForumProfileUncheckedCreateWithoutDmThreadsHighInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarUncheckedCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarUncheckedCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
@@ -4077,6 +4247,8 @@ export type ForumProfileUpdateWithoutDmThreadsLowInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
   followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
@@ -4119,6 +4291,8 @@ export type ForumProfileUncheckedUpdateWithoutDmThreadsLowInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUncheckedUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUncheckedUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
@@ -4172,6 +4346,8 @@ export type ForumProfileUpdateWithoutDmThreadsHighInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
   followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
@@ -4214,6 +4390,8 @@ export type ForumProfileUncheckedUpdateWithoutDmThreadsHighInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUncheckedUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUncheckedUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
@@ -4256,6 +4434,8 @@ export type ForumProfileCreateWithoutDmMessagesInput = {
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
   followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
@@ -4298,6 +4478,8 @@ export type ForumProfileUncheckedCreateWithoutDmMessagesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarUncheckedCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarUncheckedCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
@@ -4356,6 +4538,8 @@ export type ForumProfileUpdateWithoutDmMessagesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
   followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
@@ -4398,6 +4582,8 @@ export type ForumProfileUncheckedUpdateWithoutDmMessagesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUncheckedUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUncheckedUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
@@ -4440,6 +4626,8 @@ export type ForumProfileCreateWithoutDmBlocksMadeInput = {
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
   followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
@@ -4482,6 +4670,8 @@ export type ForumProfileUncheckedCreateWithoutDmBlocksMadeInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarUncheckedCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarUncheckedCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
@@ -4529,6 +4719,8 @@ export type ForumProfileCreateWithoutDmBlocksReceivedInput = {
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
   followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
@@ -4571,6 +4763,8 @@ export type ForumProfileUncheckedCreateWithoutDmBlocksReceivedInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarUncheckedCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarUncheckedCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
@@ -4629,6 +4823,8 @@ export type ForumProfileUpdateWithoutDmBlocksMadeInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
   followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
@@ -4671,6 +4867,8 @@ export type ForumProfileUncheckedUpdateWithoutDmBlocksMadeInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUncheckedUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUncheckedUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
@@ -4724,6 +4922,8 @@ export type ForumProfileUpdateWithoutDmBlocksReceivedInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
   followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
@@ -4766,6 +4966,8 @@ export type ForumProfileUncheckedUpdateWithoutDmBlocksReceivedInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUncheckedUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUncheckedUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
@@ -4808,6 +5010,8 @@ export type ForumProfileCreateWithoutFollowingInput = {
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
   followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
@@ -4850,6 +5054,8 @@ export type ForumProfileUncheckedCreateWithoutFollowingInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarUncheckedCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarUncheckedCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
@@ -4896,6 +5102,8 @@ export type ForumProfileCreateWithoutFollowersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
+  starsGiven?: Prisma.MemberStarCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
@@ -4938,6 +5146,8 @@ export type ForumProfileUncheckedCreateWithoutFollowersInput = {
   avatarProvider?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  starsGiven?: Prisma.MemberStarUncheckedCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarUncheckedCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
@@ -4997,6 +5207,8 @@ export type ForumProfileUpdateWithoutFollowingInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
   followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
@@ -5039,6 +5251,8 @@ export type ForumProfileUncheckedUpdateWithoutFollowingInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUncheckedUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUncheckedUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
@@ -5091,6 +5305,8 @@ export type ForumProfileUpdateWithoutFollowersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
+  starsGiven?: Prisma.MemberStarUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
@@ -5133,6 +5349,8 @@ export type ForumProfileUncheckedUpdateWithoutFollowersInput = {
   avatarProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  starsGiven?: Prisma.MemberStarUncheckedUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUncheckedUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
@@ -5176,6 +5394,8 @@ export type ForumProfileCreateWithoutWarningsInput = {
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
   followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarCreateNestedManyWithoutReceiverInput
   restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
   following?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowerInput
@@ -5218,6 +5438,8 @@ export type ForumProfileUncheckedCreateWithoutWarningsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarUncheckedCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarUncheckedCreateNestedManyWithoutReceiverInput
   restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
   following?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowerInput
@@ -5276,6 +5498,8 @@ export type ForumProfileUpdateWithoutWarningsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
   followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUpdateManyWithoutReceiverNestedInput
   restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
   following?: Prisma.ForumMemberFollowUpdateManyWithoutFollowerNestedInput
@@ -5318,6 +5542,8 @@ export type ForumProfileUncheckedUpdateWithoutWarningsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUncheckedUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUncheckedUpdateManyWithoutReceiverNestedInput
   restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
   following?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowerNestedInput
@@ -5360,6 +5586,8 @@ export type ForumProfileCreateWithoutRestrictionsInput = {
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
   followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
   following?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowerInput
@@ -5402,6 +5630,8 @@ export type ForumProfileUncheckedCreateWithoutRestrictionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarUncheckedCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarUncheckedCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
   appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
   following?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowerInput
@@ -5460,6 +5690,8 @@ export type ForumProfileUpdateWithoutRestrictionsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
   followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
   following?: Prisma.ForumMemberFollowUpdateManyWithoutFollowerNestedInput
@@ -5502,6 +5734,8 @@ export type ForumProfileUncheckedUpdateWithoutRestrictionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUncheckedUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUncheckedUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
   appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
   following?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowerNestedInput
@@ -5544,6 +5778,8 @@ export type ForumProfileCreateWithoutAppealsInput = {
   updatedAt?: Date | string
   customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
   followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
   following?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowerInput
@@ -5586,6 +5822,8 @@ export type ForumProfileUncheckedCreateWithoutAppealsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarUncheckedCreateNestedManyWithoutGiverInput
+  starsReceived?: Prisma.MemberStarUncheckedCreateNestedManyWithoutReceiverInput
   warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
   restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
   following?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowerInput
@@ -5644,6 +5882,8 @@ export type ForumProfileUpdateWithoutAppealsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
   followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
   following?: Prisma.ForumMemberFollowUpdateManyWithoutFollowerNestedInput
@@ -5686,8 +5926,394 @@ export type ForumProfileUncheckedUpdateWithoutAppealsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUncheckedUpdateManyWithoutGiverNestedInput
+  starsReceived?: Prisma.MemberStarUncheckedUpdateManyWithoutReceiverNestedInput
   warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
   restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowerNestedInput
+  dmThreadsLow?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileLowNestedInput
+  dmThreadsHigh?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileHighNestedInput
+  dmMessages?: Prisma.DmMessageUncheckedUpdateManyWithoutSenderNestedInput
+  dmBlocksMade?: Prisma.DmBlockUncheckedUpdateManyWithoutBlockerNestedInput
+  dmBlocksReceived?: Prisma.DmBlockUncheckedUpdateManyWithoutBlockedNestedInput
+  posts?: Prisma.ForumPostUncheckedUpdateManyWithoutAuthorNestedInput
+  comments?: Prisma.ForumCommentUncheckedUpdateManyWithoutAuthorNestedInput
+  postVotes?: Prisma.ForumPostVoteUncheckedUpdateManyWithoutProfileNestedInput
+  commentVotes?: Prisma.ForumCommentVoteUncheckedUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUncheckedUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUncheckedUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUncheckedUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedUpdateManyWithoutActorNestedInput
+  saves?: Prisma.ForumSaveUncheckedUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUncheckedUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedUpdateManyWithoutProfileNestedInput
+  follows?: Prisma.ForumFollowUncheckedUpdateManyWithoutProfileNestedInput
+  reportsMade?: Prisma.ForumReportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsAgainst?: Prisma.ForumReportUncheckedUpdateManyWithoutTargetProfileNestedInput
+}
+
+export type ForumProfileCreateWithoutStarsGivenInput = {
+  id?: string
+  handle: string
+  bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
+  status?: $Enums.ForumMemberStatus
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  avatarKey?: string | null
+  avatarProvider?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
+  followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  starsReceived?: Prisma.MemberStarCreateNestedManyWithoutReceiverInput
+  warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowerInput
+  dmThreadsLow?: Prisma.DmThreadCreateNestedManyWithoutProfileLowInput
+  dmThreadsHigh?: Prisma.DmThreadCreateNestedManyWithoutProfileHighInput
+  dmMessages?: Prisma.DmMessageCreateNestedManyWithoutSenderInput
+  dmBlocksMade?: Prisma.DmBlockCreateNestedManyWithoutBlockerInput
+  dmBlocksReceived?: Prisma.DmBlockCreateNestedManyWithoutBlockedInput
+  posts?: Prisma.ForumPostCreateNestedManyWithoutAuthorInput
+  comments?: Prisma.ForumCommentCreateNestedManyWithoutAuthorInput
+  postVotes?: Prisma.ForumPostVoteCreateNestedManyWithoutProfileInput
+  commentVotes?: Prisma.ForumCommentVoteCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationCreateNestedManyWithoutActorInput
+  saves?: Prisma.ForumSaveCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeCreateNestedManyWithoutProfileInput
+  follows?: Prisma.ForumFollowCreateNestedManyWithoutProfileInput
+  reportsMade?: Prisma.ForumReportCreateNestedManyWithoutReporterInput
+  reportsAgainst?: Prisma.ForumReportCreateNestedManyWithoutTargetProfileInput
+}
+
+export type ForumProfileUncheckedCreateWithoutStarsGivenInput = {
+  id?: string
+  customerId: string
+  handle: string
+  bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
+  status?: $Enums.ForumMemberStatus
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  avatarKey?: string | null
+  avatarProvider?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  starsReceived?: Prisma.MemberStarUncheckedCreateNestedManyWithoutReceiverInput
+  warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowerInput
+  dmThreadsLow?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileLowInput
+  dmThreadsHigh?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileHighInput
+  dmMessages?: Prisma.DmMessageUncheckedCreateNestedManyWithoutSenderInput
+  dmBlocksMade?: Prisma.DmBlockUncheckedCreateNestedManyWithoutBlockerInput
+  dmBlocksReceived?: Prisma.DmBlockUncheckedCreateNestedManyWithoutBlockedInput
+  posts?: Prisma.ForumPostUncheckedCreateNestedManyWithoutAuthorInput
+  comments?: Prisma.ForumCommentUncheckedCreateNestedManyWithoutAuthorInput
+  postVotes?: Prisma.ForumPostVoteUncheckedCreateNestedManyWithoutProfileInput
+  commentVotes?: Prisma.ForumCommentVoteUncheckedCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageUncheckedCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftUncheckedCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutActorInput
+  saves?: Prisma.ForumSaveUncheckedCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeUncheckedCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedCreateNestedManyWithoutProfileInput
+  follows?: Prisma.ForumFollowUncheckedCreateNestedManyWithoutProfileInput
+  reportsMade?: Prisma.ForumReportUncheckedCreateNestedManyWithoutReporterInput
+  reportsAgainst?: Prisma.ForumReportUncheckedCreateNestedManyWithoutTargetProfileInput
+}
+
+export type ForumProfileCreateOrConnectWithoutStarsGivenInput = {
+  where: Prisma.ForumProfileWhereUniqueInput
+  create: Prisma.XOR<Prisma.ForumProfileCreateWithoutStarsGivenInput, Prisma.ForumProfileUncheckedCreateWithoutStarsGivenInput>
+}
+
+export type ForumProfileCreateWithoutStarsReceivedInput = {
+  id?: string
+  handle: string
+  bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
+  status?: $Enums.ForumMemberStatus
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  avatarKey?: string | null
+  avatarProvider?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  customer: Prisma.CustomerCreateNestedOneWithoutForumProfileInput
+  followers?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarCreateNestedManyWithoutGiverInput
+  warnings?: Prisma.MemberWarningCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowCreateNestedManyWithoutFollowerInput
+  dmThreadsLow?: Prisma.DmThreadCreateNestedManyWithoutProfileLowInput
+  dmThreadsHigh?: Prisma.DmThreadCreateNestedManyWithoutProfileHighInput
+  dmMessages?: Prisma.DmMessageCreateNestedManyWithoutSenderInput
+  dmBlocksMade?: Prisma.DmBlockCreateNestedManyWithoutBlockerInput
+  dmBlocksReceived?: Prisma.DmBlockCreateNestedManyWithoutBlockedInput
+  posts?: Prisma.ForumPostCreateNestedManyWithoutAuthorInput
+  comments?: Prisma.ForumCommentCreateNestedManyWithoutAuthorInput
+  postVotes?: Prisma.ForumPostVoteCreateNestedManyWithoutProfileInput
+  commentVotes?: Prisma.ForumCommentVoteCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationCreateNestedManyWithoutActorInput
+  saves?: Prisma.ForumSaveCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeCreateNestedManyWithoutProfileInput
+  follows?: Prisma.ForumFollowCreateNestedManyWithoutProfileInput
+  reportsMade?: Prisma.ForumReportCreateNestedManyWithoutReporterInput
+  reportsAgainst?: Prisma.ForumReportCreateNestedManyWithoutTargetProfileInput
+}
+
+export type ForumProfileUncheckedCreateWithoutStarsReceivedInput = {
+  id?: string
+  customerId: string
+  handle: string
+  bio?: string | null
+  displayName?: string | null
+  location?: string | null
+  lastSeenAt?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
+  status?: $Enums.ForumMemberStatus
+  suspendedUntil?: Date | string | null
+  suspensionReason?: string | null
+  avatarKey?: string | null
+  avatarProvider?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowedInput
+  starsGiven?: Prisma.MemberStarUncheckedCreateNestedManyWithoutGiverInput
+  warnings?: Prisma.MemberWarningUncheckedCreateNestedManyWithoutProfileInput
+  restrictions?: Prisma.MemberRestrictionUncheckedCreateNestedManyWithoutProfileInput
+  appeals?: Prisma.ModerationAppealUncheckedCreateNestedManyWithoutProfileInput
+  following?: Prisma.ForumMemberFollowUncheckedCreateNestedManyWithoutFollowerInput
+  dmThreadsLow?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileLowInput
+  dmThreadsHigh?: Prisma.DmThreadUncheckedCreateNestedManyWithoutProfileHighInput
+  dmMessages?: Prisma.DmMessageUncheckedCreateNestedManyWithoutSenderInput
+  dmBlocksMade?: Prisma.DmBlockUncheckedCreateNestedManyWithoutBlockerInput
+  dmBlocksReceived?: Prisma.DmBlockUncheckedCreateNestedManyWithoutBlockedInput
+  posts?: Prisma.ForumPostUncheckedCreateNestedManyWithoutAuthorInput
+  comments?: Prisma.ForumCommentUncheckedCreateNestedManyWithoutAuthorInput
+  postVotes?: Prisma.ForumPostVoteUncheckedCreateNestedManyWithoutProfileInput
+  commentVotes?: Prisma.ForumCommentVoteUncheckedCreateNestedManyWithoutProfileInput
+  postImages?: Prisma.ForumPostImageUncheckedCreateNestedManyWithoutProfileInput
+  draft?: Prisma.ForumPostDraftUncheckedCreateNestedOneWithoutProfileInput
+  notifications?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutRecipientInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedCreateNestedManyWithoutActorInput
+  saves?: Prisma.ForumSaveUncheckedCreateNestedManyWithoutProfileInput
+  postLikes?: Prisma.ForumPostLikeUncheckedCreateNestedManyWithoutProfileInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedCreateNestedManyWithoutProfileInput
+  follows?: Prisma.ForumFollowUncheckedCreateNestedManyWithoutProfileInput
+  reportsMade?: Prisma.ForumReportUncheckedCreateNestedManyWithoutReporterInput
+  reportsAgainst?: Prisma.ForumReportUncheckedCreateNestedManyWithoutTargetProfileInput
+}
+
+export type ForumProfileCreateOrConnectWithoutStarsReceivedInput = {
+  where: Prisma.ForumProfileWhereUniqueInput
+  create: Prisma.XOR<Prisma.ForumProfileCreateWithoutStarsReceivedInput, Prisma.ForumProfileUncheckedCreateWithoutStarsReceivedInput>
+}
+
+export type ForumProfileUpsertWithoutStarsGivenInput = {
+  update: Prisma.XOR<Prisma.ForumProfileUpdateWithoutStarsGivenInput, Prisma.ForumProfileUncheckedUpdateWithoutStarsGivenInput>
+  create: Prisma.XOR<Prisma.ForumProfileCreateWithoutStarsGivenInput, Prisma.ForumProfileUncheckedCreateWithoutStarsGivenInput>
+  where?: Prisma.ForumProfileWhereInput
+}
+
+export type ForumProfileUpdateToOneWithWhereWithoutStarsGivenInput = {
+  where?: Prisma.ForumProfileWhereInput
+  data: Prisma.XOR<Prisma.ForumProfileUpdateWithoutStarsGivenInput, Prisma.ForumProfileUncheckedUpdateWithoutStarsGivenInput>
+}
+
+export type ForumProfileUpdateWithoutStarsGivenInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  handle?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
+  followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  starsReceived?: Prisma.MemberStarUpdateManyWithoutReceiverNestedInput
+  warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUpdateManyWithoutFollowerNestedInput
+  dmThreadsLow?: Prisma.DmThreadUpdateManyWithoutProfileLowNestedInput
+  dmThreadsHigh?: Prisma.DmThreadUpdateManyWithoutProfileHighNestedInput
+  dmMessages?: Prisma.DmMessageUpdateManyWithoutSenderNestedInput
+  dmBlocksMade?: Prisma.DmBlockUpdateManyWithoutBlockerNestedInput
+  dmBlocksReceived?: Prisma.DmBlockUpdateManyWithoutBlockedNestedInput
+  posts?: Prisma.ForumPostUpdateManyWithoutAuthorNestedInput
+  comments?: Prisma.ForumCommentUpdateManyWithoutAuthorNestedInput
+  postVotes?: Prisma.ForumPostVoteUpdateManyWithoutProfileNestedInput
+  commentVotes?: Prisma.ForumCommentVoteUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUpdateManyWithoutActorNestedInput
+  saves?: Prisma.ForumSaveUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUpdateManyWithoutProfileNestedInput
+  follows?: Prisma.ForumFollowUpdateManyWithoutProfileNestedInput
+  reportsMade?: Prisma.ForumReportUpdateManyWithoutReporterNestedInput
+  reportsAgainst?: Prisma.ForumReportUpdateManyWithoutTargetProfileNestedInput
+}
+
+export type ForumProfileUncheckedUpdateWithoutStarsGivenInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  handle?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  starsReceived?: Prisma.MemberStarUncheckedUpdateManyWithoutReceiverNestedInput
+  warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowerNestedInput
+  dmThreadsLow?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileLowNestedInput
+  dmThreadsHigh?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileHighNestedInput
+  dmMessages?: Prisma.DmMessageUncheckedUpdateManyWithoutSenderNestedInput
+  dmBlocksMade?: Prisma.DmBlockUncheckedUpdateManyWithoutBlockerNestedInput
+  dmBlocksReceived?: Prisma.DmBlockUncheckedUpdateManyWithoutBlockedNestedInput
+  posts?: Prisma.ForumPostUncheckedUpdateManyWithoutAuthorNestedInput
+  comments?: Prisma.ForumCommentUncheckedUpdateManyWithoutAuthorNestedInput
+  postVotes?: Prisma.ForumPostVoteUncheckedUpdateManyWithoutProfileNestedInput
+  commentVotes?: Prisma.ForumCommentVoteUncheckedUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUncheckedUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUncheckedUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUncheckedUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUncheckedUpdateManyWithoutActorNestedInput
+  saves?: Prisma.ForumSaveUncheckedUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUncheckedUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUncheckedUpdateManyWithoutProfileNestedInput
+  follows?: Prisma.ForumFollowUncheckedUpdateManyWithoutProfileNestedInput
+  reportsMade?: Prisma.ForumReportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsAgainst?: Prisma.ForumReportUncheckedUpdateManyWithoutTargetProfileNestedInput
+}
+
+export type ForumProfileUpsertWithoutStarsReceivedInput = {
+  update: Prisma.XOR<Prisma.ForumProfileUpdateWithoutStarsReceivedInput, Prisma.ForumProfileUncheckedUpdateWithoutStarsReceivedInput>
+  create: Prisma.XOR<Prisma.ForumProfileCreateWithoutStarsReceivedInput, Prisma.ForumProfileUncheckedCreateWithoutStarsReceivedInput>
+  where?: Prisma.ForumProfileWhereInput
+}
+
+export type ForumProfileUpdateToOneWithWhereWithoutStarsReceivedInput = {
+  where?: Prisma.ForumProfileWhereInput
+  data: Prisma.XOR<Prisma.ForumProfileUpdateWithoutStarsReceivedInput, Prisma.ForumProfileUncheckedUpdateWithoutStarsReceivedInput>
+}
+
+export type ForumProfileUpdateWithoutStarsReceivedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  handle?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customer?: Prisma.CustomerUpdateOneRequiredWithoutForumProfileNestedInput
+  followers?: Prisma.ForumMemberFollowUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUpdateManyWithoutGiverNestedInput
+  warnings?: Prisma.MemberWarningUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUpdateManyWithoutProfileNestedInput
+  following?: Prisma.ForumMemberFollowUpdateManyWithoutFollowerNestedInput
+  dmThreadsLow?: Prisma.DmThreadUpdateManyWithoutProfileLowNestedInput
+  dmThreadsHigh?: Prisma.DmThreadUpdateManyWithoutProfileHighNestedInput
+  dmMessages?: Prisma.DmMessageUpdateManyWithoutSenderNestedInput
+  dmBlocksMade?: Prisma.DmBlockUpdateManyWithoutBlockerNestedInput
+  dmBlocksReceived?: Prisma.DmBlockUpdateManyWithoutBlockedNestedInput
+  posts?: Prisma.ForumPostUpdateManyWithoutAuthorNestedInput
+  comments?: Prisma.ForumCommentUpdateManyWithoutAuthorNestedInput
+  postVotes?: Prisma.ForumPostVoteUpdateManyWithoutProfileNestedInput
+  commentVotes?: Prisma.ForumCommentVoteUpdateManyWithoutProfileNestedInput
+  postImages?: Prisma.ForumPostImageUpdateManyWithoutProfileNestedInput
+  draft?: Prisma.ForumPostDraftUpdateOneWithoutProfileNestedInput
+  notifications?: Prisma.ForumNotificationUpdateManyWithoutRecipientNestedInput
+  notificationsMade?: Prisma.ForumNotificationUpdateManyWithoutActorNestedInput
+  saves?: Prisma.ForumSaveUpdateManyWithoutProfileNestedInput
+  postLikes?: Prisma.ForumPostLikeUpdateManyWithoutProfileNestedInput
+  commentLikes?: Prisma.ForumCommentLikeUpdateManyWithoutProfileNestedInput
+  follows?: Prisma.ForumFollowUpdateManyWithoutProfileNestedInput
+  reportsMade?: Prisma.ForumReportUpdateManyWithoutReporterNestedInput
+  reportsAgainst?: Prisma.ForumReportUpdateManyWithoutTargetProfileNestedInput
+}
+
+export type ForumProfileUncheckedUpdateWithoutStarsReceivedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  handle?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumForumMemberStatusFieldUpdateOperationsInput | $Enums.ForumMemberStatus
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  followers?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowedNestedInput
+  starsGiven?: Prisma.MemberStarUncheckedUpdateManyWithoutGiverNestedInput
+  warnings?: Prisma.MemberWarningUncheckedUpdateManyWithoutProfileNestedInput
+  restrictions?: Prisma.MemberRestrictionUncheckedUpdateManyWithoutProfileNestedInput
+  appeals?: Prisma.ModerationAppealUncheckedUpdateManyWithoutProfileNestedInput
   following?: Prisma.ForumMemberFollowUncheckedUpdateManyWithoutFollowerNestedInput
   dmThreadsLow?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileLowNestedInput
   dmThreadsHigh?: Prisma.DmThreadUncheckedUpdateManyWithoutProfileHighNestedInput
@@ -5717,6 +6343,8 @@ export type ForumProfileUncheckedUpdateWithoutAppealsInput = {
 
 export type ForumProfileCountOutputType = {
   followers: number
+  starsGiven: number
+  starsReceived: number
   warnings: number
   restrictions: number
   appeals: number
@@ -5743,6 +6371,8 @@ export type ForumProfileCountOutputType = {
 
 export type ForumProfileCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   followers?: boolean | ForumProfileCountOutputTypeCountFollowersArgs
+  starsGiven?: boolean | ForumProfileCountOutputTypeCountStarsGivenArgs
+  starsReceived?: boolean | ForumProfileCountOutputTypeCountStarsReceivedArgs
   warnings?: boolean | ForumProfileCountOutputTypeCountWarningsArgs
   restrictions?: boolean | ForumProfileCountOutputTypeCountRestrictionsArgs
   appeals?: boolean | ForumProfileCountOutputTypeCountAppealsArgs
@@ -5782,6 +6412,20 @@ export type ForumProfileCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types
  */
 export type ForumProfileCountOutputTypeCountFollowersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.ForumMemberFollowWhereInput
+}
+
+/**
+ * ForumProfileCountOutputType without action
+ */
+export type ForumProfileCountOutputTypeCountStarsGivenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MemberStarWhereInput
+}
+
+/**
+ * ForumProfileCountOutputType without action
+ */
+export type ForumProfileCountOutputTypeCountStarsReceivedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MemberStarWhereInput
 }
 
 /**
@@ -5958,6 +6602,8 @@ export type ForumProfileSelect<ExtArgs extends runtime.Types.Extensions.Internal
   updatedAt?: boolean
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
   followers?: boolean | Prisma.ForumProfile$followersArgs<ExtArgs>
+  starsGiven?: boolean | Prisma.ForumProfile$starsGivenArgs<ExtArgs>
+  starsReceived?: boolean | Prisma.ForumProfile$starsReceivedArgs<ExtArgs>
   warnings?: boolean | Prisma.ForumProfile$warningsArgs<ExtArgs>
   restrictions?: boolean | Prisma.ForumProfile$restrictionsArgs<ExtArgs>
   appeals?: boolean | Prisma.ForumProfile$appealsArgs<ExtArgs>
@@ -6009,6 +6655,8 @@ export type ForumProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalAr
 export type ForumProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
   followers?: boolean | Prisma.ForumProfile$followersArgs<ExtArgs>
+  starsGiven?: boolean | Prisma.ForumProfile$starsGivenArgs<ExtArgs>
+  starsReceived?: boolean | Prisma.ForumProfile$starsReceivedArgs<ExtArgs>
   warnings?: boolean | Prisma.ForumProfile$warningsArgs<ExtArgs>
   restrictions?: boolean | Prisma.ForumProfile$restrictionsArgs<ExtArgs>
   appeals?: boolean | Prisma.ForumProfile$appealsArgs<ExtArgs>
@@ -6040,6 +6688,8 @@ export type $ForumProfilePayload<ExtArgs extends runtime.Types.Extensions.Intern
   objects: {
     customer: Prisma.$CustomerPayload<ExtArgs>
     followers: Prisma.$ForumMemberFollowPayload<ExtArgs>[]
+    starsGiven: Prisma.$MemberStarPayload<ExtArgs>[]
+    starsReceived: Prisma.$MemberStarPayload<ExtArgs>[]
     warnings: Prisma.$MemberWarningPayload<ExtArgs>[]
     restrictions: Prisma.$MemberRestrictionPayload<ExtArgs>[]
     appeals: Prisma.$ModerationAppealPayload<ExtArgs>[]
@@ -6426,6 +7076,8 @@ export interface Prisma__ForumProfileClient<T, Null = never, ExtArgs extends run
   readonly [Symbol.toStringTag]: "PrismaPromise"
   customer<T extends Prisma.CustomerDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CustomerDefaultArgs<ExtArgs>>): Prisma.Prisma__CustomerClient<runtime.Types.Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   followers<T extends Prisma.ForumProfile$followersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ForumProfile$followersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ForumMemberFollowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  starsGiven<T extends Prisma.ForumProfile$starsGivenArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ForumProfile$starsGivenArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MemberStarPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  starsReceived<T extends Prisma.ForumProfile$starsReceivedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ForumProfile$starsReceivedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MemberStarPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   warnings<T extends Prisma.ForumProfile$warningsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ForumProfile$warningsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MemberWarningPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   restrictions<T extends Prisma.ForumProfile$restrictionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ForumProfile$restrictionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MemberRestrictionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   appeals<T extends Prisma.ForumProfile$appealsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ForumProfile$appealsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ModerationAppealPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -6863,6 +7515,54 @@ export type ForumProfile$followersArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   distinct?: Prisma.ForumMemberFollowScalarFieldEnum | Prisma.ForumMemberFollowScalarFieldEnum[]
+}
+
+/**
+ * ForumProfile.starsGiven
+ */
+export type ForumProfile$starsGivenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MemberStar
+   */
+  select?: Prisma.MemberStarSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MemberStar
+   */
+  omit?: Prisma.MemberStarOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MemberStarInclude<ExtArgs> | null
+  where?: Prisma.MemberStarWhereInput
+  orderBy?: Prisma.MemberStarOrderByWithRelationInput | Prisma.MemberStarOrderByWithRelationInput[]
+  cursor?: Prisma.MemberStarWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MemberStarScalarFieldEnum | Prisma.MemberStarScalarFieldEnum[]
+}
+
+/**
+ * ForumProfile.starsReceived
+ */
+export type ForumProfile$starsReceivedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MemberStar
+   */
+  select?: Prisma.MemberStarSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MemberStar
+   */
+  omit?: Prisma.MemberStarOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MemberStarInclude<ExtArgs> | null
+  where?: Prisma.MemberStarWhereInput
+  orderBy?: Prisma.MemberStarOrderByWithRelationInput | Prisma.MemberStarOrderByWithRelationInput[]
+  cursor?: Prisma.MemberStarWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MemberStarScalarFieldEnum | Prisma.MemberStarScalarFieldEnum[]
 }
 
 /**

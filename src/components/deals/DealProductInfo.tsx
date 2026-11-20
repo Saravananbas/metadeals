@@ -1,4 +1,4 @@
-import { CheckCircle2, Star, Tag, Building2, Sparkles } from "lucide-react";
+import { Star, Tag, Building2 } from "lucide-react";
 import styles from "@/app/deal/[slug]/deal-detail.module.css";
 
 interface DealProductInfoProps {
@@ -27,27 +27,7 @@ export function DealProductInfo({
   const hasRating = rating !== null && rating !== undefined && rating > 0;
 
   return (
-    <div className={styles.infoCard}>
-      {/* Verified Deal Badge */}
-      <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-        <span className={styles.verifiedPill}>
-          <CheckCircle2 size={14} color="var(--md-color-primary-hover)" />
-          <span>Verified Genuine Deal</span>
-        </span>
-        <span
-          style={{
-            fontSize: 12,
-            color: "var(--md-color-success)",
-            fontWeight: 700,
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 4,
-          }}
-        >
-          <Sparkles size={13} /> Active Price Drop
-        </span>
-      </div>
-
+    <div className={styles.infoBare}>
       {/* Product Title */}
       <h1 className={styles.productTitle}>{title}</h1>
 

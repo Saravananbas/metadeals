@@ -66,6 +66,8 @@ export type DealMinAggregateOutputType = {
   productUrl: string | null
   affiliateUrl: string | null
   couponCode: string | null
+  editorNotes: string | null
+  editorNotesBy: string | null
   status: $Enums.DealStatus | null
   publishedAt: Date | null
   startsAt: Date | null
@@ -102,6 +104,8 @@ export type DealMaxAggregateOutputType = {
   productUrl: string | null
   affiliateUrl: string | null
   couponCode: string | null
+  editorNotes: string | null
+  editorNotesBy: string | null
   status: $Enums.DealStatus | null
   publishedAt: Date | null
   startsAt: Date | null
@@ -138,6 +142,8 @@ export type DealCountAggregateOutputType = {
   productUrl: number
   affiliateUrl: number
   couponCode: number
+  editorNotes: number
+  editorNotesBy: number
   status: number
   publishedAt: number
   startsAt: number
@@ -196,6 +202,8 @@ export type DealMinAggregateInputType = {
   productUrl?: true
   affiliateUrl?: true
   couponCode?: true
+  editorNotes?: true
+  editorNotesBy?: true
   status?: true
   publishedAt?: true
   startsAt?: true
@@ -232,6 +240,8 @@ export type DealMaxAggregateInputType = {
   productUrl?: true
   affiliateUrl?: true
   couponCode?: true
+  editorNotes?: true
+  editorNotesBy?: true
   status?: true
   publishedAt?: true
   startsAt?: true
@@ -268,6 +278,8 @@ export type DealCountAggregateInputType = {
   productUrl?: true
   affiliateUrl?: true
   couponCode?: true
+  editorNotes?: true
+  editorNotesBy?: true
   status?: true
   publishedAt?: true
   startsAt?: true
@@ -391,6 +403,8 @@ export type DealGroupByOutputType = {
   productUrl: string
   affiliateUrl: string | null
   couponCode: string | null
+  editorNotes: string | null
+  editorNotesBy: string | null
   status: $Enums.DealStatus
   publishedAt: Date | null
   startsAt: Date | null
@@ -450,6 +464,8 @@ export type DealWhereInput = {
   productUrl?: Prisma.StringFilter<"Deal"> | string
   affiliateUrl?: Prisma.StringNullableFilter<"Deal"> | string | null
   couponCode?: Prisma.StringNullableFilter<"Deal"> | string | null
+  editorNotes?: Prisma.StringNullableFilter<"Deal"> | string | null
+  editorNotesBy?: Prisma.StringNullableFilter<"Deal"> | string | null
   status?: Prisma.EnumDealStatusFilter<"Deal"> | $Enums.DealStatus
   publishedAt?: Prisma.DateTimeNullableFilter<"Deal"> | Date | string | null
   startsAt?: Prisma.DateTimeNullableFilter<"Deal"> | Date | string | null
@@ -477,6 +493,8 @@ export type DealWhereInput = {
   videoReviews?: Prisma.DealVideoReviewListRelationFilter
   communitySubmission?: Prisma.XOR<Prisma.CommunityDealSubmissionNullableScalarRelationFilter, Prisma.CommunityDealSubmissionWhereInput> | null
   savedBy?: Prisma.SavedDealListRelationFilter
+  votes?: Prisma.DealVoteListRelationFilter
+  notes?: Prisma.DealNoteListRelationFilter
 }
 
 export type DealOrderByWithRelationInput = {
@@ -499,6 +517,8 @@ export type DealOrderByWithRelationInput = {
   productUrl?: Prisma.SortOrder
   affiliateUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   couponCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  editorNotes?: Prisma.SortOrderInput | Prisma.SortOrder
+  editorNotesBy?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   startsAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -526,6 +546,8 @@ export type DealOrderByWithRelationInput = {
   videoReviews?: Prisma.DealVideoReviewOrderByRelationAggregateInput
   communitySubmission?: Prisma.CommunityDealSubmissionOrderByWithRelationInput
   savedBy?: Prisma.SavedDealOrderByRelationAggregateInput
+  votes?: Prisma.DealVoteOrderByRelationAggregateInput
+  notes?: Prisma.DealNoteOrderByRelationAggregateInput
   _relevance?: Prisma.DealOrderByRelevanceInput
 }
 
@@ -552,6 +574,8 @@ export type DealWhereUniqueInput = Prisma.AtLeast<{
   productUrl?: Prisma.StringFilter<"Deal"> | string
   affiliateUrl?: Prisma.StringNullableFilter<"Deal"> | string | null
   couponCode?: Prisma.StringNullableFilter<"Deal"> | string | null
+  editorNotes?: Prisma.StringNullableFilter<"Deal"> | string | null
+  editorNotesBy?: Prisma.StringNullableFilter<"Deal"> | string | null
   status?: Prisma.EnumDealStatusFilter<"Deal"> | $Enums.DealStatus
   publishedAt?: Prisma.DateTimeNullableFilter<"Deal"> | Date | string | null
   startsAt?: Prisma.DateTimeNullableFilter<"Deal"> | Date | string | null
@@ -579,6 +603,8 @@ export type DealWhereUniqueInput = Prisma.AtLeast<{
   videoReviews?: Prisma.DealVideoReviewListRelationFilter
   communitySubmission?: Prisma.XOR<Prisma.CommunityDealSubmissionNullableScalarRelationFilter, Prisma.CommunityDealSubmissionWhereInput> | null
   savedBy?: Prisma.SavedDealListRelationFilter
+  votes?: Prisma.DealVoteListRelationFilter
+  notes?: Prisma.DealNoteListRelationFilter
 }, "id" | "slug">
 
 export type DealOrderByWithAggregationInput = {
@@ -601,6 +627,8 @@ export type DealOrderByWithAggregationInput = {
   productUrl?: Prisma.SortOrder
   affiliateUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   couponCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  editorNotes?: Prisma.SortOrderInput | Prisma.SortOrder
+  editorNotesBy?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   startsAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -645,6 +673,8 @@ export type DealScalarWhereWithAggregatesInput = {
   productUrl?: Prisma.StringWithAggregatesFilter<"Deal"> | string
   affiliateUrl?: Prisma.StringNullableWithAggregatesFilter<"Deal"> | string | null
   couponCode?: Prisma.StringNullableWithAggregatesFilter<"Deal"> | string | null
+  editorNotes?: Prisma.StringNullableWithAggregatesFilter<"Deal"> | string | null
+  editorNotesBy?: Prisma.StringNullableWithAggregatesFilter<"Deal"> | string | null
   status?: Prisma.EnumDealStatusWithAggregatesFilter<"Deal"> | $Enums.DealStatus
   publishedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Deal"> | Date | string | null
   startsAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Deal"> | Date | string | null
@@ -678,6 +708,8 @@ export type DealCreateInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  editorNotes?: string | null
+  editorNotesBy?: string | null
   status?: $Enums.DealStatus
   publishedAt?: Date | string | null
   startsAt?: Date | string | null
@@ -703,6 +735,8 @@ export type DealCreateInput = {
   videoReviews?: Prisma.DealVideoReviewCreateNestedManyWithoutDealInput
   communitySubmission?: Prisma.CommunityDealSubmissionCreateNestedOneWithoutDealInput
   savedBy?: Prisma.SavedDealCreateNestedManyWithoutDealInput
+  votes?: Prisma.DealVoteCreateNestedManyWithoutDealInput
+  notes?: Prisma.DealNoteCreateNestedManyWithoutDealInput
 }
 
 export type DealUncheckedCreateInput = {
@@ -725,6 +759,8 @@ export type DealUncheckedCreateInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  editorNotes?: string | null
+  editorNotesBy?: string | null
   status?: $Enums.DealStatus
   publishedAt?: Date | string | null
   startsAt?: Date | string | null
@@ -747,6 +783,8 @@ export type DealUncheckedCreateInput = {
   videoReviews?: Prisma.DealVideoReviewUncheckedCreateNestedManyWithoutDealInput
   communitySubmission?: Prisma.CommunityDealSubmissionUncheckedCreateNestedOneWithoutDealInput
   savedBy?: Prisma.SavedDealUncheckedCreateNestedManyWithoutDealInput
+  votes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutDealInput
+  notes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutDealInput
 }
 
 export type DealUpdateInput = {
@@ -766,6 +804,8 @@ export type DealUpdateInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -791,6 +831,8 @@ export type DealUpdateInput = {
   videoReviews?: Prisma.DealVideoReviewUpdateManyWithoutDealNestedInput
   communitySubmission?: Prisma.CommunityDealSubmissionUpdateOneWithoutDealNestedInput
   savedBy?: Prisma.SavedDealUpdateManyWithoutDealNestedInput
+  votes?: Prisma.DealVoteUpdateManyWithoutDealNestedInput
+  notes?: Prisma.DealNoteUpdateManyWithoutDealNestedInput
 }
 
 export type DealUncheckedUpdateInput = {
@@ -813,6 +855,8 @@ export type DealUncheckedUpdateInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -835,6 +879,8 @@ export type DealUncheckedUpdateInput = {
   videoReviews?: Prisma.DealVideoReviewUncheckedUpdateManyWithoutDealNestedInput
   communitySubmission?: Prisma.CommunityDealSubmissionUncheckedUpdateOneWithoutDealNestedInput
   savedBy?: Prisma.SavedDealUncheckedUpdateManyWithoutDealNestedInput
+  votes?: Prisma.DealVoteUncheckedUpdateManyWithoutDealNestedInput
+  notes?: Prisma.DealNoteUncheckedUpdateManyWithoutDealNestedInput
 }
 
 export type DealCreateManyInput = {
@@ -857,6 +903,8 @@ export type DealCreateManyInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  editorNotes?: string | null
+  editorNotesBy?: string | null
   status?: $Enums.DealStatus
   publishedAt?: Date | string | null
   startsAt?: Date | string | null
@@ -890,6 +938,8 @@ export type DealUpdateManyMutationInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -924,6 +974,8 @@ export type DealUncheckedUpdateManyInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -976,6 +1028,8 @@ export type DealCountOrderByAggregateInput = {
   productUrl?: Prisma.SortOrder
   affiliateUrl?: Prisma.SortOrder
   couponCode?: Prisma.SortOrder
+  editorNotes?: Prisma.SortOrder
+  editorNotesBy?: Prisma.SortOrder
   status?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
   startsAt?: Prisma.SortOrder
@@ -1022,6 +1076,8 @@ export type DealMaxOrderByAggregateInput = {
   productUrl?: Prisma.SortOrder
   affiliateUrl?: Prisma.SortOrder
   couponCode?: Prisma.SortOrder
+  editorNotes?: Prisma.SortOrder
+  editorNotesBy?: Prisma.SortOrder
   status?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
   startsAt?: Prisma.SortOrder
@@ -1058,6 +1114,8 @@ export type DealMinOrderByAggregateInput = {
   productUrl?: Prisma.SortOrder
   affiliateUrl?: Prisma.SortOrder
   couponCode?: Prisma.SortOrder
+  editorNotes?: Prisma.SortOrder
+  editorNotesBy?: Prisma.SortOrder
   status?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
   startsAt?: Prisma.SortOrder
@@ -1434,6 +1492,34 @@ export type DealUpdateOneRequiredWithoutSavedByNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.DealUpdateToOneWithWhereWithoutSavedByInput, Prisma.DealUpdateWithoutSavedByInput>, Prisma.DealUncheckedUpdateWithoutSavedByInput>
 }
 
+export type DealCreateNestedOneWithoutVotesInput = {
+  create?: Prisma.XOR<Prisma.DealCreateWithoutVotesInput, Prisma.DealUncheckedCreateWithoutVotesInput>
+  connectOrCreate?: Prisma.DealCreateOrConnectWithoutVotesInput
+  connect?: Prisma.DealWhereUniqueInput
+}
+
+export type DealUpdateOneRequiredWithoutVotesNestedInput = {
+  create?: Prisma.XOR<Prisma.DealCreateWithoutVotesInput, Prisma.DealUncheckedCreateWithoutVotesInput>
+  connectOrCreate?: Prisma.DealCreateOrConnectWithoutVotesInput
+  upsert?: Prisma.DealUpsertWithoutVotesInput
+  connect?: Prisma.DealWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DealUpdateToOneWithWhereWithoutVotesInput, Prisma.DealUpdateWithoutVotesInput>, Prisma.DealUncheckedUpdateWithoutVotesInput>
+}
+
+export type DealCreateNestedOneWithoutNotesInput = {
+  create?: Prisma.XOR<Prisma.DealCreateWithoutNotesInput, Prisma.DealUncheckedCreateWithoutNotesInput>
+  connectOrCreate?: Prisma.DealCreateOrConnectWithoutNotesInput
+  connect?: Prisma.DealWhereUniqueInput
+}
+
+export type DealUpdateOneRequiredWithoutNotesNestedInput = {
+  create?: Prisma.XOR<Prisma.DealCreateWithoutNotesInput, Prisma.DealUncheckedCreateWithoutNotesInput>
+  connectOrCreate?: Prisma.DealCreateOrConnectWithoutNotesInput
+  upsert?: Prisma.DealUpsertWithoutNotesInput
+  connect?: Prisma.DealWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DealUpdateToOneWithWhereWithoutNotesInput, Prisma.DealUpdateWithoutNotesInput>, Prisma.DealUncheckedUpdateWithoutNotesInput>
+}
+
 export type DealCreateWithoutCreatedByInput = {
   id?: string
   slug: string
@@ -1451,6 +1537,8 @@ export type DealCreateWithoutCreatedByInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  editorNotes?: string | null
+  editorNotesBy?: string | null
   status?: $Enums.DealStatus
   publishedAt?: Date | string | null
   startsAt?: Date | string | null
@@ -1475,6 +1563,8 @@ export type DealCreateWithoutCreatedByInput = {
   videoReviews?: Prisma.DealVideoReviewCreateNestedManyWithoutDealInput
   communitySubmission?: Prisma.CommunityDealSubmissionCreateNestedOneWithoutDealInput
   savedBy?: Prisma.SavedDealCreateNestedManyWithoutDealInput
+  votes?: Prisma.DealVoteCreateNestedManyWithoutDealInput
+  notes?: Prisma.DealNoteCreateNestedManyWithoutDealInput
 }
 
 export type DealUncheckedCreateWithoutCreatedByInput = {
@@ -1497,6 +1587,8 @@ export type DealUncheckedCreateWithoutCreatedByInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  editorNotes?: string | null
+  editorNotesBy?: string | null
   status?: $Enums.DealStatus
   publishedAt?: Date | string | null
   startsAt?: Date | string | null
@@ -1518,6 +1610,8 @@ export type DealUncheckedCreateWithoutCreatedByInput = {
   videoReviews?: Prisma.DealVideoReviewUncheckedCreateNestedManyWithoutDealInput
   communitySubmission?: Prisma.CommunityDealSubmissionUncheckedCreateNestedOneWithoutDealInput
   savedBy?: Prisma.SavedDealUncheckedCreateNestedManyWithoutDealInput
+  votes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutDealInput
+  notes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutDealInput
 }
 
 export type DealCreateOrConnectWithoutCreatedByInput = {
@@ -1547,6 +1641,8 @@ export type DealCreateWithoutUpdatedByInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  editorNotes?: string | null
+  editorNotesBy?: string | null
   status?: $Enums.DealStatus
   publishedAt?: Date | string | null
   startsAt?: Date | string | null
@@ -1571,6 +1667,8 @@ export type DealCreateWithoutUpdatedByInput = {
   videoReviews?: Prisma.DealVideoReviewCreateNestedManyWithoutDealInput
   communitySubmission?: Prisma.CommunityDealSubmissionCreateNestedOneWithoutDealInput
   savedBy?: Prisma.SavedDealCreateNestedManyWithoutDealInput
+  votes?: Prisma.DealVoteCreateNestedManyWithoutDealInput
+  notes?: Prisma.DealNoteCreateNestedManyWithoutDealInput
 }
 
 export type DealUncheckedCreateWithoutUpdatedByInput = {
@@ -1593,6 +1691,8 @@ export type DealUncheckedCreateWithoutUpdatedByInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  editorNotes?: string | null
+  editorNotesBy?: string | null
   status?: $Enums.DealStatus
   publishedAt?: Date | string | null
   startsAt?: Date | string | null
@@ -1614,6 +1714,8 @@ export type DealUncheckedCreateWithoutUpdatedByInput = {
   videoReviews?: Prisma.DealVideoReviewUncheckedCreateNestedManyWithoutDealInput
   communitySubmission?: Prisma.CommunityDealSubmissionUncheckedCreateNestedOneWithoutDealInput
   savedBy?: Prisma.SavedDealUncheckedCreateNestedManyWithoutDealInput
+  votes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutDealInput
+  notes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutDealInput
 }
 
 export type DealCreateOrConnectWithoutUpdatedByInput = {
@@ -1665,6 +1767,8 @@ export type DealScalarWhereInput = {
   productUrl?: Prisma.StringFilter<"Deal"> | string
   affiliateUrl?: Prisma.StringNullableFilter<"Deal"> | string | null
   couponCode?: Prisma.StringNullableFilter<"Deal"> | string | null
+  editorNotes?: Prisma.StringNullableFilter<"Deal"> | string | null
+  editorNotesBy?: Prisma.StringNullableFilter<"Deal"> | string | null
   status?: Prisma.EnumDealStatusFilter<"Deal"> | $Enums.DealStatus
   publishedAt?: Prisma.DateTimeNullableFilter<"Deal"> | Date | string | null
   startsAt?: Prisma.DateTimeNullableFilter<"Deal"> | Date | string | null
@@ -1714,6 +1818,8 @@ export type DealCreateWithoutCategoryInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  editorNotes?: string | null
+  editorNotesBy?: string | null
   status?: $Enums.DealStatus
   publishedAt?: Date | string | null
   startsAt?: Date | string | null
@@ -1738,6 +1844,8 @@ export type DealCreateWithoutCategoryInput = {
   videoReviews?: Prisma.DealVideoReviewCreateNestedManyWithoutDealInput
   communitySubmission?: Prisma.CommunityDealSubmissionCreateNestedOneWithoutDealInput
   savedBy?: Prisma.SavedDealCreateNestedManyWithoutDealInput
+  votes?: Prisma.DealVoteCreateNestedManyWithoutDealInput
+  notes?: Prisma.DealNoteCreateNestedManyWithoutDealInput
 }
 
 export type DealUncheckedCreateWithoutCategoryInput = {
@@ -1759,6 +1867,8 @@ export type DealUncheckedCreateWithoutCategoryInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  editorNotes?: string | null
+  editorNotesBy?: string | null
   status?: $Enums.DealStatus
   publishedAt?: Date | string | null
   startsAt?: Date | string | null
@@ -1781,6 +1891,8 @@ export type DealUncheckedCreateWithoutCategoryInput = {
   videoReviews?: Prisma.DealVideoReviewUncheckedCreateNestedManyWithoutDealInput
   communitySubmission?: Prisma.CommunityDealSubmissionUncheckedCreateNestedOneWithoutDealInput
   savedBy?: Prisma.SavedDealUncheckedCreateNestedManyWithoutDealInput
+  votes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutDealInput
+  notes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutDealInput
 }
 
 export type DealCreateOrConnectWithoutCategoryInput = {
@@ -1826,6 +1938,8 @@ export type DealCreateWithoutMerchantInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  editorNotes?: string | null
+  editorNotesBy?: string | null
   status?: $Enums.DealStatus
   publishedAt?: Date | string | null
   startsAt?: Date | string | null
@@ -1850,6 +1964,8 @@ export type DealCreateWithoutMerchantInput = {
   videoReviews?: Prisma.DealVideoReviewCreateNestedManyWithoutDealInput
   communitySubmission?: Prisma.CommunityDealSubmissionCreateNestedOneWithoutDealInput
   savedBy?: Prisma.SavedDealCreateNestedManyWithoutDealInput
+  votes?: Prisma.DealVoteCreateNestedManyWithoutDealInput
+  notes?: Prisma.DealNoteCreateNestedManyWithoutDealInput
 }
 
 export type DealUncheckedCreateWithoutMerchantInput = {
@@ -1871,6 +1987,8 @@ export type DealUncheckedCreateWithoutMerchantInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  editorNotes?: string | null
+  editorNotesBy?: string | null
   status?: $Enums.DealStatus
   publishedAt?: Date | string | null
   startsAt?: Date | string | null
@@ -1893,6 +2011,8 @@ export type DealUncheckedCreateWithoutMerchantInput = {
   videoReviews?: Prisma.DealVideoReviewUncheckedCreateNestedManyWithoutDealInput
   communitySubmission?: Prisma.CommunityDealSubmissionUncheckedCreateNestedOneWithoutDealInput
   savedBy?: Prisma.SavedDealUncheckedCreateNestedManyWithoutDealInput
+  votes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutDealInput
+  notes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutDealInput
 }
 
 export type DealCreateOrConnectWithoutMerchantInput = {
@@ -1938,6 +2058,8 @@ export type DealCreateWithoutMediaInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  editorNotes?: string | null
+  editorNotesBy?: string | null
   status?: $Enums.DealStatus
   publishedAt?: Date | string | null
   startsAt?: Date | string | null
@@ -1962,6 +2084,8 @@ export type DealCreateWithoutMediaInput = {
   videoReviews?: Prisma.DealVideoReviewCreateNestedManyWithoutDealInput
   communitySubmission?: Prisma.CommunityDealSubmissionCreateNestedOneWithoutDealInput
   savedBy?: Prisma.SavedDealCreateNestedManyWithoutDealInput
+  votes?: Prisma.DealVoteCreateNestedManyWithoutDealInput
+  notes?: Prisma.DealNoteCreateNestedManyWithoutDealInput
 }
 
 export type DealUncheckedCreateWithoutMediaInput = {
@@ -1983,6 +2107,8 @@ export type DealUncheckedCreateWithoutMediaInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  editorNotes?: string | null
+  editorNotesBy?: string | null
   status?: $Enums.DealStatus
   publishedAt?: Date | string | null
   startsAt?: Date | string | null
@@ -2005,6 +2131,8 @@ export type DealUncheckedCreateWithoutMediaInput = {
   videoReviews?: Prisma.DealVideoReviewUncheckedCreateNestedManyWithoutDealInput
   communitySubmission?: Prisma.CommunityDealSubmissionUncheckedCreateNestedOneWithoutDealInput
   savedBy?: Prisma.SavedDealUncheckedCreateNestedManyWithoutDealInput
+  votes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutDealInput
+  notes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutDealInput
 }
 
 export type DealCreateOrConnectWithoutMediaInput = {
@@ -2050,6 +2178,8 @@ export type DealCreateWithoutOptionsInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  editorNotes?: string | null
+  editorNotesBy?: string | null
   status?: $Enums.DealStatus
   publishedAt?: Date | string | null
   startsAt?: Date | string | null
@@ -2074,6 +2204,8 @@ export type DealCreateWithoutOptionsInput = {
   videoReviews?: Prisma.DealVideoReviewCreateNestedManyWithoutDealInput
   communitySubmission?: Prisma.CommunityDealSubmissionCreateNestedOneWithoutDealInput
   savedBy?: Prisma.SavedDealCreateNestedManyWithoutDealInput
+  votes?: Prisma.DealVoteCreateNestedManyWithoutDealInput
+  notes?: Prisma.DealNoteCreateNestedManyWithoutDealInput
 }
 
 export type DealUncheckedCreateWithoutOptionsInput = {
@@ -2096,6 +2228,8 @@ export type DealUncheckedCreateWithoutOptionsInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  editorNotes?: string | null
+  editorNotesBy?: string | null
   status?: $Enums.DealStatus
   publishedAt?: Date | string | null
   startsAt?: Date | string | null
@@ -2117,6 +2251,8 @@ export type DealUncheckedCreateWithoutOptionsInput = {
   videoReviews?: Prisma.DealVideoReviewUncheckedCreateNestedManyWithoutDealInput
   communitySubmission?: Prisma.CommunityDealSubmissionUncheckedCreateNestedOneWithoutDealInput
   savedBy?: Prisma.SavedDealUncheckedCreateNestedManyWithoutDealInput
+  votes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutDealInput
+  notes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutDealInput
 }
 
 export type DealCreateOrConnectWithoutOptionsInput = {
@@ -2152,6 +2288,8 @@ export type DealUpdateWithoutOptionsInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2176,6 +2314,8 @@ export type DealUpdateWithoutOptionsInput = {
   videoReviews?: Prisma.DealVideoReviewUpdateManyWithoutDealNestedInput
   communitySubmission?: Prisma.CommunityDealSubmissionUpdateOneWithoutDealNestedInput
   savedBy?: Prisma.SavedDealUpdateManyWithoutDealNestedInput
+  votes?: Prisma.DealVoteUpdateManyWithoutDealNestedInput
+  notes?: Prisma.DealNoteUpdateManyWithoutDealNestedInput
 }
 
 export type DealUncheckedUpdateWithoutOptionsInput = {
@@ -2198,6 +2338,8 @@ export type DealUncheckedUpdateWithoutOptionsInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2219,6 +2361,8 @@ export type DealUncheckedUpdateWithoutOptionsInput = {
   videoReviews?: Prisma.DealVideoReviewUncheckedUpdateManyWithoutDealNestedInput
   communitySubmission?: Prisma.CommunityDealSubmissionUncheckedUpdateOneWithoutDealNestedInput
   savedBy?: Prisma.SavedDealUncheckedUpdateManyWithoutDealNestedInput
+  votes?: Prisma.DealVoteUncheckedUpdateManyWithoutDealNestedInput
+  notes?: Prisma.DealNoteUncheckedUpdateManyWithoutDealNestedInput
 }
 
 export type DealCreateWithoutGalleryImagesInput = {
@@ -2238,6 +2382,8 @@ export type DealCreateWithoutGalleryImagesInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  editorNotes?: string | null
+  editorNotesBy?: string | null
   status?: $Enums.DealStatus
   publishedAt?: Date | string | null
   startsAt?: Date | string | null
@@ -2262,6 +2408,8 @@ export type DealCreateWithoutGalleryImagesInput = {
   videoReviews?: Prisma.DealVideoReviewCreateNestedManyWithoutDealInput
   communitySubmission?: Prisma.CommunityDealSubmissionCreateNestedOneWithoutDealInput
   savedBy?: Prisma.SavedDealCreateNestedManyWithoutDealInput
+  votes?: Prisma.DealVoteCreateNestedManyWithoutDealInput
+  notes?: Prisma.DealNoteCreateNestedManyWithoutDealInput
 }
 
 export type DealUncheckedCreateWithoutGalleryImagesInput = {
@@ -2284,6 +2432,8 @@ export type DealUncheckedCreateWithoutGalleryImagesInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  editorNotes?: string | null
+  editorNotesBy?: string | null
   status?: $Enums.DealStatus
   publishedAt?: Date | string | null
   startsAt?: Date | string | null
@@ -2305,6 +2455,8 @@ export type DealUncheckedCreateWithoutGalleryImagesInput = {
   videoReviews?: Prisma.DealVideoReviewUncheckedCreateNestedManyWithoutDealInput
   communitySubmission?: Prisma.CommunityDealSubmissionUncheckedCreateNestedOneWithoutDealInput
   savedBy?: Prisma.SavedDealUncheckedCreateNestedManyWithoutDealInput
+  votes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutDealInput
+  notes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutDealInput
 }
 
 export type DealCreateOrConnectWithoutGalleryImagesInput = {
@@ -2340,6 +2492,8 @@ export type DealUpdateWithoutGalleryImagesInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2364,6 +2518,8 @@ export type DealUpdateWithoutGalleryImagesInput = {
   videoReviews?: Prisma.DealVideoReviewUpdateManyWithoutDealNestedInput
   communitySubmission?: Prisma.CommunityDealSubmissionUpdateOneWithoutDealNestedInput
   savedBy?: Prisma.SavedDealUpdateManyWithoutDealNestedInput
+  votes?: Prisma.DealVoteUpdateManyWithoutDealNestedInput
+  notes?: Prisma.DealNoteUpdateManyWithoutDealNestedInput
 }
 
 export type DealUncheckedUpdateWithoutGalleryImagesInput = {
@@ -2386,6 +2542,8 @@ export type DealUncheckedUpdateWithoutGalleryImagesInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2407,6 +2565,8 @@ export type DealUncheckedUpdateWithoutGalleryImagesInput = {
   videoReviews?: Prisma.DealVideoReviewUncheckedUpdateManyWithoutDealNestedInput
   communitySubmission?: Prisma.CommunityDealSubmissionUncheckedUpdateOneWithoutDealNestedInput
   savedBy?: Prisma.SavedDealUncheckedUpdateManyWithoutDealNestedInput
+  votes?: Prisma.DealVoteUncheckedUpdateManyWithoutDealNestedInput
+  notes?: Prisma.DealNoteUncheckedUpdateManyWithoutDealNestedInput
 }
 
 export type DealCreateWithoutCandidatesInput = {
@@ -2426,6 +2586,8 @@ export type DealCreateWithoutCandidatesInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  editorNotes?: string | null
+  editorNotesBy?: string | null
   status?: $Enums.DealStatus
   publishedAt?: Date | string | null
   startsAt?: Date | string | null
@@ -2450,6 +2612,8 @@ export type DealCreateWithoutCandidatesInput = {
   videoReviews?: Prisma.DealVideoReviewCreateNestedManyWithoutDealInput
   communitySubmission?: Prisma.CommunityDealSubmissionCreateNestedOneWithoutDealInput
   savedBy?: Prisma.SavedDealCreateNestedManyWithoutDealInput
+  votes?: Prisma.DealVoteCreateNestedManyWithoutDealInput
+  notes?: Prisma.DealNoteCreateNestedManyWithoutDealInput
 }
 
 export type DealUncheckedCreateWithoutCandidatesInput = {
@@ -2472,6 +2636,8 @@ export type DealUncheckedCreateWithoutCandidatesInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  editorNotes?: string | null
+  editorNotesBy?: string | null
   status?: $Enums.DealStatus
   publishedAt?: Date | string | null
   startsAt?: Date | string | null
@@ -2493,6 +2659,8 @@ export type DealUncheckedCreateWithoutCandidatesInput = {
   videoReviews?: Prisma.DealVideoReviewUncheckedCreateNestedManyWithoutDealInput
   communitySubmission?: Prisma.CommunityDealSubmissionUncheckedCreateNestedOneWithoutDealInput
   savedBy?: Prisma.SavedDealUncheckedCreateNestedManyWithoutDealInput
+  votes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutDealInput
+  notes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutDealInput
 }
 
 export type DealCreateOrConnectWithoutCandidatesInput = {
@@ -2528,6 +2696,8 @@ export type DealUpdateWithoutCandidatesInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2552,6 +2722,8 @@ export type DealUpdateWithoutCandidatesInput = {
   videoReviews?: Prisma.DealVideoReviewUpdateManyWithoutDealNestedInput
   communitySubmission?: Prisma.CommunityDealSubmissionUpdateOneWithoutDealNestedInput
   savedBy?: Prisma.SavedDealUpdateManyWithoutDealNestedInput
+  votes?: Prisma.DealVoteUpdateManyWithoutDealNestedInput
+  notes?: Prisma.DealNoteUpdateManyWithoutDealNestedInput
 }
 
 export type DealUncheckedUpdateWithoutCandidatesInput = {
@@ -2574,6 +2746,8 @@ export type DealUncheckedUpdateWithoutCandidatesInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2595,6 +2769,8 @@ export type DealUncheckedUpdateWithoutCandidatesInput = {
   videoReviews?: Prisma.DealVideoReviewUncheckedUpdateManyWithoutDealNestedInput
   communitySubmission?: Prisma.CommunityDealSubmissionUncheckedUpdateOneWithoutDealNestedInput
   savedBy?: Prisma.SavedDealUncheckedUpdateManyWithoutDealNestedInput
+  votes?: Prisma.DealVoteUncheckedUpdateManyWithoutDealNestedInput
+  notes?: Prisma.DealNoteUncheckedUpdateManyWithoutDealNestedInput
 }
 
 export type DealCreateWithoutPriceObservationsInput = {
@@ -2614,6 +2790,8 @@ export type DealCreateWithoutPriceObservationsInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  editorNotes?: string | null
+  editorNotesBy?: string | null
   status?: $Enums.DealStatus
   publishedAt?: Date | string | null
   startsAt?: Date | string | null
@@ -2638,6 +2816,8 @@ export type DealCreateWithoutPriceObservationsInput = {
   videoReviews?: Prisma.DealVideoReviewCreateNestedManyWithoutDealInput
   communitySubmission?: Prisma.CommunityDealSubmissionCreateNestedOneWithoutDealInput
   savedBy?: Prisma.SavedDealCreateNestedManyWithoutDealInput
+  votes?: Prisma.DealVoteCreateNestedManyWithoutDealInput
+  notes?: Prisma.DealNoteCreateNestedManyWithoutDealInput
 }
 
 export type DealUncheckedCreateWithoutPriceObservationsInput = {
@@ -2660,6 +2840,8 @@ export type DealUncheckedCreateWithoutPriceObservationsInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  editorNotes?: string | null
+  editorNotesBy?: string | null
   status?: $Enums.DealStatus
   publishedAt?: Date | string | null
   startsAt?: Date | string | null
@@ -2681,6 +2863,8 @@ export type DealUncheckedCreateWithoutPriceObservationsInput = {
   videoReviews?: Prisma.DealVideoReviewUncheckedCreateNestedManyWithoutDealInput
   communitySubmission?: Prisma.CommunityDealSubmissionUncheckedCreateNestedOneWithoutDealInput
   savedBy?: Prisma.SavedDealUncheckedCreateNestedManyWithoutDealInput
+  votes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutDealInput
+  notes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutDealInput
 }
 
 export type DealCreateOrConnectWithoutPriceObservationsInput = {
@@ -2716,6 +2900,8 @@ export type DealUpdateWithoutPriceObservationsInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2740,6 +2926,8 @@ export type DealUpdateWithoutPriceObservationsInput = {
   videoReviews?: Prisma.DealVideoReviewUpdateManyWithoutDealNestedInput
   communitySubmission?: Prisma.CommunityDealSubmissionUpdateOneWithoutDealNestedInput
   savedBy?: Prisma.SavedDealUpdateManyWithoutDealNestedInput
+  votes?: Prisma.DealVoteUpdateManyWithoutDealNestedInput
+  notes?: Prisma.DealNoteUpdateManyWithoutDealNestedInput
 }
 
 export type DealUncheckedUpdateWithoutPriceObservationsInput = {
@@ -2762,6 +2950,8 @@ export type DealUncheckedUpdateWithoutPriceObservationsInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2783,6 +2973,8 @@ export type DealUncheckedUpdateWithoutPriceObservationsInput = {
   videoReviews?: Prisma.DealVideoReviewUncheckedUpdateManyWithoutDealNestedInput
   communitySubmission?: Prisma.CommunityDealSubmissionUncheckedUpdateOneWithoutDealNestedInput
   savedBy?: Prisma.SavedDealUncheckedUpdateManyWithoutDealNestedInput
+  votes?: Prisma.DealVoteUncheckedUpdateManyWithoutDealNestedInput
+  notes?: Prisma.DealNoteUncheckedUpdateManyWithoutDealNestedInput
 }
 
 export type DealCreateWithoutVideoReviewsInput = {
@@ -2802,6 +2994,8 @@ export type DealCreateWithoutVideoReviewsInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  editorNotes?: string | null
+  editorNotesBy?: string | null
   status?: $Enums.DealStatus
   publishedAt?: Date | string | null
   startsAt?: Date | string | null
@@ -2826,6 +3020,8 @@ export type DealCreateWithoutVideoReviewsInput = {
   comments?: Prisma.DealCommentCreateNestedManyWithoutDealInput
   communitySubmission?: Prisma.CommunityDealSubmissionCreateNestedOneWithoutDealInput
   savedBy?: Prisma.SavedDealCreateNestedManyWithoutDealInput
+  votes?: Prisma.DealVoteCreateNestedManyWithoutDealInput
+  notes?: Prisma.DealNoteCreateNestedManyWithoutDealInput
 }
 
 export type DealUncheckedCreateWithoutVideoReviewsInput = {
@@ -2848,6 +3044,8 @@ export type DealUncheckedCreateWithoutVideoReviewsInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  editorNotes?: string | null
+  editorNotesBy?: string | null
   status?: $Enums.DealStatus
   publishedAt?: Date | string | null
   startsAt?: Date | string | null
@@ -2869,6 +3067,8 @@ export type DealUncheckedCreateWithoutVideoReviewsInput = {
   comments?: Prisma.DealCommentUncheckedCreateNestedManyWithoutDealInput
   communitySubmission?: Prisma.CommunityDealSubmissionUncheckedCreateNestedOneWithoutDealInput
   savedBy?: Prisma.SavedDealUncheckedCreateNestedManyWithoutDealInput
+  votes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutDealInput
+  notes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutDealInput
 }
 
 export type DealCreateOrConnectWithoutVideoReviewsInput = {
@@ -2904,6 +3104,8 @@ export type DealUpdateWithoutVideoReviewsInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2928,6 +3130,8 @@ export type DealUpdateWithoutVideoReviewsInput = {
   comments?: Prisma.DealCommentUpdateManyWithoutDealNestedInput
   communitySubmission?: Prisma.CommunityDealSubmissionUpdateOneWithoutDealNestedInput
   savedBy?: Prisma.SavedDealUpdateManyWithoutDealNestedInput
+  votes?: Prisma.DealVoteUpdateManyWithoutDealNestedInput
+  notes?: Prisma.DealNoteUpdateManyWithoutDealNestedInput
 }
 
 export type DealUncheckedUpdateWithoutVideoReviewsInput = {
@@ -2950,6 +3154,8 @@ export type DealUncheckedUpdateWithoutVideoReviewsInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2971,6 +3177,8 @@ export type DealUncheckedUpdateWithoutVideoReviewsInput = {
   comments?: Prisma.DealCommentUncheckedUpdateManyWithoutDealNestedInput
   communitySubmission?: Prisma.CommunityDealSubmissionUncheckedUpdateOneWithoutDealNestedInput
   savedBy?: Prisma.SavedDealUncheckedUpdateManyWithoutDealNestedInput
+  votes?: Prisma.DealVoteUncheckedUpdateManyWithoutDealNestedInput
+  notes?: Prisma.DealNoteUncheckedUpdateManyWithoutDealNestedInput
 }
 
 export type DealCreateWithoutCommentsInput = {
@@ -2990,6 +3198,8 @@ export type DealCreateWithoutCommentsInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  editorNotes?: string | null
+  editorNotesBy?: string | null
   status?: $Enums.DealStatus
   publishedAt?: Date | string | null
   startsAt?: Date | string | null
@@ -3014,6 +3224,8 @@ export type DealCreateWithoutCommentsInput = {
   videoReviews?: Prisma.DealVideoReviewCreateNestedManyWithoutDealInput
   communitySubmission?: Prisma.CommunityDealSubmissionCreateNestedOneWithoutDealInput
   savedBy?: Prisma.SavedDealCreateNestedManyWithoutDealInput
+  votes?: Prisma.DealVoteCreateNestedManyWithoutDealInput
+  notes?: Prisma.DealNoteCreateNestedManyWithoutDealInput
 }
 
 export type DealUncheckedCreateWithoutCommentsInput = {
@@ -3036,6 +3248,8 @@ export type DealUncheckedCreateWithoutCommentsInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  editorNotes?: string | null
+  editorNotesBy?: string | null
   status?: $Enums.DealStatus
   publishedAt?: Date | string | null
   startsAt?: Date | string | null
@@ -3057,6 +3271,8 @@ export type DealUncheckedCreateWithoutCommentsInput = {
   videoReviews?: Prisma.DealVideoReviewUncheckedCreateNestedManyWithoutDealInput
   communitySubmission?: Prisma.CommunityDealSubmissionUncheckedCreateNestedOneWithoutDealInput
   savedBy?: Prisma.SavedDealUncheckedCreateNestedManyWithoutDealInput
+  votes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutDealInput
+  notes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutDealInput
 }
 
 export type DealCreateOrConnectWithoutCommentsInput = {
@@ -3092,6 +3308,8 @@ export type DealUpdateWithoutCommentsInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3116,6 +3334,8 @@ export type DealUpdateWithoutCommentsInput = {
   videoReviews?: Prisma.DealVideoReviewUpdateManyWithoutDealNestedInput
   communitySubmission?: Prisma.CommunityDealSubmissionUpdateOneWithoutDealNestedInput
   savedBy?: Prisma.SavedDealUpdateManyWithoutDealNestedInput
+  votes?: Prisma.DealVoteUpdateManyWithoutDealNestedInput
+  notes?: Prisma.DealNoteUpdateManyWithoutDealNestedInput
 }
 
 export type DealUncheckedUpdateWithoutCommentsInput = {
@@ -3138,6 +3358,8 @@ export type DealUncheckedUpdateWithoutCommentsInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3159,6 +3381,8 @@ export type DealUncheckedUpdateWithoutCommentsInput = {
   videoReviews?: Prisma.DealVideoReviewUncheckedUpdateManyWithoutDealNestedInput
   communitySubmission?: Prisma.CommunityDealSubmissionUncheckedUpdateOneWithoutDealNestedInput
   savedBy?: Prisma.SavedDealUncheckedUpdateManyWithoutDealNestedInput
+  votes?: Prisma.DealVoteUncheckedUpdateManyWithoutDealNestedInput
+  notes?: Prisma.DealNoteUncheckedUpdateManyWithoutDealNestedInput
 }
 
 export type DealCreateWithoutCommunitySubmissionInput = {
@@ -3178,6 +3402,8 @@ export type DealCreateWithoutCommunitySubmissionInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  editorNotes?: string | null
+  editorNotesBy?: string | null
   status?: $Enums.DealStatus
   publishedAt?: Date | string | null
   startsAt?: Date | string | null
@@ -3202,6 +3428,8 @@ export type DealCreateWithoutCommunitySubmissionInput = {
   comments?: Prisma.DealCommentCreateNestedManyWithoutDealInput
   videoReviews?: Prisma.DealVideoReviewCreateNestedManyWithoutDealInput
   savedBy?: Prisma.SavedDealCreateNestedManyWithoutDealInput
+  votes?: Prisma.DealVoteCreateNestedManyWithoutDealInput
+  notes?: Prisma.DealNoteCreateNestedManyWithoutDealInput
 }
 
 export type DealUncheckedCreateWithoutCommunitySubmissionInput = {
@@ -3224,6 +3452,8 @@ export type DealUncheckedCreateWithoutCommunitySubmissionInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  editorNotes?: string | null
+  editorNotesBy?: string | null
   status?: $Enums.DealStatus
   publishedAt?: Date | string | null
   startsAt?: Date | string | null
@@ -3245,6 +3475,8 @@ export type DealUncheckedCreateWithoutCommunitySubmissionInput = {
   comments?: Prisma.DealCommentUncheckedCreateNestedManyWithoutDealInput
   videoReviews?: Prisma.DealVideoReviewUncheckedCreateNestedManyWithoutDealInput
   savedBy?: Prisma.SavedDealUncheckedCreateNestedManyWithoutDealInput
+  votes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutDealInput
+  notes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutDealInput
 }
 
 export type DealCreateOrConnectWithoutCommunitySubmissionInput = {
@@ -3280,6 +3512,8 @@ export type DealUpdateWithoutCommunitySubmissionInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3304,6 +3538,8 @@ export type DealUpdateWithoutCommunitySubmissionInput = {
   comments?: Prisma.DealCommentUpdateManyWithoutDealNestedInput
   videoReviews?: Prisma.DealVideoReviewUpdateManyWithoutDealNestedInput
   savedBy?: Prisma.SavedDealUpdateManyWithoutDealNestedInput
+  votes?: Prisma.DealVoteUpdateManyWithoutDealNestedInput
+  notes?: Prisma.DealNoteUpdateManyWithoutDealNestedInput
 }
 
 export type DealUncheckedUpdateWithoutCommunitySubmissionInput = {
@@ -3326,6 +3562,8 @@ export type DealUncheckedUpdateWithoutCommunitySubmissionInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3347,6 +3585,8 @@ export type DealUncheckedUpdateWithoutCommunitySubmissionInput = {
   comments?: Prisma.DealCommentUncheckedUpdateManyWithoutDealNestedInput
   videoReviews?: Prisma.DealVideoReviewUncheckedUpdateManyWithoutDealNestedInput
   savedBy?: Prisma.SavedDealUncheckedUpdateManyWithoutDealNestedInput
+  votes?: Prisma.DealVoteUncheckedUpdateManyWithoutDealNestedInput
+  notes?: Prisma.DealNoteUncheckedUpdateManyWithoutDealNestedInput
 }
 
 export type DealCreateWithoutSavedByInput = {
@@ -3366,6 +3606,8 @@ export type DealCreateWithoutSavedByInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  editorNotes?: string | null
+  editorNotesBy?: string | null
   status?: $Enums.DealStatus
   publishedAt?: Date | string | null
   startsAt?: Date | string | null
@@ -3390,6 +3632,8 @@ export type DealCreateWithoutSavedByInput = {
   comments?: Prisma.DealCommentCreateNestedManyWithoutDealInput
   videoReviews?: Prisma.DealVideoReviewCreateNestedManyWithoutDealInput
   communitySubmission?: Prisma.CommunityDealSubmissionCreateNestedOneWithoutDealInput
+  votes?: Prisma.DealVoteCreateNestedManyWithoutDealInput
+  notes?: Prisma.DealNoteCreateNestedManyWithoutDealInput
 }
 
 export type DealUncheckedCreateWithoutSavedByInput = {
@@ -3412,6 +3656,8 @@ export type DealUncheckedCreateWithoutSavedByInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  editorNotes?: string | null
+  editorNotesBy?: string | null
   status?: $Enums.DealStatus
   publishedAt?: Date | string | null
   startsAt?: Date | string | null
@@ -3433,6 +3679,8 @@ export type DealUncheckedCreateWithoutSavedByInput = {
   comments?: Prisma.DealCommentUncheckedCreateNestedManyWithoutDealInput
   videoReviews?: Prisma.DealVideoReviewUncheckedCreateNestedManyWithoutDealInput
   communitySubmission?: Prisma.CommunityDealSubmissionUncheckedCreateNestedOneWithoutDealInput
+  votes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutDealInput
+  notes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutDealInput
 }
 
 export type DealCreateOrConnectWithoutSavedByInput = {
@@ -3468,6 +3716,8 @@ export type DealUpdateWithoutSavedByInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3492,6 +3742,8 @@ export type DealUpdateWithoutSavedByInput = {
   comments?: Prisma.DealCommentUpdateManyWithoutDealNestedInput
   videoReviews?: Prisma.DealVideoReviewUpdateManyWithoutDealNestedInput
   communitySubmission?: Prisma.CommunityDealSubmissionUpdateOneWithoutDealNestedInput
+  votes?: Prisma.DealVoteUpdateManyWithoutDealNestedInput
+  notes?: Prisma.DealNoteUpdateManyWithoutDealNestedInput
 }
 
 export type DealUncheckedUpdateWithoutSavedByInput = {
@@ -3514,6 +3766,8 @@ export type DealUncheckedUpdateWithoutSavedByInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3535,6 +3789,416 @@ export type DealUncheckedUpdateWithoutSavedByInput = {
   comments?: Prisma.DealCommentUncheckedUpdateManyWithoutDealNestedInput
   videoReviews?: Prisma.DealVideoReviewUncheckedUpdateManyWithoutDealNestedInput
   communitySubmission?: Prisma.CommunityDealSubmissionUncheckedUpdateOneWithoutDealNestedInput
+  votes?: Prisma.DealVoteUncheckedUpdateManyWithoutDealNestedInput
+  notes?: Prisma.DealNoteUncheckedUpdateManyWithoutDealNestedInput
+}
+
+export type DealCreateWithoutVotesInput = {
+  id?: string
+  slug: string
+  title: string
+  brand: string
+  description: string
+  mrpMinor: number
+  priceMinor: number
+  currency?: string
+  rating?: number | null
+  reviewCount?: number | null
+  viewCount?: number
+  shareCount?: number
+  ratingSource?: string | null
+  productUrl: string
+  affiliateUrl?: string | null
+  couponCode?: string | null
+  editorNotes?: string | null
+  editorNotesBy?: string | null
+  status?: $Enums.DealStatus
+  publishedAt?: Date | string | null
+  startsAt?: Date | string | null
+  expiresAt?: Date | string | null
+  featured?: boolean
+  trending?: boolean
+  everPublished?: boolean
+  version?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  youtubeReviewStatus?: string
+  youtubeLastSearchedAt?: Date | string | null
+  category: Prisma.CategoryCreateNestedOneWithoutDealsInput
+  merchant: Prisma.MerchantCreateNestedOneWithoutDealsInput
+  media: Prisma.MediaCreateNestedOneWithoutDealsInput
+  galleryImages?: Prisma.DealGalleryImageCreateNestedManyWithoutDealInput
+  createdBy: Prisma.UserCreateNestedOneWithoutCreatedDealsInput
+  updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedDealsInput
+  options?: Prisma.PurchaseOptionCreateNestedManyWithoutDealInput
+  candidates?: Prisma.DealCandidateCreateNestedManyWithoutDealInput
+  priceObservations?: Prisma.PriceObservationCreateNestedManyWithoutDealInput
+  comments?: Prisma.DealCommentCreateNestedManyWithoutDealInput
+  videoReviews?: Prisma.DealVideoReviewCreateNestedManyWithoutDealInput
+  communitySubmission?: Prisma.CommunityDealSubmissionCreateNestedOneWithoutDealInput
+  savedBy?: Prisma.SavedDealCreateNestedManyWithoutDealInput
+  notes?: Prisma.DealNoteCreateNestedManyWithoutDealInput
+}
+
+export type DealUncheckedCreateWithoutVotesInput = {
+  id?: string
+  slug: string
+  title: string
+  brand: string
+  description: string
+  categoryId: string
+  merchantId: string
+  mediaId: string
+  mrpMinor: number
+  priceMinor: number
+  currency?: string
+  rating?: number | null
+  reviewCount?: number | null
+  viewCount?: number
+  shareCount?: number
+  ratingSource?: string | null
+  productUrl: string
+  affiliateUrl?: string | null
+  couponCode?: string | null
+  editorNotes?: string | null
+  editorNotesBy?: string | null
+  status?: $Enums.DealStatus
+  publishedAt?: Date | string | null
+  startsAt?: Date | string | null
+  expiresAt?: Date | string | null
+  featured?: boolean
+  trending?: boolean
+  everPublished?: boolean
+  version?: number
+  createdById: string
+  updatedById: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  youtubeReviewStatus?: string
+  youtubeLastSearchedAt?: Date | string | null
+  galleryImages?: Prisma.DealGalleryImageUncheckedCreateNestedManyWithoutDealInput
+  options?: Prisma.PurchaseOptionUncheckedCreateNestedManyWithoutDealInput
+  candidates?: Prisma.DealCandidateUncheckedCreateNestedManyWithoutDealInput
+  priceObservations?: Prisma.PriceObservationUncheckedCreateNestedManyWithoutDealInput
+  comments?: Prisma.DealCommentUncheckedCreateNestedManyWithoutDealInput
+  videoReviews?: Prisma.DealVideoReviewUncheckedCreateNestedManyWithoutDealInput
+  communitySubmission?: Prisma.CommunityDealSubmissionUncheckedCreateNestedOneWithoutDealInput
+  savedBy?: Prisma.SavedDealUncheckedCreateNestedManyWithoutDealInput
+  notes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutDealInput
+}
+
+export type DealCreateOrConnectWithoutVotesInput = {
+  where: Prisma.DealWhereUniqueInput
+  create: Prisma.XOR<Prisma.DealCreateWithoutVotesInput, Prisma.DealUncheckedCreateWithoutVotesInput>
+}
+
+export type DealUpsertWithoutVotesInput = {
+  update: Prisma.XOR<Prisma.DealUpdateWithoutVotesInput, Prisma.DealUncheckedUpdateWithoutVotesInput>
+  create: Prisma.XOR<Prisma.DealCreateWithoutVotesInput, Prisma.DealUncheckedCreateWithoutVotesInput>
+  where?: Prisma.DealWhereInput
+}
+
+export type DealUpdateToOneWithWhereWithoutVotesInput = {
+  where?: Prisma.DealWhereInput
+  data: Prisma.XOR<Prisma.DealUpdateWithoutVotesInput, Prisma.DealUncheckedUpdateWithoutVotesInput>
+}
+
+export type DealUpdateWithoutVotesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  brand?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  mrpMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  priceMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  reviewCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  shareCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  productUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  trending?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  everPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  youtubeReviewStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  youtubeLastSearchedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  category?: Prisma.CategoryUpdateOneRequiredWithoutDealsNestedInput
+  merchant?: Prisma.MerchantUpdateOneRequiredWithoutDealsNestedInput
+  media?: Prisma.MediaUpdateOneRequiredWithoutDealsNestedInput
+  galleryImages?: Prisma.DealGalleryImageUpdateManyWithoutDealNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedDealsNestedInput
+  updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedDealsNestedInput
+  options?: Prisma.PurchaseOptionUpdateManyWithoutDealNestedInput
+  candidates?: Prisma.DealCandidateUpdateManyWithoutDealNestedInput
+  priceObservations?: Prisma.PriceObservationUpdateManyWithoutDealNestedInput
+  comments?: Prisma.DealCommentUpdateManyWithoutDealNestedInput
+  videoReviews?: Prisma.DealVideoReviewUpdateManyWithoutDealNestedInput
+  communitySubmission?: Prisma.CommunityDealSubmissionUpdateOneWithoutDealNestedInput
+  savedBy?: Prisma.SavedDealUpdateManyWithoutDealNestedInput
+  notes?: Prisma.DealNoteUpdateManyWithoutDealNestedInput
+}
+
+export type DealUncheckedUpdateWithoutVotesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  brand?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  merchantId?: Prisma.StringFieldUpdateOperationsInput | string
+  mediaId?: Prisma.StringFieldUpdateOperationsInput | string
+  mrpMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  priceMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  reviewCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  shareCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  productUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  trending?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  everPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  updatedById?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  youtubeReviewStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  youtubeLastSearchedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  galleryImages?: Prisma.DealGalleryImageUncheckedUpdateManyWithoutDealNestedInput
+  options?: Prisma.PurchaseOptionUncheckedUpdateManyWithoutDealNestedInput
+  candidates?: Prisma.DealCandidateUncheckedUpdateManyWithoutDealNestedInput
+  priceObservations?: Prisma.PriceObservationUncheckedUpdateManyWithoutDealNestedInput
+  comments?: Prisma.DealCommentUncheckedUpdateManyWithoutDealNestedInput
+  videoReviews?: Prisma.DealVideoReviewUncheckedUpdateManyWithoutDealNestedInput
+  communitySubmission?: Prisma.CommunityDealSubmissionUncheckedUpdateOneWithoutDealNestedInput
+  savedBy?: Prisma.SavedDealUncheckedUpdateManyWithoutDealNestedInput
+  notes?: Prisma.DealNoteUncheckedUpdateManyWithoutDealNestedInput
+}
+
+export type DealCreateWithoutNotesInput = {
+  id?: string
+  slug: string
+  title: string
+  brand: string
+  description: string
+  mrpMinor: number
+  priceMinor: number
+  currency?: string
+  rating?: number | null
+  reviewCount?: number | null
+  viewCount?: number
+  shareCount?: number
+  ratingSource?: string | null
+  productUrl: string
+  affiliateUrl?: string | null
+  couponCode?: string | null
+  editorNotes?: string | null
+  editorNotesBy?: string | null
+  status?: $Enums.DealStatus
+  publishedAt?: Date | string | null
+  startsAt?: Date | string | null
+  expiresAt?: Date | string | null
+  featured?: boolean
+  trending?: boolean
+  everPublished?: boolean
+  version?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  youtubeReviewStatus?: string
+  youtubeLastSearchedAt?: Date | string | null
+  category: Prisma.CategoryCreateNestedOneWithoutDealsInput
+  merchant: Prisma.MerchantCreateNestedOneWithoutDealsInput
+  media: Prisma.MediaCreateNestedOneWithoutDealsInput
+  galleryImages?: Prisma.DealGalleryImageCreateNestedManyWithoutDealInput
+  createdBy: Prisma.UserCreateNestedOneWithoutCreatedDealsInput
+  updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedDealsInput
+  options?: Prisma.PurchaseOptionCreateNestedManyWithoutDealInput
+  candidates?: Prisma.DealCandidateCreateNestedManyWithoutDealInput
+  priceObservations?: Prisma.PriceObservationCreateNestedManyWithoutDealInput
+  comments?: Prisma.DealCommentCreateNestedManyWithoutDealInput
+  videoReviews?: Prisma.DealVideoReviewCreateNestedManyWithoutDealInput
+  communitySubmission?: Prisma.CommunityDealSubmissionCreateNestedOneWithoutDealInput
+  savedBy?: Prisma.SavedDealCreateNestedManyWithoutDealInput
+  votes?: Prisma.DealVoteCreateNestedManyWithoutDealInput
+}
+
+export type DealUncheckedCreateWithoutNotesInput = {
+  id?: string
+  slug: string
+  title: string
+  brand: string
+  description: string
+  categoryId: string
+  merchantId: string
+  mediaId: string
+  mrpMinor: number
+  priceMinor: number
+  currency?: string
+  rating?: number | null
+  reviewCount?: number | null
+  viewCount?: number
+  shareCount?: number
+  ratingSource?: string | null
+  productUrl: string
+  affiliateUrl?: string | null
+  couponCode?: string | null
+  editorNotes?: string | null
+  editorNotesBy?: string | null
+  status?: $Enums.DealStatus
+  publishedAt?: Date | string | null
+  startsAt?: Date | string | null
+  expiresAt?: Date | string | null
+  featured?: boolean
+  trending?: boolean
+  everPublished?: boolean
+  version?: number
+  createdById: string
+  updatedById: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  youtubeReviewStatus?: string
+  youtubeLastSearchedAt?: Date | string | null
+  galleryImages?: Prisma.DealGalleryImageUncheckedCreateNestedManyWithoutDealInput
+  options?: Prisma.PurchaseOptionUncheckedCreateNestedManyWithoutDealInput
+  candidates?: Prisma.DealCandidateUncheckedCreateNestedManyWithoutDealInput
+  priceObservations?: Prisma.PriceObservationUncheckedCreateNestedManyWithoutDealInput
+  comments?: Prisma.DealCommentUncheckedCreateNestedManyWithoutDealInput
+  videoReviews?: Prisma.DealVideoReviewUncheckedCreateNestedManyWithoutDealInput
+  communitySubmission?: Prisma.CommunityDealSubmissionUncheckedCreateNestedOneWithoutDealInput
+  savedBy?: Prisma.SavedDealUncheckedCreateNestedManyWithoutDealInput
+  votes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutDealInput
+}
+
+export type DealCreateOrConnectWithoutNotesInput = {
+  where: Prisma.DealWhereUniqueInput
+  create: Prisma.XOR<Prisma.DealCreateWithoutNotesInput, Prisma.DealUncheckedCreateWithoutNotesInput>
+}
+
+export type DealUpsertWithoutNotesInput = {
+  update: Prisma.XOR<Prisma.DealUpdateWithoutNotesInput, Prisma.DealUncheckedUpdateWithoutNotesInput>
+  create: Prisma.XOR<Prisma.DealCreateWithoutNotesInput, Prisma.DealUncheckedCreateWithoutNotesInput>
+  where?: Prisma.DealWhereInput
+}
+
+export type DealUpdateToOneWithWhereWithoutNotesInput = {
+  where?: Prisma.DealWhereInput
+  data: Prisma.XOR<Prisma.DealUpdateWithoutNotesInput, Prisma.DealUncheckedUpdateWithoutNotesInput>
+}
+
+export type DealUpdateWithoutNotesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  brand?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  mrpMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  priceMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  reviewCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  shareCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  productUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  trending?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  everPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  youtubeReviewStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  youtubeLastSearchedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  category?: Prisma.CategoryUpdateOneRequiredWithoutDealsNestedInput
+  merchant?: Prisma.MerchantUpdateOneRequiredWithoutDealsNestedInput
+  media?: Prisma.MediaUpdateOneRequiredWithoutDealsNestedInput
+  galleryImages?: Prisma.DealGalleryImageUpdateManyWithoutDealNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedDealsNestedInput
+  updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedDealsNestedInput
+  options?: Prisma.PurchaseOptionUpdateManyWithoutDealNestedInput
+  candidates?: Prisma.DealCandidateUpdateManyWithoutDealNestedInput
+  priceObservations?: Prisma.PriceObservationUpdateManyWithoutDealNestedInput
+  comments?: Prisma.DealCommentUpdateManyWithoutDealNestedInput
+  videoReviews?: Prisma.DealVideoReviewUpdateManyWithoutDealNestedInput
+  communitySubmission?: Prisma.CommunityDealSubmissionUpdateOneWithoutDealNestedInput
+  savedBy?: Prisma.SavedDealUpdateManyWithoutDealNestedInput
+  votes?: Prisma.DealVoteUpdateManyWithoutDealNestedInput
+}
+
+export type DealUncheckedUpdateWithoutNotesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  brand?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  merchantId?: Prisma.StringFieldUpdateOperationsInput | string
+  mediaId?: Prisma.StringFieldUpdateOperationsInput | string
+  mrpMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  priceMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  reviewCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  shareCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  productUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  trending?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  everPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  updatedById?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  youtubeReviewStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  youtubeLastSearchedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  galleryImages?: Prisma.DealGalleryImageUncheckedUpdateManyWithoutDealNestedInput
+  options?: Prisma.PurchaseOptionUncheckedUpdateManyWithoutDealNestedInput
+  candidates?: Prisma.DealCandidateUncheckedUpdateManyWithoutDealNestedInput
+  priceObservations?: Prisma.PriceObservationUncheckedUpdateManyWithoutDealNestedInput
+  comments?: Prisma.DealCommentUncheckedUpdateManyWithoutDealNestedInput
+  videoReviews?: Prisma.DealVideoReviewUncheckedUpdateManyWithoutDealNestedInput
+  communitySubmission?: Prisma.CommunityDealSubmissionUncheckedUpdateOneWithoutDealNestedInput
+  savedBy?: Prisma.SavedDealUncheckedUpdateManyWithoutDealNestedInput
+  votes?: Prisma.DealVoteUncheckedUpdateManyWithoutDealNestedInput
 }
 
 export type DealCreateManyCreatedByInput = {
@@ -3557,6 +4221,8 @@ export type DealCreateManyCreatedByInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  editorNotes?: string | null
+  editorNotesBy?: string | null
   status?: $Enums.DealStatus
   publishedAt?: Date | string | null
   startsAt?: Date | string | null
@@ -3592,6 +4258,8 @@ export type DealCreateManyUpdatedByInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  editorNotes?: string | null
+  editorNotesBy?: string | null
   status?: $Enums.DealStatus
   publishedAt?: Date | string | null
   startsAt?: Date | string | null
@@ -3624,6 +4292,8 @@ export type DealUpdateWithoutCreatedByInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3648,6 +4318,8 @@ export type DealUpdateWithoutCreatedByInput = {
   videoReviews?: Prisma.DealVideoReviewUpdateManyWithoutDealNestedInput
   communitySubmission?: Prisma.CommunityDealSubmissionUpdateOneWithoutDealNestedInput
   savedBy?: Prisma.SavedDealUpdateManyWithoutDealNestedInput
+  votes?: Prisma.DealVoteUpdateManyWithoutDealNestedInput
+  notes?: Prisma.DealNoteUpdateManyWithoutDealNestedInput
 }
 
 export type DealUncheckedUpdateWithoutCreatedByInput = {
@@ -3670,6 +4342,8 @@ export type DealUncheckedUpdateWithoutCreatedByInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3691,6 +4365,8 @@ export type DealUncheckedUpdateWithoutCreatedByInput = {
   videoReviews?: Prisma.DealVideoReviewUncheckedUpdateManyWithoutDealNestedInput
   communitySubmission?: Prisma.CommunityDealSubmissionUncheckedUpdateOneWithoutDealNestedInput
   savedBy?: Prisma.SavedDealUncheckedUpdateManyWithoutDealNestedInput
+  votes?: Prisma.DealVoteUncheckedUpdateManyWithoutDealNestedInput
+  notes?: Prisma.DealNoteUncheckedUpdateManyWithoutDealNestedInput
 }
 
 export type DealUncheckedUpdateManyWithoutCreatedByInput = {
@@ -3713,6 +4389,8 @@ export type DealUncheckedUpdateManyWithoutCreatedByInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3745,6 +4423,8 @@ export type DealUpdateWithoutUpdatedByInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3769,6 +4449,8 @@ export type DealUpdateWithoutUpdatedByInput = {
   videoReviews?: Prisma.DealVideoReviewUpdateManyWithoutDealNestedInput
   communitySubmission?: Prisma.CommunityDealSubmissionUpdateOneWithoutDealNestedInput
   savedBy?: Prisma.SavedDealUpdateManyWithoutDealNestedInput
+  votes?: Prisma.DealVoteUpdateManyWithoutDealNestedInput
+  notes?: Prisma.DealNoteUpdateManyWithoutDealNestedInput
 }
 
 export type DealUncheckedUpdateWithoutUpdatedByInput = {
@@ -3791,6 +4473,8 @@ export type DealUncheckedUpdateWithoutUpdatedByInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3812,6 +4496,8 @@ export type DealUncheckedUpdateWithoutUpdatedByInput = {
   videoReviews?: Prisma.DealVideoReviewUncheckedUpdateManyWithoutDealNestedInput
   communitySubmission?: Prisma.CommunityDealSubmissionUncheckedUpdateOneWithoutDealNestedInput
   savedBy?: Prisma.SavedDealUncheckedUpdateManyWithoutDealNestedInput
+  votes?: Prisma.DealVoteUncheckedUpdateManyWithoutDealNestedInput
+  notes?: Prisma.DealNoteUncheckedUpdateManyWithoutDealNestedInput
 }
 
 export type DealUncheckedUpdateManyWithoutUpdatedByInput = {
@@ -3834,6 +4520,8 @@ export type DealUncheckedUpdateManyWithoutUpdatedByInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3868,6 +4556,8 @@ export type DealCreateManyCategoryInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  editorNotes?: string | null
+  editorNotesBy?: string | null
   status?: $Enums.DealStatus
   publishedAt?: Date | string | null
   startsAt?: Date | string | null
@@ -3901,6 +4591,8 @@ export type DealUpdateWithoutCategoryInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3925,6 +4617,8 @@ export type DealUpdateWithoutCategoryInput = {
   videoReviews?: Prisma.DealVideoReviewUpdateManyWithoutDealNestedInput
   communitySubmission?: Prisma.CommunityDealSubmissionUpdateOneWithoutDealNestedInput
   savedBy?: Prisma.SavedDealUpdateManyWithoutDealNestedInput
+  votes?: Prisma.DealVoteUpdateManyWithoutDealNestedInput
+  notes?: Prisma.DealNoteUpdateManyWithoutDealNestedInput
 }
 
 export type DealUncheckedUpdateWithoutCategoryInput = {
@@ -3946,6 +4640,8 @@ export type DealUncheckedUpdateWithoutCategoryInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3968,6 +4664,8 @@ export type DealUncheckedUpdateWithoutCategoryInput = {
   videoReviews?: Prisma.DealVideoReviewUncheckedUpdateManyWithoutDealNestedInput
   communitySubmission?: Prisma.CommunityDealSubmissionUncheckedUpdateOneWithoutDealNestedInput
   savedBy?: Prisma.SavedDealUncheckedUpdateManyWithoutDealNestedInput
+  votes?: Prisma.DealVoteUncheckedUpdateManyWithoutDealNestedInput
+  notes?: Prisma.DealNoteUncheckedUpdateManyWithoutDealNestedInput
 }
 
 export type DealUncheckedUpdateManyWithoutCategoryInput = {
@@ -3989,6 +4687,8 @@ export type DealUncheckedUpdateManyWithoutCategoryInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -4024,6 +4724,8 @@ export type DealCreateManyMerchantInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  editorNotes?: string | null
+  editorNotesBy?: string | null
   status?: $Enums.DealStatus
   publishedAt?: Date | string | null
   startsAt?: Date | string | null
@@ -4057,6 +4759,8 @@ export type DealUpdateWithoutMerchantInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -4081,6 +4785,8 @@ export type DealUpdateWithoutMerchantInput = {
   videoReviews?: Prisma.DealVideoReviewUpdateManyWithoutDealNestedInput
   communitySubmission?: Prisma.CommunityDealSubmissionUpdateOneWithoutDealNestedInput
   savedBy?: Prisma.SavedDealUpdateManyWithoutDealNestedInput
+  votes?: Prisma.DealVoteUpdateManyWithoutDealNestedInput
+  notes?: Prisma.DealNoteUpdateManyWithoutDealNestedInput
 }
 
 export type DealUncheckedUpdateWithoutMerchantInput = {
@@ -4102,6 +4808,8 @@ export type DealUncheckedUpdateWithoutMerchantInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -4124,6 +4832,8 @@ export type DealUncheckedUpdateWithoutMerchantInput = {
   videoReviews?: Prisma.DealVideoReviewUncheckedUpdateManyWithoutDealNestedInput
   communitySubmission?: Prisma.CommunityDealSubmissionUncheckedUpdateOneWithoutDealNestedInput
   savedBy?: Prisma.SavedDealUncheckedUpdateManyWithoutDealNestedInput
+  votes?: Prisma.DealVoteUncheckedUpdateManyWithoutDealNestedInput
+  notes?: Prisma.DealNoteUncheckedUpdateManyWithoutDealNestedInput
 }
 
 export type DealUncheckedUpdateManyWithoutMerchantInput = {
@@ -4145,6 +4855,8 @@ export type DealUncheckedUpdateManyWithoutMerchantInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -4180,6 +4892,8 @@ export type DealCreateManyMediaInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  editorNotes?: string | null
+  editorNotesBy?: string | null
   status?: $Enums.DealStatus
   publishedAt?: Date | string | null
   startsAt?: Date | string | null
@@ -4213,6 +4927,8 @@ export type DealUpdateWithoutMediaInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -4237,6 +4953,8 @@ export type DealUpdateWithoutMediaInput = {
   videoReviews?: Prisma.DealVideoReviewUpdateManyWithoutDealNestedInput
   communitySubmission?: Prisma.CommunityDealSubmissionUpdateOneWithoutDealNestedInput
   savedBy?: Prisma.SavedDealUpdateManyWithoutDealNestedInput
+  votes?: Prisma.DealVoteUpdateManyWithoutDealNestedInput
+  notes?: Prisma.DealNoteUpdateManyWithoutDealNestedInput
 }
 
 export type DealUncheckedUpdateWithoutMediaInput = {
@@ -4258,6 +4976,8 @@ export type DealUncheckedUpdateWithoutMediaInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -4280,6 +5000,8 @@ export type DealUncheckedUpdateWithoutMediaInput = {
   videoReviews?: Prisma.DealVideoReviewUncheckedUpdateManyWithoutDealNestedInput
   communitySubmission?: Prisma.CommunityDealSubmissionUncheckedUpdateOneWithoutDealNestedInput
   savedBy?: Prisma.SavedDealUncheckedUpdateManyWithoutDealNestedInput
+  votes?: Prisma.DealVoteUncheckedUpdateManyWithoutDealNestedInput
+  notes?: Prisma.DealNoteUncheckedUpdateManyWithoutDealNestedInput
 }
 
 export type DealUncheckedUpdateManyWithoutMediaInput = {
@@ -4301,6 +5023,8 @@ export type DealUncheckedUpdateManyWithoutMediaInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -4330,6 +5054,8 @@ export type DealCountOutputType = {
   comments: number
   videoReviews: number
   savedBy: number
+  votes: number
+  notes: number
 }
 
 export type DealCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4340,6 +5066,8 @@ export type DealCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   comments?: boolean | DealCountOutputTypeCountCommentsArgs
   videoReviews?: boolean | DealCountOutputTypeCountVideoReviewsArgs
   savedBy?: boolean | DealCountOutputTypeCountSavedByArgs
+  votes?: boolean | DealCountOutputTypeCountVotesArgs
+  notes?: boolean | DealCountOutputTypeCountNotesArgs
 }
 
 /**
@@ -4401,6 +5129,20 @@ export type DealCountOutputTypeCountSavedByArgs<ExtArgs extends runtime.Types.Ex
   where?: Prisma.SavedDealWhereInput
 }
 
+/**
+ * DealCountOutputType without action
+ */
+export type DealCountOutputTypeCountVotesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DealVoteWhereInput
+}
+
+/**
+ * DealCountOutputType without action
+ */
+export type DealCountOutputTypeCountNotesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DealNoteWhereInput
+}
+
 
 export type DealSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -4422,6 +5164,8 @@ export type DealSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   productUrl?: boolean
   affiliateUrl?: boolean
   couponCode?: boolean
+  editorNotes?: boolean
+  editorNotesBy?: boolean
   status?: boolean
   publishedAt?: boolean
   startsAt?: boolean
@@ -4449,6 +5193,8 @@ export type DealSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   videoReviews?: boolean | Prisma.Deal$videoReviewsArgs<ExtArgs>
   communitySubmission?: boolean | Prisma.Deal$communitySubmissionArgs<ExtArgs>
   savedBy?: boolean | Prisma.Deal$savedByArgs<ExtArgs>
+  votes?: boolean | Prisma.Deal$votesArgs<ExtArgs>
+  notes?: boolean | Prisma.Deal$notesArgs<ExtArgs>
   _count?: boolean | Prisma.DealCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["deal"]>
 
@@ -4474,6 +5220,8 @@ export type DealSelectScalar = {
   productUrl?: boolean
   affiliateUrl?: boolean
   couponCode?: boolean
+  editorNotes?: boolean
+  editorNotesBy?: boolean
   status?: boolean
   publishedAt?: boolean
   startsAt?: boolean
@@ -4490,7 +5238,7 @@ export type DealSelectScalar = {
   youtubeLastSearchedAt?: boolean
 }
 
-export type DealOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "title" | "brand" | "description" | "categoryId" | "merchantId" | "mediaId" | "mrpMinor" | "priceMinor" | "currency" | "rating" | "reviewCount" | "viewCount" | "shareCount" | "ratingSource" | "productUrl" | "affiliateUrl" | "couponCode" | "status" | "publishedAt" | "startsAt" | "expiresAt" | "featured" | "trending" | "everPublished" | "version" | "createdById" | "updatedById" | "createdAt" | "updatedAt" | "youtubeReviewStatus" | "youtubeLastSearchedAt", ExtArgs["result"]["deal"]>
+export type DealOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "title" | "brand" | "description" | "categoryId" | "merchantId" | "mediaId" | "mrpMinor" | "priceMinor" | "currency" | "rating" | "reviewCount" | "viewCount" | "shareCount" | "ratingSource" | "productUrl" | "affiliateUrl" | "couponCode" | "editorNotes" | "editorNotesBy" | "status" | "publishedAt" | "startsAt" | "expiresAt" | "featured" | "trending" | "everPublished" | "version" | "createdById" | "updatedById" | "createdAt" | "updatedAt" | "youtubeReviewStatus" | "youtubeLastSearchedAt", ExtArgs["result"]["deal"]>
 export type DealInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   merchant?: boolean | Prisma.MerchantDefaultArgs<ExtArgs>
@@ -4505,6 +5253,8 @@ export type DealInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   videoReviews?: boolean | Prisma.Deal$videoReviewsArgs<ExtArgs>
   communitySubmission?: boolean | Prisma.Deal$communitySubmissionArgs<ExtArgs>
   savedBy?: boolean | Prisma.Deal$savedByArgs<ExtArgs>
+  votes?: boolean | Prisma.Deal$votesArgs<ExtArgs>
+  notes?: boolean | Prisma.Deal$notesArgs<ExtArgs>
   _count?: boolean | Prisma.DealCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -4524,6 +5274,8 @@ export type $DealPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     videoReviews: Prisma.$DealVideoReviewPayload<ExtArgs>[]
     communitySubmission: Prisma.$CommunityDealSubmissionPayload<ExtArgs> | null
     savedBy: Prisma.$SavedDealPayload<ExtArgs>[]
+    votes: Prisma.$DealVotePayload<ExtArgs>[]
+    notes: Prisma.$DealNotePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -4545,6 +5297,11 @@ export type $DealPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     productUrl: string
     affiliateUrl: string | null
     couponCode: string | null
+    /**
+     * One point per line, written by staff; shown on the deal page under Editor's Notes.
+     */
+    editorNotes: string | null
+    editorNotesBy: string | null
     status: $Enums.DealStatus
     publishedAt: Date | null
     startsAt: Date | null
@@ -4912,6 +5669,8 @@ export interface Prisma__DealClient<T, Null = never, ExtArgs extends runtime.Typ
   videoReviews<T extends Prisma.Deal$videoReviewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Deal$videoReviewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DealVideoReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   communitySubmission<T extends Prisma.Deal$communitySubmissionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Deal$communitySubmissionArgs<ExtArgs>>): Prisma.Prisma__CommunityDealSubmissionClient<runtime.Types.Result.GetResult<Prisma.$CommunityDealSubmissionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   savedBy<T extends Prisma.Deal$savedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Deal$savedByArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SavedDealPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  votes<T extends Prisma.Deal$votesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Deal$votesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DealVotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  notes<T extends Prisma.Deal$notesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Deal$notesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DealNotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4960,6 +5719,8 @@ export interface DealFieldRefs {
   readonly productUrl: Prisma.FieldRef<"Deal", 'String'>
   readonly affiliateUrl: Prisma.FieldRef<"Deal", 'String'>
   readonly couponCode: Prisma.FieldRef<"Deal", 'String'>
+  readonly editorNotes: Prisma.FieldRef<"Deal", 'String'>
+  readonly editorNotesBy: Prisma.FieldRef<"Deal", 'String'>
   readonly status: Prisma.FieldRef<"Deal", 'DealStatus'>
   readonly publishedAt: Prisma.FieldRef<"Deal", 'DateTime'>
   readonly startsAt: Prisma.FieldRef<"Deal", 'DateTime'>
@@ -5506,6 +6267,54 @@ export type Deal$savedByArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   distinct?: Prisma.SavedDealScalarFieldEnum | Prisma.SavedDealScalarFieldEnum[]
+}
+
+/**
+ * Deal.votes
+ */
+export type Deal$votesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DealVote
+   */
+  select?: Prisma.DealVoteSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DealVote
+   */
+  omit?: Prisma.DealVoteOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DealVoteInclude<ExtArgs> | null
+  where?: Prisma.DealVoteWhereInput
+  orderBy?: Prisma.DealVoteOrderByWithRelationInput | Prisma.DealVoteOrderByWithRelationInput[]
+  cursor?: Prisma.DealVoteWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DealVoteScalarFieldEnum | Prisma.DealVoteScalarFieldEnum[]
+}
+
+/**
+ * Deal.notes
+ */
+export type Deal$notesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DealNote
+   */
+  select?: Prisma.DealNoteSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DealNote
+   */
+  omit?: Prisma.DealNoteOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DealNoteInclude<ExtArgs> | null
+  where?: Prisma.DealNoteWhereInput
+  orderBy?: Prisma.DealNoteOrderByWithRelationInput | Prisma.DealNoteOrderByWithRelationInput[]
+  cursor?: Prisma.DealNoteWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DealNoteScalarFieldEnum | Prisma.DealNoteScalarFieldEnum[]
 }
 
 /**

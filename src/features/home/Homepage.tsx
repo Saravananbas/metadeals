@@ -61,6 +61,16 @@ export function Homepage({
   const saved = useSavedDeals();
   const router = useRouter();
 
+  // Other pages (the deal page header) open the home page with ?q=, ?category= or ?view=.
+  useEffect(() => {
+    const p = new URLSearchParams(window.location.search);
+    const view = p.get("view");
+    const next: DealFilters = { ...defaults, query: (p.get("q") ?? "").slice(0, 100), category: (p.get("category") ?? "").slice(0, 100), view: view === "latest" || view === "featured" ? view : "top" };
+    if (!next.query && !next.category && next.view === "top") return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- reading the address bar is only possible after hydration
+    setQuery(next.query); setPage(1); setFilters(next);
+  }, []);
+
   // Search & category filter changes (skip on initial mount since server already provided initialDeals)
   useEffect(() => {
     if (isInitialMount.current) {

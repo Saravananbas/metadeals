@@ -27,6 +27,9 @@ export type AggregateDealComment = {
 export type DealCommentMinAggregateOutputType = {
   id: string | null
   dealId: string | null
+  customerId: string | null
+  imageKey: string | null
+  imageProvider: string | null
   authorName: string | null
   content: string | null
   authorIpHash: string | null
@@ -36,6 +39,9 @@ export type DealCommentMinAggregateOutputType = {
 export type DealCommentMaxAggregateOutputType = {
   id: string | null
   dealId: string | null
+  customerId: string | null
+  imageKey: string | null
+  imageProvider: string | null
   authorName: string | null
   content: string | null
   authorIpHash: string | null
@@ -45,6 +51,9 @@ export type DealCommentMaxAggregateOutputType = {
 export type DealCommentCountAggregateOutputType = {
   id: number
   dealId: number
+  customerId: number
+  imageKey: number
+  imageProvider: number
   authorName: number
   content: number
   authorIpHash: number
@@ -56,6 +65,9 @@ export type DealCommentCountAggregateOutputType = {
 export type DealCommentMinAggregateInputType = {
   id?: true
   dealId?: true
+  customerId?: true
+  imageKey?: true
+  imageProvider?: true
   authorName?: true
   content?: true
   authorIpHash?: true
@@ -65,6 +77,9 @@ export type DealCommentMinAggregateInputType = {
 export type DealCommentMaxAggregateInputType = {
   id?: true
   dealId?: true
+  customerId?: true
+  imageKey?: true
+  imageProvider?: true
   authorName?: true
   content?: true
   authorIpHash?: true
@@ -74,6 +89,9 @@ export type DealCommentMaxAggregateInputType = {
 export type DealCommentCountAggregateInputType = {
   id?: true
   dealId?: true
+  customerId?: true
+  imageKey?: true
+  imageProvider?: true
   authorName?: true
   content?: true
   authorIpHash?: true
@@ -156,6 +174,9 @@ export type DealCommentGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inte
 export type DealCommentGroupByOutputType = {
   id: string
   dealId: string
+  customerId: string | null
+  imageKey: string | null
+  imageProvider: string | null
   authorName: string
   content: string
   authorIpHash: string | null
@@ -186,21 +207,31 @@ export type DealCommentWhereInput = {
   NOT?: Prisma.DealCommentWhereInput | Prisma.DealCommentWhereInput[]
   id?: Prisma.StringFilter<"DealComment"> | string
   dealId?: Prisma.StringFilter<"DealComment"> | string
+  customerId?: Prisma.StringNullableFilter<"DealComment"> | string | null
+  imageKey?: Prisma.StringNullableFilter<"DealComment"> | string | null
+  imageProvider?: Prisma.StringNullableFilter<"DealComment"> | string | null
   authorName?: Prisma.StringFilter<"DealComment"> | string
   content?: Prisma.StringFilter<"DealComment"> | string
   authorIpHash?: Prisma.StringNullableFilter<"DealComment"> | string | null
   createdAt?: Prisma.DateTimeFilter<"DealComment"> | Date | string
   deal?: Prisma.XOR<Prisma.DealScalarRelationFilter, Prisma.DealWhereInput>
+  customer?: Prisma.XOR<Prisma.CustomerNullableScalarRelationFilter, Prisma.CustomerWhereInput> | null
+  likes?: Prisma.DealCommentLikeListRelationFilter
 }
 
 export type DealCommentOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   dealId?: Prisma.SortOrder
+  customerId?: Prisma.SortOrderInput | Prisma.SortOrder
+  imageKey?: Prisma.SortOrderInput | Prisma.SortOrder
+  imageProvider?: Prisma.SortOrderInput | Prisma.SortOrder
   authorName?: Prisma.SortOrder
   content?: Prisma.SortOrder
   authorIpHash?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   deal?: Prisma.DealOrderByWithRelationInput
+  customer?: Prisma.CustomerOrderByWithRelationInput
+  likes?: Prisma.DealCommentLikeOrderByRelationAggregateInput
   _relevance?: Prisma.DealCommentOrderByRelevanceInput
 }
 
@@ -210,16 +241,24 @@ export type DealCommentWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.DealCommentWhereInput[]
   NOT?: Prisma.DealCommentWhereInput | Prisma.DealCommentWhereInput[]
   dealId?: Prisma.StringFilter<"DealComment"> | string
+  customerId?: Prisma.StringNullableFilter<"DealComment"> | string | null
+  imageKey?: Prisma.StringNullableFilter<"DealComment"> | string | null
+  imageProvider?: Prisma.StringNullableFilter<"DealComment"> | string | null
   authorName?: Prisma.StringFilter<"DealComment"> | string
   content?: Prisma.StringFilter<"DealComment"> | string
   authorIpHash?: Prisma.StringNullableFilter<"DealComment"> | string | null
   createdAt?: Prisma.DateTimeFilter<"DealComment"> | Date | string
   deal?: Prisma.XOR<Prisma.DealScalarRelationFilter, Prisma.DealWhereInput>
+  customer?: Prisma.XOR<Prisma.CustomerNullableScalarRelationFilter, Prisma.CustomerWhereInput> | null
+  likes?: Prisma.DealCommentLikeListRelationFilter
 }, "id">
 
 export type DealCommentOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   dealId?: Prisma.SortOrder
+  customerId?: Prisma.SortOrderInput | Prisma.SortOrder
+  imageKey?: Prisma.SortOrderInput | Prisma.SortOrder
+  imageProvider?: Prisma.SortOrderInput | Prisma.SortOrder
   authorName?: Prisma.SortOrder
   content?: Prisma.SortOrder
   authorIpHash?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -235,6 +274,9 @@ export type DealCommentScalarWhereWithAggregatesInput = {
   NOT?: Prisma.DealCommentScalarWhereWithAggregatesInput | Prisma.DealCommentScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"DealComment"> | string
   dealId?: Prisma.StringWithAggregatesFilter<"DealComment"> | string
+  customerId?: Prisma.StringNullableWithAggregatesFilter<"DealComment"> | string | null
+  imageKey?: Prisma.StringNullableWithAggregatesFilter<"DealComment"> | string | null
+  imageProvider?: Prisma.StringNullableWithAggregatesFilter<"DealComment"> | string | null
   authorName?: Prisma.StringWithAggregatesFilter<"DealComment"> | string
   content?: Prisma.StringWithAggregatesFilter<"DealComment"> | string
   authorIpHash?: Prisma.StringNullableWithAggregatesFilter<"DealComment"> | string | null
@@ -243,43 +285,62 @@ export type DealCommentScalarWhereWithAggregatesInput = {
 
 export type DealCommentCreateInput = {
   id?: string
+  imageKey?: string | null
+  imageProvider?: string | null
   authorName?: string
   content: string
   authorIpHash?: string | null
   createdAt?: Date | string
   deal: Prisma.DealCreateNestedOneWithoutCommentsInput
+  customer?: Prisma.CustomerCreateNestedOneWithoutDealCommentsInput
+  likes?: Prisma.DealCommentLikeCreateNestedManyWithoutCommentInput
 }
 
 export type DealCommentUncheckedCreateInput = {
   id?: string
   dealId: string
+  customerId?: string | null
+  imageKey?: string | null
+  imageProvider?: string | null
   authorName?: string
   content: string
   authorIpHash?: string | null
   createdAt?: Date | string
+  likes?: Prisma.DealCommentLikeUncheckedCreateNestedManyWithoutCommentInput
 }
 
 export type DealCommentUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   authorName?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   authorIpHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deal?: Prisma.DealUpdateOneRequiredWithoutCommentsNestedInput
+  customer?: Prisma.CustomerUpdateOneWithoutDealCommentsNestedInput
+  likes?: Prisma.DealCommentLikeUpdateManyWithoutCommentNestedInput
 }
 
 export type DealCommentUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   dealId?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   authorName?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   authorIpHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  likes?: Prisma.DealCommentLikeUncheckedUpdateManyWithoutCommentNestedInput
 }
 
 export type DealCommentCreateManyInput = {
   id?: string
   dealId: string
+  customerId?: string | null
+  imageKey?: string | null
+  imageProvider?: string | null
   authorName?: string
   content: string
   authorIpHash?: string | null
@@ -288,6 +349,8 @@ export type DealCommentCreateManyInput = {
 
 export type DealCommentUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   authorName?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   authorIpHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -297,6 +360,9 @@ export type DealCommentUpdateManyMutationInput = {
 export type DealCommentUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   dealId?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   authorName?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   authorIpHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -322,6 +388,9 @@ export type DealCommentOrderByRelevanceInput = {
 export type DealCommentCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   dealId?: Prisma.SortOrder
+  customerId?: Prisma.SortOrder
+  imageKey?: Prisma.SortOrder
+  imageProvider?: Prisma.SortOrder
   authorName?: Prisma.SortOrder
   content?: Prisma.SortOrder
   authorIpHash?: Prisma.SortOrder
@@ -331,6 +400,9 @@ export type DealCommentCountOrderByAggregateInput = {
 export type DealCommentMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   dealId?: Prisma.SortOrder
+  customerId?: Prisma.SortOrder
+  imageKey?: Prisma.SortOrder
+  imageProvider?: Prisma.SortOrder
   authorName?: Prisma.SortOrder
   content?: Prisma.SortOrder
   authorIpHash?: Prisma.SortOrder
@@ -340,10 +412,18 @@ export type DealCommentMaxOrderByAggregateInput = {
 export type DealCommentMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   dealId?: Prisma.SortOrder
+  customerId?: Prisma.SortOrder
+  imageKey?: Prisma.SortOrder
+  imageProvider?: Prisma.SortOrder
   authorName?: Prisma.SortOrder
   content?: Prisma.SortOrder
   authorIpHash?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+}
+
+export type DealCommentScalarRelationFilter = {
+  is?: Prisma.DealCommentWhereInput
+  isNot?: Prisma.DealCommentWhereInput
 }
 
 export type DealCommentCreateNestedManyWithoutDealInput = {
@@ -388,20 +468,84 @@ export type DealCommentUncheckedUpdateManyWithoutDealNestedInput = {
   deleteMany?: Prisma.DealCommentScalarWhereInput | Prisma.DealCommentScalarWhereInput[]
 }
 
+export type DealCommentCreateNestedManyWithoutCustomerInput = {
+  create?: Prisma.XOR<Prisma.DealCommentCreateWithoutCustomerInput, Prisma.DealCommentUncheckedCreateWithoutCustomerInput> | Prisma.DealCommentCreateWithoutCustomerInput[] | Prisma.DealCommentUncheckedCreateWithoutCustomerInput[]
+  connectOrCreate?: Prisma.DealCommentCreateOrConnectWithoutCustomerInput | Prisma.DealCommentCreateOrConnectWithoutCustomerInput[]
+  createMany?: Prisma.DealCommentCreateManyCustomerInputEnvelope
+  connect?: Prisma.DealCommentWhereUniqueInput | Prisma.DealCommentWhereUniqueInput[]
+}
+
+export type DealCommentUncheckedCreateNestedManyWithoutCustomerInput = {
+  create?: Prisma.XOR<Prisma.DealCommentCreateWithoutCustomerInput, Prisma.DealCommentUncheckedCreateWithoutCustomerInput> | Prisma.DealCommentCreateWithoutCustomerInput[] | Prisma.DealCommentUncheckedCreateWithoutCustomerInput[]
+  connectOrCreate?: Prisma.DealCommentCreateOrConnectWithoutCustomerInput | Prisma.DealCommentCreateOrConnectWithoutCustomerInput[]
+  createMany?: Prisma.DealCommentCreateManyCustomerInputEnvelope
+  connect?: Prisma.DealCommentWhereUniqueInput | Prisma.DealCommentWhereUniqueInput[]
+}
+
+export type DealCommentUpdateManyWithoutCustomerNestedInput = {
+  create?: Prisma.XOR<Prisma.DealCommentCreateWithoutCustomerInput, Prisma.DealCommentUncheckedCreateWithoutCustomerInput> | Prisma.DealCommentCreateWithoutCustomerInput[] | Prisma.DealCommentUncheckedCreateWithoutCustomerInput[]
+  connectOrCreate?: Prisma.DealCommentCreateOrConnectWithoutCustomerInput | Prisma.DealCommentCreateOrConnectWithoutCustomerInput[]
+  upsert?: Prisma.DealCommentUpsertWithWhereUniqueWithoutCustomerInput | Prisma.DealCommentUpsertWithWhereUniqueWithoutCustomerInput[]
+  createMany?: Prisma.DealCommentCreateManyCustomerInputEnvelope
+  set?: Prisma.DealCommentWhereUniqueInput | Prisma.DealCommentWhereUniqueInput[]
+  disconnect?: Prisma.DealCommentWhereUniqueInput | Prisma.DealCommentWhereUniqueInput[]
+  delete?: Prisma.DealCommentWhereUniqueInput | Prisma.DealCommentWhereUniqueInput[]
+  connect?: Prisma.DealCommentWhereUniqueInput | Prisma.DealCommentWhereUniqueInput[]
+  update?: Prisma.DealCommentUpdateWithWhereUniqueWithoutCustomerInput | Prisma.DealCommentUpdateWithWhereUniqueWithoutCustomerInput[]
+  updateMany?: Prisma.DealCommentUpdateManyWithWhereWithoutCustomerInput | Prisma.DealCommentUpdateManyWithWhereWithoutCustomerInput[]
+  deleteMany?: Prisma.DealCommentScalarWhereInput | Prisma.DealCommentScalarWhereInput[]
+}
+
+export type DealCommentUncheckedUpdateManyWithoutCustomerNestedInput = {
+  create?: Prisma.XOR<Prisma.DealCommentCreateWithoutCustomerInput, Prisma.DealCommentUncheckedCreateWithoutCustomerInput> | Prisma.DealCommentCreateWithoutCustomerInput[] | Prisma.DealCommentUncheckedCreateWithoutCustomerInput[]
+  connectOrCreate?: Prisma.DealCommentCreateOrConnectWithoutCustomerInput | Prisma.DealCommentCreateOrConnectWithoutCustomerInput[]
+  upsert?: Prisma.DealCommentUpsertWithWhereUniqueWithoutCustomerInput | Prisma.DealCommentUpsertWithWhereUniqueWithoutCustomerInput[]
+  createMany?: Prisma.DealCommentCreateManyCustomerInputEnvelope
+  set?: Prisma.DealCommentWhereUniqueInput | Prisma.DealCommentWhereUniqueInput[]
+  disconnect?: Prisma.DealCommentWhereUniqueInput | Prisma.DealCommentWhereUniqueInput[]
+  delete?: Prisma.DealCommentWhereUniqueInput | Prisma.DealCommentWhereUniqueInput[]
+  connect?: Prisma.DealCommentWhereUniqueInput | Prisma.DealCommentWhereUniqueInput[]
+  update?: Prisma.DealCommentUpdateWithWhereUniqueWithoutCustomerInput | Prisma.DealCommentUpdateWithWhereUniqueWithoutCustomerInput[]
+  updateMany?: Prisma.DealCommentUpdateManyWithWhereWithoutCustomerInput | Prisma.DealCommentUpdateManyWithWhereWithoutCustomerInput[]
+  deleteMany?: Prisma.DealCommentScalarWhereInput | Prisma.DealCommentScalarWhereInput[]
+}
+
+export type DealCommentCreateNestedOneWithoutLikesInput = {
+  create?: Prisma.XOR<Prisma.DealCommentCreateWithoutLikesInput, Prisma.DealCommentUncheckedCreateWithoutLikesInput>
+  connectOrCreate?: Prisma.DealCommentCreateOrConnectWithoutLikesInput
+  connect?: Prisma.DealCommentWhereUniqueInput
+}
+
+export type DealCommentUpdateOneRequiredWithoutLikesNestedInput = {
+  create?: Prisma.XOR<Prisma.DealCommentCreateWithoutLikesInput, Prisma.DealCommentUncheckedCreateWithoutLikesInput>
+  connectOrCreate?: Prisma.DealCommentCreateOrConnectWithoutLikesInput
+  upsert?: Prisma.DealCommentUpsertWithoutLikesInput
+  connect?: Prisma.DealCommentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DealCommentUpdateToOneWithWhereWithoutLikesInput, Prisma.DealCommentUpdateWithoutLikesInput>, Prisma.DealCommentUncheckedUpdateWithoutLikesInput>
+}
+
 export type DealCommentCreateWithoutDealInput = {
   id?: string
+  imageKey?: string | null
+  imageProvider?: string | null
   authorName?: string
   content: string
   authorIpHash?: string | null
   createdAt?: Date | string
+  customer?: Prisma.CustomerCreateNestedOneWithoutDealCommentsInput
+  likes?: Prisma.DealCommentLikeCreateNestedManyWithoutCommentInput
 }
 
 export type DealCommentUncheckedCreateWithoutDealInput = {
   id?: string
+  customerId?: string | null
+  imageKey?: string | null
+  imageProvider?: string | null
   authorName?: string
   content: string
   authorIpHash?: string | null
   createdAt?: Date | string
+  likes?: Prisma.DealCommentLikeUncheckedCreateNestedManyWithoutCommentInput
 }
 
 export type DealCommentCreateOrConnectWithoutDealInput = {
@@ -436,14 +580,134 @@ export type DealCommentScalarWhereInput = {
   NOT?: Prisma.DealCommentScalarWhereInput | Prisma.DealCommentScalarWhereInput[]
   id?: Prisma.StringFilter<"DealComment"> | string
   dealId?: Prisma.StringFilter<"DealComment"> | string
+  customerId?: Prisma.StringNullableFilter<"DealComment"> | string | null
+  imageKey?: Prisma.StringNullableFilter<"DealComment"> | string | null
+  imageProvider?: Prisma.StringNullableFilter<"DealComment"> | string | null
   authorName?: Prisma.StringFilter<"DealComment"> | string
   content?: Prisma.StringFilter<"DealComment"> | string
   authorIpHash?: Prisma.StringNullableFilter<"DealComment"> | string | null
   createdAt?: Prisma.DateTimeFilter<"DealComment"> | Date | string
 }
 
+export type DealCommentCreateWithoutCustomerInput = {
+  id?: string
+  imageKey?: string | null
+  imageProvider?: string | null
+  authorName?: string
+  content: string
+  authorIpHash?: string | null
+  createdAt?: Date | string
+  deal: Prisma.DealCreateNestedOneWithoutCommentsInput
+  likes?: Prisma.DealCommentLikeCreateNestedManyWithoutCommentInput
+}
+
+export type DealCommentUncheckedCreateWithoutCustomerInput = {
+  id?: string
+  dealId: string
+  imageKey?: string | null
+  imageProvider?: string | null
+  authorName?: string
+  content: string
+  authorIpHash?: string | null
+  createdAt?: Date | string
+  likes?: Prisma.DealCommentLikeUncheckedCreateNestedManyWithoutCommentInput
+}
+
+export type DealCommentCreateOrConnectWithoutCustomerInput = {
+  where: Prisma.DealCommentWhereUniqueInput
+  create: Prisma.XOR<Prisma.DealCommentCreateWithoutCustomerInput, Prisma.DealCommentUncheckedCreateWithoutCustomerInput>
+}
+
+export type DealCommentCreateManyCustomerInputEnvelope = {
+  data: Prisma.DealCommentCreateManyCustomerInput | Prisma.DealCommentCreateManyCustomerInput[]
+  skipDuplicates?: boolean
+}
+
+export type DealCommentUpsertWithWhereUniqueWithoutCustomerInput = {
+  where: Prisma.DealCommentWhereUniqueInput
+  update: Prisma.XOR<Prisma.DealCommentUpdateWithoutCustomerInput, Prisma.DealCommentUncheckedUpdateWithoutCustomerInput>
+  create: Prisma.XOR<Prisma.DealCommentCreateWithoutCustomerInput, Prisma.DealCommentUncheckedCreateWithoutCustomerInput>
+}
+
+export type DealCommentUpdateWithWhereUniqueWithoutCustomerInput = {
+  where: Prisma.DealCommentWhereUniqueInput
+  data: Prisma.XOR<Prisma.DealCommentUpdateWithoutCustomerInput, Prisma.DealCommentUncheckedUpdateWithoutCustomerInput>
+}
+
+export type DealCommentUpdateManyWithWhereWithoutCustomerInput = {
+  where: Prisma.DealCommentScalarWhereInput
+  data: Prisma.XOR<Prisma.DealCommentUpdateManyMutationInput, Prisma.DealCommentUncheckedUpdateManyWithoutCustomerInput>
+}
+
+export type DealCommentCreateWithoutLikesInput = {
+  id?: string
+  imageKey?: string | null
+  imageProvider?: string | null
+  authorName?: string
+  content: string
+  authorIpHash?: string | null
+  createdAt?: Date | string
+  deal: Prisma.DealCreateNestedOneWithoutCommentsInput
+  customer?: Prisma.CustomerCreateNestedOneWithoutDealCommentsInput
+}
+
+export type DealCommentUncheckedCreateWithoutLikesInput = {
+  id?: string
+  dealId: string
+  customerId?: string | null
+  imageKey?: string | null
+  imageProvider?: string | null
+  authorName?: string
+  content: string
+  authorIpHash?: string | null
+  createdAt?: Date | string
+}
+
+export type DealCommentCreateOrConnectWithoutLikesInput = {
+  where: Prisma.DealCommentWhereUniqueInput
+  create: Prisma.XOR<Prisma.DealCommentCreateWithoutLikesInput, Prisma.DealCommentUncheckedCreateWithoutLikesInput>
+}
+
+export type DealCommentUpsertWithoutLikesInput = {
+  update: Prisma.XOR<Prisma.DealCommentUpdateWithoutLikesInput, Prisma.DealCommentUncheckedUpdateWithoutLikesInput>
+  create: Prisma.XOR<Prisma.DealCommentCreateWithoutLikesInput, Prisma.DealCommentUncheckedCreateWithoutLikesInput>
+  where?: Prisma.DealCommentWhereInput
+}
+
+export type DealCommentUpdateToOneWithWhereWithoutLikesInput = {
+  where?: Prisma.DealCommentWhereInput
+  data: Prisma.XOR<Prisma.DealCommentUpdateWithoutLikesInput, Prisma.DealCommentUncheckedUpdateWithoutLikesInput>
+}
+
+export type DealCommentUpdateWithoutLikesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authorName?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  authorIpHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deal?: Prisma.DealUpdateOneRequiredWithoutCommentsNestedInput
+  customer?: Prisma.CustomerUpdateOneWithoutDealCommentsNestedInput
+}
+
+export type DealCommentUncheckedUpdateWithoutLikesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  dealId?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authorName?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  authorIpHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type DealCommentCreateManyDealInput = {
   id?: string
+  customerId?: string | null
+  imageKey?: string | null
+  imageProvider?: string | null
   authorName?: string
   content: string
   authorIpHash?: string | null
@@ -452,38 +716,130 @@ export type DealCommentCreateManyDealInput = {
 
 export type DealCommentUpdateWithoutDealInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   authorName?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   authorIpHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customer?: Prisma.CustomerUpdateOneWithoutDealCommentsNestedInput
+  likes?: Prisma.DealCommentLikeUpdateManyWithoutCommentNestedInput
 }
 
 export type DealCommentUncheckedUpdateWithoutDealInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   authorName?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   authorIpHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  likes?: Prisma.DealCommentLikeUncheckedUpdateManyWithoutCommentNestedInput
 }
 
 export type DealCommentUncheckedUpdateManyWithoutDealInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   authorName?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   authorIpHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type DealCommentCreateManyCustomerInput = {
+  id?: string
+  dealId: string
+  imageKey?: string | null
+  imageProvider?: string | null
+  authorName?: string
+  content: string
+  authorIpHash?: string | null
+  createdAt?: Date | string
+}
+
+export type DealCommentUpdateWithoutCustomerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authorName?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  authorIpHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deal?: Prisma.DealUpdateOneRequiredWithoutCommentsNestedInput
+  likes?: Prisma.DealCommentLikeUpdateManyWithoutCommentNestedInput
+}
+
+export type DealCommentUncheckedUpdateWithoutCustomerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  dealId?: Prisma.StringFieldUpdateOperationsInput | string
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authorName?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  authorIpHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  likes?: Prisma.DealCommentLikeUncheckedUpdateManyWithoutCommentNestedInput
+}
+
+export type DealCommentUncheckedUpdateManyWithoutCustomerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  dealId?: Prisma.StringFieldUpdateOperationsInput | string
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authorName?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  authorIpHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+
+/**
+ * Count Type DealCommentCountOutputType
+ */
+
+export type DealCommentCountOutputType = {
+  likes: number
+}
+
+export type DealCommentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  likes?: boolean | DealCommentCountOutputTypeCountLikesArgs
+}
+
+/**
+ * DealCommentCountOutputType without action
+ */
+export type DealCommentCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DealCommentCountOutputType
+   */
+  select?: Prisma.DealCommentCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * DealCommentCountOutputType without action
+ */
+export type DealCommentCountOutputTypeCountLikesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DealCommentLikeWhereInput
+}
 
 
 export type DealCommentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   dealId?: boolean
+  customerId?: boolean
+  imageKey?: boolean
+  imageProvider?: boolean
   authorName?: boolean
   content?: boolean
   authorIpHash?: boolean
   createdAt?: boolean
   deal?: boolean | Prisma.DealDefaultArgs<ExtArgs>
+  customer?: boolean | Prisma.DealComment$customerArgs<ExtArgs>
+  likes?: boolean | Prisma.DealComment$likesArgs<ExtArgs>
+  _count?: boolean | Prisma.DealCommentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["dealComment"]>
 
 
@@ -491,25 +847,39 @@ export type DealCommentSelect<ExtArgs extends runtime.Types.Extensions.InternalA
 export type DealCommentSelectScalar = {
   id?: boolean
   dealId?: boolean
+  customerId?: boolean
+  imageKey?: boolean
+  imageProvider?: boolean
   authorName?: boolean
   content?: boolean
   authorIpHash?: boolean
   createdAt?: boolean
 }
 
-export type DealCommentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "dealId" | "authorName" | "content" | "authorIpHash" | "createdAt", ExtArgs["result"]["dealComment"]>
+export type DealCommentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "dealId" | "customerId" | "imageKey" | "imageProvider" | "authorName" | "content" | "authorIpHash" | "createdAt", ExtArgs["result"]["dealComment"]>
 export type DealCommentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   deal?: boolean | Prisma.DealDefaultArgs<ExtArgs>
+  customer?: boolean | Prisma.DealComment$customerArgs<ExtArgs>
+  likes?: boolean | Prisma.DealComment$likesArgs<ExtArgs>
+  _count?: boolean | Prisma.DealCommentCountOutputTypeDefaultArgs<ExtArgs>
 }
 
 export type $DealCommentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "DealComment"
   objects: {
     deal: Prisma.$DealPayload<ExtArgs>
+    customer: Prisma.$CustomerPayload<ExtArgs> | null
+    likes: Prisma.$DealCommentLikePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     dealId: string
+    customerId: string | null
+    /**
+     * Picture attached by a signed-in member (re-encoded WebP, same storage as deal media).
+     */
+    imageKey: string | null
+    imageProvider: string | null
     authorName: string
     content: string
     authorIpHash: string | null
@@ -855,6 +1225,8 @@ readonly fields: DealCommentFieldRefs;
 export interface Prisma__DealCommentClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   deal<T extends Prisma.DealDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DealDefaultArgs<ExtArgs>>): Prisma.Prisma__DealClient<runtime.Types.Result.GetResult<Prisma.$DealPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  customer<T extends Prisma.DealComment$customerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DealComment$customerArgs<ExtArgs>>): Prisma.Prisma__CustomerClient<runtime.Types.Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  likes<T extends Prisma.DealComment$likesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DealComment$likesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DealCommentLikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -886,6 +1258,9 @@ export interface Prisma__DealCommentClient<T, Null = never, ExtArgs extends runt
 export interface DealCommentFieldRefs {
   readonly id: Prisma.FieldRef<"DealComment", 'String'>
   readonly dealId: Prisma.FieldRef<"DealComment", 'String'>
+  readonly customerId: Prisma.FieldRef<"DealComment", 'String'>
+  readonly imageKey: Prisma.FieldRef<"DealComment", 'String'>
+  readonly imageProvider: Prisma.FieldRef<"DealComment", 'String'>
   readonly authorName: Prisma.FieldRef<"DealComment", 'String'>
   readonly content: Prisma.FieldRef<"DealComment", 'String'>
   readonly authorIpHash: Prisma.FieldRef<"DealComment", 'String'>
@@ -1235,6 +1610,49 @@ export type DealCommentDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * Limit how many DealComments to delete.
    */
   limit?: number
+}
+
+/**
+ * DealComment.customer
+ */
+export type DealComment$customerArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Customer
+   */
+  select?: Prisma.CustomerSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Customer
+   */
+  omit?: Prisma.CustomerOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CustomerInclude<ExtArgs> | null
+  where?: Prisma.CustomerWhereInput
+}
+
+/**
+ * DealComment.likes
+ */
+export type DealComment$likesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DealCommentLike
+   */
+  select?: Prisma.DealCommentLikeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DealCommentLike
+   */
+  omit?: Prisma.DealCommentLikeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DealCommentLikeInclude<ExtArgs> | null
+  where?: Prisma.DealCommentLikeWhereInput
+  orderBy?: Prisma.DealCommentLikeOrderByWithRelationInput | Prisma.DealCommentLikeOrderByWithRelationInput[]
+  cursor?: Prisma.DealCommentLikeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DealCommentLikeScalarFieldEnum | Prisma.DealCommentLikeScalarFieldEnum[]
 }
 
 /**

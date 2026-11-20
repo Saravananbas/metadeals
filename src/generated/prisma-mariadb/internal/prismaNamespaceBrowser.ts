@@ -127,7 +127,11 @@ export const ModelName = {
   ModerationAppeal: 'ModerationAppeal',
   ModerationEscalation: 'ModerationEscalation',
   CustomerPreference: 'CustomerPreference',
-  SavedDeal: 'SavedDeal'
+  SavedDeal: 'SavedDeal',
+  DealVote: 'DealVote',
+  DealNote: 'DealNote',
+  MemberStar: 'MemberStar',
+  DealCommentLike: 'DealCommentLike'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -381,6 +385,8 @@ export const DealScalarFieldEnum = {
   productUrl: 'productUrl',
   affiliateUrl: 'affiliateUrl',
   couponCode: 'couponCode',
+  editorNotes: 'editorNotes',
+  editorNotesBy: 'editorNotesBy',
   status: 'status',
   publishedAt: 'publishedAt',
   startsAt: 'startsAt',
@@ -809,6 +815,9 @@ export type DealLifecycleEventScalarFieldEnum = (typeof DealLifecycleEventScalar
 export const DealCommentScalarFieldEnum = {
   id: 'id',
   dealId: 'dealId',
+  customerId: 'customerId',
+  imageKey: 'imageKey',
+  imageProvider: 'imageProvider',
   authorName: 'authorName',
   content: 'content',
   authorIpHash: 'authorIpHash',
@@ -1409,6 +1418,51 @@ export const SavedDealScalarFieldEnum = {
 export type SavedDealScalarFieldEnum = (typeof SavedDealScalarFieldEnum)[keyof typeof SavedDealScalarFieldEnum]
 
 
+export const DealVoteScalarFieldEnum = {
+  id: 'id',
+  dealId: 'dealId',
+  customerId: 'customerId',
+  value: 'value',
+  reason: 'reason',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DealVoteScalarFieldEnum = (typeof DealVoteScalarFieldEnum)[keyof typeof DealVoteScalarFieldEnum]
+
+
+export const DealNoteScalarFieldEnum = {
+  id: 'id',
+  dealId: 'dealId',
+  customerId: 'customerId',
+  content: 'content',
+  removedAt: 'removedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type DealNoteScalarFieldEnum = (typeof DealNoteScalarFieldEnum)[keyof typeof DealNoteScalarFieldEnum]
+
+
+export const MemberStarScalarFieldEnum = {
+  id: 'id',
+  giverId: 'giverId',
+  receiverId: 'receiverId',
+  createdAt: 'createdAt'
+} as const
+
+export type MemberStarScalarFieldEnum = (typeof MemberStarScalarFieldEnum)[keyof typeof MemberStarScalarFieldEnum]
+
+
+export const DealCommentLikeScalarFieldEnum = {
+  id: 'id',
+  commentId: 'commentId',
+  customerId: 'customerId',
+  createdAt: 'createdAt'
+} as const
+
+export type DealCommentLikeScalarFieldEnum = (typeof DealCommentLikeScalarFieldEnum)[keyof typeof DealCommentLikeScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -1636,6 +1690,8 @@ export const DealOrderByRelevanceFieldEnum = {
   productUrl: 'productUrl',
   affiliateUrl: 'affiliateUrl',
   couponCode: 'couponCode',
+  editorNotes: 'editorNotes',
+  editorNotesBy: 'editorNotesBy',
   createdById: 'createdById',
   updatedById: 'updatedById',
   youtubeReviewStatus: 'youtubeReviewStatus'
@@ -1942,6 +1998,9 @@ export type DealLifecycleEventOrderByRelevanceFieldEnum = (typeof DealLifecycleE
 export const DealCommentOrderByRelevanceFieldEnum = {
   id: 'id',
   dealId: 'dealId',
+  customerId: 'customerId',
+  imageKey: 'imageKey',
+  imageProvider: 'imageProvider',
   authorName: 'authorName',
   content: 'content',
   authorIpHash: 'authorIpHash'
@@ -2394,4 +2453,42 @@ export const SavedDealOrderByRelevanceFieldEnum = {
 } as const
 
 export type SavedDealOrderByRelevanceFieldEnum = (typeof SavedDealOrderByRelevanceFieldEnum)[keyof typeof SavedDealOrderByRelevanceFieldEnum]
+
+
+export const DealVoteOrderByRelevanceFieldEnum = {
+  id: 'id',
+  dealId: 'dealId',
+  customerId: 'customerId',
+  reason: 'reason'
+} as const
+
+export type DealVoteOrderByRelevanceFieldEnum = (typeof DealVoteOrderByRelevanceFieldEnum)[keyof typeof DealVoteOrderByRelevanceFieldEnum]
+
+
+export const DealNoteOrderByRelevanceFieldEnum = {
+  id: 'id',
+  dealId: 'dealId',
+  customerId: 'customerId',
+  content: 'content'
+} as const
+
+export type DealNoteOrderByRelevanceFieldEnum = (typeof DealNoteOrderByRelevanceFieldEnum)[keyof typeof DealNoteOrderByRelevanceFieldEnum]
+
+
+export const MemberStarOrderByRelevanceFieldEnum = {
+  id: 'id',
+  giverId: 'giverId',
+  receiverId: 'receiverId'
+} as const
+
+export type MemberStarOrderByRelevanceFieldEnum = (typeof MemberStarOrderByRelevanceFieldEnum)[keyof typeof MemberStarOrderByRelevanceFieldEnum]
+
+
+export const DealCommentLikeOrderByRelevanceFieldEnum = {
+  id: 'id',
+  commentId: 'commentId',
+  customerId: 'customerId'
+} as const
+
+export type DealCommentLikeOrderByRelevanceFieldEnum = (typeof DealCommentLikeOrderByRelevanceFieldEnum)[keyof typeof DealCommentLikeOrderByRelevanceFieldEnum]
 

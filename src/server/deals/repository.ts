@@ -105,6 +105,7 @@ export function publicDeal(record: DealRecord, merchantLogoUrl: string | null = 
     shareCount: record.shareCount ?? 0,
     productUrl: record.productUrl, destinationUrl: record.affiliateUrl ?? record.productUrl,
     couponCode: record.couponCode ?? null,
+    editorNotes: (record.editorNotes ?? "").split(String.fromCharCode(10)).filter(Boolean), editorNotesBy: record.editorNotesBy ?? null,
     isAffiliate: Boolean(record.affiliateUrl), featured: record.featured, trending: record.trending,
     publishedAt: record.publishedAt?.toISOString() ?? null, startsAt: record.startsAt?.toISOString() ?? null,
     expiresAt: record.expiresAt?.toISOString() ?? null,

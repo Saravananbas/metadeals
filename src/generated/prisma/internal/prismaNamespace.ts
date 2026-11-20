@@ -473,7 +473,11 @@ export const ModelName = {
   ModerationAppeal: 'ModerationAppeal',
   ModerationEscalation: 'ModerationEscalation',
   CustomerPreference: 'CustomerPreference',
-  SavedDeal: 'SavedDeal'
+  SavedDeal: 'SavedDeal',
+  DealVote: 'DealVote',
+  DealNote: 'DealNote',
+  MemberStar: 'MemberStar',
+  DealCommentLike: 'DealCommentLike'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -489,7 +493,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "account" | "session" | "verificationToken" | "authSession" | "recoveryCode" | "authToken" | "authRateLimit" | "bootstrapState" | "auditEvent" | "category" | "merchant" | "affiliateClick" | "affiliateTransaction" | "media" | "deal" | "purchaseOption" | "dealGalleryImage" | "customer" | "customerIdentity" | "customerSignupChallenge" | "customerPasswordReset" | "customerRateLimit" | "distributionDestination" | "distributionPost" | "dealCandidate" | "priceObservation" | "scraperJob" | "productExtractionLog" | "dealVideoReview" | "youTubeQuotaLedger" | "merchantWebsiteDirectory" | "productMaster" | "productVariant" | "productOffer" | "priceObservationRecord" | "sourceHealthRecord" | "publicationAuthorization" | "shadowCandidate" | "dealLifecycleEvent" | "dealComment" | "analyticsSession" | "analyticsEvent" | "analyticsDaily" | "communityDealSubmission" | "forumCommunity" | "forumProfile" | "forumPost" | "forumComment" | "forumPostVote" | "forumCommentVote" | "forumPostLike" | "forumCommentLike" | "forumSave" | "forumFollow" | "forumPostImage" | "forumPostDraft" | "forumNotification" | "forumAnnouncement" | "staffPermissionGrant" | "forumReport" | "forumModerationAction" | "dmThread" | "dmMessage" | "dmBlock" | "dmReport" | "customerAppToken" | "forumMemberFollow" | "devicePushToken" | "moderatorAppointment" | "moderatorAppointmentEvent" | "memberWarning" | "memberRestriction" | "moderationAppeal" | "moderationEscalation" | "customerPreference" | "savedDeal"
+    modelProps: "user" | "account" | "session" | "verificationToken" | "authSession" | "recoveryCode" | "authToken" | "authRateLimit" | "bootstrapState" | "auditEvent" | "category" | "merchant" | "affiliateClick" | "affiliateTransaction" | "media" | "deal" | "purchaseOption" | "dealGalleryImage" | "customer" | "customerIdentity" | "customerSignupChallenge" | "customerPasswordReset" | "customerRateLimit" | "distributionDestination" | "distributionPost" | "dealCandidate" | "priceObservation" | "scraperJob" | "productExtractionLog" | "dealVideoReview" | "youTubeQuotaLedger" | "merchantWebsiteDirectory" | "productMaster" | "productVariant" | "productOffer" | "priceObservationRecord" | "sourceHealthRecord" | "publicationAuthorization" | "shadowCandidate" | "dealLifecycleEvent" | "dealComment" | "analyticsSession" | "analyticsEvent" | "analyticsDaily" | "communityDealSubmission" | "forumCommunity" | "forumProfile" | "forumPost" | "forumComment" | "forumPostVote" | "forumCommentVote" | "forumPostLike" | "forumCommentLike" | "forumSave" | "forumFollow" | "forumPostImage" | "forumPostDraft" | "forumNotification" | "forumAnnouncement" | "staffPermissionGrant" | "forumReport" | "forumModerationAction" | "dmThread" | "dmMessage" | "dmBlock" | "dmReport" | "customerAppToken" | "forumMemberFollow" | "devicePushToken" | "moderatorAppointment" | "moderatorAppointmentEvent" | "memberWarning" | "memberRestriction" | "moderationAppeal" | "moderationEscalation" | "customerPreference" | "savedDeal" | "dealVote" | "dealNote" | "memberStar" | "dealCommentLike"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -6191,6 +6195,302 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    DealVote: {
+      payload: Prisma.$DealVotePayload<ExtArgs>
+      fields: Prisma.DealVoteFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DealVoteFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealVotePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DealVoteFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealVotePayload>
+        }
+        findFirst: {
+          args: Prisma.DealVoteFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealVotePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DealVoteFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealVotePayload>
+        }
+        findMany: {
+          args: Prisma.DealVoteFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealVotePayload>[]
+        }
+        create: {
+          args: Prisma.DealVoteCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealVotePayload>
+        }
+        createMany: {
+          args: Prisma.DealVoteCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DealVoteCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealVotePayload>[]
+        }
+        delete: {
+          args: Prisma.DealVoteDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealVotePayload>
+        }
+        update: {
+          args: Prisma.DealVoteUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealVotePayload>
+        }
+        deleteMany: {
+          args: Prisma.DealVoteDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DealVoteUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DealVoteUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealVotePayload>[]
+        }
+        upsert: {
+          args: Prisma.DealVoteUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealVotePayload>
+        }
+        aggregate: {
+          args: Prisma.DealVoteAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDealVote>
+        }
+        groupBy: {
+          args: Prisma.DealVoteGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DealVoteGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DealVoteCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DealVoteCountAggregateOutputType> | number
+        }
+      }
+    }
+    DealNote: {
+      payload: Prisma.$DealNotePayload<ExtArgs>
+      fields: Prisma.DealNoteFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DealNoteFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealNotePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DealNoteFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealNotePayload>
+        }
+        findFirst: {
+          args: Prisma.DealNoteFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealNotePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DealNoteFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealNotePayload>
+        }
+        findMany: {
+          args: Prisma.DealNoteFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealNotePayload>[]
+        }
+        create: {
+          args: Prisma.DealNoteCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealNotePayload>
+        }
+        createMany: {
+          args: Prisma.DealNoteCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DealNoteCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealNotePayload>[]
+        }
+        delete: {
+          args: Prisma.DealNoteDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealNotePayload>
+        }
+        update: {
+          args: Prisma.DealNoteUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealNotePayload>
+        }
+        deleteMany: {
+          args: Prisma.DealNoteDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DealNoteUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DealNoteUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealNotePayload>[]
+        }
+        upsert: {
+          args: Prisma.DealNoteUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealNotePayload>
+        }
+        aggregate: {
+          args: Prisma.DealNoteAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDealNote>
+        }
+        groupBy: {
+          args: Prisma.DealNoteGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DealNoteGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DealNoteCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DealNoteCountAggregateOutputType> | number
+        }
+      }
+    }
+    MemberStar: {
+      payload: Prisma.$MemberStarPayload<ExtArgs>
+      fields: Prisma.MemberStarFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MemberStarFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MemberStarPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MemberStarFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MemberStarPayload>
+        }
+        findFirst: {
+          args: Prisma.MemberStarFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MemberStarPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MemberStarFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MemberStarPayload>
+        }
+        findMany: {
+          args: Prisma.MemberStarFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MemberStarPayload>[]
+        }
+        create: {
+          args: Prisma.MemberStarCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MemberStarPayload>
+        }
+        createMany: {
+          args: Prisma.MemberStarCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.MemberStarCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MemberStarPayload>[]
+        }
+        delete: {
+          args: Prisma.MemberStarDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MemberStarPayload>
+        }
+        update: {
+          args: Prisma.MemberStarUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MemberStarPayload>
+        }
+        deleteMany: {
+          args: Prisma.MemberStarDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MemberStarUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.MemberStarUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MemberStarPayload>[]
+        }
+        upsert: {
+          args: Prisma.MemberStarUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MemberStarPayload>
+        }
+        aggregate: {
+          args: Prisma.MemberStarAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMemberStar>
+        }
+        groupBy: {
+          args: Prisma.MemberStarGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MemberStarGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MemberStarCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MemberStarCountAggregateOutputType> | number
+        }
+      }
+    }
+    DealCommentLike: {
+      payload: Prisma.$DealCommentLikePayload<ExtArgs>
+      fields: Prisma.DealCommentLikeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DealCommentLikeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealCommentLikePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DealCommentLikeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealCommentLikePayload>
+        }
+        findFirst: {
+          args: Prisma.DealCommentLikeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealCommentLikePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DealCommentLikeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealCommentLikePayload>
+        }
+        findMany: {
+          args: Prisma.DealCommentLikeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealCommentLikePayload>[]
+        }
+        create: {
+          args: Prisma.DealCommentLikeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealCommentLikePayload>
+        }
+        createMany: {
+          args: Prisma.DealCommentLikeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DealCommentLikeCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealCommentLikePayload>[]
+        }
+        delete: {
+          args: Prisma.DealCommentLikeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealCommentLikePayload>
+        }
+        update: {
+          args: Prisma.DealCommentLikeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealCommentLikePayload>
+        }
+        deleteMany: {
+          args: Prisma.DealCommentLikeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DealCommentLikeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DealCommentLikeUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealCommentLikePayload>[]
+        }
+        upsert: {
+          args: Prisma.DealCommentLikeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealCommentLikePayload>
+        }
+        aggregate: {
+          args: Prisma.DealCommentLikeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDealCommentLike>
+        }
+        groupBy: {
+          args: Prisma.DealCommentLikeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DealCommentLikeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DealCommentLikeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DealCommentLikeCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -6465,6 +6765,8 @@ export const DealScalarFieldEnum = {
   productUrl: 'productUrl',
   affiliateUrl: 'affiliateUrl',
   couponCode: 'couponCode',
+  editorNotes: 'editorNotes',
+  editorNotesBy: 'editorNotesBy',
   status: 'status',
   publishedAt: 'publishedAt',
   startsAt: 'startsAt',
@@ -6893,6 +7195,9 @@ export type DealLifecycleEventScalarFieldEnum = (typeof DealLifecycleEventScalar
 export const DealCommentScalarFieldEnum = {
   id: 'id',
   dealId: 'dealId',
+  customerId: 'customerId',
+  imageKey: 'imageKey',
+  imageProvider: 'imageProvider',
   authorName: 'authorName',
   content: 'content',
   authorIpHash: 'authorIpHash',
@@ -7491,6 +7796,51 @@ export const SavedDealScalarFieldEnum = {
 } as const
 
 export type SavedDealScalarFieldEnum = (typeof SavedDealScalarFieldEnum)[keyof typeof SavedDealScalarFieldEnum]
+
+
+export const DealVoteScalarFieldEnum = {
+  id: 'id',
+  dealId: 'dealId',
+  customerId: 'customerId',
+  value: 'value',
+  reason: 'reason',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DealVoteScalarFieldEnum = (typeof DealVoteScalarFieldEnum)[keyof typeof DealVoteScalarFieldEnum]
+
+
+export const DealNoteScalarFieldEnum = {
+  id: 'id',
+  dealId: 'dealId',
+  customerId: 'customerId',
+  content: 'content',
+  removedAt: 'removedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type DealNoteScalarFieldEnum = (typeof DealNoteScalarFieldEnum)[keyof typeof DealNoteScalarFieldEnum]
+
+
+export const MemberStarScalarFieldEnum = {
+  id: 'id',
+  giverId: 'giverId',
+  receiverId: 'receiverId',
+  createdAt: 'createdAt'
+} as const
+
+export type MemberStarScalarFieldEnum = (typeof MemberStarScalarFieldEnum)[keyof typeof MemberStarScalarFieldEnum]
+
+
+export const DealCommentLikeScalarFieldEnum = {
+  id: 'id',
+  commentId: 'commentId',
+  customerId: 'customerId',
+  createdAt: 'createdAt'
+} as const
+
+export type DealCommentLikeScalarFieldEnum = (typeof DealCommentLikeScalarFieldEnum)[keyof typeof DealCommentLikeScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -8145,6 +8495,10 @@ export type GlobalOmitConfig = {
   moderationEscalation?: Prisma.ModerationEscalationOmit
   customerPreference?: Prisma.CustomerPreferenceOmit
   savedDeal?: Prisma.SavedDealOmit
+  dealVote?: Prisma.DealVoteOmit
+  dealNote?: Prisma.DealNoteOmit
+  memberStar?: Prisma.MemberStarOmit
+  dealCommentLike?: Prisma.DealCommentLikeOmit
 }
 
 /* Types for Logging */

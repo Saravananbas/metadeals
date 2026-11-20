@@ -2,6 +2,9 @@
 
 import { trackEvent } from "@/lib/analytics-client";
 import { dealShareUrl } from "@/features/deals/short-link";
+import { sendDealVote } from "@/features/deals/vote-client";
+import type { DislikeReason } from "@/features/deals/vote-reasons";
+import { DislikeMenu } from "@/components/deals/DislikeMenu";
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import {
@@ -13,6 +16,7 @@ import {
   ExternalLink,
   Eye,
   ThumbsUp,
+  ThumbsDown,
   Share2,
   MessageCircle,
   ChevronLeft,
@@ -79,8 +83,11 @@ export function DealCard({
   const [imageIndex, setImageIndex] = useState(0);
   const [failedImage, setFailedImage] = useState<string | null>(null);
   const [copiedCoupon, setCopiedCoupon] = useState(false);
-  // No number is shown: there is no stored like count, and a made-up one would misstate popularity.
-  const [liked, setLiked] = useState(false);
+  // Members' Good Deal vote (1 up, -1 down). No count is shown on the card; the score is on the deal page.
+  const [vote, setVote] = useState<0 | 1 | -1>(0);
+  const [dislikeOpen, setDislikeOpen] = useState(false);
+  const [voteNote, setVoteNote] = useState("");
+  const liked = vote === 1;
 
   useEffect(() => {
     const card = cardRef.current;
@@ -131,10 +138,23 @@ export function DealCard({
     setTimeout(() => setCopiedCoupon(false), 2000);
   };
 
+  const castVote = async (value: 1 | -1 | 0, reason?: DislikeReason) => {
+    setDislikeOpen(false);
+    const result = await sendDealVote(deal.slug || deal.id, value, reason);
+    if (result.status === 401) { setVoteNote("Sign in to vote"); setTimeout(() => setVoteNote(""), 3000); return; }
+    if (result.status === 200) setVote(result.mine === 1 ? 1 : result.mine === -1 ? -1 : 0);
+  };
+
   const handleToggleLike = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!liked) trackEvent("LIKE", deal.slug || deal.id);
-    setLiked((prev) => !prev);
+    if (vote !== 1) trackEvent("LIKE", deal.slug || deal.id);
+    void castVote(vote === 1 ? 0 : 1);
+  };
+
+  const handleDislike = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (vote === -1) void castVote(0);
+    else setDislikeOpen((open) => !open);
   };
 
   const handleShare = async (e: React.MouseEvent) => {
@@ -357,6 +377,21 @@ export function DealCard({
             <span>{liked ? "Liked" : "Like"}</span>
           </button>
 
+          <span style={{ position: "relative", display: "inline-flex" }}>
+            <button
+              type="button"
+              className={`deal-social-btn ${vote === -1 ? "deal-social-liked" : ""}`}
+              onClick={handleDislike}
+              aria-haspopup="true"
+              aria-expanded={dislikeOpen}
+              aria-label={vote === -1 ? "Remove your downvote" : "Downvote this deal"}
+              title="Dislike deal"
+            >
+              <ThumbsDown size={13} fill={vote === -1 ? "currentColor" : "none"} />
+            </button>
+            {dislikeOpen && <DislikeMenu onPick={(reason) => void castVote(-1, reason)} onClose={() => setDislikeOpen(false)} />}
+          </span>
+
           <button
             type="button"
             className="deal-social-btn"
@@ -382,6 +417,7 @@ export function DealCard({
             <span>Comment</span>
           </button>
         </div>
+        {voteNote && <p role="status" style={{ margin: "6px 0 0", fontSize: 12, color: "var(--md-color-text-secondary)" }}>{voteNote} — <a href="/account" style={{ color: "var(--md-purple-700)", fontWeight: 700 }}>Sign in</a></p>}
       </div>
     </article>
     {commentsOpen && (

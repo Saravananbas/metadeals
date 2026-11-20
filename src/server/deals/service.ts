@@ -6,6 +6,7 @@ import { resolveAccess } from "@/server/auth/access";
 import { suspensionBlocks } from "@/server/auth/suspension";
 import { dealInputSchema, categoryInputSchema, merchantInputSchema } from "@/features/deals/validation";
 import { dealInclude, merchantSelect, type DealDatabase, type DealRecord } from "./repository";
+import { parseEditorNotes } from "@/features/deals/notes";
 
 export class DealError extends Error {
   constructor(message: string, public status = 400) { super(message); }
@@ -54,9 +55,19 @@ export async function saveDeal(db: DealDatabase, actor: DealActor, raw: unknown,
   ]);
   if (!category || !merchant || !media) throw new DealError("Select an existing category, merchant and uploaded image.");
   if (galleryMedia.length !== galleryMediaIds.length) throw new DealError("One or more gallery images are unavailable. Import them again before saving.");
-  const { options, ...fields } = input;
+  const { options, editorNotes, ...fields } = input;
   delete fields.galleryMediaIds;
-  const data = { ...fields, publishedAt: input.publishedAt ? new Date(input.publishedAt) : null, startsAt: input.startsAt ? new Date(input.startsAt) : null, expiresAt: input.expiresAt ? new Date(input.expiresAt) : null, updatedById: actor.id };
+  // Editor's Notes: stored one point per line; the saving staff member's name is shown with the Staff label.
+  const notesData: { editorNotes?: string | null; editorNotesBy?: string | null } = {};
+  if (editorNotes !== undefined && !saveOptions.moderatorDraft) {
+    const lines = parseEditorNotes(editorNotes).lines;
+    const text = lines.length ? lines.join(String.fromCharCode(10)) : null;
+    if (text !== (before?.editorNotes ?? null)) {
+      notesData.editorNotes = text;
+      notesData.editorNotesBy = text ? ((await db.user.findUnique({ where: { id: actor.id }, select: { name: true } }))?.name?.trim().slice(0, 80) || null) : null;
+    }
+  }
+  const data = { ...fields, publishedAt: input.publishedAt ? new Date(input.publishedAt) : null, startsAt: input.startsAt ? new Date(input.startsAt) : null, expiresAt: input.expiresAt ? new Date(input.expiresAt) : null, updatedById: actor.id, ...notesData };
   let result: DealRecord;
   if (before) {
     const changed = await db.deal.updateMany({ where: { id, version }, data: { ...data, version: { increment: 1 } } });

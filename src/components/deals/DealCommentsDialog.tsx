@@ -1,34 +1,10 @@
 "use client";
 
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect } from "react";
 import { createPortal } from "react-dom";
 import { MessageCircle, Send, X } from "lucide-react";
+import { useDealComments } from "./useDealComments";
 import styles from "./DealCommentsDialog.module.css";
-
-type DealComment = {
-  id: string;
-  authorName: string;
-  content: string;
-  createdAt: string;
-};
-
-type CommentsResponse = {
-  ok?: boolean;
-  error?: { message?: string };
-  data?: {
-    comments?: DealComment[];
-    count?: number | null;
-    comment?: DealComment | null;
-  };
-};
-
-async function readCommentsResponse(response: Response): Promise<CommentsResponse> {
-  try {
-    return await response.json() as CommentsResponse;
-  } catch {
-    throw new Error("Comments are temporarily unavailable.");
-  }
-}
 
 type DealCommentsDialogProps = {
   dealIdOrSlug: string;
@@ -37,35 +13,7 @@ type DealCommentsDialogProps = {
 };
 
 export function DealCommentsDialog({ dealIdOrSlug, dealTitle, onClose }: DealCommentsDialogProps) {
-  const [comments, setComments] = useState<DealComment[]>([]);
-  const [count, setCount] = useState(0);
-  const [authorName, setAuthorName] = useState("");
-  const [content, setContent] = useState("");
-  const [website, setWebsite] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [notice, setNotice] = useState<string | null>(null);
-
-  const endpoint = `/api/v1/deals/${encodeURIComponent(dealIdOrSlug)}/comments`;
-
-  useEffect(() => {
-    const controller = new AbortController();
-    fetch(endpoint, { headers: { Accept: "application/json" }, signal: controller.signal })
-      .then(async (response) => {
-        const result = await readCommentsResponse(response);
-        if (!response.ok || !result.ok) throw new Error(result.error?.message || "Comments could not be loaded.");
-        setComments(result.data?.comments ?? []);
-        setCount(result.data?.count ?? 0);
-      })
-      .catch((cause: unknown) => {
-        if (!controller.signal.aborted) setError(cause instanceof Error ? cause.message : "Comments could not be loaded.");
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setLoading(false);
-      });
-    return () => controller.abort();
-  }, [endpoint]);
+  const { comments, count, authorName, setAuthorName, content, setContent, website, setWebsite, loading, submitting, error, notice, submit } = useDealComments(dealIdOrSlug);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -74,35 +22,6 @@ export function DealCommentsDialog({ dealIdOrSlug, dealTitle, onClose }: DealCom
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [onClose]);
-
-  async function submitComment(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (!content.trim() || submitting) return;
-    setSubmitting(true);
-    setError(null);
-    setNotice(null);
-    try {
-      const response = await fetch(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({ authorName, content, website }),
-      });
-      const result = await readCommentsResponse(response);
-      if (!response.ok || !result.ok) throw new Error(result.error?.message || "Your comment could not be posted.");
-      const postedComment = result.data?.comment;
-      if (postedComment) {
-        setComments((current) => [postedComment, ...current].slice(0, 100));
-        setCount(result.data?.count ?? 0);
-        setContent("");
-        setWebsite("");
-        setNotice("Your comment has been posted.");
-      }
-    } catch (cause: unknown) {
-      setError(cause instanceof Error ? cause.message : "Your comment could not be posted.");
-    } finally {
-      setSubmitting(false);
-    }
-  }
 
   // Rendered into <body>: inside a deal card a transformed or clipped ancestor would pin the "fixed" overlay to the card, far below the viewport.
   return createPortal(
@@ -144,7 +63,7 @@ export function DealCommentsDialog({ dealIdOrSlug, dealTitle, onClose }: DealCom
           ))}
         </div>
 
-        <form className={styles.form} onSubmit={submitComment}>
+        <form className={styles.form} onSubmit={submit}>
           <div className={styles.formHeading}>
             <strong>Leave a comment</strong>
             <span>{count} {count === 1 ? "comment" : "comments"}</span>

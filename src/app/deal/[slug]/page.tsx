@@ -7,14 +7,23 @@ import { getDatabase } from "@/server/db/client";
 import { publicWhere, dealInclude, publicDealsWithMerchantLogos } from "@/server/deals/repository";
 import { listingSchema } from "@/features/deals/validation";
 import { formatINR } from "@/features/deals/pricing";
-import { DealNavbar } from "@/components/deals/DealNavbar";
+import { SiteHeader } from "@/components/deals/SiteHeader";
 import { DealGallery } from "@/components/deals/DealGallery";
 import { DealProductInfo } from "@/components/deals/DealProductInfo";
-import { DealPurchasePanel } from "@/components/deals/DealPurchasePanel";
+import { DealPurchasePanel, DealPriceBuy } from "@/components/deals/DealPurchasePanel";
 import { TrustStrip } from "@/components/deals/TrustStrip";
 import { serializeJsonLd } from "@/lib/json-ld";
 import { YouTubeReviewsSection } from "@/components/deals/YouTubeReviewsSection";
 import { DealViewTracker } from "@/components/deals/DealViewTracker";
+import { DealComments } from "@/components/deals/DealComments";
+import { DealTabs, type DealTab } from "@/components/deals/DealTabs";
+import { DealNotes } from "@/components/deals/DealNotes";
+import { StickyBuyBar } from "@/components/deals/StickyBuyBar";
+import { CouponChip } from "@/components/deals/CouponChip";
+import { PosterCard } from "@/components/deals/PosterCard";
+import { getPoster } from "@/server/deals/poster";
+import { messagesEnabled } from "@/server/messages/service";
+import extra from "@/components/deals/DealExtras.module.css";
 import { youtubeReviewsService } from "@/server/youtube/reviews-service";
 import styles from "./deal-detail.module.css";
 
@@ -89,6 +98,8 @@ export default async function DealDetailPage({
 
   const [deal] = await publicDealsWithMerchantLogos(db, [row]);
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://metadeals4u.in";
+
+  const headerCategories = await db.category.findMany({ orderBy: { name: "asc" }, select: { id: true, slug: true, name: true, parentId: true } });
 
   // 1. YouTube Reviews (Admin-controlled; only loads stored reviews)
   const videoReviews = await youtubeReviewsService.getReviewsForDeal(row.id);
@@ -176,21 +187,60 @@ export default async function DealDetailPage({
   };
 
   // Deals that came from a member's submission show who shared them (their chosen user name, never their real name or email).
-  const sharer = (await db.communityDealSubmission.findFirst({
+  const submission = await db.communityDealSubmission.findFirst({
     where: { dealId: row.id, status: "APPROVED" },
-    select: { customer: { select: { forumProfile: { select: { handle: true, avatarKey: true } } } } },
-  }))?.customer.forumProfile ?? null;
+    select: { customerId: true, customer: { select: { createdAt: true, forumProfile: { select: { handle: true, avatarKey: true } } } } },
+  });
+  const sharer = submission?.customer.forumProfile ?? null;
+  const poster = await getPoster(row.id);
+
+  const detailsTab = (
+    <>
+      <DealProductInfo
+        title={deal.title}
+        brand={deal.brand}
+        category={deal.category}
+        merchantName={deal.merchant.name}
+        description={deal.description}
+        rating={deal.rating}
+        reviewCount={deal.reviewCount}
+        ratingSource={deal.ratingSource}
+        currency={deal.currency}
+      />
+      {deal.couponCode && (
+        <div>
+          <h3>Promo code</h3>
+          <CouponChip code={deal.couponCode} />
+        </div>
+      )}
+      {sharer && <p className={extra.thanks}>Thanks to community member <strong>@{sharer.handle}</strong> for sharing this deal.</p>}
+      <p className={extra.valid}>{deal.expiresAt ? `Offer valid until ${new Date(deal.expiresAt).toLocaleDateString("en-IN", { dateStyle: "medium" })}.` : "No end date was announced for this offer. Prices can change at any time."}</p>
+      {deal.editorNotes.length > 0 && (
+        <div className={extra.editor}>
+          <h3>Editor&apos;s Notes</h3>
+          <ul>{deal.editorNotes.map((line, i) => <li key={i}>{line}</li>)}</ul>
+          <p className={extra.by}>Written by {deal.editorNotesBy ?? "the MetaDeals4U team"}<span className={extra.staff}>Staff</span></p>
+        </div>
+      )}
+    </>
+  );
+  const tabs: DealTab[] = [
+    { key: "details", label: "Deal Details", content: detailsTab },
+    { key: "notes", label: "Community Notes", content: <DealNotes slug={deal.slug} /> },
+    { key: "poster", label: "About the Poster", content: <PosterCard poster={poster} /> },
+  ];
 
   return (
     <div className={styles.pageWrapper}>
       <DealViewTracker slug={slug} />
+      {deal.status !== "EXPIRED" && <StickyBuyBar title={deal.title} price={formatINR(deal.priceMinor / 100)} merchantName={deal.merchant.name} imageUrl={`${deal.image.url}?w=80`} href={`/go/${deal.id}`} />}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd([jsonLd, breadcrumbJsonLd]) }}
       />
 
-      {/* Header and Purple Category Navigation Bar */}
-      <DealNavbar currentCategorySlug={deal.category.slug} />
+      {/* Header */}
+      <SiteHeader categories={headerCategories} communityEnabled={process.env.COMMUNITY_ENABLED === "true"} />
 
       <main className={styles.container}>
         {/* Breadcrumb Navigation */}
@@ -220,30 +270,25 @@ export default async function DealDetailPage({
 
         {/* 3-Column Desktop Product Grid */}
         <div className={styles.productGrid}>
-          {/* Column A: Product Image Gallery */}
+          <div className={styles.areaGallery}>
           <DealGallery
             dealId={deal.id}
+            slug={deal.slug}
             title={deal.title}
             primaryImage={deal.image.url}
             images={deal.imageGallery.map((image) => image.url)}
             discountPercent={deal.discountPercent}
             expired={deal.status === "EXPIRED"}
-          />
+          >
+            <DealPriceBuy dealId={deal.id} priceMinor={deal.priceMinor} mrpMinor={deal.mrpMinor} discountPercent={deal.discountPercent} savingsMinor={deal.savingsMinor} merchantName={deal.merchant.name} merchantLogoUrl={deal.merchant.logoUrl} />
+          </DealGallery>
+          </div>
 
-          {/* Column B: Product Information */}
-          <DealProductInfo
-            title={deal.title}
-            brand={deal.brand}
-            category={deal.category}
-            merchantName={deal.merchant.name}
-            description={deal.description}
-            rating={deal.rating}
-            reviewCount={deal.reviewCount}
-            ratingSource={deal.ratingSource}
-            currency={deal.currency}
-          />
+          <div className={styles.areaInfo}>
+          <DealTabs tabs={tabs} />
+          </div>
 
-          {/* Column C: Price & Purchase Panel */}
+          <div className={styles.areaBuy}>
           <DealPurchasePanel
             dealId={deal.id}
             priceMinor={deal.priceMinor}
@@ -257,12 +302,15 @@ export default async function DealDetailPage({
             publishedAt={deal.publishedAt}
             options={deal.options}
           />
+          </div>
         </div>
 
         {/* YouTube Video Reviews Section (Workstream 2 & 3) */}
         {videoReviews.length > 0 && <YouTubeReviewsSection reviews={videoReviews} />}
 
         {/* Trust Information Strip */}
+        <DealComments dealIdOrSlug={deal.slug} messaging={messagesEnabled()} />
+
         <TrustStrip />
 
         {/* Recommended Deals ("You May Also Like") */}

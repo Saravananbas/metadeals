@@ -79,6 +79,7 @@ const empty: AdminDealForm = {
   productUrl: "",
   affiliateUrl: null,
   couponCode: null,
+  editorNotes: null,
   status: "DRAFT",
   publishedAt: null,
   startsAt: null,
@@ -1368,6 +1369,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
       productUrl: row.productUrl,
       affiliateUrl: row.affiliateUrl,
       couponCode: row.couponCode ?? null,
+      editorNotes: row.editorNotes ?? null,
       status: row.status === "EXPIRED" ? "EXPIRED" : "DRAFT",
       publishedAt: row.publishedAt,
       startsAt: row.startsAt,
@@ -1463,6 +1465,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
         productUrl: form.productUrl,
         affiliateUrl: form.affiliateUrl,
         couponCode: form.couponCode?.trim() || null,
+        editorNotes: form.editorNotes ?? null,
         status: form.status,
         publishedAt: form.publishedAt,
         startsAt: form.startsAt,
@@ -2862,6 +2865,16 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
                 style={{ textTransform: "uppercase" }}
                 value={form.couponCode ?? ""}
                 onChange={(e) => field("couponCode", e.target.value ? e.target.value.toUpperCase() : null)}
+              />
+            </label>
+            <label className={styles.span2}>
+              Editor&apos;s Notes (optional, one point per line)
+              <textarea
+                rows={4}
+                maxLength={3000}
+                placeholder="Lowest price in 3 months, then one point per line"
+                value={form.editorNotes ?? ""}
+                onChange={(e) => field("editorNotes", e.target.value || null)}
               />
             </label>
             {can({ role, permissions }, "affiliate:manage") && (

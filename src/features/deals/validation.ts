@@ -1,3 +1,4 @@
+import { parseEditorNotes } from "./notes";
 import { z } from "zod";
 
 export function isPublicHttpsUrl(value: string): boolean {
@@ -31,6 +32,8 @@ export const dealInputSchema = z.object({
   productUrl: publicUrl,
   affiliateUrl: publicUrl.nullable(),
   couponCode: z.string().trim().max(50).nullable().optional(),
+  /** Staff points for the deal page, one per line. Omitted = leave as is. */
+  editorNotes: z.string().max(3000).nullable().optional(),
   status: z.enum(["DRAFT", "PENDING_REVIEW", "EXPIRED"]),
   publishedAt: optionalDate,
   startsAt: optionalDate,
@@ -39,6 +42,8 @@ export const dealInputSchema = z.object({
   trending: z.boolean(),
   options: z.array(purchaseOptionSchema).max(10).default([]),
 }).strict().superRefine((value, ctx) => {
+  const notes = parseEditorNotes(value.editorNotes);
+  if (notes.error) ctx.addIssue({ code: "custom", path: ["editorNotes"], message: notes.error });
   if (value.priceMinor > value.mrpMinor) ctx.addIssue({ code: "custom", path: ["priceMinor"], message: "Deal price cannot exceed MRP." });
   if (new Set(value.options.map((o) => o.merchantId)).size !== value.options.length || value.options.some((o) => o.priceMinor > value.mrpMinor)) ctx.addIssue({ code: "custom", path: ["options"], message: "Options need distinct merchants and prices at or below MRP." });
   if (value.galleryMediaIds && (new Set(value.galleryMediaIds).size !== value.galleryMediaIds.length || value.galleryMediaIds.includes(value.mediaId))) ctx.addIssue({ code: "custom", path: ["galleryMediaIds"], message: "Gallery images must be unique and exclude the primary image." });

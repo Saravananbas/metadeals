@@ -1,40 +1,41 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight, Heart, Maximize2, Share2, Check, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import styles from "@/app/deal/[slug]/deal-detail.module.css";
-import { useSavedDeals } from "@/features/home/saved-store";
-import { dealShareUrl } from "@/features/deals/short-link";
+import { DealActionRow } from "./DealActionRow";
 
 interface DealGalleryProps {
   dealId: string;
+  slug: string;
   title: string;
   primaryImage: string;
   images?: string[];
   discountPercent: number;
   /** Same "Expired" overlay as the deal card on the home page. */
   expired?: boolean;
+  /** Shown directly under the picture (price and Buy Now). */
+  children?: ReactNode;
 }
 
 const PLACEHOLDER_SVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400" fill="%23f1f5f9"><rect width="400" height="400" fill="%23f8fafc"/><path d="M140 180l40-40 80 80 40-40 60 60H100z" fill="%23cbd5e1"/><circle cx="160" cy="140" r="20" fill="%23cbd5e1"/><text x="50%25" y="75%25" text-anchor="middle" fill="%2394a3b8" font-size="14" font-family="sans-serif">Product Image Verified</text></svg>`;
 
 export function DealGallery({
   dealId,
+  slug,
   title,
   primaryImage,
   images: additionalImages = [],
   discountPercent,
   expired = false,
+  children,
 }: DealGalleryProps) {
-  const saved = useSavedDeals();
-  const isSaved = saved.ids.includes(dealId);
   const galleryImages = Array.from(new Set([primaryImage, ...additionalImages].filter(Boolean)));
   const imageCount = galleryImages.length;
   const [activeIndex, setActiveIndex] = useState(0);
   const [failedImages, setFailedImages] = useState<string[]>([]);
   const [isZoomOpen, setIsZoomOpen] = useState(false);
-  const [copied, setCopied] = useState(false);
   const activeImage = galleryImages[activeIndex] || PLACEHOLDER_SVG;
   const displayedImage = failedImages.includes(activeImage) ? PLACEHOLDER_SVG : activeImage;
 
@@ -50,14 +51,6 @@ export function DealGallery({
     setActiveIndex((current) => (current + direction + galleryImages.length) % galleryImages.length);
   };
 
-  const handleShare = () => {
-    if (typeof window !== "undefined") {
-      void navigator.clipboard.writeText(dealShareUrl(window.location.origin, { id: dealId, slug: window.location.pathname.split("/").pop() }));
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  };
-
   return (
     <div className={styles.galleryCard}>
       {/* Main Image Box */}
@@ -69,18 +62,6 @@ export function DealGallery({
         {discountPercent > 0 && (
           <span className={styles.discountBadge}>{discountPercent}% OFF</span>
         )}
-
-        <button
-          className={`${styles.wishlistBtn} ${isSaved ? styles.wishlistBtnActive : ""}`}
-          onClick={(e) => {
-            e.stopPropagation();
-            saved.toggle(dealId);
-          }}
-          aria-label={isSaved ? "Remove from wishlist" : "Add to wishlist"}
-          title={isSaved ? "Remove from wishlist" : "Add to wishlist"}
-        >
-          <Heart size={18} fill={isSaved ? "currentColor" : "none"} />
-        </button>
 
         <Image
           unoptimized
@@ -119,20 +100,9 @@ export function DealGallery({
         )}
       </div>
 
-      {/* Gallery Action Buttons */}
-      <div className={styles.galleryActions}>
-        <button
-          className={styles.shareBtn}
-          onClick={() => setIsZoomOpen(true)}
-        >
-          <Maximize2 size={14} /> Zoom Image
-        </button>
+      {children}
 
-        <button className={styles.shareBtn} onClick={handleShare}>
-          {copied ? <Check size={14} color="var(--md-color-success)" /> : <Share2 size={14} />}
-          <span>{copied ? "Link Copied!" : "Share Deal"}</span>
-        </button>
-      </div>
+      <DealActionRow dealId={dealId} slug={slug} />
 
       {/* Zoom Lightbox Modal */}
       {isZoomOpen && (

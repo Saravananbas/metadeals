@@ -8,6 +8,45 @@ import { readJson, RequestBodyError } from "@/server/auth/request";
 import { publicWhere } from "@/server/deals/repository";
 import { clientIpFromHeaders } from "@/server/client-ip";
 import { looksLikeStaffName } from "@/features/community/validation";
+import { getServerSession } from "next-auth";
+import { getCustomerAuthOptions } from "@/server/customer/options";
+import { assertDeclaredUploadSize } from "@/server/customer/http";
+import { normalizeImage, storeImage } from "@/server/storage/media";
+import { CustomerError } from "@/server/customer/service";
+import { DealError } from "@/server/deals/service";
+
+const commentSelect = {
+  id: true, authorName: true, content: true, createdAt: true, imageKey: true, customerId: true,
+  customer: { select: { createdAt: true, forumProfile: { select: { handle: true, avatarKey: true } } } },
+  _count: { select: { likes: true } },
+} as const;
+
+async function viewerId(): Promise<string | null> {
+  try { return (await getServerSession(getCustomerAuthOptions()))?.user?.id ?? null; } catch { return null; }
+}
+
+type Row = { id: string; authorName: string; content: string; createdAt: Date; imageKey: string | null; customerId: string | null; customer: { createdAt: Date; forumProfile: { handle: string; avatarKey: string | null } | null } | null; _count: { likes: number } };
+
+/** What the page needs for each comment. A member's comment shows their chosen user name, join month and comment count, never their real name or email. */
+async function toDto(rows: Row[], viewer: string | null) {
+  const db = getDatabase();
+  const ids = rows.map((r) => r.id);
+  const memberIds = [...new Set(rows.flatMap((r) => (r.customerId ? [r.customerId] : [])))];
+  const [liked, counts] = await Promise.all([
+    viewer && ids.length ? db.dealCommentLike.findMany({ where: { customerId: viewer, commentId: { in: ids } }, select: { commentId: true } }) : [],
+    memberIds.length ? db.dealComment.groupBy({ by: ["customerId"], where: { customerId: { in: memberIds } }, _count: { _all: true } }) : [],
+  ]);
+  const likedSet = new Set(liked.map((l) => l.commentId));
+  const countOf = new Map(counts.map((c) => [c.customerId, c._count._all]));
+  return rows.map((r) => {
+    const profile = r.customer?.forumProfile ?? null;
+    return {
+      id: r.id, authorName: r.authorName, content: r.content, createdAt: r.createdAt.toISOString(),
+      hasImage: Boolean(r.imageKey), likes: r._count.likes, liked: likedSet.has(r.id),
+      member: r.customer && profile ? { handle: profile.handle, hasAvatar: Boolean(profile.avatarKey), joined: r.customer.createdAt.toLocaleDateString("en-IN", { month: "short", year: "numeric" }), comments: countOf.get(r.customerId ?? "") ?? 1 } : null,
+    };
+  });
+}
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -42,12 +81,12 @@ export async function GET(_request: Request, { params }: { params: Promise<{ slu
     const deal = await findPublicDeal(slug);
     if (!deal) return reply({ ok: false, error: { message: "Deal unavailable." } }, 404);
     const db = getDatabase();
-    const [comments, count] = await Promise.all([
-      db.dealComment.findMany({ where: { dealId: deal.id }, orderBy: { createdAt: "desc" }, take: 100,
-        select: { id: true, authorName: true, content: true, createdAt: true } }),
+    const [rows, count, viewer] = await Promise.all([
+      db.dealComment.findMany({ where: { dealId: deal.id }, orderBy: { createdAt: "desc" }, take: 100, select: commentSelect }),
       db.dealComment.count({ where: { dealId: deal.id } }),
+      viewerId(),
     ]);
-    return reply({ ok: true, data: { comments, count } });
+    return reply({ ok: true, data: { comments: await toDto(rows, viewer), count } });
   } catch {
     return reply({ ok: false, error: { message: "Comments are temporarily unavailable." } }, 503);
   }
@@ -58,7 +97,19 @@ const memoryHits = new Map<string, { count: number; resetAt: number }>();
 export async function POST(request: Request, { params }: { params: Promise<{ slug: string }> }) {
   try {
     const { slug } = await params;
-    const payload = inputSchema.parse(await readJson(request));
+    const multipart = request.headers.get("content-type")?.toLowerCase().startsWith("multipart/form-data");
+    let image: Buffer | null = null;
+    let raw: unknown;
+    if (multipart) {
+      assertDeclaredUploadSize(request, 6 * 1024 * 1024, "The picture must be 5 MB or smaller.");
+      const form = await request.formData();
+      const file = form.get("image");
+      if (file instanceof File && file.size) image = Buffer.from(await file.arrayBuffer());
+      raw = { authorName: String(form.get("authorName") ?? ""), content: String(form.get("content") ?? ""), website: String(form.get("website") ?? "") };
+    } else raw = await readJson(request);
+    const payload = inputSchema.parse(raw);
+    const viewer = await viewerId();
+    if (image && !viewer) return reply({ ok: false, error: { message: "Please sign in to attach a picture." } }, 401);
     if (looksLikeStaffName(payload.authorName)) return reply({ ok: false, error: { message: "Please choose a different name." } }, 400);
     if (payload.website) return reply({ ok: true, data: { comment: null, count: null } });
     const deal = await findPublicDeal(slug);
@@ -91,13 +142,20 @@ export async function POST(request: Request, { params }: { params: Promise<{ slu
     if (!allowed) return reply({ ok: false, error: { message: "Too many comments. Please try again later." } }, 429);
 
     const db = getDatabase();
-    const comment = await db.dealComment.create({
-      data: { dealId: deal.id, authorName: payload.authorName || "Guest", content: payload.content },
-      select: { id: true, authorName: true, content: true, createdAt: true },
+    let stored: { storageKey: string; provider: string } | null = null;
+    if (image) stored = await storeImage((await normalizeImage(image)).bytes);
+    // A signed-in member's comment is tied to their account and shows their user name; a guest's shows the name they typed.
+    const member = viewer ? await db.customer.findUnique({ where: { id: viewer }, select: { disabledAt: true, forumProfile: { select: { handle: true } } } }) : null;
+    if (member?.disabledAt) return reply({ ok: false, error: { message: "This account cannot comment." } }, 403);
+    const created = await db.dealComment.create({
+      data: { dealId: deal.id, customerId: member ? viewer : null, authorName: member ? member.forumProfile?.handle ?? "Member" : payload.authorName || "Guest", content: payload.content, imageKey: stored?.storageKey ?? null, imageProvider: stored?.provider ?? null },
+      select: commentSelect,
     });
     const count = await db.dealComment.count({ where: { dealId: deal.id } });
-    return reply({ ok: true, data: { comment, count } }, 201);
+    return reply({ ok: true, data: { comment: (await toDto([created], viewer))[0], count } }, 201);
   } catch (error) {
+    if (error instanceof CustomerError) return reply({ ok: false, error: { message: error.message } }, error.status);
+    if (error instanceof DealError) return reply({ ok: false, error: { message: error.message } }, error.status);
     if (error instanceof RequestBodyError) return reply({ ok: false, error: { message: error.message } }, 400);
     if (error instanceof z.ZodError) return reply({ ok: false, error: { message: "Enter a comment of up to 1000 characters." } }, 400);
     return reply({ ok: false, error: { message: "Comments are temporarily unavailable." } }, 503);

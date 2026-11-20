@@ -99,22 +99,27 @@
 /* 3-Column Main Product Layout */
 .productGrid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 28px;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "gallery" "buy" "info";
+  gap: 20px;
+  align-items: start;
   margin-bottom: 36px;
 }
+.areaGallery { grid-area: gallery; min-width: 0; }
+.areaBuy { grid-area: buy; min-width: 0; }
+.areaInfo { grid-area: info; min-width: 0; }
 
+/* Tablet and desktop: picture and price stacked on the left, a wide details column on the right. */
 @media (min-width: 768px) {
   .productGrid {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(300px, 400px) minmax(0, 1fr);
+    grid-template-areas: "gallery info" "buy info";
+    gap: 24px 28px;
   }
 }
 
-@media (min-width: 1080px) {
-  .productGrid {
-    grid-template-columns: 380px 1fr 340px;
-    align-items: stretch;
-  }
+@media (min-width: 1280px) {
+  .productGrid { grid-template-columns: 440px minmax(0, 1fr); }
 }
 
 /* Column A - Image Gallery */
@@ -340,6 +345,7 @@
   font-weight: 700;
   padding: 3px 8px;
   border-radius: 6px;
+  white-space: nowrap;
 }
 
 .productDescription {
@@ -417,8 +423,9 @@
 
 .mrpLine {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
   font-size: 14px;
 }
 
@@ -531,7 +538,7 @@
   border: 1px solid var(--md-color-border, var(--md-color-border));
   border-radius: 20px;
   padding: 20px 24px;
-  margin-bottom: 36px;
+  margin: 28px 0 36px;
   box-shadow: 0 4px 16px color-mix(in srgb, var(--md-black) 4%, transparent);
 }
 
@@ -809,3 +816,12 @@
   gap: 20px;
 }
 
+
+/* Price and Buy Now directly under the product picture. */
+.priceBuy { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 10px 14px; padding-top: 14px; margin-top: 12px; border-top: 1px solid var(--md-color-border); }
+
+.priceBuy > a { white-space: nowrap; padding-left: 22px; padding-right: 22px; }
+.buyCol { display: grid; justify-items: center; gap: 8px; }
+
+/* The product details live inside the Deal Details tab, so they carry no card of their own. */
+.infoBare { display: flex; flex-direction: column; gap: 16px; }

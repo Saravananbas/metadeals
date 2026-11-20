@@ -135,6 +135,23 @@ export async function userNameAvailability(customerId: string, raw: string) {
 }
 
 /** Follow or unfollow another member. Repeating the call changes nothing; blocked pairs (either way) cannot follow each other. */
+/** Give or take back a star ("Give Star" on a member's card). One per pair, never to yourself; a member's stars are their Reputation Points. */
+export async function setStar(customerId: string, handle: string, give: boolean) {
+  const { profile } = await writableProfile(customerId);
+  const db = getDatabase();
+  const target = await db.forumProfile.findUnique({ where: { handle: handle.toLowerCase() }, select: { id: true, customer: { select: { disabledAt: true } } } });
+  if (!target || target.customer.disabledAt || target.id === profile.id) throw new CustomerError("Member not found.", 404);
+  if (give) {
+    await limitCustomerRequests(`member-star:${profile.id}`, 60, 3600);
+    const blocked = await db.dmBlock.findFirst({ where: { OR: [{ blockerId: profile.id, blockedId: target.id }, { blockerId: target.id, blockedId: profile.id }] }, select: { id: true } });
+    if (blocked) throw new CustomerError("You cannot give this member a star.", 403);
+    await db.memberStar.createMany({ data: [{ giverId: profile.id, receiverId: target.id }], skipDuplicates: true });
+  } else {
+    await db.memberStar.deleteMany({ where: { giverId: profile.id, receiverId: target.id } });
+  }
+  return { starred: give, stars: await db.memberStar.count({ where: { receiverId: target.id } }) };
+}
+
 export async function setFollow(customerId: string, handle: string, follow: boolean) {
   const { profile } = await writableProfile(customerId);
   const db = getDatabase();
