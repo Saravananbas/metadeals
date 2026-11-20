@@ -27,3 +27,7 @@ How
 
 # downloaded hosting env files
 staging/
+
+# Python bytecode
+__pycache__/
+*.pyc
