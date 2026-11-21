@@ -53,6 +53,7 @@ export type CommunityDealSubmissionMinAggregateOutputType = {
   title: string | null
   brand: string | null
   description: string | null
+  descriptionHtml: string | null
   productUrl: string | null
   urlHash: string | null
   merchantName: string | null
@@ -84,6 +85,7 @@ export type CommunityDealSubmissionMaxAggregateOutputType = {
   title: string | null
   brand: string | null
   description: string | null
+  descriptionHtml: string | null
   productUrl: string | null
   urlHash: string | null
   merchantName: string | null
@@ -115,6 +117,7 @@ export type CommunityDealSubmissionCountAggregateOutputType = {
   title: number
   brand: number
   description: number
+  descriptionHtml: number
   productUrl: number
   urlHash: number
   merchantName: number
@@ -168,6 +171,7 @@ export type CommunityDealSubmissionMinAggregateInputType = {
   title?: true
   brand?: true
   description?: true
+  descriptionHtml?: true
   productUrl?: true
   urlHash?: true
   merchantName?: true
@@ -199,6 +203,7 @@ export type CommunityDealSubmissionMaxAggregateInputType = {
   title?: true
   brand?: true
   description?: true
+  descriptionHtml?: true
   productUrl?: true
   urlHash?: true
   merchantName?: true
@@ -230,6 +235,7 @@ export type CommunityDealSubmissionCountAggregateInputType = {
   title?: true
   brand?: true
   description?: true
+  descriptionHtml?: true
   productUrl?: true
   urlHash?: true
   merchantName?: true
@@ -348,6 +354,7 @@ export type CommunityDealSubmissionGroupByOutputType = {
   title: string
   brand: string | null
   description: string
+  descriptionHtml: string | null
   productUrl: string
   urlHash: string
   merchantName: string | null
@@ -402,6 +409,7 @@ export type CommunityDealSubmissionWhereInput = {
   title?: Prisma.StringFilter<"CommunityDealSubmission"> | string
   brand?: Prisma.StringNullableFilter<"CommunityDealSubmission"> | string | null
   description?: Prisma.StringFilter<"CommunityDealSubmission"> | string
+  descriptionHtml?: Prisma.StringNullableFilter<"CommunityDealSubmission"> | string | null
   productUrl?: Prisma.StringFilter<"CommunityDealSubmission"> | string
   urlHash?: Prisma.StringFilter<"CommunityDealSubmission"> | string
   merchantName?: Prisma.StringNullableFilter<"CommunityDealSubmission"> | string | null
@@ -437,6 +445,7 @@ export type CommunityDealSubmissionOrderByWithRelationInput = {
   title?: Prisma.SortOrder
   brand?: Prisma.SortOrderInput | Prisma.SortOrder
   description?: Prisma.SortOrder
+  descriptionHtml?: Prisma.SortOrderInput | Prisma.SortOrder
   productUrl?: Prisma.SortOrder
   urlHash?: Prisma.SortOrder
   merchantName?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -478,6 +487,7 @@ export type CommunityDealSubmissionWhereUniqueInput = Prisma.AtLeast<{
   title?: Prisma.StringFilter<"CommunityDealSubmission"> | string
   brand?: Prisma.StringNullableFilter<"CommunityDealSubmission"> | string | null
   description?: Prisma.StringFilter<"CommunityDealSubmission"> | string
+  descriptionHtml?: Prisma.StringNullableFilter<"CommunityDealSubmission"> | string | null
   productUrl?: Prisma.StringFilter<"CommunityDealSubmission"> | string
   urlHash?: Prisma.StringFilter<"CommunityDealSubmission"> | string
   merchantName?: Prisma.StringNullableFilter<"CommunityDealSubmission"> | string | null
@@ -512,6 +522,7 @@ export type CommunityDealSubmissionOrderByWithAggregationInput = {
   title?: Prisma.SortOrder
   brand?: Prisma.SortOrderInput | Prisma.SortOrder
   description?: Prisma.SortOrder
+  descriptionHtml?: Prisma.SortOrderInput | Prisma.SortOrder
   productUrl?: Prisma.SortOrder
   urlHash?: Prisma.SortOrder
   merchantName?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -551,6 +562,7 @@ export type CommunityDealSubmissionScalarWhereWithAggregatesInput = {
   title?: Prisma.StringWithAggregatesFilter<"CommunityDealSubmission"> | string
   brand?: Prisma.StringNullableWithAggregatesFilter<"CommunityDealSubmission"> | string | null
   description?: Prisma.StringWithAggregatesFilter<"CommunityDealSubmission"> | string
+  descriptionHtml?: Prisma.StringNullableWithAggregatesFilter<"CommunityDealSubmission"> | string | null
   productUrl?: Prisma.StringWithAggregatesFilter<"CommunityDealSubmission"> | string
   urlHash?: Prisma.StringWithAggregatesFilter<"CommunityDealSubmission"> | string
   merchantName?: Prisma.StringNullableWithAggregatesFilter<"CommunityDealSubmission"> | string | null
@@ -581,6 +593,7 @@ export type CommunityDealSubmissionCreateInput = {
   title: string
   brand?: string | null
   description: string
+  descriptionHtml?: string | null
   productUrl: string
   urlHash: string
   merchantName?: string | null
@@ -614,6 +627,7 @@ export type CommunityDealSubmissionUncheckedCreateInput = {
   title: string
   brand?: string | null
   description: string
+  descriptionHtml?: string | null
   productUrl: string
   urlHash: string
   merchantName?: string | null
@@ -645,6 +659,7 @@ export type CommunityDealSubmissionUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   urlHash?: Prisma.StringFieldUpdateOperationsInput | string
   merchantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -678,6 +693,7 @@ export type CommunityDealSubmissionUncheckedUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   urlHash?: Prisma.StringFieldUpdateOperationsInput | string
   merchantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -710,6 +726,7 @@ export type CommunityDealSubmissionCreateManyInput = {
   title: string
   brand?: string | null
   description: string
+  descriptionHtml?: string | null
   productUrl: string
   urlHash: string
   merchantName?: string | null
@@ -740,6 +757,7 @@ export type CommunityDealSubmissionUpdateManyMutationInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   urlHash?: Prisma.StringFieldUpdateOperationsInput | string
   merchantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -769,6 +787,7 @@ export type CommunityDealSubmissionUncheckedUpdateManyInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   urlHash?: Prisma.StringFieldUpdateOperationsInput | string
   merchantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -826,6 +845,7 @@ export type CommunityDealSubmissionCountOrderByAggregateInput = {
   title?: Prisma.SortOrder
   brand?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  descriptionHtml?: Prisma.SortOrder
   productUrl?: Prisma.SortOrder
   urlHash?: Prisma.SortOrder
   merchantName?: Prisma.SortOrder
@@ -867,6 +887,7 @@ export type CommunityDealSubmissionMaxOrderByAggregateInput = {
   title?: Prisma.SortOrder
   brand?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  descriptionHtml?: Prisma.SortOrder
   productUrl?: Prisma.SortOrder
   urlHash?: Prisma.SortOrder
   merchantName?: Prisma.SortOrder
@@ -898,6 +919,7 @@ export type CommunityDealSubmissionMinOrderByAggregateInput = {
   title?: Prisma.SortOrder
   brand?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  descriptionHtml?: Prisma.SortOrder
   productUrl?: Prisma.SortOrder
   urlHash?: Prisma.SortOrder
   merchantName?: Prisma.SortOrder
@@ -1077,6 +1099,7 @@ export type CommunityDealSubmissionCreateWithoutReviewedByInput = {
   title: string
   brand?: string | null
   description: string
+  descriptionHtml?: string | null
   productUrl: string
   urlHash: string
   merchantName?: string | null
@@ -1109,6 +1132,7 @@ export type CommunityDealSubmissionUncheckedCreateWithoutReviewedByInput = {
   title: string
   brand?: string | null
   description: string
+  descriptionHtml?: string | null
   productUrl: string
   urlHash: string
   merchantName?: string | null
@@ -1169,6 +1193,7 @@ export type CommunityDealSubmissionScalarWhereInput = {
   title?: Prisma.StringFilter<"CommunityDealSubmission"> | string
   brand?: Prisma.StringNullableFilter<"CommunityDealSubmission"> | string | null
   description?: Prisma.StringFilter<"CommunityDealSubmission"> | string
+  descriptionHtml?: Prisma.StringNullableFilter<"CommunityDealSubmission"> | string | null
   productUrl?: Prisma.StringFilter<"CommunityDealSubmission"> | string
   urlHash?: Prisma.StringFilter<"CommunityDealSubmission"> | string
   merchantName?: Prisma.StringNullableFilter<"CommunityDealSubmission"> | string | null
@@ -1199,6 +1224,7 @@ export type CommunityDealSubmissionCreateWithoutDealInput = {
   title: string
   brand?: string | null
   description: string
+  descriptionHtml?: string | null
   productUrl: string
   urlHash: string
   merchantName?: string | null
@@ -1231,6 +1257,7 @@ export type CommunityDealSubmissionUncheckedCreateWithoutDealInput = {
   title: string
   brand?: string | null
   description: string
+  descriptionHtml?: string | null
   productUrl: string
   urlHash: string
   merchantName?: string | null
@@ -1277,6 +1304,7 @@ export type CommunityDealSubmissionUpdateWithoutDealInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   urlHash?: Prisma.StringFieldUpdateOperationsInput | string
   merchantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1309,6 +1337,7 @@ export type CommunityDealSubmissionUncheckedUpdateWithoutDealInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   urlHash?: Prisma.StringFieldUpdateOperationsInput | string
   merchantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1339,6 +1368,7 @@ export type CommunityDealSubmissionCreateWithoutCustomerInput = {
   title: string
   brand?: string | null
   description: string
+  descriptionHtml?: string | null
   productUrl: string
   urlHash: string
   merchantName?: string | null
@@ -1370,6 +1400,7 @@ export type CommunityDealSubmissionUncheckedCreateWithoutCustomerInput = {
   title: string
   brand?: string | null
   description: string
+  descriptionHtml?: string | null
   productUrl: string
   urlHash: string
   merchantName?: string | null
@@ -1427,6 +1458,7 @@ export type CommunityDealSubmissionCreateWithoutExtraImagesInput = {
   title: string
   brand?: string | null
   description: string
+  descriptionHtml?: string | null
   productUrl: string
   urlHash: string
   merchantName?: string | null
@@ -1459,6 +1491,7 @@ export type CommunityDealSubmissionUncheckedCreateWithoutExtraImagesInput = {
   title: string
   brand?: string | null
   description: string
+  descriptionHtml?: string | null
   productUrl: string
   urlHash: string
   merchantName?: string | null
@@ -1505,6 +1538,7 @@ export type CommunityDealSubmissionUpdateWithoutExtraImagesInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   urlHash?: Prisma.StringFieldUpdateOperationsInput | string
   merchantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1537,6 +1571,7 @@ export type CommunityDealSubmissionUncheckedUpdateWithoutExtraImagesInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   urlHash?: Prisma.StringFieldUpdateOperationsInput | string
   merchantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1568,6 +1603,7 @@ export type CommunityDealSubmissionCreateManyReviewedByInput = {
   title: string
   brand?: string | null
   description: string
+  descriptionHtml?: string | null
   productUrl: string
   urlHash: string
   merchantName?: string | null
@@ -1597,6 +1633,7 @@ export type CommunityDealSubmissionUpdateWithoutReviewedByInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   urlHash?: Prisma.StringFieldUpdateOperationsInput | string
   merchantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1629,6 +1666,7 @@ export type CommunityDealSubmissionUncheckedUpdateWithoutReviewedByInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   urlHash?: Prisma.StringFieldUpdateOperationsInput | string
   merchantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1660,6 +1698,7 @@ export type CommunityDealSubmissionUncheckedUpdateManyWithoutReviewedByInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   urlHash?: Prisma.StringFieldUpdateOperationsInput | string
   merchantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1689,6 +1728,7 @@ export type CommunityDealSubmissionCreateManyCustomerInput = {
   title: string
   brand?: string | null
   description: string
+  descriptionHtml?: string | null
   productUrl: string
   urlHash: string
   merchantName?: string | null
@@ -1719,6 +1759,7 @@ export type CommunityDealSubmissionUpdateWithoutCustomerInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   urlHash?: Prisma.StringFieldUpdateOperationsInput | string
   merchantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1750,6 +1791,7 @@ export type CommunityDealSubmissionUncheckedUpdateWithoutCustomerInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   urlHash?: Prisma.StringFieldUpdateOperationsInput | string
   merchantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1781,6 +1823,7 @@ export type CommunityDealSubmissionUncheckedUpdateManyWithoutCustomerInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   urlHash?: Prisma.StringFieldUpdateOperationsInput | string
   merchantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1843,6 +1886,7 @@ export type CommunityDealSubmissionSelect<ExtArgs extends runtime.Types.Extensio
   title?: boolean
   brand?: boolean
   description?: boolean
+  descriptionHtml?: boolean
   productUrl?: boolean
   urlHash?: boolean
   merchantName?: boolean
@@ -1881,6 +1925,7 @@ export type CommunityDealSubmissionSelectScalar = {
   title?: boolean
   brand?: boolean
   description?: boolean
+  descriptionHtml?: boolean
   productUrl?: boolean
   urlHash?: boolean
   merchantName?: boolean
@@ -1905,7 +1950,7 @@ export type CommunityDealSubmissionSelectScalar = {
   updatedAt?: boolean
 }
 
-export type CommunityDealSubmissionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "customerId" | "status" | "title" | "brand" | "description" | "productUrl" | "urlHash" | "merchantName" | "categoryHint" | "priceMinor" | "mrpMinor" | "couponCode" | "imageKey" | "imageProvider" | "imageMime" | "imageBytes" | "imageWidth" | "imageHeight" | "version" | "resubmissions" | "submittedAt" | "reviewedById" | "reviewedAt" | "rejectionReason" | "dealId" | "createdAt" | "updatedAt", ExtArgs["result"]["communityDealSubmission"]>
+export type CommunityDealSubmissionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "customerId" | "status" | "title" | "brand" | "description" | "descriptionHtml" | "productUrl" | "urlHash" | "merchantName" | "categoryHint" | "priceMinor" | "mrpMinor" | "couponCode" | "imageKey" | "imageProvider" | "imageMime" | "imageBytes" | "imageWidth" | "imageHeight" | "version" | "resubmissions" | "submittedAt" | "reviewedById" | "reviewedAt" | "rejectionReason" | "dealId" | "createdAt" | "updatedAt", ExtArgs["result"]["communityDealSubmission"]>
 export type CommunityDealSubmissionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
   reviewedBy?: boolean | Prisma.CommunityDealSubmission$reviewedByArgs<ExtArgs>
@@ -1929,6 +1974,7 @@ export type $CommunityDealSubmissionPayload<ExtArgs extends runtime.Types.Extens
     title: string
     brand: string | null
     description: string
+    descriptionHtml: string | null
     productUrl: string
     urlHash: string
     merchantName: string | null
@@ -2330,6 +2376,7 @@ export interface CommunityDealSubmissionFieldRefs {
   readonly title: Prisma.FieldRef<"CommunityDealSubmission", 'String'>
   readonly brand: Prisma.FieldRef<"CommunityDealSubmission", 'String'>
   readonly description: Prisma.FieldRef<"CommunityDealSubmission", 'String'>
+  readonly descriptionHtml: Prisma.FieldRef<"CommunityDealSubmission", 'String'>
   readonly productUrl: Prisma.FieldRef<"CommunityDealSubmission", 'String'>
   readonly urlHash: Prisma.FieldRef<"CommunityDealSubmission", 'String'>
   readonly merchantName: Prisma.FieldRef<"CommunityDealSubmission", 'String'>

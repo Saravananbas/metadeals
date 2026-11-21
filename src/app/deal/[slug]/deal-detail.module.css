@@ -829,3 +829,11 @@
 
 /* The product details live inside the Deal Details tab, so they carry no card of their own. */
 .infoBare { display: flex; flex-direction: column; gap: 16px; }
+
+/* Formatted description (from the editor) */
+.richDescription p{margin:0 0 10px}
+.richDescription ul,.richDescription ol{margin:0 0 10px;padding-left:22px}
+.richDescription h2,.richDescription h3{margin:12px 0 6px;font-size:16px}
+.richDescription blockquote{margin:0 0 10px;padding:6px 12px;border-left:3px solid var(--md-purple-200);color:var(--md-color-text-secondary)}
+.richDescription a{color:var(--md-purple-700);text-decoration:underline;overflow-wrap:anywhere}
+.richDescription>*:last-child{margin-bottom:0}

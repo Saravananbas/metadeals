@@ -202,6 +202,7 @@ export default async function DealDetailPage({
         category={deal.category}
         merchantName={deal.merchant.name}
         description={deal.description}
+        descriptionHtml={deal.descriptionHtml}
         rating={deal.rating}
         reviewCount={deal.reviewCount}
         ratingSource={deal.ratingSource}

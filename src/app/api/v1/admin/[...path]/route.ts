@@ -19,6 +19,7 @@ import { destinationInputSchema, publishDealInputSchema } from "@/features/distr
 import { getUnifiedAnalyticsSummary } from "@/server/analytics/service";
 import { getAdminNotifications, getNotificationIds } from "@/server/admin/notifications";
 import { approveSubmission, getSubmissionImage, listSubmissions, rejectSubmission } from "@/server/community/review";
+import { dealCheckQuery, findDealMatches } from "@/server/customer/deal-check";
 import { exportCsv, getTab, TABS } from "@/server/analytics/tabs";
 import { getDashboard, getLive, getSessionTimeline, listSessions, resolveRange, vendorReport } from "@/server/analytics/queries";
 import { scraperService } from "@/server/scraper/service";
@@ -377,6 +378,13 @@ async function handle(request: Request, { params }: { params: Promise<{ path: st
         });
       }
       throw new DealError("Product extraction endpoint not found.", 404);
+    }
+    if (resource === "deal-check") {
+      // Duplicate and similar-deal check for the Add deal screen: staff also see drafts, pending and archived deals.
+      if (request.method !== "GET") throw new DealError("Method not supported.", 405);
+      if (!can(context.user, "deal:create") && !can(context.user, "deal:edit")) throw new DealError("Permission denied.", 403);
+      const q = new URL(request.url).searchParams;
+      return json({ data: await findDealMatches(dealCheckQuery.parse({ url: q.get("url") ?? undefined, title: q.get("title") ?? undefined, excludeDealId: q.get("excludeDealId") ?? undefined }), true) });
     }
     if ((resource === "categories" || resource === "merchants") && !action) {
       if (request.method === "GET") return json({ data: await (resource === "categories" ? db.category.findMany({ take: 500, orderBy: { name: "asc" } }) : db.merchant.findMany({ take: 500, orderBy: { name: "asc" }, select: merchantSelect })) });

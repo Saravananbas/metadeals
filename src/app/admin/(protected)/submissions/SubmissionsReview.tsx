@@ -11,7 +11,7 @@ type Item = {
   priceMinor: number; mrpMinor: number | null; couponCode: string | null; version: number; resubmissions: number; submittedAt: string; rejectionReason: string | null;
   dealId: string | null; imageUrl: string; customer: { name: string; email: string }; deal: { status: string; everPublished: boolean } | null; _count?: { extraImages: number };
 };
-type Option = { id: string; name: string; slug?: string; websiteUrl?: string };
+type Option = { id: string; name: string; slug?: string; websiteUrl?: string; parentId?: string | null };
 const host = (u: string) => { try { return new URL(u.startsWith("http") ? u : `https://${u}`).hostname.toLowerCase().replace(/^www\./, ""); } catch { return ""; } };
 const norm = (v: string) => v.toLowerCase().replace(/[^a-z0-9]/g, "");
 type Draft = { categoryId: string; merchantId: string; title: string; brand: string; description: string; productUrl: string; price: string; mrp: string; coupon: string; reason: string };
@@ -36,6 +36,7 @@ export function SubmissionsReview() {
   const [pending, setPending] = useState(0);
   const [categories, setCategories] = useState<Option[]>([]);
   const [merchants, setMerchants] = useState<Option[]>([]);
+  const [directory, setDirectory] = useState<Option[]>([]);
   const [drafts, setDrafts] = useState<Record<string, Draft>>({});
   const [message, setMessage] = useState<{ kind: "ok" | "error"; text: string } | null>(null);
   const [busy, setBusy] = useState("");
@@ -65,6 +66,8 @@ export function SubmissionsReview() {
     Promise.all([call<{ data: Option[] }>("/api/v1/admin/categories"), call<{ data: Option[] }>("/api/v1/admin/merchants")])
       .then(([c, m]) => { if (alive) { setCategories(c.data); setMerchants(m.data); } })
       .catch(() => {});
+    // The Merchant Website Directory (public list of active stores): stores that are not a Merchant yet can be picked too.
+    fetch("/api/v1/catalog", { cache: "no-store" }).then((r) => r.json()).then((b) => { if (alive) setDirectory((b?.merchantWebsites ?? []).map((w: { id: string; name: string; domain: string }) => ({ id: `dir:${w.id}`, name: w.name, websiteUrl: w.domain }))); }).catch(() => {});
     return () => { alive = false; };
   }, []);
 
@@ -72,11 +75,19 @@ export function SubmissionsReview() {
   const withSuggestions = (item: Item): Draft => {
     const d = drafts[item.id] ?? blankDraft(item);
     const h = host(item.productUrl), written = norm(item.merchantName ?? "");
-    const merchant = d.merchantId ? undefined : merchants.find((m) => (m.websiteUrl && host(m.websiteUrl) === h) || (written && norm(m.name) === written) || (h && norm(m.name).length > 2 && norm(h).startsWith(norm(m.name))));
+    const merchant = d.merchantId ? undefined : [...merchants, ...directory.filter((w) => !merchants.some((m) => m.websiteUrl && host(m.websiteUrl) === host(w.websiteUrl ?? "")))].find((m) => (m.websiteUrl && host(m.websiteUrl) === h) || (written && norm(m.name) === written) || (h && norm(m.name).length > 2 && norm(h).startsWith(norm(m.name))));
     const category = d.categoryId || !item.categoryHint ? undefined : categories.find((c) => norm(c.name) === norm(item.categoryHint ?? ""));
     return { ...d, merchantId: d.merchantId || merchant?.id || "", categoryId: d.categoryId || category?.id || "" };
   };
 
+  // Directory stores that already have a Merchant are left out (the Merchant is used).
+  // A directory store and a Merchant are the same store when they share a website or a name.
+  const sameStore = (m: Option, w: Option) => (Boolean(m.websiteUrl) && host(m.websiteUrl ?? "") === host(w.websiteUrl ?? "")) || norm(m.name) === norm(w.name);
+  const storeOptions = [
+    ...directory.map((w) => ({ id: merchants.find((m) => sameStore(m, w))?.id ?? w.id, name: w.name })),
+    ...merchants.filter((m) => !directory.some((w) => sameStore(m, w))).map((m) => ({ id: m.id, name: m.name })),
+  ].filter((o, i, all) => all.findIndex((x) => x.id === o.id) === i).sort((a, b) => a.name.localeCompare(b.name));
+  const mainCategories = categories.filter((c) => !c.parentId);
   const set = (id: string, patch: Partial<Draft>) => setDrafts((d) => ({ ...d, [id]: { ...d[id], ...patch } }));
 
   async function act(item: Item, kind: "approve" | "reject", publish = false) {
@@ -159,8 +170,16 @@ export function SubmissionsReview() {
                 {item.status === "PENDING_REVIEW" && (
                   <>
                     <div className={styles.grid}>
-                      <label>Category<select value={d.categoryId} onChange={(e) => set(item.id, { categoryId: e.target.value })}><option value="">Select…</option>{categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</select></label>
-                      <label>Store<select value={d.merchantId} onChange={(e) => set(item.id, { merchantId: e.target.value })}><option value="">Select…</option>{merchants.map((m) => <option key={m.id} value={m.id}>{m.name}</option>)}</select></label>
+                      {(() => {
+                        const chosen = categories.find((c) => c.id === d.categoryId);
+                        const main = chosen?.parentId ? categories.find((c) => c.id === chosen.parentId) : chosen;
+                        const subs = main ? categories.filter((c) => c.parentId === main.id) : [];
+                        return <>
+                          <label>Category<select value={main?.id ?? ""} onChange={(e) => set(item.id, { categoryId: e.target.value })}><option value="">Select…</option>{mainCategories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</select></label>
+                          <label>Sub-category<select value={chosen?.parentId ? chosen.id : ""} disabled={!main || subs.length === 0} onChange={(e) => set(item.id, { categoryId: e.target.value || main?.id || "" })}><option value="">{main && subs.length === 0 ? "No sub-categories" : "None"}</option>{subs.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</select></label>
+                        </>;
+                      })()}
+                      <label>Store<select value={d.merchantId} onChange={(e) => set(item.id, { merchantId: e.target.value })}><option value="">Select…</option>{(storeOptions.length ? storeOptions : merchants).map((m) => <option key={m.id} value={m.id}>{m.name}</option>)}</select></label>
                       <label>Deal price (₹)<input inputMode="decimal" value={d.price} onChange={(e) => set(item.id, { price: e.target.value })} /></label>
                       <label>MRP (₹, required)<input inputMode="decimal" value={d.mrp} onChange={(e) => set(item.id, { mrp: e.target.value })} /></label>
                       <label>Brand<input value={d.brand} onChange={(e) => set(item.id, { brand: e.target.value })} /></label>

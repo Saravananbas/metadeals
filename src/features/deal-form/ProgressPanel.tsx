@@ -1,5 +1,5 @@
 import { Check } from "lucide-react";
-import styles from "../profile.module.css";
+import styles from "@/features/customer/profile.module.css";
 
 type Values = { productUrl: string; title: string; price: string; mrp: string; description: string; categoryHint: string; merchantName: string; brand: string; hasImage: boolean };
 const STEPS: { key: string; label: string; tip: string; done: (v: Values) => boolean }[] = [

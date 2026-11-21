@@ -286,6 +286,8 @@ model Deal {
   title          String     @db.VarChar(200)
   brand          String     @db.VarChar(100)
   description    String     @db.VarChar(2000)
+  /// Formatted version of the description (sanitized HTML); `description` stays the plain text used by cards, search and meta tags.
+  descriptionHtml String?   @db.Text
   categoryId     String
   category       Category   @relation(fields: [categoryId], references: [id], onDelete: Restrict)
   merchantId     String
@@ -955,6 +957,7 @@ model CommunityDealSubmission {
   title           String           @db.VarChar(200)
   brand           String?          @db.VarChar(100)
   description     String           @db.VarChar(2000)
+  descriptionHtml String?          @db.Text
   productUrl      String           @db.VarChar(2048)
   urlHash         String           @db.Char(64)
   merchantName    String?          @db.VarChar(100)

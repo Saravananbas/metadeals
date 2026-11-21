@@ -13,6 +13,10 @@ import {
 import { can, type AdminRole } from "@/server/auth/permissions";
 import { Calendar, Eye, ImageIcon, Link2, Save, Send, Settings, Tag, UploadCloud, Plus, Wand2, X } from "lucide-react";
 import { AdminNav } from "@/components/admin/AdminNav";
+import { ProgressPanel } from "@/features/deal-form/ProgressPanel";
+import { SameLinkNotice, SimilarDeals, useDealCheck } from "@/features/deal-form/SimilarDeals";
+import { htmlToPlain, textToHtml } from "@/features/deal-form/text";
+import { RichEditor } from "@/features/community/components/RichEditor";
 import { classifyDeal, type DealTab } from "../tabs";
 import styles from "./manager.module.css";
 
@@ -778,6 +782,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
   }
 
   function resetDealEntry() {
+    lastAutoUrl.current = "";
     extractionController.current?.abort();
     extractionController.current = null;
     setForm(empty);
@@ -840,6 +845,13 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
     setHtmlReviewTab("review");
     setMessage("Unsaved changes reset to the saved deal values.");
   }
+
+  // Details fill in by themselves a moment after a new link is pasted (once per link); "Try again" runs it by hand.
+  const lastAutoUrl = useRef("");
+  const dealCheck = useDealCheck(form.productUrl, form.title, true, { endpoint: "/api/v1/admin/deal-check", excludeDealId: selected?.id });
+  // The formatted description editor follows the form: it reloads whenever the plain description changes from outside it (reset, edit, fetched details).
+  const [descEditor, setDescEditor] = useState({ plain: "", html: "", version: 0 });
+  if (form.description !== descEditor.plain) setDescEditor({ plain: form.description, html: form.descriptionHtml || textToHtml(form.description), version: descEditor.version + 1 });
 
   async function handleScrape() {
     if (!form.productUrl || !form.productUrl.trim()) {
@@ -927,6 +939,15 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
       }
     }
   }
+
+  useEffect(() => {
+    if (selected) return;
+    const link = form.productUrl.trim();
+    if (!/^https:\/\/[^\s/]+\.[^\s/]+\//i.test(link) || link === lastAutoUrl.current || extracting) return;
+    const timer = setTimeout(() => { lastAutoUrl.current = link; void handleScrape(); }, 700);
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- handleScrape reads the latest form; only a new link should restart the timer
+  }, [form.productUrl, selected]);
 
   async function applyExtractedData() {
     if (!extractionResult) return;
@@ -1466,6 +1487,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
         affiliateUrl: form.affiliateUrl,
         couponCode: form.couponCode?.trim() || null,
         editorNotes: form.editorNotes ?? null,
+        descriptionHtml: form.descriptionHtml === undefined ? undefined : form.descriptionHtml || null,
         status: form.status,
         publishedAt: form.publishedAt,
         startsAt: form.startsAt,
@@ -2411,7 +2433,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
             <div className={styles.addHead}>
               <div>
                 <h2>{selected ? "Edit deal" : "Add New Deal"}</h2>
-                <p>{selected ? "Update the details of this deal." : "Add a new deal to MetaDeals4U."} You can fetch details from a product URL or enter them manually.</p>
+                {selected && <p>Update the details of this deal.</p>}
               </div>
               <div className={styles.addHeadActions}>
                 {editModal && (
@@ -2477,7 +2499,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
                   onClick={handleScrape}
                   className={styles.scrapeBtn}
                 >
-                  <Wand2 size={15} aria-hidden="true" /> {extracting ? "Fetching..." : "Fetch Details"}
+                  <Wand2 size={15} aria-hidden="true" /> {extracting ? "Fetching..." : extractionResult ? "Try again" : "Fetch Details"}
                 </button>
                 <button
                   type="button"
@@ -2490,6 +2512,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
                   {selected ? "Reset changes" : "Reset"}
                 </button>
               </div>
+              <SameLinkNotice check={dealCheck} />
               {extractProgress && (
                 <div className={styles.extractStatus}>
                   <span>{extractProgress}</span>
@@ -2683,6 +2706,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
                 onChange={(e) => field("title", e.target.value)}
               />
             </label>
+            <div className={styles.fullRow}><SimilarDeals check={dealCheck} /></div>
             <label>
               Stable slug
               <input
@@ -2700,18 +2724,17 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
                 onChange={(e) => field("brand", e.target.value)}
               />
             </label>
-            <label className={styles.fullRow}>
-              Description
-              <textarea
-                required
-                rows={4}
-                maxLength={2000}
-                placeholder="Write a short and attractive deal description..."
-                value={form.description}
-                onChange={(e) => field("description", e.target.value)}
-              />
-              <span className={styles.charCount}>{form.description.length} / 2000</span>
-            </label>
+            <div className={styles.fullRow}>
+              <span id="admin-description-label" style={{ fontWeight: 600 }}>Description <b aria-hidden="true">*</b></span>
+              <div className={styles.richHost}>
+              <RichEditor id="admin-description" initialHtml={descEditor.html} version={descEditor.version} limit={2000} minHeight={150} placeholder="Write a short and attractive deal description..."
+                onChange={(html) => {
+                  const plain = html ? htmlToPlain(html) : "";
+                  setDescEditor((d) => (d.plain === plain ? d : { ...d, plain }));
+                  setForm((f) => (f.descriptionHtml === (html || null) && f.description === plain ? f : { ...f, descriptionHtml: html || null, description: plain }));
+                }} />
+              </div>
+            </div>
             <label>
               Category
               <select
@@ -3037,6 +3060,18 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
 
             </div>
             <aside className={styles.addSide}>
+              <ProgressPanel values={{
+                // Fetched details sit in the extraction preview until they are applied to the form, so the ring counts those too.
+                productUrl: form.productUrl,
+                title: (extractionResult && previewTitle) || form.title,
+                price: (extractionResult && previewPrice) || form.priceRupees,
+                mrp: (extractionResult && previewMrp) || form.mrpRupees,
+                description: (extractionResult && previewDescription) || form.description,
+                categoryHint: (extractionResult && previewCategory) || form.categoryId,
+                merchantName: (extractionResult && previewMerchant) || form.merchantId,
+                brand: (extractionResult && previewBrand) || form.brand,
+                hasImage: Boolean(form.mediaId || (form.galleryImageUrls?.length ?? 0) > 0 || (extractionResult && (previewImageUrl || previewMediaId || previewGalleryImageUrls.length > 0))),
+              }} />
               <section className={styles.addCard}>
                 <div className={styles.cardHead}>
                   <span className={styles.cardIcon}><Eye size={18} aria-hidden="true" /></span>

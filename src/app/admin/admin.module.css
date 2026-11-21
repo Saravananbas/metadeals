@@ -565,3 +565,6 @@
 @media (max-width: 760px) { .accessList { grid-template-columns: 1fr; } }
 .accessFooter { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; align-items: start; }
 @media (max-width: 760px) { .accessFooter { grid-template-columns: 1fr; } }
+
+/* Page title kept for screen readers; the visible banner was removed. */
+.pageTitle { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }

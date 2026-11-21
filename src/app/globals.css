@@ -152,7 +152,7 @@ a { text-decoration: none; }
 /* ROW 7: Social Interaction Row */
 .deal-row-social { display: flex; align-items: center; justify-content: space-between; padding-top: 8px; border-top: 1px solid var(--md-color-surface-muted); min-height: 28px; }
 .deal-social-views { display: flex; align-items: center; gap: 4px; color: var(--md-color-text-secondary); font-size: 11.5px; font-weight: 600; padding: 4px 6px; }
-.deal-social-btn { white-space: nowrap; background: transparent; border: none; display: flex; align-items: center; gap: 4px; color: var(--md-color-text-secondary); font-size: 11.5px; font-weight: 600; cursor: pointer; padding: 4px 6px; border-radius: 6px; transition: all 0.15s ease; }
+.deal-social-btn { text-decoration: none; white-space: nowrap; background: transparent; border: none; display: flex; align-items: center; gap: 4px; color: var(--md-color-text-secondary); font-size: 11.5px; font-weight: 600; cursor: pointer; padding: 4px 6px; border-radius: 6px; transition: all 0.15s ease; }
 .deal-social-btn:hover { color: var(--md-color-primary); background: var(--md-color-primary-subtle); }
 .deal-social-liked { color: var(--md-color-primary) !important; }
 .deal-bottom { display: flex; align-items: center; justify-content: space-between; gap: 4px; margin-top: 8px; min-height: 24px; }
@@ -629,3 +629,42 @@ body { background: radial-gradient(ellipse at 12% 18%, color-mix(in srgb, var(--
 
 /* Set while a full-screen pop-up (the deal edit window) is open, so the page behind it does not scroll. */
 body.md-modal-open { overflow: hidden; }
+
+/* Card action row: each action is a soft coloured pill with a coloured icon, with thin dividers between them */
+.deal-row-social { gap: 10px; padding-top: 10px; }
+.deal-row-social > * { position: relative; }
+.deal-row-social > * + *::before { content: ""; position: absolute; left: -6px; top: 8px; bottom: 8px; width: 1px; background: var(--md-purple-100); pointer-events: none; }
+.deal-social-views, .deal-social-btn { gap: 5px; padding: 6px 9px; border-radius: 12px; font-size: 12px; font-weight: 700; }
+.deal-social-views { background: var(--md-blue-50); color: var(--md-color-text); }
+.deal-social-views svg { color: var(--md-blue-600); width: 16px; height: 16px; }
+.deal-social-btn svg { width: 16px; height: 16px; }
+.deal-social-like { background: var(--md-green-50); color: var(--md-green-700); }
+.deal-social-dislike { background: var(--md-red-50); color: var(--md-red-600); }
+.deal-social-share { background: var(--md-purple-50); color: var(--md-purple-600); }
+.deal-social-comment { background: var(--md-amber-50); color: var(--md-amber-600); }
+.deal-social-like:hover { background: var(--md-green-100, var(--md-green-50)); color: var(--md-green-700); }
+.deal-social-dislike:hover { background: var(--md-red-100, var(--md-red-50)); color: var(--md-red-600); }
+.deal-social-share:hover { background: var(--md-purple-100); color: var(--md-purple-700); }
+.deal-social-comment:hover { background: var(--md-amber-100, var(--md-amber-50)); color: var(--md-amber-600); }
+.deal-social-like.deal-social-liked { background: var(--md-green-600); color: var(--md-white) !important; }
+.deal-social-dislike.deal-social-liked { background: var(--md-red-600); color: var(--md-white) !important; }
+
+/* Card buttons: outlined Post Details with a document icon, solid Buy Now with a cart, a divider and the open-in-new-tab icon */
+.deal-row-actions { gap: 10px; }
+.deal-view-details-btn, .deal-buy-now-btn { min-height: 38px; padding: 0 12px; gap: 8px; border-radius: 12px; font-size: 13px; }
+.deal-view-details-btn { border: 1px solid var(--md-purple-800); color: var(--md-purple-800); background: var(--md-white); }
+.deal-view-details-btn:hover { background: var(--md-purple-50); }
+.deal-buy-now-btn { background: var(--md-purple-800); border: 1px solid var(--md-purple-800); color: var(--md-white); }
+.deal-buy-now-btn:hover { background: var(--md-purple-900); border-color: var(--md-purple-900); }
+.deal-btn-divider { width: 1px; height: 18px; background: color-mix(in srgb, var(--md-white) 45%, transparent); }
+.deal-view-details-btn svg, .deal-buy-now-btn svg { flex: none; }
+.deal-buy-now-disabled { min-height: 38px; border-radius: 12px; }
+/* Narrow cards (five across on a desktop): the buttons share the row and drop the first icon so nothing spills out of the card */
+.deal-row-actions { container-type: inline-size; }
+.deal-view-details-btn, .deal-buy-now-btn { min-width: 0; }
+.deal-view-details-btn { flex: 1 1 0; }
+.deal-buy-now-btn { flex: 1.15 1 0; }
+@container (max-width: 300px) {
+  .deal-view-details-btn, .deal-buy-now-btn { padding: 0 8px; gap: 6px; font-size: 12.5px; }
+  .deal-view-details-btn > svg, .deal-buy-now-btn > svg:first-child { display: none; }
+}

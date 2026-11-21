@@ -2,13 +2,13 @@
 
 import { useEffect } from "react";
 import { X } from "lucide-react";
-import styles from "../profile.module.css";
+import styles from "@/features/customer/profile.module.css";
 
-type Props = { title: string; price: string; mrp: string; store: string; brand: string; coupon: string; description: string; imageSrc: string; onClose: () => void };
+type Props = { title: string; price: string; mrp: string; store: string; brand: string; coupon: string; description: string; imageSrc: string; busy?: boolean; onClose: () => void; onPublish: () => void };
 const rupees = (v: string) => `₹${Number(v).toLocaleString("en-IN")}`;
 
 /** "Preview Deal": the card as visitors will see it, from what is typed so far. Nothing is sent. */
-export function PreviewDialog({ title, price, mrp, store, brand, coupon, description, imageSrc, onClose }: Props) {
+export function PreviewDialog({ title, price, mrp, store, brand, coupon, description, imageSrc, busy = false, onClose, onPublish }: Props) {
   useEffect(() => {
     const key = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
     document.addEventListener("keydown", key);
@@ -33,6 +33,11 @@ export function PreviewDialog({ title, price, mrp, store, brand, coupon, descrip
           {coupon && <code>Coupon: {coupon}</code>}
           {description && <p>{description.slice(0, 220)}{description.length > 220 ? "…" : ""}</p>}
         </div>
+        <div className={styles.previewActions}>
+          <button type="button" className={styles.secondary} onClick={onClose}>✎ Edit</button>
+          <button type="button" className={styles.primary} onClick={onPublish} disabled={busy}>{busy ? "Sending…" : "➤ Publish"}</button>
+        </div>
+        <p className={styles.hint}>Our team checks every deal first, so it goes live after approval.</p>
       </div>
     </div>
   );

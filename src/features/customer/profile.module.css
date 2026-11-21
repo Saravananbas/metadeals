@@ -210,3 +210,56 @@
 .stripCta{min-height:46px;padding:0 20px;border-radius:12px;font-size:15px}
 @media(max-width:1060px){.dealStrip{flex-wrap:wrap;padding:14px 16px}.stripText{flex:1 1 calc(100% - 90px);border-right:0;padding-right:0}.stripStats{order:3;flex:1 1 100%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.stripStats>div{border:1px solid var(--md-neutral-200);border-radius:14px;padding:8px 12px}.stripCta{order:2;flex:1 1 100%}}
 @media(max-width:520px){.stripIcon{width:52px;height:52px}.stripIcon svg{width:26px;height:26px}.stripText{flex-basis:calc(100% - 68px)}.stripText h1{font-size:22px}}
+
+.previewActions{display:flex;gap:10px;justify-content:flex-end;margin-top:14px}
+.previewActions button{min-height:44px;padding:0 20px}
+.previewBox>.hint{margin:8px 0 0;text-align:right;font-size:12px}
+
+/* Similar and already-posted deals: Title | Price | Store and age, with space and a divider between them */
+.dupNotice li a,.similar li a{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 0}
+.simTitle{flex:1 1 260px;min-width:0;padding-right:16px}
+.simPrice{flex:none;padding:0 16px;border-left:1px solid var(--md-purple-200);white-space:nowrap}
+.simMeta{flex:none;padding-left:16px;border-left:1px solid var(--md-purple-200);white-space:nowrap}
+@media(max-width:560px){.simTitle{flex-basis:100%;padding-right:0}.simPrice{padding-left:0;border-left:0}}
+.dupNotice li .simRow,.similar li .simRow{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 0;color:var(--md-color-text)}
+
+/* Post a Deal strip, version 2: five counts stacked as icon, label, number, with dividers (the redesign mock) */
+.dealStrip{gap:0;padding:14px 16px;align-items:stretch}
+.stripIcon{align-self:center;width:72px;height:72px;margin-right:16px;border-radius:18px}
+.stripIcon svg{width:34px;height:34px}
+.stripText{flex:0 1 250px;align-self:center;padding-right:18px;border-right:1px solid var(--md-neutral-200)}
+.stripText h1{font-size:24px}
+.stripText p{margin-top:6px;font-size:14px;line-height:1.45;color:var(--md-c-4f4770)}
+.stripStats{flex:1 1 auto;display:flex;align-items:stretch;justify-content:space-between;gap:0}
+.stripStats>div{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:4px 10px;text-align:center;border-right:1px solid var(--md-neutral-200)}
+.stripStats>div:last-child{border-right:1px solid var(--md-neutral-200)}
+.stripStats dt{margin:0;font-size:14px;font-weight:800;color:var(--md-c-21124b);white-space:nowrap}
+.stripStats dd{margin:0;font-size:34px;font-weight:850;line-height:1.05;color:var(--md-c-21124b)}
+.stripStatIcon{width:44px;height:44px}
+.toneOnair{background:var(--md-blue-50,var(--md-purple-50));color:var(--md-blue-600,var(--md-purple-700))}
+.stripCta{align-self:center;margin-left:16px;min-height:60px;padding:0 22px;border-radius:16px;font-size:16px;line-height:1.25;text-align:left}
+@media(max-width:1060px){.dealStrip{flex-wrap:wrap;gap:12px}.stripIcon{margin-right:0}.stripText{flex:1 1 calc(100% - 100px);border-right:0;padding-right:0}.stripStats{order:3;flex:1 1 100%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.stripStats>div,.stripStats>div:last-child{border:1px solid var(--md-neutral-200);border-radius:14px;padding:10px 8px}.stripCta{order:2;flex:1 1 100%;margin-left:0;justify-content:center}}
+@media(max-width:520px){.stripStats{grid-template-columns:repeat(2,minmax(0,1fr))}.stripStats dd{font-size:28px}}
+
+/* Post a Deal strip: three-line tagline and even spacing between the tile, text, counts and button */
+.dealStrip{gap:20px;padding:16px 20px}
+.stripIcon{margin-right:0}
+.stripText{flex:0 0 auto;padding-right:20px}
+.stripText p{margin-top:6px;white-space:nowrap}
+.stripStats>div{padding:4px 16px}
+.stripCta{margin-left:0}
+@media(max-width:1060px){.dealStrip{gap:14px}.stripText{flex:1 1 calc(100% - 100px);padding-right:0}.stripText p{white-space:normal}}
+
+/* Post a Deal strip: shorter, and every font 2pt smaller */
+.dealStrip{padding:10px 18px}
+.stripIcon{width:58px;height:58px;border-radius:16px}
+.stripIcon svg{width:28px;height:28px}
+.stripText h1{font-size:22px}
+.stripText p{margin-top:4px;font-size:12px;line-height:1.35}
+.stripStats>div{gap:0;padding:2px 14px}
+.stripStatIcon{width:36px;height:36px}
+.stripStatIcon svg{width:18px;height:18px}
+.stripStats dt{font-size:12px}
+.stripStats dd{font-size:30px;line-height:1}
+.stripCta{min-height:48px;padding:0 18px;border-radius:14px;font-size:14px;gap:8px}
+.stripCta svg{width:22px;height:22px}

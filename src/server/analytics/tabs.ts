@@ -187,7 +187,8 @@ export async function engagementTab(range: DateRange) {
     soft(db.forumPost.count({ where: { createdAt: created, status: "PUBLISHED" } }), 0),
     soft(db.forumComment.count({ where: { createdAt: created, status: "PUBLISHED" } }), 0),
     soft(db.forumPost.findMany({ where: { status: "PUBLISHED" }, orderBy: [{ viewCount: "desc" }], take: 10, select: { id: true, slug: true, title: true, viewCount: true, commentCount: true, likeCount: true } }), []),
-    db.analyticsEvent.count({ where: { createdAt: created, type: "PAGE_VIEW", path: { startsWith: "/community" } } }),
+    // Raw LIKE with a prepared pattern: Prisma's own startsWith fails on the staging MariaDB (collation error 1267) and took the whole Engagement tab down.
+    db.$queryRaw<{ n: unknown }[]>(Prisma.sql`SELECT COUNT(*) AS n FROM ${table("AnalyticsEvent")} WHERE ${col("type")} = 'PAGE_VIEW' AND ${col("path")} LIKE ${"/community%"} AND ${inRange(range)}`).then((r) => num(r[0]?.n)),
   ]);
   const totals = Object.fromEntries(types.map((t) => [t, daily.reduce((a, d) => a + (d[t] ?? 0), 0)])) as Record<string, number>;
   const info = await dealLookup(db, rows.map((r) => r.id));

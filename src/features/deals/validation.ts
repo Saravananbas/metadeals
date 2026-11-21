@@ -19,6 +19,8 @@ export const dealInputSchema = z.object({
   title: z.string().trim().min(3).max(200),
   brand: z.string().trim().max(100),
   description: z.string().trim().min(1).max(2000),
+  /** Formatted description (sanitized on save). Omitted = leave as is; it is cleared when the plain description is edited without it. */
+  descriptionHtml: z.string().max(20000).nullable().optional(),
   categoryId: z.string().min(1).max(100),
   merchantId: z.string().min(1).max(100),
   mediaId: z.string().min(1).max(100),

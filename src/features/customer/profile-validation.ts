@@ -38,6 +38,8 @@ export const submissionSchema = z.object({
   couponCode: optionalText(50),
   imageUrl: z.string().trim().max(2048).refine(isPublicHttpsUrl, "Use a public https image link.").nullable().optional(),
   /** More pictures from the product page (after the first one). Uploaded files travel separately as `images`. */
+  /** Formatted description from the editor (sanitized again on the server; the plain `description` is derived from it). */
+  descriptionHtml: z.string().max(20000).nullable().optional(),
   extraImageUrls: z.array(z.string().trim().max(2048).refine(isPublicHttpsUrl, "Use a public https image link.")).max(9).optional(),
 }).strict().superRefine((value, ctx) => {
   if (value.mrpMinor != null && value.priceMinor > value.mrpMinor) ctx.addIssue({ code: "custom", path: ["priceMinor"], message: "Deal price cannot be higher than the MRP." });

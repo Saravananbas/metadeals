@@ -134,12 +134,49 @@ export function AdminNav(props: { active?: string; onSelectTab?: (tab: "deals" |
 
   return (
     <div className={styles.adminChrome}>
-      <header className={styles.brandHeader}>
-        <div className={styles.brandRow}>
+      <div className={styles.topBar}>
+        <div className={styles.topBarInner}>
           <div className={styles.brandCluster}>
             <BrandLogo />
             <span className={styles.version}>v2.5</span>
           </div>
+        <nav ref={navigationRef} className={`${styles.navigation} ${mobileOpen ? styles.navigationOpen : ""}`} aria-label="Admin navigation">
+          <div className={styles.navigationInner}>
+            {ok("account:read") && (
+              <Link className={linkClass(pathname === "/admin")} href="/admin" onClick={closeNavigation} aria-current={pathname === "/admin" ? "page" : undefined}>
+                <Shield size={19} aria-hidden="true" /><span>Admin</span>
+              </Link>
+            )}
+            {visibleDealLinks.length > 0 && <details className={`${styles.navGroup} ${dealLinks.some((l) => l.match(pathname)) ? styles.navGroupActive : ""}`}>
+              <summary aria-label="Deals menu"><Tag size={19} aria-hidden="true" /><span>Deals</span><ChevronDown size={15} aria-hidden="true" /></summary>
+              <div className={styles.navDropdown}>
+                {visibleDealLinks.map(({ href, label, match }) => <Link key={href} href={href} onClick={closeNavigation} aria-current={match(pathname) ? "page" : undefined}>{label}</Link>)}
+              </div>
+            </details>}
+            {ok("deal:edit", "category:manage") && <details className={`${styles.navGroup} ${pathname.startsWith("/admin/categories") ? styles.navGroupActive : ""}`}>
+              <summary aria-label="Categories menu"><FolderOpen size={19} aria-hidden="true" /><span>Categories</span><ChevronDown size={15} aria-hidden="true" /></summary>
+              <div className={styles.navDropdown}><Link href="/admin/categories" onClick={closeNavigation}>Category Management</Link></div>
+            </details>}
+            {ok("deal:edit", "merchant:manage") && <details className={`${styles.navGroup} ${pathname.startsWith("/admin/merchant-websites") ? styles.navGroupActive : ""}`}>
+              <summary aria-label="Merchants menu"><Store size={19} aria-hidden="true" /><span>Merchants</span><ChevronDown size={15} aria-hidden="true" /></summary>
+              <div className={styles.navDropdown}><Link href="/admin/merchant-websites" onClick={closeNavigation}>Merchant Websites</Link></div>
+            </details>}
+            {visibleNavLinks.map(({ href, label, Icon, match }) => (
+              <Link key={href} className={linkClass(match(pathname))} href={href} onClick={closeNavigation} aria-current={match(pathname) ? "page" : undefined}>
+                <Icon size={19} aria-hidden="true" /><span>{label}</span>
+              </Link>
+            ))}
+            {visibleCommunity.length > 0 && <details className={`${styles.navGroup} ${activeCommunity ? styles.navGroupActive : ""}`}>
+              <summary aria-label="Community administration menu"><Users size={19} aria-hidden="true" /><span>Community Deals</span><ChevronDown size={15} aria-hidden="true" /></summary>
+              <div className={styles.navDropdown}>
+                {visibleCommunity.map((item) => <Link key={item.href} href={item.href} onClick={closeNavigation}>{item.label}</Link>)}
+              </div>
+            </details>}
+            <Link className={`${styles.navLink} ${styles.siteLink}`} href="/" onClick={closeNavigation} aria-label="Open the MetaDeals4U website" title="Open the MetaDeals4U website">
+              <ExternalLink size={19} aria-hidden="true" /><span>MetaDeals4U</span>
+            </Link>
+          </div>
+        </nav>
           <div className={styles.headerActions}>
             <NotificationCenter />
             <div className={styles.profileWrap} ref={profileRef}>
@@ -183,45 +220,7 @@ export function AdminNav(props: { active?: string; onSelectTab?: (tab: "deals" |
             </button>
           </div>
         </div>
-      </header>
-
-      <nav ref={navigationRef} className={`${styles.navigation} ${mobileOpen ? styles.navigationOpen : ""}`} aria-label="Admin navigation">
-        <div className={styles.navigationInner}>
-          {ok("account:read") && (
-            <Link className={linkClass(pathname === "/admin")} href="/admin" onClick={closeNavigation} aria-current={pathname === "/admin" ? "page" : undefined}>
-              <Shield size={19} aria-hidden="true" /><span>Admin</span>
-            </Link>
-          )}
-          {visibleDealLinks.length > 0 && <details className={`${styles.navGroup} ${dealLinks.some((l) => l.match(pathname)) ? styles.navGroupActive : ""}`}>
-            <summary aria-label="Deals menu"><Tag size={19} aria-hidden="true" /><span>Deals</span><ChevronDown size={15} aria-hidden="true" /></summary>
-            <div className={styles.navDropdown}>
-              {visibleDealLinks.map(({ href, label, match }) => <Link key={href} href={href} onClick={closeNavigation} aria-current={match(pathname) ? "page" : undefined}>{label}</Link>)}
-            </div>
-          </details>}
-          {ok("deal:edit", "category:manage") && <details className={`${styles.navGroup} ${pathname.startsWith("/admin/categories") ? styles.navGroupActive : ""}`}>
-            <summary aria-label="Categories menu"><FolderOpen size={19} aria-hidden="true" /><span>Categories</span><ChevronDown size={15} aria-hidden="true" /></summary>
-            <div className={styles.navDropdown}><Link href="/admin/categories" onClick={closeNavigation}>Category Management</Link></div>
-          </details>}
-          {ok("deal:edit", "merchant:manage") && <details className={`${styles.navGroup} ${pathname.startsWith("/admin/merchant-websites") ? styles.navGroupActive : ""}`}>
-            <summary aria-label="Merchants menu"><Store size={19} aria-hidden="true" /><span>Merchants</span><ChevronDown size={15} aria-hidden="true" /></summary>
-            <div className={styles.navDropdown}><Link href="/admin/merchant-websites" onClick={closeNavigation}>Merchant Websites</Link></div>
-          </details>}
-          {visibleNavLinks.map(({ href, label, Icon, match }) => (
-            <Link key={href} className={linkClass(match(pathname))} href={href} onClick={closeNavigation} aria-current={match(pathname) ? "page" : undefined}>
-              <Icon size={19} aria-hidden="true" /><span>{label}</span>
-            </Link>
-          ))}
-          {visibleCommunity.length > 0 && <details className={`${styles.navGroup} ${activeCommunity ? styles.navGroupActive : ""}`}>
-            <summary aria-label="Community administration menu"><Users size={19} aria-hidden="true" /><span>Community Deals</span><ChevronDown size={15} aria-hidden="true" /></summary>
-            <div className={styles.navDropdown}>
-              {visibleCommunity.map((item) => <Link key={item.href} href={item.href} onClick={closeNavigation}>{item.label}</Link>)}
-            </div>
-          </details>}
-          <Link className={styles.navLink} href="/" onClick={closeNavigation}>
-            <ExternalLink size={19} aria-hidden="true" /><span>MetaDeals4U</span>
-          </Link>
-        </div>
-      </nav>
+      </div>
       {dealLinks.some((l) => l.match(pathname)) && (
         <div className={styles.dealTabs} role="tablist" aria-label="Deals sections">
           {visibleDealLinks.map(({ href, label, Icon, match }) => (

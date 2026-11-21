@@ -1,6 +1,7 @@
 import "server-only";
 import { randomBytes } from "node:crypto";
 import { z } from "zod";
+import type { Prisma } from "@/generated/prisma/client";
 import { getDatabase } from "@/server/db/client";
 import { canCreateDealsDirectly, canReviewSubmissions } from "@/server/auth/permissions";
 import { DealError, saveDeal } from "@/server/deals/service";
@@ -52,6 +53,27 @@ export async function getSubmissionImage(actor: ReviewActor, id: string, n = 0) 
   return { bytes: await readImage(row.imageProvider, row.imageKey), mimeType: row.imageMime };
 }
 
+const hostOf = (raw: string) => { try { return new URL(raw.startsWith("http") ? raw : `https://${raw}`).hostname.toLowerCase().replace(/^www\./, ""); } catch { return ""; } };
+
+/**
+ * The review form can pick a store from the Merchant Website Directory ("dir:<id>"). If a Merchant already uses that website it is used;
+ * otherwise one is created from the directory entry (its website is also the only host buy links may go to). Only administrators and editors can do this.
+ */
+async function resolveMerchantId(tx: Prisma.TransactionClient, actor: ReviewActor, raw: string): Promise<{ id: string; created: boolean }> {
+  if (!raw.startsWith("dir:")) return { id: raw, created: false };
+  if (!canCreateDealsDirectly(actor)) throw new DealError("Only administrators and editors can add a store from the directory.", 403);
+  const entry = await tx.merchantWebsiteDirectory.findUnique({ where: { id: raw.slice(4) } });
+  if (!entry || entry.status !== "ACTIVE") throw new DealError("That directory store is not available.", 404);
+  const host = hostOf(entry.domain || entry.websiteUrl);
+  if (!host) throw new DealError("That directory store has no website.", 409);
+  const existing = (await tx.merchant.findMany({ select: { id: true, websiteUrl: true } })).find((m) => hostOf(m.websiteUrl) === host);
+  if (existing) return { id: existing.id, created: false };
+  const base = entry.name.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 90) || "store";
+  const slug = (await tx.merchant.findUnique({ where: { slug: base }, select: { id: true } })) ? `${base}-${randomBytes(2).toString("hex")}` : base;
+  const created = await tx.merchant.create({ data: { slug, name: entry.name.slice(0, 100), websiteUrl: entry.websiteUrl.slice(0, 2048), affiliateHosts: [host] } });
+  return { id: created.id, created: true };
+}
+
 export const approveSchema = z.object({
   version: z.number().int().positive(),
   categoryId: z.string().min(1).max(100),
@@ -82,6 +104,7 @@ export async function approveSubmission(actor: ReviewActor, id: string, raw: unk
     if (submission.status !== "PENDING_REVIEW") throw new DealError("Only a submission awaiting review can be approved.", 409);
     if (submission.version !== input.version) throw new DealError("This submission changed. Reload first.", 409);
 
+    const store = await resolveMerchantId(tx, actor, input.merchantId);
     const media = await tx.media.create({
       data: {
         storageKey: submission.imageKey, provider: submission.imageProvider, mimeType: submission.imageMime, byteSize: submission.imageBytes,
@@ -96,7 +119,7 @@ export async function approveSubmission(actor: ReviewActor, id: string, raw: unk
       galleryMediaIds.push(m.id);
     }
     const deal = await saveDeal(tx, actor, {
-      slug: slugFor(input.title), title: input.title, brand: input.brand, description: input.description, categoryId: input.categoryId, merchantId: input.merchantId,
+      slug: slugFor(input.title), title: input.title, brand: input.brand, description: input.description, descriptionHtml: submission.descriptionHtml && input.description === submission.description ? submission.descriptionHtml : null, categoryId: input.categoryId, merchantId: store.id,
       mediaId: media.id, ...(galleryMediaIds.length ? { galleryMediaIds } : {}), mrpMinor: input.mrpMinor, priceMinor: input.priceMinor, currency: "INR", rating: null, reviewCount: null, ratingSource: null,
       productUrl: input.productUrl, affiliateUrl: null, couponCode: input.couponCode || null, status: "DRAFT", publishedAt: null, startsAt: null, expiresAt: null,
       featured: false, trending: false, options: [],
@@ -107,7 +130,7 @@ export async function approveSubmission(actor: ReviewActor, id: string, raw: unk
       data: { status: "APPROVED", dealId: deal.id, reviewedById: actor.id, reviewedAt: new Date(), rejectionReason: null, version: { increment: 1 } },
     });
     if (changed.count !== 1) throw new DealError("Another reviewer just handled this submission.", 409);
-    await tx.auditEvent.create({ data: { actorId: actor.id, action: "submission.approved", targetId: id, success: true, metadata: { dealId: deal.id, customerId: submission.customerId } } });
+    await tx.auditEvent.create({ data: { actorId: actor.id, action: "submission.approved", targetId: id, success: true, metadata: { dealId: deal.id, customerId: submission.customerId, merchantId: store.id, merchantCreatedFromDirectory: store.created } } });
     return { submissionId: id, dealId: deal.id };
   });
 }

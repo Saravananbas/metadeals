@@ -14,6 +14,8 @@ import {
   Copy,
   Check,
   ExternalLink,
+  FileText,
+  ShoppingCart,
   Eye,
   ThumbsUp,
   ThumbsDown,
@@ -25,8 +27,6 @@ import {
 import type { Deal } from "@/features/deals/types";
 import { formatINR, getSavings } from "@/features/deals/pricing";
 import { StoreLogo } from "./StoreLogo";
-import dynamic from "next/dynamic";
-const DealCommentsDialog = dynamic(() => import("@/components/deals/DealCommentsDialog").then((m) => m.DealCommentsDialog));
 
 const CARD_WIDTHS = [240, 320, 400, 480, 640];
 
@@ -129,7 +129,6 @@ export function DealCard({
   const viewCount = deal.viewCount && deal.viewCount > 0 ? deal.viewCount : 0;
   const [shareCount, setShareCount] = useState<number>(deal.shareCount || 0);
   const [copiedShare, setCopiedShare] = useState(false);
-  const [commentsOpen, setCommentsOpen] = useState(false);
 
   const handleCopyCoupon = (e: React.MouseEvent, code: string) => {
     e.stopPropagation();
@@ -348,7 +347,7 @@ export function DealCard({
             aria-label={`View deal details for ${deal.name}`}
             onClick={(e) => e.stopPropagation()}
           >
-            Post Details
+            <FileText size={16} aria-hidden="true" /> Post Details
           </a>
           <a
             href={`/go/${deal.id}`}
@@ -358,7 +357,7 @@ export function DealCard({
             aria-label={`Buy ${deal.name} now`}
             onClick={(e) => e.stopPropagation()}
           >
-            Buy Now <ExternalLink size={12} />
+            <ShoppingCart size={16} aria-hidden="true" /> Buy Now <span className="deal-btn-divider" aria-hidden="true" /> <ExternalLink size={15} aria-hidden="true" />
           </a>
         </div>
 
@@ -371,7 +370,7 @@ export function DealCard({
 
           <button
             type="button"
-            className={`deal-social-btn ${liked ? "deal-social-liked" : ""}`}
+            className={`deal-social-btn deal-social-like ${liked ? "deal-social-liked" : ""}`}
             onClick={handleToggleLike}
             aria-pressed={liked}
             aria-label={`${liked ? "Remove your like" : "Like this deal"}${likes ? `, ${likes} likes` : ""}`}
@@ -384,7 +383,7 @@ export function DealCard({
           <span style={{ position: "relative", display: "inline-flex" }}>
             <button
               type="button"
-              className={`deal-social-btn ${vote === -1 ? "deal-social-liked" : ""}`}
+              className={`deal-social-btn deal-social-dislike ${vote === -1 ? "deal-social-liked" : ""}`}
               onClick={handleDislike}
               aria-haspopup="true"
               aria-expanded={dislikeOpen}
@@ -398,7 +397,7 @@ export function DealCard({
 
           <button
             type="button"
-            className="deal-social-btn"
+            className="deal-social-btn deal-social-share"
             onClick={handleShare}
             aria-label={`${copiedShare ? "Link copied" : "Share this deal"}${shareCount ? `, shared ${shareCount} times` : ""}`}
             title={copiedShare ? "Link copied to clipboard!" : "Share deal"}
@@ -407,31 +406,22 @@ export function DealCard({
             {shareCount > 0 && <span>{formatCompactNumber(shareCount)}</span>}
           </button>
 
-          <button
-            type="button"
-            className="deal-social-btn"
-            onClick={(e) => {
-              e.stopPropagation();
-              trackEvent("COMMENT", deal.slug || deal.id);
-              setCommentsOpen(true);
-            }}
-            aria-label={`View comments for ${deal.name}${deal.commentCount ? ` (${deal.commentCount})` : ""}`}
-            title={deal.commentCount ? `${deal.commentCount} comment${deal.commentCount === 1 ? "" : "s"}` : "View comments"}
+          <a
+            className="deal-social-btn deal-social-comment"
+            href={`/deal/${encodeURIComponent(deal.slug || deal.id)}#comments`}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => { e.stopPropagation(); trackEvent("COMMENT", deal.slug || deal.id); }}
+            aria-label={`Open the comments for ${deal.name} in a new tab${deal.commentCount ? ` (${deal.commentCount})` : ""}`}
+            title={deal.commentCount ? `${deal.commentCount} comment${deal.commentCount === 1 ? "" : "s"}` : "Comments"}
           >
             <MessageCircle size={13} />
             {deal.commentCount ? <span>{formatCompactNumber(deal.commentCount)}</span> : null}
-          </button>
+          </a>
         </div>
         {voteNote && <p role="status" style={{ margin: "6px 0 0", fontSize: 12, color: "var(--md-color-text-secondary)" }}>{voteNote} — <a href="/account" style={{ color: "var(--md-purple-700)", fontWeight: 700 }}>Sign in</a></p>}
       </div>
     </article>
-    {commentsOpen && (
-      <DealCommentsDialog
-        dealIdOrSlug={deal.slug || deal.id}
-        dealTitle={deal.name}
-        onClose={() => setCommentsOpen(false)}
-      />
-    )}
     </>
   );
 }

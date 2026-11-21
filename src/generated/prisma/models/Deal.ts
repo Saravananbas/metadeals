@@ -52,6 +52,7 @@ export type DealMinAggregateOutputType = {
   title: string | null
   brand: string | null
   description: string | null
+  descriptionHtml: string | null
   categoryId: string | null
   merchantId: string | null
   mediaId: string | null
@@ -90,6 +91,7 @@ export type DealMaxAggregateOutputType = {
   title: string | null
   brand: string | null
   description: string | null
+  descriptionHtml: string | null
   categoryId: string | null
   merchantId: string | null
   mediaId: string | null
@@ -128,6 +130,7 @@ export type DealCountAggregateOutputType = {
   title: number
   brand: number
   description: number
+  descriptionHtml: number
   categoryId: number
   merchantId: number
   mediaId: number
@@ -188,6 +191,7 @@ export type DealMinAggregateInputType = {
   title?: true
   brand?: true
   description?: true
+  descriptionHtml?: true
   categoryId?: true
   merchantId?: true
   mediaId?: true
@@ -226,6 +230,7 @@ export type DealMaxAggregateInputType = {
   title?: true
   brand?: true
   description?: true
+  descriptionHtml?: true
   categoryId?: true
   merchantId?: true
   mediaId?: true
@@ -264,6 +269,7 @@ export type DealCountAggregateInputType = {
   title?: true
   brand?: true
   description?: true
+  descriptionHtml?: true
   categoryId?: true
   merchantId?: true
   mediaId?: true
@@ -389,6 +395,7 @@ export type DealGroupByOutputType = {
   title: string
   brand: string
   description: string
+  descriptionHtml: string | null
   categoryId: string
   merchantId: string
   mediaId: string
@@ -450,6 +457,7 @@ export type DealWhereInput = {
   title?: Prisma.StringFilter<"Deal"> | string
   brand?: Prisma.StringFilter<"Deal"> | string
   description?: Prisma.StringFilter<"Deal"> | string
+  descriptionHtml?: Prisma.StringNullableFilter<"Deal"> | string | null
   categoryId?: Prisma.StringFilter<"Deal"> | string
   merchantId?: Prisma.StringFilter<"Deal"> | string
   mediaId?: Prisma.StringFilter<"Deal"> | string
@@ -503,6 +511,7 @@ export type DealOrderByWithRelationInput = {
   title?: Prisma.SortOrder
   brand?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  descriptionHtml?: Prisma.SortOrderInput | Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   merchantId?: Prisma.SortOrder
   mediaId?: Prisma.SortOrder
@@ -559,6 +568,7 @@ export type DealWhereUniqueInput = Prisma.AtLeast<{
   title?: Prisma.StringFilter<"Deal"> | string
   brand?: Prisma.StringFilter<"Deal"> | string
   description?: Prisma.StringFilter<"Deal"> | string
+  descriptionHtml?: Prisma.StringNullableFilter<"Deal"> | string | null
   categoryId?: Prisma.StringFilter<"Deal"> | string
   merchantId?: Prisma.StringFilter<"Deal"> | string
   mediaId?: Prisma.StringFilter<"Deal"> | string
@@ -612,6 +622,7 @@ export type DealOrderByWithAggregationInput = {
   title?: Prisma.SortOrder
   brand?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  descriptionHtml?: Prisma.SortOrderInput | Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   merchantId?: Prisma.SortOrder
   mediaId?: Prisma.SortOrder
@@ -658,6 +669,7 @@ export type DealScalarWhereWithAggregatesInput = {
   title?: Prisma.StringWithAggregatesFilter<"Deal"> | string
   brand?: Prisma.StringWithAggregatesFilter<"Deal"> | string
   description?: Prisma.StringWithAggregatesFilter<"Deal"> | string
+  descriptionHtml?: Prisma.StringNullableWithAggregatesFilter<"Deal"> | string | null
   categoryId?: Prisma.StringWithAggregatesFilter<"Deal"> | string
   merchantId?: Prisma.StringWithAggregatesFilter<"Deal"> | string
   mediaId?: Prisma.StringWithAggregatesFilter<"Deal"> | string
@@ -696,6 +708,7 @@ export type DealCreateInput = {
   title: string
   brand: string
   description: string
+  descriptionHtml?: string | null
   mrpMinor: number
   priceMinor: number
   currency?: string
@@ -744,6 +757,7 @@ export type DealUncheckedCreateInput = {
   title: string
   brand: string
   description: string
+  descriptionHtml?: string | null
   categoryId: string
   merchantId: string
   mediaId: string
@@ -792,6 +806,7 @@ export type DealUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mrpMinor?: Prisma.IntFieldUpdateOperationsInput | number
   priceMinor?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -840,6 +855,7 @@ export type DealUncheckedUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   merchantId?: Prisma.StringFieldUpdateOperationsInput | string
   mediaId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -888,6 +904,7 @@ export type DealCreateManyInput = {
   title: string
   brand: string
   description: string
+  descriptionHtml?: string | null
   categoryId: string
   merchantId: string
   mediaId: string
@@ -926,6 +943,7 @@ export type DealUpdateManyMutationInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mrpMinor?: Prisma.IntFieldUpdateOperationsInput | number
   priceMinor?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -959,6 +977,7 @@ export type DealUncheckedUpdateManyInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   merchantId?: Prisma.StringFieldUpdateOperationsInput | string
   mediaId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1007,6 +1026,7 @@ export type DealCountOrderByAggregateInput = {
   title?: Prisma.SortOrder
   brand?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  descriptionHtml?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   merchantId?: Prisma.SortOrder
   mediaId?: Prisma.SortOrder
@@ -1055,6 +1075,7 @@ export type DealMaxOrderByAggregateInput = {
   title?: Prisma.SortOrder
   brand?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  descriptionHtml?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   merchantId?: Prisma.SortOrder
   mediaId?: Prisma.SortOrder
@@ -1093,6 +1114,7 @@ export type DealMinOrderByAggregateInput = {
   title?: Prisma.SortOrder
   brand?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  descriptionHtml?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   merchantId?: Prisma.SortOrder
   mediaId?: Prisma.SortOrder
@@ -1519,6 +1541,7 @@ export type DealCreateWithoutCreatedByInput = {
   title: string
   brand: string
   description: string
+  descriptionHtml?: string | null
   mrpMinor: number
   priceMinor: number
   currency?: string
@@ -1566,6 +1589,7 @@ export type DealUncheckedCreateWithoutCreatedByInput = {
   title: string
   brand: string
   description: string
+  descriptionHtml?: string | null
   categoryId: string
   merchantId: string
   mediaId: string
@@ -1623,6 +1647,7 @@ export type DealCreateWithoutUpdatedByInput = {
   title: string
   brand: string
   description: string
+  descriptionHtml?: string | null
   mrpMinor: number
   priceMinor: number
   currency?: string
@@ -1670,6 +1695,7 @@ export type DealUncheckedCreateWithoutUpdatedByInput = {
   title: string
   brand: string
   description: string
+  descriptionHtml?: string | null
   categoryId: string
   merchantId: string
   mediaId: string
@@ -1746,6 +1772,7 @@ export type DealScalarWhereInput = {
   title?: Prisma.StringFilter<"Deal"> | string
   brand?: Prisma.StringFilter<"Deal"> | string
   description?: Prisma.StringFilter<"Deal"> | string
+  descriptionHtml?: Prisma.StringNullableFilter<"Deal"> | string | null
   categoryId?: Prisma.StringFilter<"Deal"> | string
   merchantId?: Prisma.StringFilter<"Deal"> | string
   mediaId?: Prisma.StringFilter<"Deal"> | string
@@ -1800,6 +1827,7 @@ export type DealCreateWithoutCategoryInput = {
   title: string
   brand: string
   description: string
+  descriptionHtml?: string | null
   mrpMinor: number
   priceMinor: number
   currency?: string
@@ -1847,6 +1875,7 @@ export type DealUncheckedCreateWithoutCategoryInput = {
   title: string
   brand: string
   description: string
+  descriptionHtml?: string | null
   merchantId: string
   mediaId: string
   mrpMinor: number
@@ -1920,6 +1949,7 @@ export type DealCreateWithoutMerchantInput = {
   title: string
   brand: string
   description: string
+  descriptionHtml?: string | null
   mrpMinor: number
   priceMinor: number
   currency?: string
@@ -1967,6 +1997,7 @@ export type DealUncheckedCreateWithoutMerchantInput = {
   title: string
   brand: string
   description: string
+  descriptionHtml?: string | null
   categoryId: string
   mediaId: string
   mrpMinor: number
@@ -2040,6 +2071,7 @@ export type DealCreateWithoutMediaInput = {
   title: string
   brand: string
   description: string
+  descriptionHtml?: string | null
   mrpMinor: number
   priceMinor: number
   currency?: string
@@ -2087,6 +2119,7 @@ export type DealUncheckedCreateWithoutMediaInput = {
   title: string
   brand: string
   description: string
+  descriptionHtml?: string | null
   categoryId: string
   merchantId: string
   mrpMinor: number
@@ -2160,6 +2193,7 @@ export type DealCreateWithoutOptionsInput = {
   title: string
   brand: string
   description: string
+  descriptionHtml?: string | null
   mrpMinor: number
   priceMinor: number
   currency?: string
@@ -2207,6 +2241,7 @@ export type DealUncheckedCreateWithoutOptionsInput = {
   title: string
   brand: string
   description: string
+  descriptionHtml?: string | null
   categoryId: string
   merchantId: string
   mediaId: string
@@ -2270,6 +2305,7 @@ export type DealUpdateWithoutOptionsInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mrpMinor?: Prisma.IntFieldUpdateOperationsInput | number
   priceMinor?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2317,6 +2353,7 @@ export type DealUncheckedUpdateWithoutOptionsInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   merchantId?: Prisma.StringFieldUpdateOperationsInput | string
   mediaId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2364,6 +2401,7 @@ export type DealCreateWithoutGalleryImagesInput = {
   title: string
   brand: string
   description: string
+  descriptionHtml?: string | null
   mrpMinor: number
   priceMinor: number
   currency?: string
@@ -2411,6 +2449,7 @@ export type DealUncheckedCreateWithoutGalleryImagesInput = {
   title: string
   brand: string
   description: string
+  descriptionHtml?: string | null
   categoryId: string
   merchantId: string
   mediaId: string
@@ -2474,6 +2513,7 @@ export type DealUpdateWithoutGalleryImagesInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mrpMinor?: Prisma.IntFieldUpdateOperationsInput | number
   priceMinor?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2521,6 +2561,7 @@ export type DealUncheckedUpdateWithoutGalleryImagesInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   merchantId?: Prisma.StringFieldUpdateOperationsInput | string
   mediaId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2568,6 +2609,7 @@ export type DealCreateWithoutCandidatesInput = {
   title: string
   brand: string
   description: string
+  descriptionHtml?: string | null
   mrpMinor: number
   priceMinor: number
   currency?: string
@@ -2615,6 +2657,7 @@ export type DealUncheckedCreateWithoutCandidatesInput = {
   title: string
   brand: string
   description: string
+  descriptionHtml?: string | null
   categoryId: string
   merchantId: string
   mediaId: string
@@ -2678,6 +2721,7 @@ export type DealUpdateWithoutCandidatesInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mrpMinor?: Prisma.IntFieldUpdateOperationsInput | number
   priceMinor?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2725,6 +2769,7 @@ export type DealUncheckedUpdateWithoutCandidatesInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   merchantId?: Prisma.StringFieldUpdateOperationsInput | string
   mediaId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2772,6 +2817,7 @@ export type DealCreateWithoutPriceObservationsInput = {
   title: string
   brand: string
   description: string
+  descriptionHtml?: string | null
   mrpMinor: number
   priceMinor: number
   currency?: string
@@ -2819,6 +2865,7 @@ export type DealUncheckedCreateWithoutPriceObservationsInput = {
   title: string
   brand: string
   description: string
+  descriptionHtml?: string | null
   categoryId: string
   merchantId: string
   mediaId: string
@@ -2882,6 +2929,7 @@ export type DealUpdateWithoutPriceObservationsInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mrpMinor?: Prisma.IntFieldUpdateOperationsInput | number
   priceMinor?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2929,6 +2977,7 @@ export type DealUncheckedUpdateWithoutPriceObservationsInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   merchantId?: Prisma.StringFieldUpdateOperationsInput | string
   mediaId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2976,6 +3025,7 @@ export type DealCreateWithoutVideoReviewsInput = {
   title: string
   brand: string
   description: string
+  descriptionHtml?: string | null
   mrpMinor: number
   priceMinor: number
   currency?: string
@@ -3023,6 +3073,7 @@ export type DealUncheckedCreateWithoutVideoReviewsInput = {
   title: string
   brand: string
   description: string
+  descriptionHtml?: string | null
   categoryId: string
   merchantId: string
   mediaId: string
@@ -3086,6 +3137,7 @@ export type DealUpdateWithoutVideoReviewsInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mrpMinor?: Prisma.IntFieldUpdateOperationsInput | number
   priceMinor?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -3133,6 +3185,7 @@ export type DealUncheckedUpdateWithoutVideoReviewsInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   merchantId?: Prisma.StringFieldUpdateOperationsInput | string
   mediaId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -3180,6 +3233,7 @@ export type DealCreateWithoutCommentsInput = {
   title: string
   brand: string
   description: string
+  descriptionHtml?: string | null
   mrpMinor: number
   priceMinor: number
   currency?: string
@@ -3227,6 +3281,7 @@ export type DealUncheckedCreateWithoutCommentsInput = {
   title: string
   brand: string
   description: string
+  descriptionHtml?: string | null
   categoryId: string
   merchantId: string
   mediaId: string
@@ -3290,6 +3345,7 @@ export type DealUpdateWithoutCommentsInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mrpMinor?: Prisma.IntFieldUpdateOperationsInput | number
   priceMinor?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -3337,6 +3393,7 @@ export type DealUncheckedUpdateWithoutCommentsInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   merchantId?: Prisma.StringFieldUpdateOperationsInput | string
   mediaId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -3384,6 +3441,7 @@ export type DealCreateWithoutCommunitySubmissionInput = {
   title: string
   brand: string
   description: string
+  descriptionHtml?: string | null
   mrpMinor: number
   priceMinor: number
   currency?: string
@@ -3431,6 +3489,7 @@ export type DealUncheckedCreateWithoutCommunitySubmissionInput = {
   title: string
   brand: string
   description: string
+  descriptionHtml?: string | null
   categoryId: string
   merchantId: string
   mediaId: string
@@ -3494,6 +3553,7 @@ export type DealUpdateWithoutCommunitySubmissionInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mrpMinor?: Prisma.IntFieldUpdateOperationsInput | number
   priceMinor?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -3541,6 +3601,7 @@ export type DealUncheckedUpdateWithoutCommunitySubmissionInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   merchantId?: Prisma.StringFieldUpdateOperationsInput | string
   mediaId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -3588,6 +3649,7 @@ export type DealCreateWithoutSavedByInput = {
   title: string
   brand: string
   description: string
+  descriptionHtml?: string | null
   mrpMinor: number
   priceMinor: number
   currency?: string
@@ -3635,6 +3697,7 @@ export type DealUncheckedCreateWithoutSavedByInput = {
   title: string
   brand: string
   description: string
+  descriptionHtml?: string | null
   categoryId: string
   merchantId: string
   mediaId: string
@@ -3698,6 +3761,7 @@ export type DealUpdateWithoutSavedByInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mrpMinor?: Prisma.IntFieldUpdateOperationsInput | number
   priceMinor?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -3745,6 +3809,7 @@ export type DealUncheckedUpdateWithoutSavedByInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   merchantId?: Prisma.StringFieldUpdateOperationsInput | string
   mediaId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -3792,6 +3857,7 @@ export type DealCreateWithoutVotesInput = {
   title: string
   brand: string
   description: string
+  descriptionHtml?: string | null
   mrpMinor: number
   priceMinor: number
   currency?: string
@@ -3839,6 +3905,7 @@ export type DealUncheckedCreateWithoutVotesInput = {
   title: string
   brand: string
   description: string
+  descriptionHtml?: string | null
   categoryId: string
   merchantId: string
   mediaId: string
@@ -3902,6 +3969,7 @@ export type DealUpdateWithoutVotesInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mrpMinor?: Prisma.IntFieldUpdateOperationsInput | number
   priceMinor?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -3949,6 +4017,7 @@ export type DealUncheckedUpdateWithoutVotesInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   merchantId?: Prisma.StringFieldUpdateOperationsInput | string
   mediaId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -3996,6 +4065,7 @@ export type DealCreateWithoutNotesInput = {
   title: string
   brand: string
   description: string
+  descriptionHtml?: string | null
   mrpMinor: number
   priceMinor: number
   currency?: string
@@ -4043,6 +4113,7 @@ export type DealUncheckedCreateWithoutNotesInput = {
   title: string
   brand: string
   description: string
+  descriptionHtml?: string | null
   categoryId: string
   merchantId: string
   mediaId: string
@@ -4106,6 +4177,7 @@ export type DealUpdateWithoutNotesInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mrpMinor?: Prisma.IntFieldUpdateOperationsInput | number
   priceMinor?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -4153,6 +4225,7 @@ export type DealUncheckedUpdateWithoutNotesInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   merchantId?: Prisma.StringFieldUpdateOperationsInput | string
   mediaId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -4200,6 +4273,7 @@ export type DealCreateManyCreatedByInput = {
   title: string
   brand: string
   description: string
+  descriptionHtml?: string | null
   categoryId: string
   merchantId: string
   mediaId: string
@@ -4237,6 +4311,7 @@ export type DealCreateManyUpdatedByInput = {
   title: string
   brand: string
   description: string
+  descriptionHtml?: string | null
   categoryId: string
   merchantId: string
   mediaId: string
@@ -4274,6 +4349,7 @@ export type DealUpdateWithoutCreatedByInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mrpMinor?: Prisma.IntFieldUpdateOperationsInput | number
   priceMinor?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -4321,6 +4397,7 @@ export type DealUncheckedUpdateWithoutCreatedByInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   merchantId?: Prisma.StringFieldUpdateOperationsInput | string
   mediaId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -4368,6 +4445,7 @@ export type DealUncheckedUpdateManyWithoutCreatedByInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   merchantId?: Prisma.StringFieldUpdateOperationsInput | string
   mediaId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -4405,6 +4483,7 @@ export type DealUpdateWithoutUpdatedByInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mrpMinor?: Prisma.IntFieldUpdateOperationsInput | number
   priceMinor?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -4452,6 +4531,7 @@ export type DealUncheckedUpdateWithoutUpdatedByInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   merchantId?: Prisma.StringFieldUpdateOperationsInput | string
   mediaId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -4499,6 +4579,7 @@ export type DealUncheckedUpdateManyWithoutUpdatedByInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   merchantId?: Prisma.StringFieldUpdateOperationsInput | string
   mediaId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -4536,6 +4617,7 @@ export type DealCreateManyCategoryInput = {
   title: string
   brand: string
   description: string
+  descriptionHtml?: string | null
   merchantId: string
   mediaId: string
   mrpMinor: number
@@ -4573,6 +4655,7 @@ export type DealUpdateWithoutCategoryInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mrpMinor?: Prisma.IntFieldUpdateOperationsInput | number
   priceMinor?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -4620,6 +4703,7 @@ export type DealUncheckedUpdateWithoutCategoryInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   merchantId?: Prisma.StringFieldUpdateOperationsInput | string
   mediaId?: Prisma.StringFieldUpdateOperationsInput | string
   mrpMinor?: Prisma.IntFieldUpdateOperationsInput | number
@@ -4667,6 +4751,7 @@ export type DealUncheckedUpdateManyWithoutCategoryInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   merchantId?: Prisma.StringFieldUpdateOperationsInput | string
   mediaId?: Prisma.StringFieldUpdateOperationsInput | string
   mrpMinor?: Prisma.IntFieldUpdateOperationsInput | number
@@ -4704,6 +4789,7 @@ export type DealCreateManyMerchantInput = {
   title: string
   brand: string
   description: string
+  descriptionHtml?: string | null
   categoryId: string
   mediaId: string
   mrpMinor: number
@@ -4741,6 +4827,7 @@ export type DealUpdateWithoutMerchantInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mrpMinor?: Prisma.IntFieldUpdateOperationsInput | number
   priceMinor?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -4788,6 +4875,7 @@ export type DealUncheckedUpdateWithoutMerchantInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   mediaId?: Prisma.StringFieldUpdateOperationsInput | string
   mrpMinor?: Prisma.IntFieldUpdateOperationsInput | number
@@ -4835,6 +4923,7 @@ export type DealUncheckedUpdateManyWithoutMerchantInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   mediaId?: Prisma.StringFieldUpdateOperationsInput | string
   mrpMinor?: Prisma.IntFieldUpdateOperationsInput | number
@@ -4872,6 +4961,7 @@ export type DealCreateManyMediaInput = {
   title: string
   brand: string
   description: string
+  descriptionHtml?: string | null
   categoryId: string
   merchantId: string
   mrpMinor: number
@@ -4909,6 +4999,7 @@ export type DealUpdateWithoutMediaInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mrpMinor?: Prisma.IntFieldUpdateOperationsInput | number
   priceMinor?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -4956,6 +5047,7 @@ export type DealUncheckedUpdateWithoutMediaInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   merchantId?: Prisma.StringFieldUpdateOperationsInput | string
   mrpMinor?: Prisma.IntFieldUpdateOperationsInput | number
@@ -5003,6 +5095,7 @@ export type DealUncheckedUpdateManyWithoutMediaInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   merchantId?: Prisma.StringFieldUpdateOperationsInput | string
   mrpMinor?: Prisma.IntFieldUpdateOperationsInput | number
@@ -5143,6 +5236,7 @@ export type DealSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   title?: boolean
   brand?: boolean
   description?: boolean
+  descriptionHtml?: boolean
   categoryId?: boolean
   merchantId?: boolean
   mediaId?: boolean
@@ -5197,6 +5291,7 @@ export type DealSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   title?: boolean
   brand?: boolean
   description?: boolean
+  descriptionHtml?: boolean
   categoryId?: boolean
   merchantId?: boolean
   mediaId?: boolean
@@ -5240,6 +5335,7 @@ export type DealSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   title?: boolean
   brand?: boolean
   description?: boolean
+  descriptionHtml?: boolean
   categoryId?: boolean
   merchantId?: boolean
   mediaId?: boolean
@@ -5283,6 +5379,7 @@ export type DealSelectScalar = {
   title?: boolean
   brand?: boolean
   description?: boolean
+  descriptionHtml?: boolean
   categoryId?: boolean
   merchantId?: boolean
   mediaId?: boolean
@@ -5315,7 +5412,7 @@ export type DealSelectScalar = {
   youtubeLastSearchedAt?: boolean
 }
 
-export type DealOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "title" | "brand" | "description" | "categoryId" | "merchantId" | "mediaId" | "mrpMinor" | "priceMinor" | "currency" | "rating" | "reviewCount" | "viewCount" | "shareCount" | "ratingSource" | "productUrl" | "affiliateUrl" | "couponCode" | "editorNotes" | "editorNotesBy" | "status" | "publishedAt" | "startsAt" | "expiresAt" | "featured" | "trending" | "everPublished" | "version" | "createdById" | "updatedById" | "createdAt" | "updatedAt" | "youtubeReviewStatus" | "youtubeLastSearchedAt", ExtArgs["result"]["deal"]>
+export type DealOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "title" | "brand" | "description" | "descriptionHtml" | "categoryId" | "merchantId" | "mediaId" | "mrpMinor" | "priceMinor" | "currency" | "rating" | "reviewCount" | "viewCount" | "shareCount" | "ratingSource" | "productUrl" | "affiliateUrl" | "couponCode" | "editorNotes" | "editorNotesBy" | "status" | "publishedAt" | "startsAt" | "expiresAt" | "featured" | "trending" | "everPublished" | "version" | "createdById" | "updatedById" | "createdAt" | "updatedAt" | "youtubeReviewStatus" | "youtubeLastSearchedAt", ExtArgs["result"]["deal"]>
 export type DealInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   merchant?: boolean | Prisma.MerchantDefaultArgs<ExtArgs>
@@ -5374,6 +5471,10 @@ export type $DealPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     title: string
     brand: string
     description: string
+    /**
+     * Formatted version of the description (sanitized HTML); `description` stays the plain text used by cards, search and meta tags.
+     */
+    descriptionHtml: string | null
     categoryId: string
     merchantId: string
     mediaId: string
@@ -5850,6 +5951,7 @@ export interface DealFieldRefs {
   readonly title: Prisma.FieldRef<"Deal", 'String'>
   readonly brand: Prisma.FieldRef<"Deal", 'String'>
   readonly description: Prisma.FieldRef<"Deal", 'String'>
+  readonly descriptionHtml: Prisma.FieldRef<"Deal", 'String'>
   readonly categoryId: Prisma.FieldRef<"Deal", 'String'>
   readonly merchantId: Prisma.FieldRef<"Deal", 'String'>
   readonly mediaId: Prisma.FieldRef<"Deal", 'String'>

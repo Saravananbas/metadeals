@@ -291,3 +291,68 @@
 .dealTab:hover { background: var(--md-purple-50); }
 .dealTabActive, .dealTabActive:hover { background: var(--md-purple-600); color: var(--md-white); }
 .dealTab:focus-visible { outline: 2px solid var(--md-purple-800); outline-offset: 2px; }
+
+/* One single-row bar: logo (white on purple) on the left, the menu in the middle, notifications and the signed-in user on the right.
+   Sizes follow the width of the bar itself (container queries), because the notification panel can take space from it. */
+.adminChrome { container-type: inline-size; }
+.topBar { position: relative; z-index: 50; background: linear-gradient(105deg, var(--admin-purple-950), var(--md-c-4b16a0) 54%, var(--md-c-6121b8)); box-shadow: 0 5px 16px var(--md-c-39107822); }
+.topBarInner { width: min(100%, 1760px); min-height: 72px; margin-inline: auto; padding: 8px clamp(14px, 1.6vw, 36px); display: flex; flex-wrap: nowrap; align-items: center; gap: 14px; }
+.topBar .brandCluster { flex: none; gap: 12px; }
+.topBar .brandCluster :global(.brand-name) { color: var(--md-white); }
+.topBar .brandCluster :global(.brand-tagline) { color: color-mix(in srgb, var(--md-white) 82%, transparent); }
+.topBar .version { border-color: color-mix(in srgb, var(--md-white) 30%, transparent); background: var(--md-white); }
+.topBar .navigation { flex: 1 1 auto; min-width: 0; background: none; box-shadow: none; z-index: auto; }
+.topBar .navigationInner { width: 100%; min-height: 0; padding: 0; justify-content: center; flex-wrap: nowrap; gap: 2px; }
+.topBar .navLink, .topBar .navGroup > summary { white-space: nowrap; padding-inline: 12px; font-size: 14px; }
+.topBar .headerActions { flex: none; gap: 10px; }
+.topBar .notificationLink { color: var(--md-white); }
+.topBar .notificationLink:hover { background: var(--md-c-ffffff1c); }
+.topBar .profileWrap .profileButton { background: var(--md-c-ffffff24); border: 1px solid color-mix(in srgb, var(--md-white) 22%, transparent); }
+.topBar .profileWrap .profileButton:hover, .topBar .profileWrap .profileButton[aria-expanded="true"] { background: color-mix(in srgb, var(--md-white) 30%, transparent); }
+
+@container (max-width: 1640px) {
+  .topBar .navLink, .topBar .navGroup > summary { padding-inline: 8px; font-size: 13px; gap: 6px; }
+  .topBar .navLink svg, .topBar .navGroup > summary svg { width: 17px; height: 17px; }
+}
+@container (max-width: 1500px) {
+  .topBar .brandCluster :global(.brand-tagline), .topBar .version { display: none; }
+  .topBar .profileText small { display: none; }
+  .topBar .navLink, .topBar .navGroup > summary { padding-inline: 7px; font-size: 12.5px; }
+}
+@container (max-width: 1420px) {
+  /* keep the words, drop the small icons in front of them */
+  .topBar .navLink > svg:first-child, .topBar .navGroup > summary > svg:first-child { display: none; }
+}
+@container (max-width: 1300px) {
+  .topBar .profileText { display: none; }
+  .topBar .profileButton { gap: 4px; padding-right: 8px; }
+}
+/* Too narrow for one row: logo, bell, user and a menu button stay in the bar, the menu opens underneath. */
+@container (max-width: 1160px) {
+  .topBarInner { flex-wrap: wrap; gap: 8px; }
+  .topBar .headerActions { margin-left: auto; }
+  .topBar .mobileMenuButton { width: 40px; height: 40px; display: grid; place-items: center; border: 1px solid color-mix(in srgb, var(--md-white) 30%, transparent); border-radius: 10px; color: var(--md-white); background: var(--md-c-ffffff24); }
+  .topBar .navigation { display: none; flex: 1 1 100%; order: 3; }
+  .topBar .navigationOpen { display: block; }
+  .topBar .navigationInner { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px; padding: 4px 0 6px; }
+  .topBar .navLink, .topBar .navGroup > summary { width: 100%; min-height: 44px; justify-content: flex-start; font-size: 13px; }
+  .topBar .navDropdown { top: calc(100% + 4px); left: 0; right: auto; width: max-content; max-width: calc(100vw - 32px); }
+  .topBar .navGroup:nth-last-child(-n + 2) .navDropdown { left: auto; right: 0; }
+}
+@container (max-width: 480px) {
+  .topBar .navigationInner { grid-template-columns: 1fr; }
+  .topBar .brandCluster :global(.brand-name) { font-size: 15px; }
+}
+
+/* The link back to the site is just the icon in the bar; in the collapsed menu the words come back. */
+.topBar .siteLink > span { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
+.topBar .siteLink > svg:first-child { display: inline-block; }
+@container (max-width: 1160px) { .topBar .siteLink > span { position: static; width: auto; height: auto; margin: 0; overflow: visible; clip: auto; } }
+
+/* Even spacing across the bar: the menu items share the middle evenly, and the bell and user sit apart with a clear gap. */
+.topBar .topBarInner { gap: 22px; }
+.topBar .navigationInner { justify-content: space-evenly; gap: 0; }
+.topBar .headerActions { gap: 14px; }
+.topBar .bellWrap .bell { padding: 0; background: transparent; }
+.topBar .bellWrap .bell:hover, .topBar .bellWrap .bell[aria-expanded="true"] { background: color-mix(in srgb, var(--md-white) 18%, transparent); }
+@container (max-width: 1160px) { .topBar .navigationInner { justify-content: stretch; } }

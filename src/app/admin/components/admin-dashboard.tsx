@@ -302,13 +302,7 @@ export function AdminDashboard({ actorId, role }: { actorId: string; role: UserR
     <main className={styles.adminPage}>
       <AdminNav active="account" />
 
-      <section className={styles.foundationHero}>
-        <div>
-          <h1>Admin</h1>
-          <p>Authentication and account management for administrative access.</p>
-        </div>
-        <ShieldCheck size={60} aria-hidden="true" />
-      </section>
+      <h1 className={styles.pageTitle}>Admin</h1>
 
       {error && <p className={styles.error} role="alert">{error}</p>}
       {notice && <p className={styles.notice} role="status">{notice}</p>}

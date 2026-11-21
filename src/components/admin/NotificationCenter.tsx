@@ -64,6 +64,15 @@ export function NotificationCenter() {
   const [hidden, setHidden] = useState<string[]>([]);
   const [hiddenReady, setHiddenReady] = useState(false);
   const bellRef = useRef<HTMLDivElement>(null);
+  // On wide screens the bell in the top bar opens and closes the side panel; on narrower ones it opens the small pop-up list.
+  const [wide, setWide] = useState(false);
+  useEffect(() => {
+    const query = window.matchMedia("(min-width: 1280px)");
+    const update = () => setWide(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
   const total = feed?.total ?? 0;
   const show = Boolean(feed && feed.groups.length > 0);
 
@@ -95,7 +104,7 @@ export function NotificationCenter() {
   useEffect(() => {
     const cls = document.body.classList;
     cls.toggle("md-notify-dock", show && !collapsed);
-    cls.toggle("md-notify-rail", show && collapsed);
+    cls.remove("md-notify-rail");
     return () => { cls.remove("md-notify-dock", "md-notify-rail"); };
   }, [show, collapsed]);
 
@@ -135,7 +144,7 @@ export function NotificationCenter() {
   return (
     <>
       <div className={styles.bellWrap} ref={bellRef}>
-        <button type="button" className={styles.bell} aria-label={`Notifications${total ? `, ${total} waiting` : ""}`} aria-expanded={bellOpen} onClick={() => setBellOpen((o) => !o)}>
+        <button type="button" className={styles.bell} aria-label={`Notifications${total ? `, ${total} waiting` : ""}`} aria-expanded={wide ? !collapsed : bellOpen} onClick={() => (wide ? toggle() : setBellOpen((o) => !o))}>
           <Bell size={22} aria-hidden="true" />{badge}
         </button>
         {bellOpen && (
@@ -147,11 +156,7 @@ export function NotificationCenter() {
       </div>
 
       <aside className={`${styles.dock} ${collapsed ? styles.dockCollapsed : ""}`} aria-label="Notifications">
-        {collapsed ? (
-          <button type="button" className={styles.rail} onClick={toggle} aria-label={`Open notifications${total ? `, ${total} waiting` : ""}`}>
-            <Bell size={22} aria-hidden="true" />{badge}
-          </button>
-        ) : (
+        {collapsed ? null : (
           <>
             <header className={styles.dockHead}>
               <h2>Notifications {badge}</h2>

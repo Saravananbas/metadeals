@@ -1,4 +1,5 @@
 import { Star, Tag, Building2 } from "lucide-react";
+import { sanitizeRichHtml } from "@/server/community/richtext";
 import styles from "@/app/deal/[slug]/deal-detail.module.css";
 
 interface DealProductInfoProps {
@@ -7,6 +8,8 @@ interface DealProductInfoProps {
   category: { id: string; name: string; slug: string };
   merchantName: string;
   description: string;
+  /** Formatted description, already sanitized when saved and cleaned again here. */
+  descriptionHtml?: string | null;
   rating?: number | null;
   reviewCount?: number | null;
   ratingSource?: string | null;
@@ -19,6 +22,7 @@ export function DealProductInfo({
   category,
   merchantName,
   description,
+  descriptionHtml,
   rating,
   reviewCount,
   ratingSource,
@@ -74,7 +78,9 @@ export function DealProductInfo({
         <h3 style={{ fontSize: 15, fontWeight: 700, margin: "0 0 6px", color: "var(--md-color-text)" }}>
           About this item
         </h3>
-        <p className={styles.productDescription}>{description || title}</p>
+        {descriptionHtml
+          ? <div className={`${styles.productDescription} ${styles.richDescription}`} dangerouslySetInnerHTML={{ __html: sanitizeRichHtml(descriptionHtml) }} />
+          : <p className={styles.productDescription}>{description || title}</p>}
       </div>
 
       {/* Key Specifications & Verification Table */}

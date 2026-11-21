@@ -8,6 +8,7 @@ import { CustomerError, limitCustomerRequests } from "./service";
 import { downloadImageFromUrl } from "./product-fetch";
 import { assertActiveCustomer } from "./session";
 import { assertNotRestrictedByCustomer } from "@/server/community/restrictions";
+import { prepareRichBody } from "@/server/community/richtext";
 
 /** Same product link with tracking/affiliate parameters, fragments and trailing slashes removed. */
 export function canonicalProductUrl(raw: string): string {
@@ -20,7 +21,7 @@ export function canonicalProductUrl(raw: string): string {
 export const hashProductUrl = (raw: string) => createHash("sha256").update(canonicalProductUrl(raw)).digest("hex");
 
 const publicFields = {
-  id: true, status: true, title: true, brand: true, description: true, productUrl: true, merchantName: true, categoryHint: true,
+  id: true, status: true, title: true, brand: true, description: true, descriptionHtml: true, productUrl: true, merchantName: true, categoryHint: true,
   priceMinor: true, mrpMinor: true, couponCode: true, version: true, resubmissions: true, submittedAt: true, reviewedAt: true, rejectionReason: true,
   deal: { select: { status: true, everPublished: true, slug: true } },
 } as const;
@@ -68,6 +69,15 @@ async function decodeExtras(urls: string[] | undefined, files: Buffer[]): Promis
 }
 const extraRows = (list: Decoded[]) => list.map((d, i) => ({ position: i + 1, imageKey: d.storage.storageKey, imageProvider: d.storage.provider, imageMime: d.normalized.mimeType, imageBytes: d.normalized.bytes.length, imageWidth: d.normalized.width, imageHeight: d.normalized.height }));
 
+/** The editor's HTML is sanitized here; the plain text derived from it is what cards, search and the length rules use. Without HTML the plain description is kept as sent. */
+function descriptionFrom(input: SubmissionInput): { description: string; descriptionHtml: string | null } {
+  const rich = input.descriptionHtml ? prepareRichBody(input.descriptionHtml) : null;
+  const description = rich ? rich.text : input.description;
+  if (description.length < 10) throw new CustomerError("Describe the deal in at least 10 characters.");
+  if (description.length > 2000) throw new CustomerError("The description is too long (2,000 characters at most).");
+  return { description, descriptionHtml: rich?.html || null };
+}
+
 async function assertNotAlreadyListed(productUrl: string) {
   const listed = await getDatabase().deal.findFirst({ where: { productUrl, status: "PUBLISHED" }, select: { id: true } });
   if (listed) throw new CustomerError("This deal is already listed on MetaDeals4U.", 409);
@@ -81,6 +91,7 @@ export async function createSubmission(customerId: string, rawFields: unknown, i
   await limitCustomerRequests(`submit-day:${customer.id}`, 15, 86_400);
   const db = getDatabase();
   const urlHash = hashProductUrl(input.productUrl);
+  const { description, descriptionHtml } = descriptionFrom(input);
 
   const existing = await db.communityDealSubmission.findUnique({ where: { customerId_urlHash: { customerId: customer.id, urlHash } }, select: { id: true, status: true } });
   if (existing) {
@@ -94,7 +105,7 @@ export async function createSubmission(customerId: string, rawFields: unknown, i
   try {
     const row = await db.communityDealSubmission.create({
       data: {
-        customerId: customer.id, title: input.title, brand: input.brand || null, description: input.description, productUrl: input.productUrl, urlHash,
+        customerId: customer.id, title: input.title, brand: input.brand || null, description, descriptionHtml, productUrl: input.productUrl, urlHash,
         merchantName: input.merchantName || null, categoryHint: input.categoryHint || null, priceMinor: input.priceMinor, mrpMinor: input.mrpMinor ?? null,
         couponCode: input.couponCode ? input.couponCode.toUpperCase() : null,
         imageKey: storage.storageKey, imageProvider: storage.provider, imageMime: normalized.mimeType, imageBytes: normalized.bytes.length,
@@ -158,7 +169,7 @@ export async function resubmit(customerId: string, id: string, rawFields: unknow
     const changed = await db.communityDealSubmission.updateMany({
       where: { id, customerId: customer.id, status: "REJECTED", version },
       data: {
-        title: input.title, brand: input.brand || null, description: input.description, productUrl: input.productUrl, urlHash,
+        title: input.title, brand: input.brand || null, ...descriptionFrom(input), productUrl: input.productUrl, urlHash,
         merchantName: input.merchantName || null, categoryHint: input.categoryHint || null, priceMinor: input.priceMinor, mrpMinor: input.mrpMinor ?? null,
         couponCode: input.couponCode ? input.couponCode.toUpperCase() : null,
         ...(image ? { imageKey: image.storage.storageKey, imageProvider: image.storage.provider, imageMime: image.normalized.mimeType, imageBytes: image.normalized.bytes.length, imageWidth: image.normalized.width, imageHeight: image.normalized.height } : {}),

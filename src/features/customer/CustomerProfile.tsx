@@ -2,18 +2,20 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
-import { Check, Compass, Hourglass, Megaphone, Send, X } from "lucide-react";
+import { Check, Compass, Hourglass, Megaphone, Radio, Send, X } from "lucide-react";
 import { SEX_LABELS, SEX_VALUES } from "./profile-validation";
 import styles from "./profile.module.css";
 import { IdentityCard, UserNamePrompt } from "./IdentityCard";
-import { ProgressPanel } from "./deal-form/ProgressPanel";
-import { SameLinkNotice, SimilarDeals, useDealCheck } from "./deal-form/SimilarDeals";
-import { PreviewDialog } from "./deal-form/PreviewDialog";
+import { ProgressPanel } from "@/features/deal-form/ProgressPanel";
+import { SameLinkNotice, SimilarDeals, useDealCheck } from "@/features/deal-form/SimilarDeals";
+import { PreviewDialog } from "@/features/deal-form/PreviewDialog";
+import { RichEditor } from "@/features/community/components/RichEditor";
+import { htmlToPlain, textToHtml } from "@/features/deal-form/text";
 
 type Counts = { total: number; pendingReview: number; approvedAwaitingPublication: number; rejected: number; live: number };
 type Profile = { name: string; email: string; sex: string | null; dateOfBirth: string | null; location: string | null; counts: Counts };
 type Submission = {
-  id: string; title: string; brand: string | null; description: string; productUrl: string; merchantName: string | null; categoryHint: string | null;
+  id: string; title: string; brand: string | null; description: string; descriptionHtml?: string | null; productUrl: string; merchantName: string | null; categoryHint: string | null;
   priceMinor: number; mrpMinor: number | null; couponCode: string | null; version: number; submittedAt: string; rejectionReason: string | null;
   stage: "PENDING_REVIEW" | "APPROVED" | "LIVE" | "REJECTED"; dealState?: "LIVE" | "EXPIRED" | "ARCHIVED" | null; dealSlug: string | null; imageUrl: string;
 };
@@ -23,7 +25,7 @@ type Picture = { id: string } & ({ kind: "url"; url: string } | { kind: "file"; 
 const MAX_PICTURES = 10;
 const newId = () => Math.random().toString(36).slice(2);
 const proxied = (src: string) => `/api/v1/customer/image-proxy?src=${encodeURIComponent(src)}`;
-const emptyForm = { title: "", productUrl: "", merchantName: "", categoryHint: "", price: "", mrp: "", couponCode: "", brand: "", description: "" };
+const emptyForm = { title: "", productUrl: "", merchantName: "", categoryHint: "", price: "", mrp: "", couponCode: "", brand: "", description: "", descriptionHtml: "" };
 
 async function api<T>(url: string, init?: RequestInit): Promise<T> {
   const response = await fetch(url, { cache: "no-store", ...init });
@@ -66,6 +68,10 @@ export function CustomerProfile({ section = "profile", embedded = false }: { sec
   const [fetching, setFetching] = useState(false);
   const [autoFilled, setAutoFilled] = useState<string[]>([]);
   const [previewOpen, setPreviewOpen] = useState(false);
+  const [editorHtml, setEditorHtml] = useState("");
+  const [editorVersion, setEditorVersion] = useState(0);
+  const lastAutoDescription = useRef("");
+  const loadEditor = (html: string) => { setEditorHtml(html); setEditorVersion((v) => v + 1); };
   const lastAutoUrl = useRef("");
   const [profileMsg, setProfileMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [submitMsg, setSubmitMsg] = useState<{ ok: boolean; text: string } | null>(null);
@@ -129,13 +135,14 @@ export function CustomerProfile({ section = "profile", embedded = false }: { sec
     setSubmitMsg(null);
     setForm({
       title: item.title, productUrl: item.productUrl, merchantName: item.merchantName ?? "", categoryHint: item.categoryHint ?? "", price: String(item.priceMinor / 100),
-      mrp: item.mrpMinor ? String(item.mrpMinor / 100) : "", couponCode: item.couponCode ?? "", brand: item.brand ?? "", description: item.description,
+      mrp: item.mrpMinor ? String(item.mrpMinor / 100) : "", couponCode: item.couponCode ?? "", brand: item.brand ?? "", description: item.description, descriptionHtml: item.descriptionHtml ?? "",
     });
+    loadEditor(item.descriptionHtml || textToHtml(item.description));
     window.scrollTo({ top: document.getElementById("submit-deal")?.offsetTop ?? 0, behavior: "smooth" });
   }
 
   function resetDealForm() {
-    setForm(emptyForm); clearPictures(); setEditing(null); setFetched(null); setSubmitMsg(null);
+    setForm(emptyForm); loadEditor(""); clearPictures(); setEditing(null); setFetched(null); setSubmitMsg(null);
     try { if (profile?.email) localStorage.removeItem(`metadeals:deal-draft:${profile.email.trim().toLowerCase()}`); } catch { /* storage may be disabled */ }
     if (fileInput.current) fileInput.current.value = "";
   }
@@ -181,6 +188,7 @@ export function CustomerProfile({ section = "profile", embedded = false }: { sec
       setFetched({ logoUrl: matchedWebsite?.logoUrl || d.logoUrl, store: detectedMerchant, images: d.images, notes: d.notes, category: d.category, status: d.status });
       // The first picture found is chosen for the member; they can add more or swap it.
       setPictures((list) => [...list.filter((p) => p.kind === "file"), ...(d.images[0] ? [{ id: newId(), kind: "url" as const, url: d.images[0] }] : [])]);
+      if (d.description) { lastAutoDescription.current = htmlToPlain(textToHtml(d.description)); loadEditor(textToHtml(d.description)); }
       setAutoFilled([d.title && "title", d.priceRupees && "price", d.mrpRupees && "mrp", d.brand && "brand", d.description && "description", detectedMerchant && "merchantName"].filter((k): k is string => Boolean(k)));
       // The blue notice below the link box says details were filled in; only a page we could not read needs an error here.
       setSubmitMsg(d.title || d.priceRupees ? null : { ok: false, text: "We could not read this page automatically. Please fill in the details yourself." });
@@ -208,12 +216,13 @@ export function CustomerProfile({ section = "profile", embedded = false }: { sec
       setSubmitMsg({ ok: false, text: "Deal price cannot be higher than the MRP." });
       return;
     }
+    if (form.description.trim().length < 10) { setSubmitMsg({ ok: false, text: "Describe the deal in at least 10 characters." }); return; }
     setBusy(true);
     setSubmitMsg(null);
     try {
       if (!editing && !image && !pickedImage) { setSubmitMsg({ ok: false, text: "Please upload a product picture, or fetch details and choose one." }); setBusy(false); return; }
       const data = {
-        title: form.title, productUrl: form.productUrl.trim().replace(/^http:\/\//i, "https://"), description: form.description, priceMinor: toMinor(form.price),
+        title: form.title, productUrl: form.productUrl.trim().replace(/^http:\/\//i, "https://"), description: form.description, descriptionHtml: form.descriptionHtml || null, priceMinor: toMinor(form.price),
         brand: form.brand || null, merchantName: form.merchantName || null, categoryHint: form.categoryHint || null,
         mrpMinor: form.mrp ? toMinor(form.mrp) : null, couponCode: form.couponCode || null,
         ...(!image && pickedImage ? { imageUrl: pickedImage } : {}),
@@ -227,7 +236,7 @@ export function CustomerProfile({ section = "profile", embedded = false }: { sec
       if (editing) body.set("version", String(editing.version));
       await api(editing ? `/api/v1/customer/submissions/${editing.id}` : "/api/v1/customer/submissions", { method: editing ? "PATCH" : "POST", body });
       try { if (profile?.email) localStorage.removeItem(`metadeals:deal-draft:${profile.email.trim().toLowerCase()}`); } catch { /* submission already succeeded */ }
-      setForm(emptyForm); clearPictures(); setEditing(null); setFetched(null);
+      setForm(emptyForm); loadEditor(""); clearPictures(); setEditing(null); setFetched(null);
       await refresh();
       setSubmitMsg({ ok: true, text: editing ? "Sent back for review." : "Thank you! Your deal was sent for review. It stays private until our team approves and publishes it." });
     } catch (error) {
@@ -265,6 +274,7 @@ export function CustomerProfile({ section = "profile", embedded = false }: { sec
       const draft = JSON.parse(raw) as { form?: typeof emptyForm; pickedImage?: string };
       if (!draft.form || typeof draft.form.title !== "string" || typeof draft.form.productUrl !== "string") throw new Error("Invalid draft");
       setForm({ ...emptyForm, ...draft.form });
+      loadEditor(draft.form.descriptionHtml || textToHtml(draft.form.description ?? ""));
       setPictures(typeof draft.pickedImage === "string" && draft.pickedImage ? [{ id: newId(), kind: "url", url: draft.pickedImage }] : []);
       setEditing(null);
       setSubmitMsg({ ok: true, text: "Draft restored from this device. Please check the details and add any missing product image." });
@@ -276,14 +286,15 @@ export function CustomerProfile({ section = "profile", embedded = false }: { sec
       {!embedded && deals && (
         <section className={styles.dealStrip} aria-label="Post a Deal and your deal counts">
           <span className={styles.stripIcon} aria-hidden="true"><Megaphone size={36} /></span>
-          <div className={styles.stripText}><h1>Post a Deal</h1><p>Found a great offer? Share it with the community & help others save</p></div>
+          <div className={styles.stripText}><h1>Post a Deal</h1><p>Found a great offer?<br />Share it here &amp;<br />help others save</p></div>
           <dl className={styles.stripStats}>
-            <div><span className={`${styles.stripStatIcon} ${styles.toneSent}`} aria-hidden="true"><Send size={20} /></span><span><dt>Submitted</dt><dd>{c?.total ?? "–"}</dd></span></div>
-            <div><span className={`${styles.stripStatIcon} ${styles.toneWait}`} aria-hidden="true"><Hourglass size={20} /></span><span><dt>Awaiting Review</dt><dd>{c?.pendingReview ?? "–"}</dd></span></div>
-            <div><span className={`${styles.stripStatIcon} ${styles.toneNo}`} aria-hidden="true"><X size={20} /></span><span><dt>Not Approved</dt><dd>{c?.rejected ?? "–"}</dd></span></div>
-            <div><span className={`${styles.stripStatIcon} ${styles.toneLive}`} aria-hidden="true"><Check size={20} /></span><span><dt>Live</dt><dd>{c?.live ?? "–"}</dd>{!!c?.approvedAwaitingPublication && <small>{c.approvedAwaitingPublication} approved, going live soon</small>}</span></div>
+            <div><span className={`${styles.stripStatIcon} ${styles.toneSent}`} aria-hidden="true"><Send size={22} /></span><dt>Submitted</dt><dd>{c?.total ?? "–"}</dd></div>
+            <div><span className={`${styles.stripStatIcon} ${styles.toneLive}`} aria-hidden="true"><Check size={22} /></span><dt>Approved</dt><dd>{c ? c.live + c.approvedAwaitingPublication : "–"}</dd></div>
+            <div><span className={`${styles.stripStatIcon} ${styles.toneNo}`} aria-hidden="true"><X size={22} /></span><dt>Rejected</dt><dd>{c?.rejected ?? "–"}</dd></div>
+            <div><span className={`${styles.stripStatIcon} ${styles.toneWait}`} aria-hidden="true"><Hourglass size={22} /></span><dt>Awaiting Review</dt><dd>{c?.pendingReview ?? "–"}</dd></div>
+            <div><span className={`${styles.stripStatIcon} ${styles.toneOnair}`} aria-hidden="true"><Radio size={22} /></span><dt>Live</dt><dd>{c?.live ?? "–"}</dd></div>
           </dl>
-          <Link href="/" className={styles.stripCta}><Compass size={20} aria-hidden="true" /> Explore Deals</Link>
+          <Link href="/" className={styles.stripCta}><Compass size={26} aria-hidden="true" /> <span>Explore<br />Deals</span></Link>
         </section>
       )}
       {!embedded && !deals && <div className={styles.head}>
@@ -327,7 +338,7 @@ export function CustomerProfile({ section = "profile", embedded = false }: { sec
 
       {deals && <div className={styles.dealLayout}>
         <section className={`${styles.card} ${styles.dealFormCard}`} id="submit-deal">
-          <form className={styles.dealForm} onSubmit={submitDeal}>
+          <form id="deal-form" className={styles.dealForm} onSubmit={submitDeal}>
             <ProgressPanel values={progressValues} compact />
             <div className={styles.dealStep}>
               <h2><span>1</span> Product Link</h2>
@@ -402,7 +413,15 @@ export function CustomerProfile({ section = "profile", embedded = false }: { sec
             </div>
             <div className={styles.dealStep}>
               <h2><span>3</span> Description</h2>
-              <label className={styles.dealWide}>Deal details{auto("description")}<textarea rows={5} value={form.description} onChange={set("description")} required minLength={10} maxLength={2000} placeholder="Add key details, offer terms, validity, or why it’s a good buy..." /><small className={styles.counter}>{form.description.length} / 2,000</small></label>
+              <div className={styles.dealWide}>
+                <span id="deal-description-label" style={{ fontWeight: 700, fontSize: 14 }}>Deal details <b aria-hidden="true">*</b>{auto("description")}</span>
+                <RichEditor id="deal-description" initialHtml={editorHtml} version={editorVersion} limit={2000} minHeight={150} placeholder="Add key details, offer terms, validity, or why it’s a good buy..."
+                  onChange={(html) => {
+                    const plain = html ? htmlToPlain(html) : "";
+                    setForm((f) => (f.descriptionHtml === html && f.description === plain ? f : { ...f, descriptionHtml: html, description: plain }));
+                    if (plain !== lastAutoDescription.current) setAutoFilled((list) => list.filter((k) => k !== "description"));
+                  }} />
+              </div>
             </div>
             <div className={styles.dealStep}>
               <h2><span>4</span> Product Images</h2>
@@ -450,7 +469,9 @@ export function CustomerProfile({ section = "profile", embedded = false }: { sec
           <p className={styles.privateNote}>Your submission stays private until approved. Your email is never shown publicly.</p>
         </aside>
       </div>}
-      {previewOpen && <PreviewDialog title={form.title} price={form.price} mrp={form.mrp} store={form.merchantName} brand={form.brand} coupon={form.couponCode} description={form.description} imageSrc={image ? uploadedPreview : pickedImage} onClose={() => setPreviewOpen(false)} />}
+      {previewOpen && <PreviewDialog title={form.title} price={form.price} mrp={form.mrp} store={form.merchantName} brand={form.brand} coupon={form.couponCode} description={form.description} imageSrc={image ? uploadedPreview : pickedImage} busy={busy}
+        onClose={() => { setPreviewOpen(false); titleInput.current?.scrollIntoView({ behavior: "smooth", block: "center" }); }}
+        onPublish={() => { setPreviewOpen(false); (document.getElementById("deal-form") as HTMLFormElement | null)?.requestSubmit(); }} />}
 
       {deals && <section className={styles.card} id="my-submissions">
         <h2>My submissions</h2>

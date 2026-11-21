@@ -103,6 +103,15 @@ test("deal votes, dislike reasons, notes, comment likes and member stars", { ski
       await assert.rejects(() => proxy.proxyImage(a.id, src), (e: unknown) => e instanceof Error && /could not be loaded|not valid/.test(e.message), src);
     }
 
+    // Staff check: a draft is found by staff but never shown to members; the deal being edited is left out
+    const draft = await db.deal.create({ data: { slug: `zzdealcom-${stamp}-draft`, title: "Zzdraftonly Fixture Widget", brand: "Fixture", description: "Fixture", categoryId: category.id, merchantId: merchant.id, mediaId: media.id, mrpMinor: 1000, priceMinor: 500, productUrl: "https://www.amazon.in/dp/B0DRAFT001", status: "DRAFT", createdById: boss.id, updatedById: boss.id } });
+    extraDealIds.push(draft.id);
+    const asStaff = await check.findDealMatches({ url: "https://www.amazon.in/x/dp/B0DRAFT001?ref=y", title: "Zzdraftonly Fixture Widget" }, true);
+    assert.deepEqual(asStaff.sameLink.map((d) => [d.slug, d.state]), [[draft.slug, "DRAFT"]]);
+    const asMember = await check.dealCheck(a.id, { url: "https://www.amazon.in/x/dp/B0DRAFT001?ref=y", title: "Zzdraftonly Fixture Widget" });
+    assert.deepEqual([asMember.sameLink.length, asMember.similar.length], [0, 0], "members never learn about drafts");
+    assert.equal((await check.findDealMatches({ url: "https://www.amazon.in/dp/B0DRAFT001", excludeDealId: draft.id }, true)).sameLink.length, 0, "the deal being edited is not its own duplicate");
+
     // Stars: one per pair, never to yourself, taken back by the giver
     await service.ensureProfile(a.id); await service.ensureProfile(b.id);
     const handleA = (await db.forumProfile.findUniqueOrThrow({ where: { customerId: a.id } })).handle;

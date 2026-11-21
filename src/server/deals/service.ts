@@ -7,6 +7,7 @@ import { suspensionBlocks } from "@/server/auth/suspension";
 import { dealInputSchema, categoryInputSchema, merchantInputSchema } from "@/features/deals/validation";
 import { dealInclude, merchantSelect, type DealDatabase, type DealRecord } from "./repository";
 import { parseEditorNotes } from "@/features/deals/notes";
+import { sanitizeRichHtml } from "@/server/community/richtext";
 
 export class DealError extends Error {
   constructor(message: string, public status = 400) { super(message); }
@@ -55,7 +56,11 @@ export async function saveDeal(db: DealDatabase, actor: DealActor, raw: unknown,
   ]);
   if (!category || !merchant || !media) throw new DealError("Select an existing category, merchant and uploaded image.");
   if (galleryMedia.length !== galleryMediaIds.length) throw new DealError("One or more gallery images are unavailable. Import them again before saving.");
-  const { options, editorNotes, ...fields } = input;
+  const { options, editorNotes, descriptionHtml, ...fields } = input;
+  // Formatted description: sanitized when sent; dropped when the plain text was edited without it, so the two never disagree.
+  const htmlData: { descriptionHtml?: string | null } = {};
+  if (descriptionHtml !== undefined) htmlData.descriptionHtml = descriptionHtml ? sanitizeRichHtml(descriptionHtml) || null : null;
+  else if (before && before.description !== input.description) htmlData.descriptionHtml = null;
   delete fields.galleryMediaIds;
   // Editor's Notes: stored one point per line; the saving staff member's name is shown with the Staff label.
   const notesData: { editorNotes?: string | null; editorNotesBy?: string | null } = {};
@@ -67,7 +72,7 @@ export async function saveDeal(db: DealDatabase, actor: DealActor, raw: unknown,
       notesData.editorNotesBy = text ? ((await db.user.findUnique({ where: { id: actor.id }, select: { name: true } }))?.name?.trim().slice(0, 80) || null) : null;
     }
   }
-  const data = { ...fields, publishedAt: input.publishedAt ? new Date(input.publishedAt) : null, startsAt: input.startsAt ? new Date(input.startsAt) : null, expiresAt: input.expiresAt ? new Date(input.expiresAt) : null, updatedById: actor.id, ...notesData };
+  const data = { ...fields, publishedAt: input.publishedAt ? new Date(input.publishedAt) : null, startsAt: input.startsAt ? new Date(input.startsAt) : null, expiresAt: input.expiresAt ? new Date(input.expiresAt) : null, updatedById: actor.id, ...notesData, ...htmlData };
   let result: DealRecord;
   if (before) {
     const changed = await db.deal.updateMany({ where: { id, version }, data: { ...data, version: { increment: 1 } } });
