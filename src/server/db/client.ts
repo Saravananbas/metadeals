@@ -17,7 +17,8 @@ export function getDatabase(): PgPrismaClient {
           host: parsedUrl.hostname,
           port: Number(parsedUrl.port || 3306),
           user: decodeURIComponent(parsedUrl.username),
-          password: decodeURIComponent(parsedUrl.password),
+          // DATABASE_PASSWORD (optional) is the plain password, so characters such as # / ? % never need encoding inside DATABASE_URL.
+          password: process.env.DATABASE_PASSWORD ?? decodeURIComponent(parsedUrl.password),
           database: decodeURIComponent(parsedUrl.pathname.slice(1)),
           connectionLimit: 5,
           connectTimeout: 15_000,
