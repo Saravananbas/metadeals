@@ -4,7 +4,7 @@ import path from "node:path";
 import nodemailer from "nodemailer";
 /** SMTP settings, or null when any of the five required values is missing. Port 465 uses TLS from the start; any other port (587) upgrades with STARTTLS. */
 export function smtpSettings(env: Record<string, string | undefined> = process.env) {
-  const host = env.SMTP_HOST?.trim(), user = env.SMTP_USER?.trim(), pass = env.SMTP_PASSWORD, from = env.EMAIL_FROM?.trim();
+  const host = env.SMTP_HOST?.trim(), user = (env.SMTP_USERNAME ?? env.SMTP_USER)?.trim(), pass = env.SMTP_PASSWORD, from = env.EMAIL_FROM?.trim();
   const port = Number(env.SMTP_PORT ?? 465);
   if (!host || !user || !pass || !from || !Number.isInteger(port) || port < 1 || port > 65535) return null;
   const secure = env.SMTP_SECURE ? env.SMTP_SECURE === "true" : port === 465;
