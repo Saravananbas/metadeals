@@ -62,6 +62,7 @@ export default function CookiePolicyPage() {
         <ul>
           <li><b>Stores and affiliate networks:</b> when you press Buy Now, you go to the store. The store or its network may set its own cookies to credit the referral. They follow their own policies.</li>
           <li><b>Google and Apple sign-in:</b> if you choose them, they may set cookies on their own pages.</li>
+          <li><b>Google Analytics (through Google Tag Manager):</b> loaded only after you press Accept. It counts visits and which pages are used, and may set its own cookies such as <code>_ga</code>. We do not use it for advertising. Press Decline and it is never loaded.</li>
           <li><b>YouTube videos:</b> if you open a review video, YouTube may set cookies. See <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google&apos;s privacy policy</a>.</li>
         </ul>
         <div className={styles.note}>We do not currently use advertising cookies. If we add any, we will list them here and ask for your choice first.</div>

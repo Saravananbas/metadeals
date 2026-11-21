@@ -3,6 +3,7 @@ import { Manrope } from "next/font/google";
 import { isProductionIndexingEnabled } from "./robots";
 import "./globals.css";
 import { AnalyticsTracker } from "@/components/analytics/AnalyticsTracker";
+import { GoogleTagManager } from "@/components/analytics/GoogleTagManager";
 import { ConsentBanner } from "@/components/analytics/ConsentBanner";
 
 const allowIndexing = isProductionIndexingEnabled({
@@ -42,6 +43,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body className={manrope.variable}>
         {children}
         <AnalyticsTracker />
+        <GoogleTagManager />
         <ConsentBanner />
       </body>
     </html>

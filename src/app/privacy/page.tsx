@@ -96,6 +96,7 @@ export default function PrivacyPage() {
           <li><b>The store and its affiliate network</b>, when you press Buy Now. Your browser sends them the usual technical details, and our link carries our publisher ID and a channel label. We do not send them your name, email or account details.</li>
           <li><b>Service providers</b> who help us run the site, such as our web host. They may use the data only to serve us.</li>
           <li><b>Google and Apple</b>, if you choose to sign in with them. See <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google&apos;s privacy policy</a>.</li>
+          <li><b>Google Analytics</b> (through Google Tag Manager), only if you press Accept on the cookie banner. It receives your visit details (pages opened, device and browser type, approximate location from your address). See <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google&apos;s privacy policy</a>.</li>
           <li><b>YouTube</b>, if you open a review video. See <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google&apos;s privacy policy</a>.</li>
           <li><b>Telegram or WhatsApp channels</b>, where we may post deal details (title, price, link), never customer data.</li>
           <li><b>Authorities</b>, when the law requires it.</li>

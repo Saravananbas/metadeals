@@ -5,12 +5,12 @@ import type { NextConfig } from "next";
 // Inline scripts stay allowed because Next.js needs them for its page bootstrap; moving to nonces is a later step.
 const CSP_POLICY = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' https://www.youtube.com https://s.ytimg.com",
+  "script-src 'self' 'unsafe-inline' https://www.youtube.com https://s.ytimg.com https://www.googletagmanager.com",
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https:",
   "font-src 'self' data:",
-  "connect-src 'self'",
-  "frame-src https://www.youtube.com https://www.youtube-nocookie.com",
+  "connect-src 'self' https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com",
+  "frame-src https://www.youtube.com https://www.youtube-nocookie.com https://www.googletagmanager.com",
   "media-src 'self' https:",
   "object-src 'none'",
   "base-uri 'self'",
