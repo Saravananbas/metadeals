@@ -47,7 +47,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
         let thumb = thumbCache.get(key);
         if (!thumb) {
           try {
-            thumb = await sharp(buffer, { limitInputPixels: 50_000_000 }).rotate().resize({ width: thumbWidth, withoutEnlargement: true }).webp({ quality: 78 }).toBuffer();
+            thumb = await sharp(buffer, { limitInputPixels: 50_000_000 }).rotate().resize({ width: thumbWidth, withoutEnlargement: true }).webp({ quality: 68 }).toBuffer();
             // shortcut: in-memory cache of the newest 300 thumbnails, per server process; move to stored files if memory gets tight.
             if (thumbCache.size >= 300) thumbCache.delete(thumbCache.keys().next().value as string);
             thumbCache.set(key, thumb);
