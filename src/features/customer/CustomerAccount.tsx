@@ -10,7 +10,7 @@ import { CustomerProfile } from "./CustomerProfile";
 
 type Props = {
   providers: { google: boolean; apple: boolean };
-  delivery: "local" | "resend" | "unavailable";
+  delivery: "local" | "smtp" | "resend" | "unavailable";
   oauthError?: boolean;
   /** Where to go after signing in (the home page by default). */
   redirectTo?: string;

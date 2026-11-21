@@ -2,7 +2,14 @@
   "name": "metadeals4u",
   "version": "0.1.0",
   "private": true,
-  "browserslist": ["chrome >= 100", "edge >= 100", "firefox >= 100", "safari >= 15.4", "ios_saf >= 15.4", "samsung >= 18"],
+  "browserslist": [
+    "chrome >= 100",
+    "edge >= 100",
+    "firefox >= 100",
+    "safari >= 15.4",
+    "ios_saf >= 15.4",
+    "samsung >= 18"
+  ],
   "engines": {
     "node": ">=24.11.0 <25"
   },
@@ -60,6 +67,7 @@
     "mariadb": "3.5.5",
     "next": "16.4.6",
     "next-auth": "4.24.15",
+    "nodemailer": "7.0.13",
     "otpauth": "9.5.2",
     "pg": "8.23.1",
     "pino": "10.4.0",
@@ -76,6 +84,7 @@
   "devDependencies": {
     "@tailwindcss/postcss": "4.3.3",
     "@types/node": "24.19.2",
+    "@types/nodemailer": "8.0.2",
     "@types/pg": "8.23.1",
     "@types/qrcode": "1.5.6",
     "@types/react": "19.3.0",
