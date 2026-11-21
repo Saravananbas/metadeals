@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
-import { Calendar, ImagePlus, MessageCircle, Send, ThumbsUp, User, X } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { ImagePlus, MessageCircle, Send, ThumbsUp, User, X } from "lucide-react";
 import { ACCEPTED_IMAGES, useDealComments, type DealComment } from "./useDealComments";
 import Link from "next/link";
 import { MemberMenu } from "./MemberMenu";
@@ -10,6 +10,15 @@ import styles from "./DealComments.module.css";
 
 const compact = (n: number) => (n >= 1000 ? `${(n / 1000).toFixed(1).replace(/\.0$/, "")}K` : String(n));
 const when = (iso: string) => new Date(iso).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" });
+/** "5m", "3h", "2d" like Reddit; older than a month shows the date. */
+function ago(iso: string) {
+  const s = Math.max(0, (Date.now() - new Date(iso).getTime()) / 1000);
+  if (s < 60) return "just now";
+  if (s < 3600) return `${Math.floor(s / 60)}m`;
+  if (s < 86400) return `${Math.floor(s / 3600)}h`;
+  if (s < 2592000) return `${Math.floor(s / 86400)}d`;
+  return new Date(iso).toLocaleDateString("en-IN", { dateStyle: "medium" });
+}
 
 /** The comment text with @user names that belong to a member shown as links to their profile. */
 function Text({ comment }: { comment: DealComment }) {
@@ -37,10 +46,11 @@ function Avatar({ comment }: { comment: DealComment }) {
 export function DealComments({ dealIdOrSlug, messaging = false }: { dealIdOrSlug: string; messaging?: boolean }) {
   const c = useDealComments(dealIdOrSlug);
   const fileRef = useRef<HTMLInputElement>(null);
+  const [replyAt, setReplyAt] = useState<string | null>(null); // the comment whose reply box is open
   const preview = useMemo(() => (c.image ? URL.createObjectURL(c.image) : null), [c.image]);
   useEffect(() => () => { if (preview) URL.revokeObjectURL(preview); }, [preview]);
 
-  // Replies sit under the comment they answer (one level deep); a reply whose parent is not in the list shows as a normal comment.
+  // Replies sit under the comment they answer (any depth the server allows); a reply whose parent is not in the list shows as a normal comment.
   const { tops, repliesOf } = useMemo(() => {
     const ids = new Set(c.comments.map((x) => x.id));
     const byParent = new Map<string, DealComment[]>();
@@ -55,9 +65,11 @@ export function DealComments({ dealIdOrSlug, messaging = false }: { dealIdOrSlug
 
   function reply(comment: DealComment) {
     const name = comment.member?.handle ?? comment.authorName;
-    c.setReplyTo({ id: comment.parentId ?? comment.id, name });
-    document.getElementById("deal-comment-text")?.focus();
+    c.setReplyTo({ id: comment.id, name });
+    setReplyAt(comment.id);
   }
+  // The reply box opens right under the comment; once the reply is posted or cancelled it closes.
+  useEffect(() => { if (!c.replyTo) setReplyAt(null); else setTimeout(() => document.getElementById("deal-comment-text")?.focus(), 0); }, [c.replyTo]);
 
   function renderComment(comment: DealComment, isReply: boolean) {
     return (
@@ -66,14 +78,8 @@ export function DealComments({ dealIdOrSlug, messaging = false }: { dealIdOrSlug
         <div className={styles.body}>
           <div className={styles.meta}>
             {comment.member ? <MemberMenu handle={comment.member.handle} messaging={messaging} label={comment.member.handle} /> : <><strong>{comment.authorName}</strong> <span className={styles.tag}>Guest</span></>}
-            <time dateTime={comment.createdAt}>{when(comment.createdAt)}</time>
+            <time dateTime={comment.createdAt} title={when(comment.createdAt)}>· {ago(comment.createdAt)}</time>
           </div>
-          {comment.member && (
-            <div className={styles.sub}>
-              <span><MessageCircle size={14} aria-hidden="true" /> {compact(comment.member.comments)} Comment{comment.member.comments === 1 ? "" : "s"}</span>
-              <span><Calendar size={14} aria-hidden="true" /> Joined {comment.member.joined}</span>
-            </div>
-          )}
           <p><Text comment={comment} /></p>
           {comment.hasImage && (
             <a href={`${c.endpoint}/${comment.id}/image`} target="_blank" rel="noopener noreferrer">
@@ -87,24 +93,15 @@ export function DealComments({ dealIdOrSlug, messaging = false }: { dealIdOrSlug
             </button>
             {c.signedIn && <button type="button" className={styles.pill} onClick={() => reply(comment)}>Reply</button>}
           </div>
+          {replyAt === comment.id && c.signedIn && renderForm()}
           {repliesOf.get(comment.id)?.map((r) => renderComment(r, true))}
         </div>
       </article>
     );
   }
 
-  return (
-    <section className={styles.section} id="comments" aria-labelledby="deal-page-comments-title">
-      <h2 id="deal-page-comments-title"><MessageCircle size={20} aria-hidden="true" /> Comments <span>({c.count})</span></h2>
-
-      <div className={styles.list} aria-live="polite">
-        {c.loading && <p className={styles.muted}>Loading comments…</p>}
-        {!c.loading && !c.error && c.comments.length === 0 && <p className={styles.muted}>No comments yet. {c.signedIn ? "Be the first to share your thoughts about this deal." : "Sign in to start the conversation."}</p>}
-        {tops.map((comment) => renderComment(comment, false))}
-      </div>
-
-      {c.signedIn === false && <p className={styles.signin}>Please <a href="/account">sign in</a> to comment, reply and like. Only signed-in members can comment.</p>}
-      {c.signedIn && (
+  function renderForm() {
+    return (
       <form className={styles.form} onSubmit={c.submit}>
         <strong>{c.replyTo ? "Write a reply" : "Leave a comment"}</strong>
         {c.replyTo && (
@@ -138,7 +135,21 @@ export function DealComments({ dealIdOrSlug, messaging = false }: { dealIdOrSlug
         </button>
         <p className={styles.note}>Your comment shows your user name. Please keep comments respectful.</p>
       </form>
-      )}
+    );
+  }
+
+  return (
+    <section className={styles.section} id="comments" aria-labelledby="deal-page-comments-title">
+      <h2 id="deal-page-comments-title"><MessageCircle size={20} aria-hidden="true" /> Comments <span>({c.count})</span></h2>
+
+      <div className={styles.list} aria-live="polite">
+        {c.loading && <p className={styles.muted}>Loading comments…</p>}
+        {!c.loading && !c.error && c.comments.length === 0 && <p className={styles.muted}>No comments yet. {c.signedIn ? "Be the first to share your thoughts about this deal." : "Sign in to start the conversation."}</p>}
+        {tops.map((comment) => renderComment(comment, false))}
+      </div>
+
+      {c.signedIn === false && <p className={styles.signin}>Please <a href="/account">sign in</a> to comment, reply and like. Only signed-in members can comment.</p>}
+      {c.signedIn && !replyAt && renderForm()}
     </section>
   );
 }

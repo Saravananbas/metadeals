@@ -133,7 +133,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ slu
         await redis.connect();
         const count = await redis.incr(key);
         if (count === 1) await redis.expire(key, 3600);
-        allowed = count <= 5;
+        allowed = count <= 30;
       } finally {
         redis.disconnect();
       }
@@ -145,17 +145,24 @@ export async function POST(request: Request, { params }: { params: Promise<{ slu
       entry.count += 1;
       memoryHits.set(key, entry);
       if (memoryHits.size > 5000) for (const [k, v] of memoryHits) if (v.resetAt <= now) memoryHits.delete(k);
-      allowed = entry.count <= 5;
+      allowed = entry.count <= 30;
     }
     if (!allowed) return reply({ ok: false, error: { message: "Too many comments. Please try again later." } }, 429);
 
     const db = getDatabase();
-    // A reply is attached to the top-level comment it answers (one level deep), and only within this deal.
+    // A reply is attached to the comment it answers, only within this deal. Threads go 6 reply levels deep (7 with the top comment); a reply to a comment at the last level joins that level.
     let parentId: string | null = null;
     if (payload.parentId) {
-      const parent = await db.dealComment.findFirst({ where: { id: payload.parentId, dealId: deal.id }, select: { id: true, parentId: true } });
+      let parent = await db.dealComment.findFirst({ where: { id: payload.parentId, dealId: deal.id }, select: { id: true, parentId: true } });
       if (!parent) return reply({ ok: false, error: { message: "The comment you are replying to is no longer available." } }, 404);
-      parentId = parent.parentId ?? parent.id;
+      const chain = [parent.id];
+      while (parent.parentId && chain.length < 10) {
+        const up: { id: string; parentId: string | null } | null = await db.dealComment.findFirst({ where: { id: parent.parentId, dealId: deal.id }, select: { id: true, parentId: true } });
+        if (!up) break;
+        chain.push(up.id); parent = up;
+      }
+      // chain[0] is the comment answered; chain.length is its level (1 = top). At level 7 or more the reply becomes its sibling.
+      parentId = chain.length >= 7 ? (chain[1] ?? chain[0]) : chain[0];
     }
     let stored: { storageKey: string; provider: string } | null = null;
     if (image) stored = await storeImage((await normalizeImage(image)).bytes);

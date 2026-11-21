@@ -57,3 +57,22 @@
 .mentionActive, .mentionList li:hover { background: var(--md-purple-50); }
 .mention { color: var(--md-purple-700); font-weight: 700; text-decoration: none; }
 .mention:hover { text-decoration: underline; }
+
+/* Reddit-style thread: no cards; replies indent under their comment with a thread line; small avatar; plain Like / Reply actions. */
+.list { gap: 18px; }
+.comment { padding: 0; background: none; border: 0; border-radius: 0; gap: 10px; }
+.replyItem { margin-top: 12px; background: none; }
+.avatar, .avatarFallback { width: 36px; height: 36px; }
+.avatarFallback svg { width: 20px; height: 20px; }
+.online { width: 10px; height: 10px; }
+.meta { gap: 6px; }
+.meta time { margin-left: 0; font-size: 12px; }
+.comment p { margin-top: 4px; }
+.actions { margin-top: 6px; gap: 4px; }
+.pill { min-height: 30px; padding: 0 10px; border: 0; background: none; border-radius: 999px; font-size: 13px; color: var(--md-color-text-secondary); }
+.pill:hover { background: var(--md-purple-50); }
+.pillOn { color: var(--md-purple-700); }
+.body > .comment { margin-left: -2px; padding-left: 14px; border-left: 2px solid var(--md-purple-100); }
+.body > .comment:hover { border-left-color: var(--md-purple-200); }
+.body > .form { margin-top: 10px; padding: 12px; border: 1px solid var(--md-purple-100); border-radius: 12px; }
+@media (max-width: 520px) { .avatar, .avatarFallback { width: 30px; height: 30px; } .body > .comment { padding-left: 8px; } }
