@@ -217,7 +217,7 @@ export function DealCard({
               key={`${deal.id}-${currentImageIndex}`}
               src={`${imageSrc}?w=640`}
               srcSet={CARD_WIDTHS.map((w) => `${imageSrc}?w=${w} ${w}w`).join(", ")}
-              sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 16vw"
+              sizes="(max-width: 639px) 34vw, (max-width: 1199px) 50vw, 16vw"
               alt=""
               aria-hidden="true"
               className="deal-gallery-image"
@@ -237,7 +237,7 @@ export function DealCard({
               fill
               loading={priority ? "eager" : undefined}
               fetchPriority={priority ? "high" : undefined}
-              sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 16vw"
+              sizes="(max-width: 639px) 34vw, (max-width: 1199px) 50vw, 16vw"
               onError={() => setFailedImage(currentImage)}
               unoptimized
             />

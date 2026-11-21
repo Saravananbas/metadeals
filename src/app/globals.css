@@ -668,3 +668,15 @@ body.md-modal-open { overflow: hidden; }
   .deal-view-details-btn, .deal-buy-now-btn { padding: 0 8px; gap: 6px; font-size: 12.5px; }
   .deal-view-details-btn > svg, .deal-buy-now-btn > svg:first-child { display: none; }
 }
+
+/* Bottom banner: four benefits and a "coming soon" tile for the Android and iOS apps */
+.benefits { grid-template-columns: repeat(4, minmax(0, 1fr)) minmax(270px, 1.2fr); gap: 0; }
+.benefit-app { display: flex; align-items: center; gap: 10px; margin-left: 12px; padding: 10px 16px; border-radius: 14px; background: linear-gradient(120deg, var(--md-purple-100), var(--md-purple-50)); }
+.benefit-app .app-mark { display: grid; place-items: center; flex: none; width: 46px; height: 46px; border-radius: 12px; background: var(--md-white); color: var(--md-black); box-shadow: 0 2px 8px color-mix(in srgb, var(--md-purple-700) 14%, transparent); }
+.benefit-app h2 { margin: 0 0 4px; font-size: 16px; font-weight: 800; color: var(--md-color-text); white-space: nowrap; }
+.app-soon { display: inline-block; padding: 3px 12px; border-radius: 999px; background: var(--md-purple-700); color: var(--md-white); font-size: 13px; font-weight: 800; }
+@media (max-width: 1199px) {
+  .benefits { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 0; }
+  .benefit-app { grid-column: 1 / -1; margin: 4px 8px 0; justify-content: center; }
+}
+@media (max-width: 520px) { .benefit-app h2 { font-size: 14px; white-space: normal; } }

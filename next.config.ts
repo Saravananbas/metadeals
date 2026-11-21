@@ -35,7 +35,7 @@ const nextConfig: NextConfig = {
   ...(process.env.NEXT_DIST_DIR ? { distDir: process.env.NEXT_DIST_DIR } : {}),
   // The Hostinger build server reports 64 CPUs but allows few threads; fewer build workers avoids "can't spawn worker thread".
   // strict: a page loads only the CSS of the modules it imports (the default merges CSS across routes, so the homepage was loading community and profile styles).
-  experimental: { cpus: 2, cssChunking: "strict" },
+  experimental: { cpus: 2, cssChunking: "strict", inlineCss: true },
   reactStrictMode: true,
   // The hero pictures never change under the same name, so the optimiser keeps its WebP copies for a week instead of the default 4 hours (less CPU on the host, faster repeat views).
   images: { minimumCacheTTL: 604800 },

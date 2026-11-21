@@ -16,13 +16,13 @@ import {
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { SignInDialog } from "@/features/customer/SignInDialog";
 import dynamic from "next/dynamic";
 import { BrandLogo } from "@/components/BrandLogo";
 import { MessagesLink } from "@/features/messages/MessagesLink";
 import type { DealFilters } from "@/features/deals/types";
 
 // Only signed-in visitors need these, so their code (next-auth client, the profile styles) stays out of the first page load.
+const SignInDialog = dynamic(() => import("@/features/customer/SignInDialog").then((m) => m.SignInDialog), { ssr: false });
 const UserNamePrompt = dynamic(() => import("@/features/customer/IdentityCard").then((m) => m.UserNamePrompt), { ssr: false });
 const signOutNow = () => void import("next-auth/react").then((m) => m.signOut({ callbackUrl: "/" }));
 
