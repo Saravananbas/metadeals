@@ -80,7 +80,6 @@ export function Composer({ communities, tree, general, defaultCommunity, viewer,
     if (snapshot === lastSaved.current) return;
     const timer = setTimeout(() => void saveDraft(snapshot, false), 2000);
     return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [payload, viewer, hasContent]);
 
   async function saveDraft(snapshot: string, announce: boolean) {
@@ -288,14 +287,14 @@ export function Composer({ communities, tree, general, defaultCommunity, viewer,
           </div>
           <div className={`${styles.frame} ${device === "mobile" ? styles.frameMobile : ""}`}>
             <div className={styles.pvTop}>
-              <span className={styles.pvAvatar}>{viewer?.avatarUrl ? /* eslint-disable-next-line @next/next/no-img-element */ <img src={viewer.avatarUrl} alt="" /> : (viewer?.handle ?? "?").slice(0, 1).toUpperCase()}</span>
+              <span className={styles.pvAvatar}>{viewer?.avatarUrl ? <img src={viewer.avatarUrl} alt="" /> : (viewer?.handle ?? "?").slice(0, 1).toUpperCase()}</span>
               <span><b>{viewer?.handle ?? "Your user name"}</b><small>{categoryName || "Category"}{subName ? ` › ${subName}` : ""} · Just now · {typeMeta.label}</small></span>
             </div>
             <h3 className={styles.pvTitle}>{title || "Your title appears here"}</h3>
             {type === "DEAL" && (f.price || f.merchantName) && <div className={styles.pvDeal}><strong>{rupees(f.price)} {f.mrp ? <s>{rupees(f.mrp)}</s> : null} {f.merchantName ? `at ${f.merchantName}` : ""}</strong>{f.couponCode && <span>Coupon: {f.couponCode}</span>}</div>}
             {/* The editor only produces its own formatting nodes (no scripts, no raw HTML typed by the user), and the server sanitizes again on save. */}
             {html ? <div className={styles.pvBody} dangerouslySetInnerHTML={{ __html: html }} /> : <p className={styles.pvEmpty}>Your post will look like this as you write it.</p>}
-            {images.length > 0 && <div className={styles.pvImages}>{images.map((img) => /* eslint-disable-next-line @next/next/no-img-element */ <img key={img.key} src={img.url} alt="" />)}</div>}
+            {images.length > 0 && <div className={styles.pvImages}>{images.map((img) => <img key={img.key} src={img.url} alt="" />)}</div>}
             <div className={styles.pvActions}><span><ArrowBigUp size={20} /> 0 <ArrowBigDown size={20} /></span><span><MessageSquare size={18} /> Comments</span><span><Bookmark size={18} /> Save</span><span><Share2 size={18} /> Share</span></div>
           </div>
         </div>

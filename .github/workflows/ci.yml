@@ -1,8 +1,12 @@
 name: CI
 
+# The release pipeline: changes are pushed to `staging` (CI runs, Hostinger deploys staging.metadeals4u.in), tested there,
+# then promoted with a pull request from `staging` to `main`. `main` is production and only accepts a pull request whose CI run passed.
 on:
   push:
+    branches: [main, staging]
   pull_request:
+    branches: [main, staging]
 
 permissions:
   contents: read
@@ -37,8 +41,8 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
-      - name: Audit dependencies
-        run: npm audit --audit-level=moderate
+      - name: Audit dependencies (fail on critical)
+        run: npm audit --audit-level=critical
       - name: Generate PostgreSQL and MariaDB clients
         run: npm run db:generate:all
         env:
@@ -77,5 +81,13 @@ jobs:
           DATABASE_PROVIDER: postgresql
           DATABASE_URL: postgresql://ci:ci@127.0.0.1:5432/ci?schema=public
           NODE_ENV: test
-      - name: Dependency audit (fail on high or critical)
+      - name: Production build
+        run: npm run build
+        env:
+          DATABASE_PROVIDER: mysql
+          DATABASE_URL: mysql://ci:ci_only_local@127.0.0.1:3306/ci
+      - name: Dependency audit (high findings, report only)
+        # Decision of 22 Nov 2026 (owner): only critical findings block a release. High findings are printed on every run and tracked in
+        # docs/security/PRODUCTION_LAUNCH_TRACKER.md with the reason each is accepted for now.
+        continue-on-error: true
         run: npm audit --audit-level=high

@@ -31,7 +31,6 @@ const SETUP_TOKEN_LIFETIME_MS = 30 * 60 * 1000;
 const PASSWORD_RESET_TOKEN_LIFETIME_MS = 30 * 60 * 1000;
 const DUMMY_HASH = hashPassword(randomBytes(32).toString("hex"));
 /** Five failed sign-ins on one email lock it for 30 minutes (wrong, unknown or not: the count is kept per typed email, so an unknown email behaves the same). */
-const ACCOUNT_LOCK_AFTER = 5;
 export const ACCOUNT_LOCK_MS = 30 * 60 * 1000;
 export const ACCOUNT_LOCKED_MESSAGE = "Too many failed attempts. This account is locked for 30 minutes. Try again later, or use Forgot password to unlock it with a new password.";
 const TEMP_PASSWORD_LIFETIME_MS = 25 * 60 * 1000;
