@@ -110,6 +110,14 @@ test("Cuelinks adapter wraps URLs only when configured", () => {
   assert.equal(converted.isAffiliate, true);
   assert.match(converted.url, /pub_id=12345/);
   assert.match(converted.url, /subid=sub789/);
+
+  // With a channel id the link uses cid (what Cuelinks' own API returns), not the publisher id.
+  process.env.CUELINKS_CHANNEL_ID = "337441";
+  const withChannel = adapter.convertUrl("https://www.myntra.com/shirt", { dealId: "d1", subId: "sub789" });
+  assert.match(withChannel.url, /cid=337441/);
+  assert.match(withChannel.url, /source=api/);
+  assert.doesNotMatch(withChannel.url, /pub_id=/);
+  delete process.env.CUELINKS_CHANNEL_ID;
   delete process.env.CUELINKS_PUB_ID;
 });
 

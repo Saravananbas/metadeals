@@ -9,18 +9,22 @@ export class CuelinksAdapter implements AffiliateProviderAdapter {
       return false;
     }
     // Cuelinks can wrap multiple merchants when configured as a fallback aggregator
-    return Boolean(process.env.CUELINKS_PUB_ID && url && merchantHost);
+    return Boolean((process.env.CUELINKS_CHANNEL_ID || process.env.CUELINKS_PUB_ID) && url && merchantHost);
   }
 
   convertUrl(originalUrl: string, context: AffiliateConversionContext): ConvertedLinkResult {
+    // Cuelinks' own link API returns links shaped `?cid=<channel id>&source=api&url=...`, so the channel id is what credits the click to this site.
+    // CUELINKS_PUB_ID (the publisher id) is only the fallback for setups that have no channel id yet.
+    const channelId = process.env.CUELINKS_CHANNEL_ID;
     const pubId = process.env.CUELINKS_PUB_ID;
-    if (!pubId) {
+    if (!channelId && !pubId) {
       return { url: originalUrl, provider: this.name, isAffiliate: false };
     }
 
     try {
       const redirectBase = new URL("https://linksredirect.com/");
-      redirectBase.searchParams.set("pub_id", pubId);
+      if (channelId) { redirectBase.searchParams.set("cid", channelId); redirectBase.searchParams.set("source", "api"); }
+      else redirectBase.searchParams.set("pub_id", pubId as string);
       redirectBase.searchParams.set("url", originalUrl);
       if (context.subId) {
         redirectBase.searchParams.set("subid", context.subId);
