@@ -172,12 +172,14 @@ export class CuelinksClient {
    * Synchronously builds a standard Cuelinks tracking URL using the publisher ID.
    */
   buildTrackingUrl(targetUrl: string, subId?: string): string {
+    const channelId = process.env.CUELINKS_CHANNEL_ID;
     const pubId = this.publisherId;
-    if (!pubId) return targetUrl;
+    if (!channelId && !pubId) return targetUrl;
 
     try {
-      const redirectBase = new URL("https://clnk.in/r");
-      redirectBase.searchParams.set("id", pubId);
+      const redirectBase = new URL("https://linksredirect.com/");
+      if (channelId) { redirectBase.searchParams.set("cid", channelId); redirectBase.searchParams.set("source", "api"); }
+      else redirectBase.searchParams.set("pub_id", pubId as string);
       redirectBase.searchParams.set("url", targetUrl);
       if (subId) {
         redirectBase.searchParams.set("subid", subId);

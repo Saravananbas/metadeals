@@ -121,6 +121,18 @@ test("Cuelinks adapter wraps URLs only when configured", () => {
   delete process.env.CUELINKS_PUB_ID;
 });
 
+test("Tata CLiQ, Myntra, AJIO, Croma, Reliance Digital and Nykaa links use the same Cuelinks link as every other store, never clnk.in/r?id=", () => {
+  process.env.CUELINKS_CHANNEL_ID = "337441";
+  process.env.CUELINKS_PUB_ID = "286339";
+  for (const host of ["www.tatacliq.com", "www.myntra.com", "www.ajio.com", "www.croma.com", "www.reliancedigital.in", "www.nykaa.com", "www.flipkart.com", "www.amazon.in"]) {
+    const result = convertMerchantUrl(`https://${host}/p/1`, host, { dealId: "d1", subId: "web" });
+    assert.match(result.url, /^https:\/\/linksredirect\.com\/\?cid=337441&source=api&url=/, host);
+    assert.doesNotMatch(result.url, /clnk\.in/, host);
+  }
+  delete process.env.CUELINKS_CHANNEL_ID;
+  delete process.env.CUELINKS_PUB_ID;
+});
+
 test("convertMerchantUrl falls back to clean direct link when no adapter matches", () => {
   const direct = convertMerchantUrl("https://www.reliance.com/tv", "www.reliance.com", { dealId: "d1" });
   assert.equal(direct.isAffiliate, false);
