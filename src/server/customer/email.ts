@@ -21,6 +21,10 @@ export async function sendSignupCode(email: string, code: string, challengeId: s
 export async function sendResetCode(email: string, code: string, challengeId: string) {
   return sendCode({ email, code, challengeId, kind: "reset", subject: "Reset your MetaDeals4U password", text: `Your MetaDeals4U password reset code is ${code}. It expires in 10 minutes. If you did not ask to reset your password, ignore this email: your password has not been changed.` });
 }
+/** Staff "Forgot password": the temporary password, as text only (no link). It works once and expires in 25 minutes. */
+export async function sendStaffTemporaryPassword(email: string, tempPassword: string, tokenId: string) {
+  return sendCode({ email, code: "", challengeId: tokenId, kind: "staff-temporary-password", subject: "Your MetaDeals4U temporary password", text: `Your MetaDeals4U temporary password is ${tempPassword}\n\nIt works once and expires in 25 minutes. Use it on the admin sign-in page; you will be asked to choose a new password straight away.\n\nIf you did not ask for this, ignore this email: your password has not been changed.` });
+}
 async function sendCode({ email, code, challengeId, kind, subject, text }: { email: string; code: string; challengeId: string; kind: string; subject: string; text: string }) {
   const mode = emailMode();
   if (mode === "unavailable") throw new Error("Email delivery is not configured.");

@@ -1,0 +1,12 @@
+/* Authenticator-code popup for the forgot-password flow. Design tokens only. Phone first: a sheet at the bottom of the screen, a centred card from 560px. */
+.backdrop { position: fixed; inset: 0; z-index: 100; display: flex; align-items: flex-end; justify-content: center; background: color-mix(in srgb, var(--md-black) 55%, transparent); }
+.dialog { width: 100%; max-height: 90dvh; overflow-y: auto; display: grid; gap: 12px; padding: 22px 18px calc(22px + env(safe-area-inset-bottom)); background: var(--md-white); border-radius: 20px 20px 0 0; box-sizing: border-box; }
+.dialog h2 { margin: 0; font-size: 20px; color: var(--md-color-text); }
+.dialog p { margin: 0; font-size: 14px; line-height: 1.5; color: var(--md-neutral-600); }
+.dialog input { width: 100%; box-sizing: border-box; min-height: 52px; padding: 0 14px; font: inherit; font-size: 22px; letter-spacing: .3em; text-align: center; border: 1px solid var(--md-purple-200); border-radius: 12px; background: var(--md-white); color: var(--md-color-text); }
+.actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.cancel, .confirm { min-height: 48px; border-radius: 12px; font: inherit; font-weight: 700; cursor: pointer; }
+.cancel { background: var(--md-white); color: var(--md-color-text); border: 1px solid var(--md-purple-200); }
+.confirm { border: 0; background: var(--md-purple-700); color: var(--md-white); }
+.cancel:disabled, .confirm:disabled { opacity: .6; cursor: not-allowed; }
+@media (min-width: 560px) { .backdrop { align-items: center; padding: 16px; } .dialog { max-width: 420px; border-radius: 20px; padding-bottom: 22px; } }

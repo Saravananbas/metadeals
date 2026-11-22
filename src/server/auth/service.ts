@@ -30,6 +30,17 @@ const BOOTSTRAP_STATE_ID = "initial-super-admin";
 const SETUP_TOKEN_LIFETIME_MS = 30 * 60 * 1000;
 const PASSWORD_RESET_TOKEN_LIFETIME_MS = 30 * 60 * 1000;
 const DUMMY_HASH = hashPassword(randomBytes(32).toString("hex"));
+/** Five failed sign-ins on one email lock it for 30 minutes (wrong, unknown or not: the count is kept per typed email, so an unknown email behaves the same). */
+const ACCOUNT_LOCK_AFTER = 5;
+export const ACCOUNT_LOCK_MS = 30 * 60 * 1000;
+export const ACCOUNT_LOCKED_MESSAGE = "Too many failed attempts. This account is locked for 30 minutes. Try again later, or use Forgot password to unlock it with a new password.";
+const TEMP_PASSWORD_LIFETIME_MS = 25 * 60 * 1000;
+const TEMP_PASSWORD_LENGTH = 10;
+/** No 0/O, 1/l/I: the temporary password is read from an email and typed by hand. */
+const TEMP_PASSWORD_ALPHABET = "abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789";
+const TEMP_PASSWORD_WRONG_TRIES = 5;
+/** Thrown at sign-in when the person typed their temporary password: no session is opened and it is not counted as a failure. */
+export class PasswordChangeRequired extends Error {}
 
 export type RequestAuditMetadata = {
   ipHash: string | null;
@@ -66,7 +77,7 @@ function loginRateLimitHashes(email: string, network: string, pepper: string): s
 
 async function recordLoginFailure(subjectHashes: string[], userId: string | null, metadata: RequestAuditMetadata) {
   const db = getDatabase();
-  await Promise.all(subjectHashes.map(async (subjectHash) => {
+  await Promise.all(subjectHashes.map(async (subjectHash, index) => {
     const updated = await db.authRateLimit.upsert({
       where: { subjectHash },
       create: { subjectHash, failures: 1 },
@@ -74,7 +85,9 @@ async function recordLoginFailure(subjectHashes: string[], userId: string | null
       select: { failures: true },
     });
     const failures = Math.min(updated.failures, 16);
-    const delaySeconds = failures < 5 ? 0 : Math.min(15 * 60, 2 ** Math.min(failures - 5, 9));
+    // The typed email (index 0) is the account lock: flat 30 minutes at the 5th failure. The address and the pair keep the short growing delay,
+    // so one shared office address is not locked out for half an hour.
+    const delaySeconds = failures < 5 ? 0 : index === 0 ? ACCOUNT_LOCK_MS / 1000 : Math.min(15 * 60, 2 ** Math.min(failures - 5, 9));
     const lockedUntil = delaySeconds ? new Date(Date.now() + delaySeconds * 1000) : null;
     await db.authRateLimit.updateMany({
       where: { subjectHash, failures: { lte: updated.failures } },
@@ -102,6 +115,125 @@ async function consumeRecoveryCode(userId: string, code: string, tx: Prisma.Tran
   return updated.count === 1;
 }
 
+/** The person's latest unused, unexpired temporary password row, when the typed text is that password. */
+async function currentTemporaryPassword(userId: string, typed: string, now: Date) {
+  const row = await getDatabase().authToken.findFirst({
+    where: { userId, purpose: AuthTokenPurpose.PASSWORD_RESET, passwordHash: { not: null }, completedAt: null, revokedAt: null, expiresAt: { gt: now } },
+    orderBy: { createdAt: "desc" },
+    select: { id: true, passwordHash: true },
+  });
+  if (!row?.passwordHash || !(await verifyPassword(row.passwordHash, typed))) return null;
+  return row;
+}
+
+/** 10 characters from an alphabet without look-alikes, drawn without modulo bias. */
+export function generateTemporaryPassword(): string {
+  const limit = Math.floor(256 / TEMP_PASSWORD_ALPHABET.length) * TEMP_PASSWORD_ALPHABET.length;
+  let out = "";
+  while (out.length < TEMP_PASSWORD_LENGTH) {
+    for (const byte of randomBytes(TEMP_PASSWORD_LENGTH * 2)) {
+      if (byte < limit && out.length < TEMP_PASSWORD_LENGTH) out += TEMP_PASSWORD_ALPHABET[byte % TEMP_PASSWORD_ALPHABET.length];
+    }
+  }
+  return out;
+}
+
+/** A sliding allowance of `max` tries per subject within the window (30 minutes by default); true while the try is allowed. */
+async function allowAttempt(subject: string, max: number, windowMs = ACCOUNT_LOCK_MS): Promise<boolean> {
+  const db = getDatabase();
+  const subjectHash = hashRateLimitSubject(subject, getAuthEnv().AUTH_SESSION_SECRET);
+  const existing = await db.authRateLimit.findUnique({ where: { subjectHash }, select: { updatedAt: true } });
+  if (existing && Date.now() - existing.updatedAt.getTime() > windowMs) await db.authRateLimit.deleteMany({ where: { subjectHash } });
+  const updated = await db.authRateLimit.upsert({ where: { subjectHash }, create: { subjectHash, failures: 1 }, update: { failures: { increment: 1 } }, select: { failures: true } });
+  return updated.failures <= max;
+}
+
+/**
+ * "Forgot password" step 1. Returns the new temporary password to email, or null for EVERY other outcome; the caller answers the same neutral message either way.
+ * It needs a valid authenticator code, is limited per email and per address, and never touches the sign-in lock (it is the way out of that lock).
+ */
+export async function requestTemporaryPassword(input: { email: string; mfaCode: string; metadata: RequestAuditMetadata }): Promise<{ email: string; tempPassword: string; tokenId: string } | null> {
+  const email = normalizedEmail(input.email);
+  const db = getDatabase();
+  const env = getAuthEnv();
+  const record = (userId: string | null, success: boolean, reason?: string) => writeAudit({ actorId: null, targetId: userId, action: "auth.password_reset.temporary_requested", success, ...input.metadata, metadata: reason ? { reason } : {} });
+  const allowedEmail = await allowAttempt(`forgot-email:${email}`, 5);
+  const allowedNetwork = await allowAttempt(`forgot-network:${input.metadata.ipHash ?? "unknown-network"}`, 20);
+  if (!allowedEmail || !allowedNetwork) { await record(null, false, "rate_limited"); return null; }
+
+  const user = await db.user.findUnique({ where: { email }, select: { id: true, status: true, totpSecretEncrypted: true, totpEnabledAt: true } });
+  if (!user || user.status !== UserStatus.ACTIVE || !user.totpEnabledAt || !user.totpSecretEncrypted) {
+    await verifyPassword(await DUMMY_HASH, "not-a-password"); // about the same time as a real account
+    await record(user?.id ?? null, false, "no_active_account");
+    return null;
+  }
+  const step = verifyTotp(decryptTotpSecret(user.totpSecretEncrypted, env.AUTH_TOTP_ENCRYPTION_KEY), input.mfaCode);
+  if (step === null) { await record(user.id, false, "bad_code"); return null; }
+  const guard = await db.user.updateMany({ where: { id: user.id, status: UserStatus.ACTIVE, lastTotpStep: { lt: BigInt(step) } }, data: { lastTotpStep: BigInt(step) } });
+  if (guard.count !== 1) { await record(user.id, false, "code_reused"); return null; }
+
+  const tempPassword = generateTemporaryPassword();
+  const passwordHash = await hashPassword(tempPassword);
+  const now = new Date();
+  const tokenId = await db.$transaction(async (tx) => {
+    // Only earlier temporary passwords are cancelled; a link issued by a Super Admin stays as it is.
+    await tx.authToken.updateMany({ where: { userId: user.id, purpose: AuthTokenPurpose.PASSWORD_RESET, passwordHash: { not: null }, completedAt: null, revokedAt: null }, data: { revokedAt: now } });
+    const created = await tx.authToken.create({
+      data: { tokenHash: authTokenHash(createOpaqueToken(32)), purpose: AuthTokenPurpose.PASSWORD_RESET, email, userId: user.id, passwordHash, expiresAt: new Date(now.getTime() + TEMP_PASSWORD_LIFETIME_MS) },
+      select: { id: true },
+    });
+    await writeAudit({ actorId: null, targetId: user.id, action: "auth.password_reset.temporary_requested", success: true, ...input.metadata, metadata: { expiresInMinutes: TEMP_PASSWORD_LIFETIME_MS / 60_000 } }, tx);
+    return created.id;
+  });
+  return { email, tempPassword, tokenId };
+}
+
+/**
+ * "Forgot password" step 2: the temporary password, a new password (twice) and a fresh authenticator code. Opens no session.
+ * A wrong temporary password or code counts toward the same sign-in lock; five wrong tries burn the temporary password.
+ */
+export async function changePasswordWithTemporary(input: { email: string; tempPassword: string; newPassword: string; confirmPassword: string; mfaCode: string; metadata: RequestAuditMetadata }): Promise<void> {
+  const email = normalizedEmail(input.email);
+  const db = getDatabase();
+  const env = getAuthEnv();
+  if (input.newPassword !== input.confirmPassword) throw new AuthenticationFailure("The new password and the confirmation do not match.");
+  const passwordError = validatePassword(input.newPassword, email);
+  if (passwordError) throw new AuthenticationFailure(passwordError);
+  if (input.newPassword === input.tempPassword) throw new AuthenticationFailure("Choose a new password that is different from the temporary one.");
+
+  const BAD = "The temporary password or authenticator code is not correct, or the temporary password has expired.";
+  const subjectHashes = loginRateLimitHashes(email, input.metadata.ipHash ?? "unknown-network", env.AUTH_SESSION_SECRET);
+  const now = new Date();
+  const user = await db.user.findUnique({ where: { email }, select: { id: true, status: true, totpSecretEncrypted: true, totpEnabledAt: true } });
+  const active = user && user.status === UserStatus.ACTIVE && user.totpEnabledAt && user.totpSecretEncrypted ? user : null;
+  const row = active ? await currentTemporaryPassword(active.id, input.tempPassword, now) : null;
+  if (!active) await verifyPassword(await DUMMY_HASH, "not-a-password");
+  const step = active ? verifyTotp(decryptTotpSecret(active.totpSecretEncrypted!, env.AUTH_TOTP_ENCRYPTION_KEY), input.mfaCode) : null;
+  if (!active || !row || step === null) {
+    await recordLoginFailure(subjectHashes, user?.id ?? null, input.metadata);
+    if (active) {
+      const current = await db.authToken.findFirst({ where: { userId: active.id, purpose: AuthTokenPurpose.PASSWORD_RESET, passwordHash: { not: null }, completedAt: null, revokedAt: null, expiresAt: { gt: now } }, orderBy: { createdAt: "desc" }, select: { id: true } });
+      if (current && !(await allowAttempt(`temporary-password-tries:${current.id}`, TEMP_PASSWORD_WRONG_TRIES - 1))) {
+        await db.authToken.updateMany({ where: { id: current.id, completedAt: null }, data: { revokedAt: now, passwordHash: null } });
+      }
+    }
+    throw new AuthenticationFailure(BAD);
+  }
+
+  const passwordHash = await hashPassword(input.newPassword);
+  await db.$transaction(async (tx) => {
+    const guard = await tx.user.updateMany({ where: { id: active.id, status: UserStatus.ACTIVE, lastTotpStep: { lt: BigInt(step) } }, data: { passwordHash, lastTotpStep: BigInt(step) } });
+    if (guard.count !== 1) throw new AuthenticationFailure("That authenticator code was already used. Wait for the next code and try again.");
+    const consumed = await tx.authToken.updateMany({ where: { id: row.id, completedAt: null, revokedAt: null, expiresAt: { gt: now } }, data: { completedAt: now, passwordHash: null } });
+    if (consumed.count !== 1) throw new AuthenticationFailure(BAD);
+    await tx.authToken.updateMany({ where: { userId: active.id, purpose: AuthTokenPurpose.PASSWORD_RESET, completedAt: null, revokedAt: null }, data: { revokedAt: now } });
+    await tx.authSession.deleteMany({ where: { userId: active.id } });
+    // Choosing a new password unlocks the account.
+    await tx.authRateLimit.deleteMany({ where: { subjectHash: subjectHashes[0] } });
+    await writeAudit({ actorId: active.id, targetId: active.id, action: "auth.password_reset.temporary_completed", success: true, ...input.metadata, metadata: {} }, tx);
+  });
+}
+
 export async function authenticate(input: {
   email: string;
   password: string;
@@ -113,17 +245,25 @@ export async function authenticate(input: {
   const env = getAuthEnv();
   const network = input.metadata.ipHash ?? "unknown-network";
   const subjectHashes = loginRateLimitHashes(email, network, env.AUTH_SESSION_SECRET);
-  const limiters = await db.authRateLimit.findMany({ where: { subjectHash: { in: subjectHashes } } });
+  let limiters = await db.authRateLimit.findMany({ where: { subjectHash: { in: subjectHashes } } });
   const now = new Date();
-  if (limiters.some((limiter) => limiter.lockedUntil && limiter.lockedUntil > now)) {
+  // A lock that has run out, or failures older than the lock window, start fresh.
+  const emailHash = subjectHashes[0];
+  const stale = limiters.find((l) => l.subjectHash === emailHash && ((l.lockedUntil && l.lockedUntil <= now) || (!l.lockedUntil && now.getTime() - l.updatedAt.getTime() > ACCOUNT_LOCK_MS)));
+  if (stale) {
+    await db.authRateLimit.deleteMany({ where: { subjectHash: emailHash } });
+    limiters = limiters.filter((l) => l.subjectHash !== emailHash);
+  }
+  const locked = limiters.filter((limiter) => limiter.lockedUntil && limiter.lockedUntil > now);
+  if (locked.length) {
     await writeAudit({
       action: "auth.login.failed",
       targetId: null,
       success: false,
       ...input.metadata,
-      metadata: { reason: "rate_limited" },
+      metadata: { reason: locked.some((l) => l.subjectHash === emailHash) ? "account_locked" : "rate_limited" },
     });
-    throw new AuthenticationFailure("Invalid email, password, or authenticator code.");
+    throw new AuthenticationFailure(locked.some((l) => l.subjectHash === emailHash) ? ACCOUNT_LOCKED_MESSAGE : "Invalid email, password, or authenticator code.");
   }
 
   const user = await db.user.findUnique({
@@ -139,6 +279,8 @@ export async function authenticate(input: {
     user.status = UserStatus.ACTIVE;
   }
   const passwordMatches = await verifyPassword(user?.passwordHash ?? await DUMMY_HASH, input.password);
+  // The temporary password from "Forgot password" opens no session: it only sends the person to the page that makes them choose a new one.
+  if (user && !passwordMatches && user.status === UserStatus.ACTIVE && await currentTemporaryPassword(user.id, input.password, now)) throw new PasswordChangeRequired();
   if (!user || !passwordMatches || user.status !== UserStatus.ACTIVE || suspensionBlocks(user, now) || !user.totpEnabledAt || !user.totpSecretEncrypted) {
     await recordLoginFailure(subjectHashes, user?.id ?? null, input.metadata);
     throw new AuthenticationFailure("Invalid email, password, or authenticator code.");
@@ -513,6 +655,8 @@ export async function completePasswordReset(token: string, password: string, met
     });
     if (consumed.count !== 1) throw new AuthenticationFailure("Reset link is invalid or expired.");
     await tx.authSession.deleteMany({ where: { userId } });
+    // A new password also unlocks the account.
+    await tx.authRateLimit.deleteMany({ where: { subjectHash: hashRateLimitSubject(`email:${normalizedEmail(row.email)}`, getAuthEnv().AUTH_SESSION_SECRET) } });
     await tx.authToken.updateMany({
       where: { userId, purpose: AuthTokenPurpose.PASSWORD_RESET, completedAt: null, revokedAt: null },
       data: { revokedAt: now },

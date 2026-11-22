@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { authenticate } from "@/server/auth/service";
+import { authenticate, PasswordChangeRequired } from "@/server/auth/service";
 import { getRequestMetadata } from "@/server/auth/request";
 import { requireSameOrigin, parseRequestBody, authFailureResponse } from "@/server/auth/http";
 import { revokeCurrentSession, setSessionCookie } from "@/server/auth/session";
@@ -22,6 +22,8 @@ export async function POST(request: Request) {
     await setSessionCookie(result.token);
     return Response.json({ userId: result.userId });
   } catch (error) {
+    // The emailed temporary password opens no session: the screen sends the person to the page that makes them choose a new password.
+    if (error instanceof PasswordChangeRequired) return Response.json({ passwordChangeRequired: true });
     return authFailureResponse(error, 401);
   }
 }
