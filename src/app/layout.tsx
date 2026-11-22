@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   robots: { index: allowIndexing, follow: allowIndexing },
   referrer: "strict-origin-when-cross-origin",
   other: {
-    "cuelinks-verification": "VERIFY-CL-YN1ZO95L",
+    "cuelinks-verification": ["VERIFY-CL-YN1ZO95L", "VERIFY-CL-JBFDE9Y6"],
   },
 };
 
@@ -38,7 +38,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en-IN">
       <head>
-        <meta name="cuelinks-verification" content="VERIFY-CL-YN1ZO95L" />
       </head>
       <body className={manrope.variable}>
         {children}
