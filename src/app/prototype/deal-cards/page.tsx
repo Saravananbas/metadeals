@@ -422,14 +422,14 @@ export default function PrototypeDealCardsPage() {
                       )}
                     </div>
 
-                    {/* ROW 6: Action Row (Post Details & Buy Now) */}
+                    {/* ROW 6: Action Row (Details & Buy Now) */}
                     <div className={styles.rowActions}>
                       <button
                         type="button"
                         className={styles.detailsBtn}
                         onClick={() => handlePostDetails(deal)}
                       >
-                        Post Details
+                        Details
                       </button>
 
                       <a

@@ -337,7 +337,7 @@ export function DealCard({
           )}
         </div>
 
-        {/* ROW 6: Action Row (Post Details & Buy Now) */}
+        {/* ROW 6: Action Row (Details & Buy Now) */}
         <div className="deal-row-actions">
           <a
             href={`/deal/${encodeURIComponent(deal.slug || deal.id)}`}
@@ -347,7 +347,7 @@ export function DealCard({
             aria-label={`View deal details for ${deal.name}`}
             onClick={(e) => e.stopPropagation()}
           >
-            <FileText size={16} aria-hidden="true" /> Post Details
+            <FileText size={16} aria-hidden="true" /> Details
           </a>
           <a
             href={`/go/${deal.id}`}
