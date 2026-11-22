@@ -101,13 +101,13 @@ export function UsersAdmin() {
               <tbody>
                 {members.data.map((m) => (
                   <tr key={m.id}>
-                    <td><strong>{m.name}</strong>{m.handle && <small>@{m.handle}</small>}</td>
-                    <td>{m.email}{!m.emailVerified && <small className={styles.warn}>Not verified</small>}</td>
-                    <td>{m.signInMethods.join(", ") || "–"}</td>
-                    <td>{when(m.joinedAt)}</td>
-                    <td>{when(m.lastSeenAt)}</td>
-                    <td><span className={`${styles.badge} ${m.status === "Active" ? styles.ok : styles.bad}`}>{m.status}</span></td>
-                    <td>{m.comments}</td><td>{m.votes}</td><td>{m.saved}</td><td>{m.submissions}</td>
+                    <td data-label="Member"><strong>{m.name}</strong>{m.handle && <small>@{m.handle}</small>}</td>
+                    <td data-label="Email">{m.email}{!m.emailVerified && <small className={styles.warn}>Not verified</small>}</td>
+                    <td data-label="Signed up with">{m.signInMethods.join(", ") || "–"}</td>
+                    <td data-label="Joined">{when(m.joinedAt)}</td>
+                    <td data-label="Last seen">{when(m.lastSeenAt)}</td>
+                    <td data-label="Status"><span className={`${styles.badge} ${m.status === "Active" ? styles.ok : styles.bad}`}>{m.status}</span></td>
+                    <td data-label="Comments">{m.comments}</td><td data-label="Votes">{m.votes}</td><td data-label="Saved">{m.saved}</td><td data-label="Posted deals">{m.submissions}</td>
                   </tr>
                 ))}
                 {members.data.length === 0 && <tr><td colSpan={10} className={styles.empty}>{query ? "No member matches that search." : "No registered members yet."}</td></tr>}
@@ -123,14 +123,14 @@ export function UsersAdmin() {
               <tbody>
                 {visitors.data.map((v) => (
                   <tr key={v.id}>
-                    <td>{when(v.startedAt)}</td>
-                    <td>{v.visitor ? <code>{v.visitor}</code> : "–"}{v.returning && <small>Returning</small>}</td>
-                    <td>{v.source}</td>
-                    <td>{v.device}<small>{v.browser} · {v.os}</small></td>
-                    <td className={styles.path}>{v.entry}</td>
-                    <td className={styles.path}>{v.exit}</td>
-                    <td>{v.pages}</td>
-                    <td>{duration(v.seconds)}</td>
+                    <td data-label="Visit started">{when(v.startedAt)}</td>
+                    <td data-label="Visitor">{v.visitor ? <code>{v.visitor}</code> : "–"}{v.returning && <small>Returning</small>}</td>
+                    <td data-label="Source">{v.source}</td>
+                    <td data-label="Device">{v.device}<small>{v.browser} · {v.os}</small></td>
+                    <td data-label="Landed on" className={styles.path}>{v.entry}</td>
+                    <td data-label="Left on" className={styles.path}>{v.exit}</td>
+                    <td data-label="Pages">{v.pages}</td>
+                    <td data-label="Time active">{duration(v.seconds)}</td>
                   </tr>
                 ))}
                 {visitors.data.length === 0 && <tr><td colSpan={8} className={styles.empty}>No anonymous visits in this period.</td></tr>}
