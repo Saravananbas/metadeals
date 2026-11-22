@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { CONSENT_EVENT, getConsent } from "@/lib/analytics-client";
 
 // Set NEXT_PUBLIC_GTM_ID (empty to switch off) before the build; production builds only, so local work never counts as visits.
-const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID ?? "GTM-WN8LB3ZM";
+const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID ?? "GTM-NM5TR8GZ";
 const PRIVATE_AREAS = /^\/(admin|moderator|messages)(\/|$)/;
 
 declare global { interface Window { dataLayer?: unknown[] } }
