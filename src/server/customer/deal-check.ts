@@ -8,7 +8,11 @@ import { limitCustomerRequests } from "./service";
 import { assertActiveCustomer } from "./session";
 import { canonicalProductUrl, hashProductUrl } from "./submissions";
 
-/** The part of a store link that identifies the product, so two links with different tracking text still match. Amazon: /dp/<ASIN>. Flipkart: ?pid=. Otherwise null. */
+/**
+ * The part of a store link that identifies the product, so two links with different tracking text still match.
+ * Amazon: /dp/<ASIN>. Flipkart: ?pid=. Any other store: the product page path (for example /products/plum-lip-balm), ignoring the query and any tracking text.
+ * shortcut: paths that are short or look like search and category pages give no key, to avoid false matches; a store that puts the product only in the query is not matched.
+ */
 export function productKey(raw: string): string | null {
   try {
     const url = new URL(raw);
@@ -16,6 +20,8 @@ export function productKey(raw: string): string | null {
     if (asin) return `/${asin.toUpperCase()}`;
     const pid = url.searchParams.get("pid");
     if (pid && /^[A-Z0-9]{8,20}$/i.test(pid)) return `pid=${pid}`;
+    const path = decodeURIComponent(url.pathname).toLowerCase().replace(/\/+$/, "");
+    if (path.length >= 15 && !/^\/(search|s|c|category|categories|collections?|cart|checkout|login)(\/|$)/.test(path) && !/[%_\\]/.test(path)) return path;
   } catch { /* not a link */ }
   return null;
 }
