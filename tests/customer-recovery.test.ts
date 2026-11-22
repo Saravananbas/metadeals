@@ -45,9 +45,10 @@ test("sign in with the user name or the email; unknown names look like unknown e
     assert.equal(await service.loginCustomer({ email: "a b", password: PASSWORD }, "198.51.100.26"), null, "malformed names are refused");
     assert.equal((await service.loginCustomer({ email: HANDLE, password: PASSWORD, remember: "on" }, "198.51.100.27"))?.remember, true);
     assert.equal((await service.loginCustomer({ email: HANDLE, password: PASSWORD }, "198.51.100.28"))?.remember, false);
-    // Failures under the user name count against the same account as failures under the email.
-    for (let i = 0; i < 8; i++) await service.loginCustomer({ email: i % 2 ? HANDLE : EMAIL, password: "bad-" + i }, "203.0.113.90");
-    assert.equal(await service.loginCustomer({ email: EMAIL, password: PASSWORD }, "203.0.113.90"), null, "mixing names does not reset the per-address limit");
+    // Failures under the user name count against the same account as failures under the email, so mixing them still reaches the lock at five.
+    for (let i = 0; i < 5; i++) await service.loginCustomer({ email: i % 2 ? HANDLE : EMAIL, password: "bad-" + i }, "203.0.113.90");
+    await assert.rejects(() => service.loginCustomer({ email: EMAIL, password: PASSWORD }, "203.0.113.90"), (e: unknown) => e instanceof service.CustomerError && e.status === 423, "mixing names does not get around the lock");
+    await assert.rejects(() => service.loginCustomer({ email: HANDLE, password: PASSWORD }, "203.0.113.91"), (e: unknown) => e instanceof service.CustomerError && e.status === 423, "the user name is locked too");
   } finally { await wipe(); }
 });
 
@@ -83,6 +84,20 @@ test("forgot password: same answer for everyone, code by email, new password wor
     const dir = path.join(process.cwd(), ".local", "email-outbox");
     for (const f of await readdir(dir).catch(() => [] as string[])) if (f.endsWith(".json")) { const t = await readFile(path.join(dir, f), "utf8").catch(() => ""); if (t.includes(EMAIL)) await rm(path.join(dir, f), { force: true }); }
   }
+});
+
+test("a locked member is unlocked at once by choosing a new password with the emailed code", { skip }, async () => {
+  const { service, db, wipe } = await setup();
+  try {
+    for (let i = 0; i < 5; i++) assert.equal(await service.loginCustomer({ email: EMAIL, password: "bad-" + i }, "203.0.113.95"), null);
+    await assert.rejects(() => service.loginCustomer({ email: EMAIL, password: PASSWORD }, "198.51.100.95"), (e: unknown) => e instanceof service.CustomerError && e.status === 423 && e.message === service.MEMBER_LOCKED_MESSAGE);
+    // The way out stays open: the reset code is requested and confirmed while the account is locked.
+    const asked = await service.requestPasswordReset({ email: EMAIL });
+    const { code } = await lastCode(asked.challengeId);
+    await service.confirmPasswordReset({ challengeId: asked.challengeId, code, password: NEW_PASSWORD, confirmPassword: NEW_PASSWORD });
+    assert.equal((await service.loginCustomer({ email: EMAIL, password: NEW_PASSWORD }, "198.51.100.96"))?.email, EMAIL, "signs in straight away, no 30-minute wait");
+    void db;
+  } finally { await wipe(); }
 });
 
 test("remember me: the sign-in token lasts 30 days with it and 24 hours without it", async () => {
