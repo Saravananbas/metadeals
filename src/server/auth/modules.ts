@@ -37,7 +37,7 @@ export const ACCESS_MODULES: AccessModule[] = [
 ];
 
 /** Parts of the admin area that cannot be delegated from this screen: they stay with the person's role. */
-export const ROLE_ONLY_MODULES = ["Accounts and access", "Audit log", "Security settings", "Community Management", "Moderators", "Announcements"];
+export const ROLE_ONLY_MODULES = ["Accounts and access", "Audit log", "Security settings", "Community Management", "Moderators", "Announcements", "Users"];
 
 export const DELEGABLE_PERMISSIONS: ReadonlySet<string> = new Set(ACCESS_MODULES.flatMap((m) => m.levels.flatMap((l) => l.permissions)));
 

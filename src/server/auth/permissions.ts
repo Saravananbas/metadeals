@@ -26,6 +26,7 @@ export type Permission =
   | "forum:moderate"
   | "forum:manage"
   | "announcement.publish"
+  | "users:view"
   // Community moderation. A moderator holds ONLY the "mod:" capabilities listed under COMMUNITY_MODERATOR below.
   | "mod:queue:read" | "mod:post:review" | "mod:comment:moderate" | "mod:report:handle" | "mod:submission:review"
   | "mod:member:warn" | "mod:member:restrict" | "mod:history:own" | "mod:sensitive:hide"
@@ -42,12 +43,12 @@ const rolePermissions: Record<AdminRole, ReadonlySet<Permission>> = {
     "account:role:update", "account:suspend", "account:reactivate", "account:delete", "account:read",
     "audit:read", "security:manage", "deal:create", "deal:edit", "deal:publish",
     "deal:archive", "merchant:manage", "category:manage", "affiliate:manage",
-    "operations:read", "analytics:view", "intelligence:view", "scraper:use", "affiliate:view", "forum:moderate", "forum:manage", "announcement.publish", ...ADMIN_MODERATION,
+    "operations:read", "analytics:view", "intelligence:view", "scraper:use", "affiliate:view", "forum:moderate", "forum:manage", "announcement.publish", "users:view", ...ADMIN_MODERATION,
   ]),
   ADMIN: new Set([
     "account:create:editor", "account:suspend", "account:reactivate", "account:read",
     "deal:create", "deal:edit", "deal:publish", "deal:archive", "merchant:manage",
-    "category:manage", "affiliate:manage", "operations:read", "analytics:view", "intelligence:view", "scraper:use", "affiliate:view", "forum:moderate", "forum:manage", "announcement.publish", ...ADMIN_MODERATION,
+    "category:manage", "affiliate:manage", "operations:read", "analytics:view", "intelligence:view", "scraper:use", "affiliate:view", "forum:moderate", "forum:manage", "announcement.publish", "users:view", ...ADMIN_MODERATION,
   ]),
   EDITOR: new Set(["deal:create", "deal:edit", "deal:publish", "scraper:use"]),
   COMMUNITY_MODERATOR: new Set<Permission>(MODERATOR_PERMISSIONS),
