@@ -38,11 +38,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en-IN">
       <head>
+        <GoogleTagManager />
       </head>
       <body className={manrope.variable}>
         {children}
         <AnalyticsTracker />
-        <GoogleTagManager />
         <ConsentBanner />
       </body>
     </html>
