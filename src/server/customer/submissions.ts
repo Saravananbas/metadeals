@@ -78,11 +78,6 @@ function descriptionFrom(input: SubmissionInput): { description: string; descrip
   return { description, descriptionHtml: rich?.html || null };
 }
 
-async function assertNotAlreadyListed(productUrl: string) {
-  const listed = await getDatabase().deal.findFirst({ where: { productUrl, status: "PUBLISHED" }, select: { id: true } });
-  if (listed) throw new CustomerError("This deal is already listed on MetaDeals4U.", 409);
-}
-
 export async function createSubmission(customerId: string, rawFields: unknown, imageBytes: Buffer | null, extraFiles: Buffer[] = []) {
   const customer = await assertActiveCustomer(customerId);
   await assertNotRestrictedByCustomer(customer.id); // a moderator's posting restriction also covers community deal submissions
@@ -97,7 +92,6 @@ export async function createSubmission(customerId: string, rawFields: unknown, i
   if (existing) {
     throw new CustomerError(existing.status === "REJECTED" ? "You already sent this link and it was not approved. Open it under My submissions to fix and resubmit." : "You have already submitted this link.", 409);
   }
-  await assertNotAlreadyListed(input.productUrl);
 
   const { storage, normalized } = await decodeImage(imageBytes?.length ? imageBytes : input.imageUrl ? await downloadImageFromUrl(input.imageUrl) : null);
   let extras: Decoded[] = [];
@@ -159,7 +153,6 @@ export async function resubmit(customerId: string, id: string, rawFields: unknow
   const urlHash = hashProductUrl(input.productUrl);
   if (urlHash !== current.urlHash) {
     if (await db.communityDealSubmission.findUnique({ where: { customerId_urlHash: { customerId: customer.id, urlHash } }, select: { id: true } })) throw new CustomerError("You have already submitted that link.", 409);
-    await assertNotAlreadyListed(input.productUrl);
   }
   const image = imageBytes?.length ? await decodeImage(imageBytes) : input.imageUrl ? await decodeImage(await downloadImageFromUrl(input.imageUrl)) : null;
   // Pictures are replaced only when the member sent new ones.
