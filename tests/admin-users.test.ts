@@ -22,7 +22,7 @@ test("the member row never carries a password, date of birth, sex or location", 
   assert.ok(!/argon2|passwordHash|dateOfBirth|sex|location/i.test(text));
   assert.deepEqual(row.signInMethods, ["Email and password", "Google", "Apple"]);
   assert.equal(row.status, "Active");
-  assert.equal(toMemberRow({ ...({} as never), id: "c2", name: "B", email: "b@x.in", createdAt: new Date(), emailVerifiedAt: null, disabledAt: new Date(), passwordHash: null, identities: [], forumProfile: null, _count: { dealComments: 0, dealVotes: 0, savedDeals: 0, submissions: 0 } }).status, "Disabled");
+  assert.equal(toMemberRow({ id: "c2", name: "B", email: "b@x.in", createdAt: new Date(), emailVerifiedAt: null, disabledAt: new Date(), passwordHash: null, identities: [], forumProfile: null, _count: { dealComments: 0, dealVotes: 0, savedDeals: 0, submissions: 0 } }).status, "Disabled");
 });
 
 test("the list query is bounded", () => {
