@@ -395,6 +395,21 @@ export async function createAccountSetupToken(input: {
       where: { email },
       select: { id: true, role: true, status: true },
     });
+    // Deleting an account only marks it (its history and the work it created stay linked), so the email is still taken.
+    // Creating the same email again starts it over: every old credential, sign-in and access setting is wiped first.
+    if (existing?.status === UserStatus.DELETED) {
+      await tx.authSession.deleteMany({ where: { userId: existing.id } });
+      await tx.session.deleteMany({ where: { userId: existing.id } });
+      await tx.recoveryCode.deleteMany({ where: { userId: existing.id } });
+      await tx.staffPermissionGrant.deleteMany({ where: { userId: existing.id } });
+      await tx.authToken.updateMany({ where: { userId: existing.id, completedAt: null, revokedAt: null }, data: { revokedAt: new Date() } });
+      await tx.user.update({
+        where: { id: existing.id },
+        data: { status: UserStatus.PENDING_SETUP, role: input.role, passwordHash: null, totpSecretEncrypted: null, totpEnabledAt: null, lastTotpStep: BigInt(-1), suspendedFrom: null, suspendedUntil: null, suspensionReason: null, customAccess: false, customAccessUntil: null },
+      });
+      existing.status = UserStatus.PENDING_SETUP;
+      existing.role = input.role;
+    }
     if (existing && (existing.status !== UserStatus.PENDING_SETUP || existing.role !== input.role)) {
       throw new AuthenticationFailure("An account with that email already exists.");
     }

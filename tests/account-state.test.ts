@@ -136,3 +136,29 @@ test("who may do what: nobody changes themselves, admins only touch editors and 
     await run(admin, editor.id, "suspend", { suspendedFrom: new Date(), suspendedUntil: new Date(Date.now() + 3_600_000), reason: "Short break" });
   } finally { await cleanup(); }
 });
+
+test("a deleted account's email can be used again, and the new account starts clean", { skip }, async () => {
+  const { db, person, code, run, cleanup } = await setup();
+  const { createAccountSetupToken } = await import("../src/server/auth/service");
+  try {
+    const actor = await person("SUPER_ADMIN"), target = await person("ADMIN");
+    await db.recoveryCode.create({ data: { userId: target.id, codeHash: "x" } });
+    await run(actor, target.id, "delete", { totp: code(actor.secret, 0) });
+    assert.equal((await db.user.findUniqueOrThrow({ where: { id: target.id } })).status, "DELETED");
+
+    const again = await createAccountSetupToken({ email: target.email!, role: "EDITOR", emailDeliveryVerified: true, actorId: actor.id, metadata: { ipHash: null, userAgent: null, requestId: "recreate" } });
+    assert.equal(again.userId, target.id, "same row, so its history stays linked");
+    const fresh = await db.user.findUniqueOrThrow({ where: { id: target.id } });
+    assert.equal(fresh.status, "PENDING_SETUP");
+    assert.equal(fresh.role, "EDITOR", "the role chosen now, not the old one");
+    assert.equal(fresh.passwordHash, null);
+    assert.equal(fresh.totpEnabledAt, null);
+    assert.equal(fresh.totpSecretEncrypted, null, "the old authenticator is gone");
+    assert.equal(await db.recoveryCode.count({ where: { userId: target.id } }), 0);
+    assert.equal(await db.authSession.count({ where: { userId: target.id } }), 0);
+
+    // An account that is still active keeps its email.
+    const live = await person("ADMIN");
+    await assert.rejects(() => createAccountSetupToken({ email: live.email!, role: "ADMIN", emailDeliveryVerified: true, actorId: actor.id, metadata: { ipHash: null, userAgent: null, requestId: "dup" } }), /already exists/i);
+  } finally { await cleanup(); }
+});
