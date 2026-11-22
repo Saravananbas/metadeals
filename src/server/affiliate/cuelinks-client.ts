@@ -178,7 +178,7 @@ export class CuelinksClient {
 
     try {
       const redirectBase = new URL("https://linksredirect.com/");
-      if (channelId) { redirectBase.searchParams.set("cid", channelId); redirectBase.searchParams.set("source", "api"); }
+      if (channelId) { redirectBase.searchParams.set("cid", channelId); redirectBase.searchParams.set("source", "linkkit"); }
       else redirectBase.searchParams.set("pub_id", pubId as string);
       redirectBase.searchParams.set("url", targetUrl);
       if (subId) {

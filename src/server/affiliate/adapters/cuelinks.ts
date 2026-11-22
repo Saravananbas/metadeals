@@ -13,7 +13,7 @@ export class CuelinksAdapter implements AffiliateProviderAdapter {
   }
 
   convertUrl(originalUrl: string, context: AffiliateConversionContext): ConvertedLinkResult {
-    // Cuelinks' own link API returns links shaped `?cid=<channel id>&source=api&url=...`, so the channel id is what credits the click to this site.
+    // Cuelinks' own link API returns links shaped `?cid=<channel id>&source=linkkit&url=...`, so the channel id is what credits the click to this site.
     // CUELINKS_PUB_ID (the publisher id) is only the fallback for setups that have no channel id yet.
     const channelId = process.env.CUELINKS_CHANNEL_ID;
     const pubId = process.env.CUELINKS_PUB_ID;
@@ -23,7 +23,7 @@ export class CuelinksAdapter implements AffiliateProviderAdapter {
 
     try {
       const redirectBase = new URL("https://linksredirect.com/");
-      if (channelId) { redirectBase.searchParams.set("cid", channelId); redirectBase.searchParams.set("source", "api"); }
+      if (channelId) { redirectBase.searchParams.set("cid", channelId); redirectBase.searchParams.set("source", "linkkit"); }
       else redirectBase.searchParams.set("pub_id", pubId as string);
       redirectBase.searchParams.set("url", originalUrl);
       if (context.subId) {

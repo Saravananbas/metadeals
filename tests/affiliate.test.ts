@@ -115,7 +115,7 @@ test("Cuelinks adapter wraps URLs only when configured", () => {
   process.env.CUELINKS_CHANNEL_ID = "337441";
   const withChannel = adapter.convertUrl("https://www.myntra.com/shirt", { dealId: "d1", subId: "sub789" });
   assert.match(withChannel.url, /cid=337441/);
-  assert.match(withChannel.url, /source=api/);
+  assert.match(withChannel.url, /source=linkkit/);
   assert.doesNotMatch(withChannel.url, /pub_id=/);
   delete process.env.CUELINKS_CHANNEL_ID;
   delete process.env.CUELINKS_PUB_ID;
@@ -126,7 +126,7 @@ test("Tata CLiQ, Myntra, AJIO, Croma, Reliance Digital and Nykaa links use the s
   process.env.CUELINKS_PUB_ID = "286339";
   for (const host of ["www.tatacliq.com", "www.myntra.com", "www.ajio.com", "www.croma.com", "www.reliancedigital.in", "www.nykaa.com", "www.flipkart.com", "www.amazon.in"]) {
     const result = convertMerchantUrl(`https://${host}/p/1`, host, { dealId: "d1", subId: "web" });
-    assert.match(result.url, /^https:\/\/linksredirect\.com\/\?cid=337441&source=api&url=/, host);
+    assert.match(result.url, /^https:\/\/linksredirect\.com\/\?cid=337441&source=linkkit&url=/, host);
     assert.doesNotMatch(result.url, /clnk\.in/, host);
   }
   delete process.env.CUELINKS_CHANNEL_ID;
