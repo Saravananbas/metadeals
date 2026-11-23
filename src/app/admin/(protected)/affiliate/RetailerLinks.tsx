@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState, type FormEvent } from "react";
+import { Fragment, useCallback, useEffect, useState, type FormEvent } from "react";
 import { AdminNav } from "@/components/admin/AdminNav";
 import styles from "./retailer-links.module.css";
 
@@ -49,19 +49,24 @@ export function RetailerLinks({ canManage }: { canManage: boolean }) {
         )}
         {error && <p className={styles.error} role="alert">{error}</p>}
         {data && !data.cuelinksOn && <p className={styles.error}>Cuelinks is switched off or has no channel id, so stores without their own account are not monetised.</p>}
-        <div className={styles.list}>
-          {data?.items.map((r) => (
-            <section key={r.id} className={styles.card}>
-              <div className={styles.row}>
-                <div><div className={styles.name}>{r.name}</div><div className={styles.site}>{r.websiteUrl}</div></div>
-                <span className={`${styles.badge} ${r.config?.mode === "OWN" && !r.config.problem ? styles.own : r.earningVia.startsWith("Not") ? styles.off : ""}`}>{r.earningVia}</span>
-                <span className={styles.meta}>{r.clicks30d} clicks (30 days)</span>
-                <button type="button" className={styles.ghost} aria-expanded={open === r.id} onClick={() => setOpen(open === r.id ? null : r.id)}>{open === r.id ? "Close" : canManage ? "Set up" : "Details"}</button>
-              </div>
-              {open === r.id && <RetailerForm retailer={r} canManage={canManage} onSaved={load} />}
-            </section>
-          ))}
-          {data && data.items.length === 0 && <p className={styles.sub}>No stores yet. Add one above.</p>}
+        <div className={styles.tableWrap}>
+          <table className={styles.table}>
+            <thead><tr><th>Store</th><th>Earns through</th><th className={styles.num}>Clicks (30 days)</th><th><span className={styles.srOnly}>Action</span></th></tr></thead>
+            <tbody>
+              {data?.items.map((r) => (
+                <Fragment key={r.id}>
+                  <tr>
+                    <td data-label="Store"><div className={styles.name}>{r.name}</div><div className={styles.site}>{r.websiteUrl}</div></td>
+                    <td data-label="Earns through"><span className={`${styles.badge} ${r.config?.mode === "OWN" && !r.config.problem ? styles.own : r.earningVia.startsWith("Not") ? styles.off : ""}`}>{r.earningVia}</span></td>
+                    <td data-label="Clicks (30 days)" className={styles.num}>{r.clicks30d}</td>
+                    <td className={styles.act}><button type="button" className={styles.ghost} aria-expanded={open === r.id} onClick={() => setOpen(open === r.id ? null : r.id)}>{open === r.id ? "Close" : canManage ? "Set up" : "Details"}</button></td>
+                  </tr>
+                  {open === r.id && <tr className={styles.formRow}><td colSpan={4}><RetailerForm retailer={r} canManage={canManage} onSaved={load} /></td></tr>}
+                </Fragment>
+              ))}
+            </tbody>
+          </table>
+          {data && data.items.length === 0 && <p className={styles.empty}>No stores yet. Add one above.</p>}
         </div>
       </main>
     </>

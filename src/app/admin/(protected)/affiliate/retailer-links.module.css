@@ -7,9 +7,28 @@
 .primary { min-height: 40px; padding: 0 18px; font-size: 13px; border: 0; border-radius: 10px; background: var(--md-purple-700); color: var(--md-white); font: inherit; font-weight: 700; cursor: pointer; }
 .primary:disabled { opacity: .55; cursor: not-allowed; }
 .ghost { min-height: 40px; padding: 0 14px; font-size: 13px; border: 1px solid var(--md-purple-200); border-radius: 10px; background: var(--md-white); color: var(--md-purple-700); font: inherit; font-weight: 700; cursor: pointer; }
-.list { display: grid; gap: 10px; }
-.card { background: var(--md-white); border: 1px solid var(--md-purple-100); border-radius: 14px; padding: 12px 14px; display: grid; gap: 10px; }
-.row { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between; }
+.tableWrap { background: var(--md-white); border: 1px solid var(--md-purple-100); border-radius: 14px; overflow-x: auto; }
+.table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.table th { text-align: left; padding: 10px 14px; background: var(--md-purple-50); color: var(--md-neutral-700); font-size: 11px; text-transform: uppercase; letter-spacing: .03em; white-space: nowrap; }
+.table td { padding: 10px 14px; border-top: 1px solid var(--md-neutral-200); vertical-align: middle; color: var(--md-color-text); }
+.num { text-align: right; font-variant-numeric: tabular-nums; }
+.act { text-align: right; width: 1%; white-space: nowrap; }
+.formRow td { background: var(--md-purple-50); }
+.formRow .form { border-top: 0; padding-top: 0; }
+.empty { padding: 28px; text-align: center; color: var(--md-neutral-600); font-size: 12px; }
+.srOnly { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (max-width: 720px) {
+  .table thead { display: none; }
+  .table, .table tbody, .table tr, .table td { display: block; width: auto; }
+  .table tr { padding: 10px 14px; border-top: 1px solid var(--md-neutral-200); }
+  .table td { border: 0; padding: 4px 0; display: flex; justify-content: space-between; gap: 12px; text-align: right; }
+  .table td[data-label]::before { content: attr(data-label); font-size: 11px; font-weight: 700; color: var(--md-neutral-600); text-align: left; }
+  .table td:first-child { display: block; text-align: left; }
+  .table td:first-child::before { display: none; }
+  .act { width: auto; }
+  .act .ghost { width: 100%; }
+  .formRow td { display: block; text-align: left; }
+}
 .name { font-weight: 800; font-size: 14px; color: var(--md-color-text); }
 .site { font-size: 11px; color: var(--md-neutral-600); overflow-wrap: anywhere; }
 .badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; background: var(--md-purple-50); color: var(--md-purple-700); }
