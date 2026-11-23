@@ -96,6 +96,9 @@ const empty: AdminDealForm = {
   options: [],
 };
 
+/** Lower-case words joined by single hyphens, the only form the server accepts for a slug. */
+const toSlug = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
 async function request<T>(path: string, method = "GET", body?: unknown, signal?: AbortSignal): Promise<T> {
   const response = await fetch(`/api/v1/admin/${path}`, {
     method,
@@ -103,7 +106,11 @@ async function request<T>(path: string, method = "GET", body?: unknown, signal?:
     ...(body ? { headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) } : {}),
   });
   const data = await response.json();
-  if (!response.ok) throw new Error(data.error?.message ?? "Request failed.");
+  if (!response.ok) {
+    // Validation errors name the fields that failed, so the editor can see what to fix.
+    const detail = Array.isArray(data.error?.fields) ? data.error.fields.slice(0, 3).map((f: { path: string; message: string }) => `${f.path || "form"}: ${f.message}`).join("; ") : "";
+    throw new Error(`${data.error?.message ?? "Request failed."}${detail ? ` (${detail})` : ""}`);
+  }
   return data;
 }
 
@@ -940,6 +947,16 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
     }
   }
 
+  // The store is picked from the product link as soon as it is pasted; a store the editor already chose is never overridden.
+  useEffect(() => {
+    if (form.merchantId || !form.productUrl.trim()) return;
+    const match = findDirectoryMerchant([form.productUrl]);
+    if (!match) return;
+    const operational = merchants.find((m) => m.websiteUrl && merchantDomain(m.websiteUrl) === merchantDomain(match.domain || match.websiteUrl));
+    setForm((old) => (old.merchantId ? old : { ...old, merchantId: operational?.id || match.id }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- findDirectoryMerchant reads the loaded directory; re-run when the link or the lists change
+  }, [form.productUrl, form.merchantId, directoryMerchants, merchants]);
+
   useEffect(() => {
     if (selected) return;
     const link = form.productUrl.trim();
@@ -1112,7 +1129,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
       return;
     }
 
-    const slug = s?.slug || form.slug || title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    const slug = toSlug(s?.slug || form.slug || title);
     const description = (previewDescription || s?.description || form.description || title).trim();
     const productUrl = s?.productUrl || form.productUrl || extractionResult.canonicalUrl;
     const brand = (previewBrand || s?.brand || extractionResult.data.identity.brand.value || form.brand || "").trim();
@@ -1469,7 +1486,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
         : form.galleryMediaIds ?? [];
 
       const payload: DealInput = {
-        slug: form.slug,
+        slug: toSlug(form.slug) || toSlug(form.title),
         title: form.title,
         brand: form.brand,
         description: form.description,
@@ -1521,8 +1538,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
       setMessage("Saved. Preview this saved version before publishing.");
       if (publishNow) {
         setPreview(await request(`deals/${result.data.id}/preview`, "POST", {}));
-        setMessage("Saved. Review the preview below, then confirm to publish.");
-        requestAnimationFrame(() => document.getElementById("saved-preview")?.scrollIntoView({ behavior: "smooth", block: "center" }));
+        setMessage("Saved. Review the preview, then publish.");
       }
     });
   }
@@ -2454,6 +2470,8 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
                   className={styles.headPublish}
                   disabled={busy || selected?.status === "ARCHIVED"}
                   onClick={() => {
+                    // While an extraction preview is open, the top button does exactly what the preview's own Publish Deal does.
+                    if (showPreviewModal && extractionResult) { void handleDirectPublish(); return; }
                     const formEl = document.getElementById("deal-form") as HTMLFormElement | null;
                     if (!formEl) return;
                     publishAfterSave.current = true;
@@ -2708,12 +2726,12 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
             </label>
             <div className={styles.fullRow}><SimilarDeals check={dealCheck} /></div>
             <label>
-              Stable slug
+              Stable slug (automatic)
               <input
-                required
                 type="text"
-                value={form.slug}
-                onChange={(e) => field("slug", e.target.value)}
+                readOnly
+                value={toSlug(form.slug) || toSlug(form.title)}
+                aria-readonly="true"
               />
             </label>
             <label>
@@ -3220,6 +3238,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
           </div>
         )}
         {preview && (
+          <div className={styles.previewOverlay} role="dialog" aria-modal="true" aria-label="Deal preview">
           <article className={styles.preview} id="saved-preview">
             <h3>Saved preview: {preview.data.title}</h3>
             <Image
@@ -3241,25 +3260,30 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
             <a href={preview.data.productUrl} target="_blank" rel="noreferrer">
               Inspect source
             </a>
-            <button
-              disabled={busy || !["DRAFT", "PENDING_REVIEW"].includes(preview.data.status)}
-              onClick={() =>
-                void run(async () => {
-                  const result = await request<{ data: Row }>(
-                    `deals/${preview.data.id}/publish`,
-                    "POST",
-                    { version: preview.data.version, previewToken: preview.previewToken }
-                  );
-                  setSelected(result.data);
-                  setPreview(null);
-                  await load();
-                  setMessage("Published or scheduled according to the saved dates.");
-                })
-              }
-            >
-              Confirm preview and publish
-            </button>
+            <div className={styles.previewModalActions}>
+              <button
+                disabled={busy || !["DRAFT", "PENDING_REVIEW"].includes(preview.data.status)}
+                onClick={() =>
+                  void run(async () => {
+                    const result = await request<{ data: Row }>(
+                      `deals/${preview.data.id}/publish`,
+                      "POST",
+                      { version: preview.data.version, previewToken: preview.previewToken }
+                    );
+                    setSelected(result.data);
+                    setPreview(null);
+                    await load();
+                    setMessage("Published or scheduled according to the saved dates.");
+                  })
+                }
+              >
+                Publish
+              </button>
+              <button type="button" disabled={busy} onClick={() => { setPreview(null); window.scrollTo({ top: 0, behavior: "smooth" }); }}>Edit Details</button>
+              <button type="button" disabled={busy} onClick={() => { setPreview(null); setMessage("Preview closed. The deal is saved as a draft."); }}>Discard</button>
+            </div>
           </article>
+          </div>
         )}
       </section>
           </div>

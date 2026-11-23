@@ -196,6 +196,7 @@ export type MerchantWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Merchant"> | Date | string
   deals?: Prisma.DealListRelationFilter
   options?: Prisma.PurchaseOptionListRelationFilter
+  affiliateConfig?: Prisma.XOR<Prisma.MerchantAffiliateConfigNullableScalarRelationFilter, Prisma.MerchantAffiliateConfigWhereInput> | null
 }
 
 export type MerchantOrderByWithRelationInput = {
@@ -208,6 +209,7 @@ export type MerchantOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   deals?: Prisma.DealOrderByRelationAggregateInput
   options?: Prisma.PurchaseOptionOrderByRelationAggregateInput
+  affiliateConfig?: Prisma.MerchantAffiliateConfigOrderByWithRelationInput
 }
 
 export type MerchantWhereUniqueInput = Prisma.AtLeast<{
@@ -223,6 +225,7 @@ export type MerchantWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Merchant"> | Date | string
   deals?: Prisma.DealListRelationFilter
   options?: Prisma.PurchaseOptionListRelationFilter
+  affiliateConfig?: Prisma.XOR<Prisma.MerchantAffiliateConfigNullableScalarRelationFilter, Prisma.MerchantAffiliateConfigWhereInput> | null
 }, "id" | "slug">
 
 export type MerchantOrderByWithAggregationInput = {
@@ -261,6 +264,7 @@ export type MerchantCreateInput = {
   updatedAt?: Date | string
   deals?: Prisma.DealCreateNestedManyWithoutMerchantInput
   options?: Prisma.PurchaseOptionCreateNestedManyWithoutMerchantInput
+  affiliateConfig?: Prisma.MerchantAffiliateConfigCreateNestedOneWithoutMerchantInput
 }
 
 export type MerchantUncheckedCreateInput = {
@@ -273,6 +277,7 @@ export type MerchantUncheckedCreateInput = {
   updatedAt?: Date | string
   deals?: Prisma.DealUncheckedCreateNestedManyWithoutMerchantInput
   options?: Prisma.PurchaseOptionUncheckedCreateNestedManyWithoutMerchantInput
+  affiliateConfig?: Prisma.MerchantAffiliateConfigUncheckedCreateNestedOneWithoutMerchantInput
 }
 
 export type MerchantUpdateInput = {
@@ -285,6 +290,7 @@ export type MerchantUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deals?: Prisma.DealUpdateManyWithoutMerchantNestedInput
   options?: Prisma.PurchaseOptionUpdateManyWithoutMerchantNestedInput
+  affiliateConfig?: Prisma.MerchantAffiliateConfigUpdateOneWithoutMerchantNestedInput
 }
 
 export type MerchantUncheckedUpdateInput = {
@@ -297,6 +303,7 @@ export type MerchantUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deals?: Prisma.DealUncheckedUpdateManyWithoutMerchantNestedInput
   options?: Prisma.PurchaseOptionUncheckedUpdateManyWithoutMerchantNestedInput
+  affiliateConfig?: Prisma.MerchantAffiliateConfigUncheckedUpdateOneWithoutMerchantNestedInput
 }
 
 export type MerchantCreateManyInput = {
@@ -407,6 +414,20 @@ export type MerchantUpdateOneRequiredWithoutOptionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.MerchantUpdateToOneWithWhereWithoutOptionsInput, Prisma.MerchantUpdateWithoutOptionsInput>, Prisma.MerchantUncheckedUpdateWithoutOptionsInput>
 }
 
+export type MerchantCreateNestedOneWithoutAffiliateConfigInput = {
+  create?: Prisma.XOR<Prisma.MerchantCreateWithoutAffiliateConfigInput, Prisma.MerchantUncheckedCreateWithoutAffiliateConfigInput>
+  connectOrCreate?: Prisma.MerchantCreateOrConnectWithoutAffiliateConfigInput
+  connect?: Prisma.MerchantWhereUniqueInput
+}
+
+export type MerchantUpdateOneRequiredWithoutAffiliateConfigNestedInput = {
+  create?: Prisma.XOR<Prisma.MerchantCreateWithoutAffiliateConfigInput, Prisma.MerchantUncheckedCreateWithoutAffiliateConfigInput>
+  connectOrCreate?: Prisma.MerchantCreateOrConnectWithoutAffiliateConfigInput
+  upsert?: Prisma.MerchantUpsertWithoutAffiliateConfigInput
+  connect?: Prisma.MerchantWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MerchantUpdateToOneWithWhereWithoutAffiliateConfigInput, Prisma.MerchantUpdateWithoutAffiliateConfigInput>, Prisma.MerchantUncheckedUpdateWithoutAffiliateConfigInput>
+}
+
 export type MerchantCreateWithoutDealsInput = {
   id?: string
   slug: string
@@ -416,6 +437,7 @@ export type MerchantCreateWithoutDealsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   options?: Prisma.PurchaseOptionCreateNestedManyWithoutMerchantInput
+  affiliateConfig?: Prisma.MerchantAffiliateConfigCreateNestedOneWithoutMerchantInput
 }
 
 export type MerchantUncheckedCreateWithoutDealsInput = {
@@ -427,6 +449,7 @@ export type MerchantUncheckedCreateWithoutDealsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   options?: Prisma.PurchaseOptionUncheckedCreateNestedManyWithoutMerchantInput
+  affiliateConfig?: Prisma.MerchantAffiliateConfigUncheckedCreateNestedOneWithoutMerchantInput
 }
 
 export type MerchantCreateOrConnectWithoutDealsInput = {
@@ -454,6 +477,7 @@ export type MerchantUpdateWithoutDealsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   options?: Prisma.PurchaseOptionUpdateManyWithoutMerchantNestedInput
+  affiliateConfig?: Prisma.MerchantAffiliateConfigUpdateOneWithoutMerchantNestedInput
 }
 
 export type MerchantUncheckedUpdateWithoutDealsInput = {
@@ -465,6 +489,7 @@ export type MerchantUncheckedUpdateWithoutDealsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   options?: Prisma.PurchaseOptionUncheckedUpdateManyWithoutMerchantNestedInput
+  affiliateConfig?: Prisma.MerchantAffiliateConfigUncheckedUpdateOneWithoutMerchantNestedInput
 }
 
 export type MerchantCreateWithoutOptionsInput = {
@@ -476,6 +501,7 @@ export type MerchantCreateWithoutOptionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deals?: Prisma.DealCreateNestedManyWithoutMerchantInput
+  affiliateConfig?: Prisma.MerchantAffiliateConfigCreateNestedOneWithoutMerchantInput
 }
 
 export type MerchantUncheckedCreateWithoutOptionsInput = {
@@ -487,6 +513,7 @@ export type MerchantUncheckedCreateWithoutOptionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deals?: Prisma.DealUncheckedCreateNestedManyWithoutMerchantInput
+  affiliateConfig?: Prisma.MerchantAffiliateConfigUncheckedCreateNestedOneWithoutMerchantInput
 }
 
 export type MerchantCreateOrConnectWithoutOptionsInput = {
@@ -514,6 +541,7 @@ export type MerchantUpdateWithoutOptionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deals?: Prisma.DealUpdateManyWithoutMerchantNestedInput
+  affiliateConfig?: Prisma.MerchantAffiliateConfigUpdateOneWithoutMerchantNestedInput
 }
 
 export type MerchantUncheckedUpdateWithoutOptionsInput = {
@@ -525,6 +553,71 @@ export type MerchantUncheckedUpdateWithoutOptionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deals?: Prisma.DealUncheckedUpdateManyWithoutMerchantNestedInput
+  affiliateConfig?: Prisma.MerchantAffiliateConfigUncheckedUpdateOneWithoutMerchantNestedInput
+}
+
+export type MerchantCreateWithoutAffiliateConfigInput = {
+  id?: string
+  slug: string
+  name: string
+  websiteUrl: string
+  affiliateHosts?: Prisma.MerchantCreateaffiliateHostsInput | string[]
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deals?: Prisma.DealCreateNestedManyWithoutMerchantInput
+  options?: Prisma.PurchaseOptionCreateNestedManyWithoutMerchantInput
+}
+
+export type MerchantUncheckedCreateWithoutAffiliateConfigInput = {
+  id?: string
+  slug: string
+  name: string
+  websiteUrl: string
+  affiliateHosts?: Prisma.MerchantCreateaffiliateHostsInput | string[]
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deals?: Prisma.DealUncheckedCreateNestedManyWithoutMerchantInput
+  options?: Prisma.PurchaseOptionUncheckedCreateNestedManyWithoutMerchantInput
+}
+
+export type MerchantCreateOrConnectWithoutAffiliateConfigInput = {
+  where: Prisma.MerchantWhereUniqueInput
+  create: Prisma.XOR<Prisma.MerchantCreateWithoutAffiliateConfigInput, Prisma.MerchantUncheckedCreateWithoutAffiliateConfigInput>
+}
+
+export type MerchantUpsertWithoutAffiliateConfigInput = {
+  update: Prisma.XOR<Prisma.MerchantUpdateWithoutAffiliateConfigInput, Prisma.MerchantUncheckedUpdateWithoutAffiliateConfigInput>
+  create: Prisma.XOR<Prisma.MerchantCreateWithoutAffiliateConfigInput, Prisma.MerchantUncheckedCreateWithoutAffiliateConfigInput>
+  where?: Prisma.MerchantWhereInput
+}
+
+export type MerchantUpdateToOneWithWhereWithoutAffiliateConfigInput = {
+  where?: Prisma.MerchantWhereInput
+  data: Prisma.XOR<Prisma.MerchantUpdateWithoutAffiliateConfigInput, Prisma.MerchantUncheckedUpdateWithoutAffiliateConfigInput>
+}
+
+export type MerchantUpdateWithoutAffiliateConfigInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  websiteUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  affiliateHosts?: Prisma.MerchantUpdateaffiliateHostsInput | string[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deals?: Prisma.DealUpdateManyWithoutMerchantNestedInput
+  options?: Prisma.PurchaseOptionUpdateManyWithoutMerchantNestedInput
+}
+
+export type MerchantUncheckedUpdateWithoutAffiliateConfigInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  websiteUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  affiliateHosts?: Prisma.MerchantUpdateaffiliateHostsInput | string[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deals?: Prisma.DealUncheckedUpdateManyWithoutMerchantNestedInput
+  options?: Prisma.PurchaseOptionUncheckedUpdateManyWithoutMerchantNestedInput
 }
 
 
@@ -577,6 +670,7 @@ export type MerchantSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   updatedAt?: boolean
   deals?: boolean | Prisma.Merchant$dealsArgs<ExtArgs>
   options?: boolean | Prisma.Merchant$optionsArgs<ExtArgs>
+  affiliateConfig?: boolean | Prisma.Merchant$affiliateConfigArgs<ExtArgs>
   _count?: boolean | Prisma.MerchantCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["merchant"]>
 
@@ -614,6 +708,7 @@ export type MerchantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs =
 export type MerchantInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   deals?: boolean | Prisma.Merchant$dealsArgs<ExtArgs>
   options?: boolean | Prisma.Merchant$optionsArgs<ExtArgs>
+  affiliateConfig?: boolean | Prisma.Merchant$affiliateConfigArgs<ExtArgs>
   _count?: boolean | Prisma.MerchantCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type MerchantIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -624,6 +719,7 @@ export type $MerchantPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   objects: {
     deals: Prisma.$DealPayload<ExtArgs>[]
     options: Prisma.$PurchaseOptionPayload<ExtArgs>[]
+    affiliateConfig: Prisma.$MerchantAffiliateConfigPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1029,6 +1125,7 @@ export interface Prisma__MerchantClient<T, Null = never, ExtArgs extends runtime
   readonly [Symbol.toStringTag]: "PrismaPromise"
   deals<T extends Prisma.Merchant$dealsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Merchant$dealsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DealPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   options<T extends Prisma.Merchant$optionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Merchant$optionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PurchaseOptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  affiliateConfig<T extends Prisma.Merchant$affiliateConfigArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Merchant$affiliateConfigArgs<ExtArgs>>): Prisma.Prisma__MerchantAffiliateConfigClient<runtime.Types.Result.GetResult<Prisma.$MerchantAffiliateConfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1503,6 +1600,25 @@ export type Merchant$optionsArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.PurchaseOptionScalarFieldEnum | Prisma.PurchaseOptionScalarFieldEnum[]
+}
+
+/**
+ * Merchant.affiliateConfig
+ */
+export type Merchant$affiliateConfigArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MerchantAffiliateConfig
+   */
+  select?: Prisma.MerchantAffiliateConfigSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MerchantAffiliateConfig
+   */
+  omit?: Prisma.MerchantAffiliateConfigOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MerchantAffiliateConfigInclude<ExtArgs> | null
+  where?: Prisma.MerchantAffiliateConfigWhereInput
 }
 
 /**

@@ -204,6 +204,7 @@ model Merchant {
   affiliateHosts String[]         @default([])
   deals          Deal[]
   options        PurchaseOption[]
+  affiliateConfig MerchantAffiliateConfig?
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
 }
@@ -214,6 +215,7 @@ model AffiliateClick {
   optionId  String?
   merchantId String
   channel   String @db.VarChar(30)
+  provider  String? @db.VarChar(24)
   actorHash String @db.Char(64)
   createdAt DateTime @default(now())
 
@@ -666,4 +668,19 @@ model AnalyticsDaily {
 
   @@unique([date, dimension, key])
   @@index([dimension, date])
+}
+
+/// How outgoing links for one retailer earn: through our own affiliate account (OWN) or Cuelinks. No row means Cuelinks.
+model MerchantAffiliateConfig {
+  id                   String   @id @default(cuid())
+  merchantId           String   @unique
+  mode                 String   @db.VarChar(12)
+  provider             String   @db.VarChar(24)
+  publicId             String?  @db.VarChar(120)
+  linkTemplate         String?  @db.VarChar(1000)
+  credentialsEncrypted String?  @db.Text
+  apiEnabled           Boolean  @default(false)
+  merchant             Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
 }

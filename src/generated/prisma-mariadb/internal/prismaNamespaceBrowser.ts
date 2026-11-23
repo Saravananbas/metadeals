@@ -133,7 +133,8 @@ export const ModelName = {
   MemberStar: 'MemberStar',
   DealCommentLike: 'DealCommentLike',
   CommunityDealSubmissionImage: 'CommunityDealSubmissionImage',
-  Brand: 'Brand'
+  Brand: 'Brand',
+  MerchantAffiliateConfig: 'MerchantAffiliateConfig'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -327,6 +328,7 @@ export const AffiliateClickScalarFieldEnum = {
   optionId: 'optionId',
   merchantId: 'merchantId',
   channel: 'channel',
+  provider: 'provider',
   actorHash: 'actorHash',
   createdAt: 'createdAt'
 } as const
@@ -1494,6 +1496,22 @@ export const BrandScalarFieldEnum = {
 export type BrandScalarFieldEnum = (typeof BrandScalarFieldEnum)[keyof typeof BrandScalarFieldEnum]
 
 
+export const MerchantAffiliateConfigScalarFieldEnum = {
+  id: 'id',
+  merchantId: 'merchantId',
+  mode: 'mode',
+  provider: 'provider',
+  publicId: 'publicId',
+  linkTemplate: 'linkTemplate',
+  credentialsEncrypted: 'credentialsEncrypted',
+  apiEnabled: 'apiEnabled',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MerchantAffiliateConfigScalarFieldEnum = (typeof MerchantAffiliateConfigScalarFieldEnum)[keyof typeof MerchantAffiliateConfigScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -1676,6 +1694,7 @@ export const AffiliateClickOrderByRelevanceFieldEnum = {
   optionId: 'optionId',
   merchantId: 'merchantId',
   channel: 'channel',
+  provider: 'provider',
   actorHash: 'actorHash'
 } as const
 
@@ -2545,4 +2564,17 @@ export const BrandOrderByRelevanceFieldEnum = {
 } as const
 
 export type BrandOrderByRelevanceFieldEnum = (typeof BrandOrderByRelevanceFieldEnum)[keyof typeof BrandOrderByRelevanceFieldEnum]
+
+
+export const MerchantAffiliateConfigOrderByRelevanceFieldEnum = {
+  id: 'id',
+  merchantId: 'merchantId',
+  mode: 'mode',
+  provider: 'provider',
+  publicId: 'publicId',
+  linkTemplate: 'linkTemplate',
+  credentialsEncrypted: 'credentialsEncrypted'
+} as const
+
+export type MerchantAffiliateConfigOrderByRelevanceFieldEnum = (typeof MerchantAffiliateConfigOrderByRelevanceFieldEnum)[keyof typeof MerchantAffiliateConfigOrderByRelevanceFieldEnum]
 

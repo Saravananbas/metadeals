@@ -35,7 +35,7 @@ const dealLinks: NavLink[] = [
 ];
 
 const navLinks: NavLink[] = [
-  { href: "/admin/cuelinks", label: "Affiliate", Icon: Link2, match: (path) => path.startsWith("/admin/cuelinks"), needs: ["affiliate:view"] },
+  { href: "/admin/cuelinks", label: "Affiliate", Icon: Link2, match: (path) => path.startsWith("/admin/cuelinks") || path.startsWith("/admin/affiliate"), needs: ["affiliate:view"] },
   { href: "/admin/analytics", label: "Analytics", Icon: BarChart3, match: (path) => path.startsWith("/admin/analytics"), needs: ["analytics:view"] },
   { href: "/admin/users", label: "Users", Icon: Users, match: (path) => path.startsWith("/admin/users"), needs: ["users:view"] },
 ];

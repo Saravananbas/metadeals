@@ -479,7 +479,8 @@ export const ModelName = {
   MemberStar: 'MemberStar',
   DealCommentLike: 'DealCommentLike',
   CommunityDealSubmissionImage: 'CommunityDealSubmissionImage',
-  Brand: 'Brand'
+  Brand: 'Brand',
+  MerchantAffiliateConfig: 'MerchantAffiliateConfig'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -495,7 +496,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "account" | "session" | "verificationToken" | "authSession" | "recoveryCode" | "authToken" | "authRateLimit" | "bootstrapState" | "auditEvent" | "category" | "merchant" | "affiliateClick" | "affiliateTransaction" | "media" | "deal" | "purchaseOption" | "dealGalleryImage" | "customer" | "customerIdentity" | "customerSignupChallenge" | "customerPasswordReset" | "customerRateLimit" | "distributionDestination" | "distributionPost" | "dealCandidate" | "priceObservation" | "scraperJob" | "productExtractionLog" | "dealVideoReview" | "youTubeQuotaLedger" | "merchantWebsiteDirectory" | "productMaster" | "productVariant" | "productOffer" | "priceObservationRecord" | "sourceHealthRecord" | "publicationAuthorization" | "shadowCandidate" | "dealLifecycleEvent" | "dealComment" | "analyticsSession" | "analyticsEvent" | "analyticsDaily" | "communityDealSubmission" | "forumCommunity" | "forumProfile" | "forumPost" | "forumComment" | "forumPostVote" | "forumCommentVote" | "forumPostLike" | "forumCommentLike" | "forumSave" | "forumFollow" | "forumPostImage" | "forumPostDraft" | "forumNotification" | "forumAnnouncement" | "staffPermissionGrant" | "forumReport" | "forumModerationAction" | "dmThread" | "dmMessage" | "dmBlock" | "dmReport" | "customerAppToken" | "forumMemberFollow" | "devicePushToken" | "moderatorAppointment" | "moderatorAppointmentEvent" | "memberWarning" | "memberRestriction" | "moderationAppeal" | "moderationEscalation" | "customerPreference" | "savedDeal" | "dealVote" | "dealNote" | "memberStar" | "dealCommentLike" | "communityDealSubmissionImage" | "brand"
+    modelProps: "user" | "account" | "session" | "verificationToken" | "authSession" | "recoveryCode" | "authToken" | "authRateLimit" | "bootstrapState" | "auditEvent" | "category" | "merchant" | "affiliateClick" | "affiliateTransaction" | "media" | "deal" | "purchaseOption" | "dealGalleryImage" | "customer" | "customerIdentity" | "customerSignupChallenge" | "customerPasswordReset" | "customerRateLimit" | "distributionDestination" | "distributionPost" | "dealCandidate" | "priceObservation" | "scraperJob" | "productExtractionLog" | "dealVideoReview" | "youTubeQuotaLedger" | "merchantWebsiteDirectory" | "productMaster" | "productVariant" | "productOffer" | "priceObservationRecord" | "sourceHealthRecord" | "publicationAuthorization" | "shadowCandidate" | "dealLifecycleEvent" | "dealComment" | "analyticsSession" | "analyticsEvent" | "analyticsDaily" | "communityDealSubmission" | "forumCommunity" | "forumProfile" | "forumPost" | "forumComment" | "forumPostVote" | "forumCommentVote" | "forumPostLike" | "forumCommentLike" | "forumSave" | "forumFollow" | "forumPostImage" | "forumPostDraft" | "forumNotification" | "forumAnnouncement" | "staffPermissionGrant" | "forumReport" | "forumModerationAction" | "dmThread" | "dmMessage" | "dmBlock" | "dmReport" | "customerAppToken" | "forumMemberFollow" | "devicePushToken" | "moderatorAppointment" | "moderatorAppointmentEvent" | "memberWarning" | "memberRestriction" | "moderationAppeal" | "moderationEscalation" | "customerPreference" | "savedDeal" | "dealVote" | "dealNote" | "memberStar" | "dealCommentLike" | "communityDealSubmissionImage" | "brand" | "merchantAffiliateConfig"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -6641,6 +6642,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    MerchantAffiliateConfig: {
+      payload: Prisma.$MerchantAffiliateConfigPayload<ExtArgs>
+      fields: Prisma.MerchantAffiliateConfigFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MerchantAffiliateConfigFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantAffiliateConfigPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MerchantAffiliateConfigFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantAffiliateConfigPayload>
+        }
+        findFirst: {
+          args: Prisma.MerchantAffiliateConfigFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantAffiliateConfigPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MerchantAffiliateConfigFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantAffiliateConfigPayload>
+        }
+        findMany: {
+          args: Prisma.MerchantAffiliateConfigFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantAffiliateConfigPayload>[]
+        }
+        create: {
+          args: Prisma.MerchantAffiliateConfigCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantAffiliateConfigPayload>
+        }
+        createMany: {
+          args: Prisma.MerchantAffiliateConfigCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.MerchantAffiliateConfigCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantAffiliateConfigPayload>[]
+        }
+        delete: {
+          args: Prisma.MerchantAffiliateConfigDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantAffiliateConfigPayload>
+        }
+        update: {
+          args: Prisma.MerchantAffiliateConfigUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantAffiliateConfigPayload>
+        }
+        deleteMany: {
+          args: Prisma.MerchantAffiliateConfigDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MerchantAffiliateConfigUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.MerchantAffiliateConfigUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantAffiliateConfigPayload>[]
+        }
+        upsert: {
+          args: Prisma.MerchantAffiliateConfigUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantAffiliateConfigPayload>
+        }
+        aggregate: {
+          args: Prisma.MerchantAffiliateConfigAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMerchantAffiliateConfig>
+        }
+        groupBy: {
+          args: Prisma.MerchantAffiliateConfigGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MerchantAffiliateConfigGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MerchantAffiliateConfigCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MerchantAffiliateConfigCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -6855,6 +6930,7 @@ export const AffiliateClickScalarFieldEnum = {
   optionId: 'optionId',
   merchantId: 'merchantId',
   channel: 'channel',
+  provider: 'provider',
   actorHash: 'actorHash',
   createdAt: 'createdAt'
 } as const
@@ -8022,6 +8098,22 @@ export const BrandScalarFieldEnum = {
 export type BrandScalarFieldEnum = (typeof BrandScalarFieldEnum)[keyof typeof BrandScalarFieldEnum]
 
 
+export const MerchantAffiliateConfigScalarFieldEnum = {
+  id: 'id',
+  merchantId: 'merchantId',
+  mode: 'mode',
+  provider: 'provider',
+  publicId: 'publicId',
+  linkTemplate: 'linkTemplate',
+  credentialsEncrypted: 'credentialsEncrypted',
+  apiEnabled: 'apiEnabled',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MerchantAffiliateConfigScalarFieldEnum = (typeof MerchantAffiliateConfigScalarFieldEnum)[keyof typeof MerchantAffiliateConfigScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -8680,6 +8772,7 @@ export type GlobalOmitConfig = {
   dealCommentLike?: Prisma.DealCommentLikeOmit
   communityDealSubmissionImage?: Prisma.CommunityDealSubmissionImageOmit
   brand?: Prisma.BrandOmit
+  merchantAffiliateConfig?: Prisma.MerchantAffiliateConfigOmit
 }
 
 /* Types for Logging */

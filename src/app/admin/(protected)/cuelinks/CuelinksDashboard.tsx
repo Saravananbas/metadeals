@@ -164,6 +164,7 @@ export function CuelinksDashboard({
           </p>
         </div>
         <div className={styles.headerActions}>
+          <a className={styles.syncBtn} href="/admin/affiliate">Retailer links</a>
           <button
             className={styles.syncBtn}
             onClick={refreshHealthAndStats}

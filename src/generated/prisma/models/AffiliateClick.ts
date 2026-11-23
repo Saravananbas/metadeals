@@ -30,6 +30,7 @@ export type AffiliateClickMinAggregateOutputType = {
   optionId: string | null
   merchantId: string | null
   channel: string | null
+  provider: string | null
   actorHash: string | null
   createdAt: Date | null
 }
@@ -40,6 +41,7 @@ export type AffiliateClickMaxAggregateOutputType = {
   optionId: string | null
   merchantId: string | null
   channel: string | null
+  provider: string | null
   actorHash: string | null
   createdAt: Date | null
 }
@@ -50,6 +52,7 @@ export type AffiliateClickCountAggregateOutputType = {
   optionId: number
   merchantId: number
   channel: number
+  provider: number
   actorHash: number
   createdAt: number
   _all: number
@@ -62,6 +65,7 @@ export type AffiliateClickMinAggregateInputType = {
   optionId?: true
   merchantId?: true
   channel?: true
+  provider?: true
   actorHash?: true
   createdAt?: true
 }
@@ -72,6 +76,7 @@ export type AffiliateClickMaxAggregateInputType = {
   optionId?: true
   merchantId?: true
   channel?: true
+  provider?: true
   actorHash?: true
   createdAt?: true
 }
@@ -82,6 +87,7 @@ export type AffiliateClickCountAggregateInputType = {
   optionId?: true
   merchantId?: true
   channel?: true
+  provider?: true
   actorHash?: true
   createdAt?: true
   _all?: true
@@ -165,6 +171,7 @@ export type AffiliateClickGroupByOutputType = {
   optionId: string | null
   merchantId: string
   channel: string
+  provider: string | null
   actorHash: string
   createdAt: Date
   _count: AffiliateClickCountAggregateOutputType | null
@@ -196,6 +203,7 @@ export type AffiliateClickWhereInput = {
   optionId?: Prisma.StringNullableFilter<"AffiliateClick"> | string | null
   merchantId?: Prisma.StringFilter<"AffiliateClick"> | string
   channel?: Prisma.StringFilter<"AffiliateClick"> | string
+  provider?: Prisma.StringNullableFilter<"AffiliateClick"> | string | null
   actorHash?: Prisma.StringFilter<"AffiliateClick"> | string
   createdAt?: Prisma.DateTimeFilter<"AffiliateClick"> | Date | string
 }
@@ -206,6 +214,7 @@ export type AffiliateClickOrderByWithRelationInput = {
   optionId?: Prisma.SortOrderInput | Prisma.SortOrder
   merchantId?: Prisma.SortOrder
   channel?: Prisma.SortOrder
+  provider?: Prisma.SortOrderInput | Prisma.SortOrder
   actorHash?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -219,6 +228,7 @@ export type AffiliateClickWhereUniqueInput = Prisma.AtLeast<{
   optionId?: Prisma.StringNullableFilter<"AffiliateClick"> | string | null
   merchantId?: Prisma.StringFilter<"AffiliateClick"> | string
   channel?: Prisma.StringFilter<"AffiliateClick"> | string
+  provider?: Prisma.StringNullableFilter<"AffiliateClick"> | string | null
   actorHash?: Prisma.StringFilter<"AffiliateClick"> | string
   createdAt?: Prisma.DateTimeFilter<"AffiliateClick"> | Date | string
 }, "id">
@@ -229,6 +239,7 @@ export type AffiliateClickOrderByWithAggregationInput = {
   optionId?: Prisma.SortOrderInput | Prisma.SortOrder
   merchantId?: Prisma.SortOrder
   channel?: Prisma.SortOrder
+  provider?: Prisma.SortOrderInput | Prisma.SortOrder
   actorHash?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.AffiliateClickCountOrderByAggregateInput
@@ -245,6 +256,7 @@ export type AffiliateClickScalarWhereWithAggregatesInput = {
   optionId?: Prisma.StringNullableWithAggregatesFilter<"AffiliateClick"> | string | null
   merchantId?: Prisma.StringWithAggregatesFilter<"AffiliateClick"> | string
   channel?: Prisma.StringWithAggregatesFilter<"AffiliateClick"> | string
+  provider?: Prisma.StringNullableWithAggregatesFilter<"AffiliateClick"> | string | null
   actorHash?: Prisma.StringWithAggregatesFilter<"AffiliateClick"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"AffiliateClick"> | Date | string
 }
@@ -255,6 +267,7 @@ export type AffiliateClickCreateInput = {
   optionId?: string | null
   merchantId: string
   channel: string
+  provider?: string | null
   actorHash: string
   createdAt?: Date | string
 }
@@ -265,6 +278,7 @@ export type AffiliateClickUncheckedCreateInput = {
   optionId?: string | null
   merchantId: string
   channel: string
+  provider?: string | null
   actorHash: string
   createdAt?: Date | string
 }
@@ -275,6 +289,7 @@ export type AffiliateClickUpdateInput = {
   optionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   merchantId?: Prisma.StringFieldUpdateOperationsInput | string
   channel?: Prisma.StringFieldUpdateOperationsInput | string
+  provider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actorHash?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -285,6 +300,7 @@ export type AffiliateClickUncheckedUpdateInput = {
   optionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   merchantId?: Prisma.StringFieldUpdateOperationsInput | string
   channel?: Prisma.StringFieldUpdateOperationsInput | string
+  provider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actorHash?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -295,6 +311,7 @@ export type AffiliateClickCreateManyInput = {
   optionId?: string | null
   merchantId: string
   channel: string
+  provider?: string | null
   actorHash: string
   createdAt?: Date | string
 }
@@ -305,6 +322,7 @@ export type AffiliateClickUpdateManyMutationInput = {
   optionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   merchantId?: Prisma.StringFieldUpdateOperationsInput | string
   channel?: Prisma.StringFieldUpdateOperationsInput | string
+  provider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actorHash?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -315,6 +333,7 @@ export type AffiliateClickUncheckedUpdateManyInput = {
   optionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   merchantId?: Prisma.StringFieldUpdateOperationsInput | string
   channel?: Prisma.StringFieldUpdateOperationsInput | string
+  provider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actorHash?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -325,6 +344,7 @@ export type AffiliateClickCountOrderByAggregateInput = {
   optionId?: Prisma.SortOrder
   merchantId?: Prisma.SortOrder
   channel?: Prisma.SortOrder
+  provider?: Prisma.SortOrder
   actorHash?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -335,6 +355,7 @@ export type AffiliateClickMaxOrderByAggregateInput = {
   optionId?: Prisma.SortOrder
   merchantId?: Prisma.SortOrder
   channel?: Prisma.SortOrder
+  provider?: Prisma.SortOrder
   actorHash?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -345,6 +366,7 @@ export type AffiliateClickMinOrderByAggregateInput = {
   optionId?: Prisma.SortOrder
   merchantId?: Prisma.SortOrder
   channel?: Prisma.SortOrder
+  provider?: Prisma.SortOrder
   actorHash?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -357,6 +379,7 @@ export type AffiliateClickSelect<ExtArgs extends runtime.Types.Extensions.Intern
   optionId?: boolean
   merchantId?: boolean
   channel?: boolean
+  provider?: boolean
   actorHash?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["affiliateClick"]>
@@ -367,6 +390,7 @@ export type AffiliateClickSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   optionId?: boolean
   merchantId?: boolean
   channel?: boolean
+  provider?: boolean
   actorHash?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["affiliateClick"]>
@@ -377,6 +401,7 @@ export type AffiliateClickSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   optionId?: boolean
   merchantId?: boolean
   channel?: boolean
+  provider?: boolean
   actorHash?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["affiliateClick"]>
@@ -387,11 +412,12 @@ export type AffiliateClickSelectScalar = {
   optionId?: boolean
   merchantId?: boolean
   channel?: boolean
+  provider?: boolean
   actorHash?: boolean
   createdAt?: boolean
 }
 
-export type AffiliateClickOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "dealId" | "optionId" | "merchantId" | "channel" | "actorHash" | "createdAt", ExtArgs["result"]["affiliateClick"]>
+export type AffiliateClickOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "dealId" | "optionId" | "merchantId" | "channel" | "provider" | "actorHash" | "createdAt", ExtArgs["result"]["affiliateClick"]>
 
 export type $AffiliateClickPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "AffiliateClick"
@@ -402,6 +428,7 @@ export type $AffiliateClickPayload<ExtArgs extends runtime.Types.Extensions.Inte
     optionId: string | null
     merchantId: string
     channel: string
+    provider: string | null
     actorHash: string
     createdAt: Date
   }, ExtArgs["result"]["affiliateClick"]>
@@ -832,6 +859,7 @@ export interface AffiliateClickFieldRefs {
   readonly optionId: Prisma.FieldRef<"AffiliateClick", 'String'>
   readonly merchantId: Prisma.FieldRef<"AffiliateClick", 'String'>
   readonly channel: Prisma.FieldRef<"AffiliateClick", 'String'>
+  readonly provider: Prisma.FieldRef<"AffiliateClick", 'String'>
   readonly actorHash: Prisma.FieldRef<"AffiliateClick", 'String'>
   readonly createdAt: Prisma.FieldRef<"AffiliateClick", 'DateTime'>
 }

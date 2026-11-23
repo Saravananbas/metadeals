@@ -17,6 +17,10 @@
 .preview { max-width: 650px; margin: 24px auto; border: 1px solid var(--md-color-border); padding: 20px; border-radius: 16px; }
 .preview img { object-fit: contain; }
 .preview button { display: block; margin-top: 16px; }
+.previewOverlay { position: fixed; inset: 0; z-index: 1000; background: rgba(20, 12, 40, .55); display: flex; align-items: center; justify-content: center; padding: 12px; }
+.previewOverlay .preview { margin: 0; width: min(650px, 100%); max-height: calc(100dvh - 24px); overflow-y: auto; background: var(--md-white); }
+.previewModalActions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+.previewModalActions button { margin-top: 0; flex: 1 1 140px; min-height: 44px; }
 .list { display: grid; gap: 10px; }
 .dealCard { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px; border: 1px solid var(--md-color-border); border-radius: 10px; background: var(--md-color-surface-muted); }
 .dealCardSummary { min-width: 0; }
