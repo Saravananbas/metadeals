@@ -96,6 +96,9 @@ const empty: AdminDealForm = {
   options: [],
 };
 
+/** Lower-case words joined by single hyphens, the only form the server accepts for a slug. */
+const toSlug = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
 async function request<T>(path: string, method = "GET", body?: unknown, signal?: AbortSignal): Promise<T> {
   const response = await fetch(`/api/v1/admin/${path}`, {
     method,
@@ -1116,7 +1119,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
       return;
     }
 
-    const slug = s?.slug || form.slug || title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    const slug = toSlug(s?.slug || form.slug || title);
     const description = (previewDescription || s?.description || form.description || title).trim();
     const productUrl = s?.productUrl || form.productUrl || extractionResult.canonicalUrl;
     const brand = (previewBrand || s?.brand || extractionResult.data.identity.brand.value || form.brand || "").trim();
@@ -1473,7 +1476,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
         : form.galleryMediaIds ?? [];
 
       const payload: DealInput = {
-        slug: form.slug,
+        slug: toSlug(form.slug) || toSlug(form.title),
         title: form.title,
         brand: form.brand,
         description: form.description,
