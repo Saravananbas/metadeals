@@ -18,7 +18,9 @@ export async function normalizeImage(bytes: Buffer) {
   try {
     const image = sharp(bytes, { limitInputPixels: 25_000_000, failOn: "warning", animated: false });
     const meta = await image.metadata();
-    if (!["jpeg", "png", "webp", "gif", "svg", "tiff", "avif"].includes(meta.format ?? "") || !meta.width || !meta.height || meta.width > 6000 || meta.height > 6000) throw new Error("Unsupported image");
+    // sharp reports AVIF files as format "heif" with AV1 compression; HEIC (HEVC) stays unsupported.
+    const format = meta.format === "heif" && meta.compression === "av1" ? "avif" : meta.format;
+    if (!["jpeg", "png", "webp", "gif", "svg", "tiff", "avif"].includes(format ?? "") || !meta.width || !meta.height || meta.width > 6000 || meta.height > 6000) throw new Error("Unsupported image");
     const { data, info } = await image.rotate().resize({ width: 1600, height: 1600, fit: "inside", withoutEnlargement: true }).webp({ quality: 90 }).toBuffer({ resolveWithObject: true });
     return { bytes: data, width: info.width, height: info.height, mimeType: "image/webp" };
   } catch (cause) { console.warn("Image rejected:", cause instanceof Error ? cause.message : "unknown", "magic:", bytes.subarray(0, 4).toString("hex"), "bytes:", bytes.length); throw new DealError("Use a valid image (JPEG, PNG, GIF, SVG, TIFF, WebP, or AVIF), at most 6000×6000 and 25 megapixels."); }
