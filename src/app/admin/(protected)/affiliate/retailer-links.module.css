@@ -4,6 +4,7 @@
 .sub { margin: 4px 0 0; color: var(--md-neutral-600); font-size: 12px; }
 .add { display: flex; flex-wrap: wrap; gap: 10px; }
 .add input, .field input, .field select { flex: 1 1 260px; min-width: 0; min-height: 40px; padding: 0 12px; border: 1px solid var(--md-purple-200); border-radius: 10px; font: inherit; font-size: 13px; background: var(--md-white); color: var(--md-color-text); }
+.search { min-height: 40px; padding: 0 12px; border: 1px solid var(--md-purple-200); border-radius: 10px; font: inherit; font-size: 13px; background: var(--md-white); color: var(--md-color-text); width: 100%; max-width: 360px; }
 .primary { min-height: 40px; padding: 0 18px; font-size: 13px; border: 0; border-radius: 10px; background: var(--md-purple-700); color: var(--md-white); font: inherit; font-weight: 700; cursor: pointer; }
 .primary:disabled { opacity: .55; cursor: not-allowed; }
 .ghost { min-height: 40px; padding: 0 14px; font-size: 13px; border: 1px solid var(--md-purple-200); border-radius: 10px; background: var(--md-white); color: var(--md-purple-700); font: inherit; font-weight: 700; cursor: pointer; }

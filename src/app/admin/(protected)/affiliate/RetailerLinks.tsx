@@ -22,6 +22,7 @@ export function RetailerLinks({ canManage }: { canManage: boolean }) {
   const [url, setUrl] = useState("");
   const [open, setOpen] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [filter, setFilter] = useState("");
 
   const load = useCallback(() => { call<Listing>("/api/v1/admin/affiliate/retailers", "GET").then(setData).catch((e: Error) => setError(e.message)); }, []);
   useEffect(() => load(), [load]);
@@ -47,13 +48,14 @@ export function RetailerLinks({ canManage }: { canManage: boolean }) {
             <button type="submit" className={styles.primary} disabled={busy}>Add store</button>
           </form>
         )}
+        <input type="search" className={styles.search} value={filter} onChange={(e) => setFilter(e.target.value)} placeholder="Search stores" aria-label="Search stores" maxLength={80} />
         {error && <p className={styles.error} role="alert">{error}</p>}
         {data && !data.cuelinksOn && <p className={styles.error}>Cuelinks is switched off or has no channel id, so stores without their own account are not monetised.</p>}
         <div className={styles.tableWrap}>
           <table className={styles.table}>
             <thead><tr><th>Store</th><th>Earns through</th><th className={styles.num}>Clicks (30 days)</th><th><span className={styles.srOnly}>Action</span></th></tr></thead>
             <tbody>
-              {data?.items.map((r) => (
+              {data?.items.filter((r) => !filter.trim() || `${r.name} ${r.websiteUrl}`.toLowerCase().includes(filter.trim().toLowerCase())).map((r) => (
                 <Fragment key={r.id}>
                   <tr>
                     <td data-label="Store"><div className={styles.name}>{r.name}</div><div className={styles.site}>{r.websiteUrl}</div></td>
@@ -61,7 +63,7 @@ export function RetailerLinks({ canManage }: { canManage: boolean }) {
                     <td data-label="Clicks (30 days)" className={styles.num}>{r.clicks30d}</td>
                     <td className={styles.act}><button type="button" className={styles.ghost} aria-expanded={open === r.id} onClick={() => setOpen(open === r.id ? null : r.id)}>{open === r.id ? "Close" : canManage ? "Set up" : "Details"}</button></td>
                   </tr>
-                  {open === r.id && <tr className={styles.formRow}><td colSpan={4}><RetailerForm retailer={r} canManage={canManage} onSaved={load} /></td></tr>}
+                  {open === r.id && <tr className={styles.formRow}><td colSpan={4}><RetailerForm retailer={r} canManage={canManage} onSaved={(id) => { load(); if (id) setOpen(id); }} /></td></tr>}
                 </Fragment>
               ))}
             </tbody>
@@ -73,7 +75,7 @@ export function RetailerLinks({ canManage }: { canManage: boolean }) {
   );
 }
 
-function RetailerForm({ retailer, canManage, onSaved }: { retailer: Retailer; canManage: boolean; onSaved: () => void }) {
+function RetailerForm({ retailer, canManage, onSaved }: { retailer: Retailer; canManage: boolean; onSaved: (id?: string) => void }) {
   const c = retailer.config;
   const [mode, setMode] = useState<Config["mode"]>(c?.mode ?? "CUELINKS");
   const [provider, setProvider] = useState<Config["provider"]>(c?.provider ?? "custom");
@@ -90,11 +92,11 @@ function RetailerForm({ retailer, canManage, onSaved }: { retailer: Retailer; ca
   const save = (event: FormEvent) => {
     event.preventDefault();
     void run(async () => {
-      await call(`/api/v1/admin/affiliate/retailers/${retailer.id}`, "PUT", { mode, provider, publicId: publicId || null, linkTemplate: template || null, ...(credentials ? { apiCredentials: credentials } : {}) });
-      setCredentials(""); onSaved();
+      const saved = await call<{ id: string }>(`/api/v1/admin/affiliate/retailers/${encodeURIComponent(retailer.id)}`, "PUT", { mode, provider, publicId: publicId || null, linkTemplate: template || null, ...(credentials ? { apiCredentials: credentials } : {}) });
+      setCredentials(""); onSaved(saved.id);
     }, () => "Saved.");
   };
-  const test = () => void run(() => call<{ via: string; sampleLink: string; problem: string | null }>(`/api/v1/admin/affiliate/retailers/${retailer.id}/test`, "POST", {}), (r) => `${r.via}${r.problem ? ` (${r.problem})` : ""}: ${r.sampleLink}`);
+  const test = () => void run(() => call<{ via: string; sampleLink: string; problem: string | null }>(`/api/v1/admin/affiliate/retailers/${encodeURIComponent(retailer.id)}/test`, "POST", {}), (r) => `${r.via}${r.problem ? ` (${r.problem})` : ""}: ${r.sampleLink}`);
 
   const needsId = mode === "OWN" && (provider === "amazon" || provider === "flipkart");
   const needsTemplate = mode === "OWN" && (provider === "ajio" || provider === "custom");
