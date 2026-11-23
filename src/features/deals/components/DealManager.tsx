@@ -2454,6 +2454,8 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
                   className={styles.headPublish}
                   disabled={busy || selected?.status === "ARCHIVED"}
                   onClick={() => {
+                    // While an extraction preview is open, the top button does exactly what the preview's own Publish Deal does.
+                    if (showPreviewModal && extractionResult) { void handleDirectPublish(); return; }
                     const formEl = document.getElementById("deal-form") as HTMLFormElement | null;
                     if (!formEl) return;
                     publishAfterSave.current = true;

@@ -374,7 +374,6 @@ export function AnalyticsDashboard() {
           {TABS.map(([k, label, Icon]) => <button key={k} role="tab" aria-selected={tab === k} className={`${styles.tab} ${tab === k ? styles.tabActive : ""}`} onClick={() => go(k)}><Icon size={16} aria-hidden />{label}</button>)}
         </nav>
         {error && <div className={styles.error} role="alert">{error} <button onClick={() => { cache.current.clear(); setError(""); setNonce((n) => n + 1); }}>Retry</button></div>}
-        {!customReady && <p className={styles.note}>Choose a from and to date (the end date cannot be before the start).</p>}
         {!ready && !error && customReady && <div className={styles.skelGrid} aria-busy="true"><div className={styles.skeleton} style={{ height: 84 }} /><div className={styles.skeleton} style={{ height: 230 }} /><div className={styles.skeleton} style={{ height: 230 }} /></div>}
         {ready && tab === "overview" && <Overview d={data} go={go} />}
         {ready && tab === "audience" && <Audience d={data} query={query} />}
