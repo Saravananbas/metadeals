@@ -37,6 +37,7 @@ export function RetailerLinks({ canManage }: { canManage: boolean }) {
       <AdminNav />
       <main className={styles.page}>
         <header className={styles.head}>
+          <p className={styles.sub}><a href="/admin/cuelinks">Affiliate</a> › Retailer links</p>
           <h1>Retailer links</h1>
           <p className={styles.sub}>Choose how each store earns: your own affiliate account, or Cuelinks. A store with no setting uses Cuelinks.</p>
         </header>
