@@ -2717,12 +2717,12 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
             </label>
             <div className={styles.fullRow}><SimilarDeals check={dealCheck} /></div>
             <label>
-              Stable slug
+              Stable slug (automatic)
               <input
-                required
                 type="text"
-                value={form.slug}
-                onChange={(e) => field("slug", e.target.value)}
+                readOnly
+                value={toSlug(form.slug) || toSlug(form.title)}
+                aria-readonly="true"
               />
             </label>
             <label>
