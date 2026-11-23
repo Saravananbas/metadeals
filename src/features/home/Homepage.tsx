@@ -51,6 +51,11 @@ export function Homepage({
   const [loadError, setLoadError] = useState("");
   const [catalog, setCatalog] = useState(initialCatalog ?? { categories: [], merchants: [] });
   const [filters, setFilters] = useState(defaults);
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [newDeals, setNewDeals] = useState(0);
+  const [dismissedAt, setDismissedAt] = useState(0);
+  const seenAt = useRef<string | null>(null);
+  const checkedAt = useRef<string | null>(null);
   // Any new search, category or store starts again from page 1.
   const applyFilters = (next: DealFilters) => { setPage(1); setFilters(next); };
   const [query, setQuery] = useState("");
@@ -110,7 +115,26 @@ export function Homepage({
     return () => {
       controller.abort();
     };
-  }, [filters, page]);
+  }, [filters, page, refreshKey]);
+
+  // Quietly looks for newly published deals once a minute while the tab is visible; the visitor chooses when to show them.
+  useEffect(() => {
+    const check = async () => {
+      if (document.hidden) return;
+      try {
+        const r = await fetch(`/api/v1/home-deals/new${seenAt.current ? `?since=${encodeURIComponent(seenAt.current)}` : ""}`, { cache: "no-store" });
+        if (!r.ok) return;
+        const data = (await r.json()) as { count: number; now: string };
+        checkedAt.current = data.now;
+        if (!seenAt.current) seenAt.current = data.now; else if (data.count > 0) setNewDeals(data.count);
+      } catch { /* a missed check is fine; the next one tries again */ }
+    };
+    void check();
+    const timer = setInterval(check, 60_000);
+    document.addEventListener("visibilitychange", check);
+    return () => { clearInterval(timer); document.removeEventListener("visibilitychange", check); };
+  }, []);
+  const showNewDeals = () => { seenAt.current = checkedAt.current; setNewDeals(0); setDismissedAt(0); setPage(1); setRefreshKey((k) => k + 1); window.scrollTo({ top: 0, behavior: "smooth" }); };
 
   useEffect(() => {
     if (!initialCatalog?.categories?.length) {
@@ -186,6 +210,14 @@ export function Homepage({
   return <>
     <Header query={query} onQuery={setQuery} onSearch={search} communityEnabled={communityEnabled} categories={catalog.categories} onCategory={(cat) => { applyFilters({ ...defaults, category: cat }); setQuery(""); scrollToDeals(); }} savedCount={saved.ids.filter((id) => deals.some((deal) => deal.id === id)).length} onHome={() => { setFilters(defaults); setQuery(""); window.scrollTo({ top: 0, behavior: "smooth" }); }} onPanel={(next)=>{if(next==="account")router.push("/account");else setPanel(next);}} onView={(view) => { setFilters({ ...defaults, view }); setQuery(""); scrollToDeals(); }} />
     <main id="main">
+      {newDeals > dismissedAt && (
+        <div className="new-deals-toast" role="status">
+          <span className="new-deals-dot" aria-hidden="true" />
+          <span><strong>{newDeals} new {newDeals === 1 ? "deal" : "deals"}</strong> just posted</span>
+          <button type="button" className="new-deals-show" onClick={showNewDeals}>Show</button>
+          <button type="button" className="new-deals-close" aria-label="Dismiss" onClick={() => setDismissedAt(newDeals)}>×</button>
+        </div>
+      )}
       <MobileFeedBar
         query={query} onQuery={setQuery} onSearch={search}
         categories={mainCategories.map((c) => ({ slug: c.slug, name: c.name }))}

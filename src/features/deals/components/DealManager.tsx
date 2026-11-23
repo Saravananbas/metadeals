@@ -947,6 +947,16 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
     }
   }
 
+  // The store is picked from the product link as soon as it is pasted; a store the editor already chose is never overridden.
+  useEffect(() => {
+    if (form.merchantId || !form.productUrl.trim()) return;
+    const match = findDirectoryMerchant([form.productUrl]);
+    if (!match) return;
+    const operational = merchants.find((m) => m.websiteUrl && merchantDomain(m.websiteUrl) === merchantDomain(match.domain || match.websiteUrl));
+    setForm((old) => (old.merchantId ? old : { ...old, merchantId: operational?.id || match.id }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- findDirectoryMerchant reads the loaded directory; re-run when the link or the lists change
+  }, [form.productUrl, form.merchantId, directoryMerchants, merchants]);
+
   useEffect(() => {
     if (selected) return;
     const link = form.productUrl.trim();
@@ -1528,8 +1538,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
       setMessage("Saved. Preview this saved version before publishing.");
       if (publishNow) {
         setPreview(await request(`deals/${result.data.id}/preview`, "POST", {}));
-        setMessage("Saved. Review the preview below, then confirm to publish.");
-        requestAnimationFrame(() => document.getElementById("saved-preview")?.scrollIntoView({ behavior: "smooth", block: "center" }));
+        setMessage("Saved. Review the preview, then publish.");
       }
     });
   }
@@ -3229,6 +3238,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
           </div>
         )}
         {preview && (
+          <div className={styles.previewOverlay} role="dialog" aria-modal="true" aria-label="Deal preview">
           <article className={styles.preview} id="saved-preview">
             <h3>Saved preview: {preview.data.title}</h3>
             <Image
@@ -3250,25 +3260,30 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
             <a href={preview.data.productUrl} target="_blank" rel="noreferrer">
               Inspect source
             </a>
-            <button
-              disabled={busy || !["DRAFT", "PENDING_REVIEW"].includes(preview.data.status)}
-              onClick={() =>
-                void run(async () => {
-                  const result = await request<{ data: Row }>(
-                    `deals/${preview.data.id}/publish`,
-                    "POST",
-                    { version: preview.data.version, previewToken: preview.previewToken }
-                  );
-                  setSelected(result.data);
-                  setPreview(null);
-                  await load();
-                  setMessage("Published or scheduled according to the saved dates.");
-                })
-              }
-            >
-              Confirm preview and publish
-            </button>
+            <div className={styles.previewModalActions}>
+              <button
+                disabled={busy || !["DRAFT", "PENDING_REVIEW"].includes(preview.data.status)}
+                onClick={() =>
+                  void run(async () => {
+                    const result = await request<{ data: Row }>(
+                      `deals/${preview.data.id}/publish`,
+                      "POST",
+                      { version: preview.data.version, previewToken: preview.previewToken }
+                    );
+                    setSelected(result.data);
+                    setPreview(null);
+                    await load();
+                    setMessage("Published or scheduled according to the saved dates.");
+                  })
+                }
+              >
+                Publish
+              </button>
+              <button type="button" disabled={busy} onClick={() => { setPreview(null); window.scrollTo({ top: 0, behavior: "smooth" }); }}>Edit Details</button>
+              <button type="button" disabled={busy} onClick={() => { setPreview(null); setMessage("Preview closed. The deal is saved as a draft."); }}>Discard</button>
+            </div>
           </article>
+          </div>
         )}
       </section>
           </div>
