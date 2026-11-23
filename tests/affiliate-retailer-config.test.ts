@@ -64,9 +64,14 @@ test("earningVia names the program that earns", () => {
 
 test("stored credentials are encrypted, round-trip, and need the key", () => {
   const key = process.env.AFFILIATE_CREDENTIALS_KEY;
+  const base = process.env.AUTH_TOTP_ENCRYPTION_KEY;
   delete process.env.AFFILIATE_CREDENTIALS_KEY;
+  delete process.env.AUTH_TOTP_ENCRYPTION_KEY;
   try {
-    assert.throws(() => encryptCredentials("secret"), /AFFILIATE_CREDENTIALS_KEY/);
+    assert.throws(() => encryptCredentials("secret"), /encryption key is missing/);
+    // Nothing to configure: the key is derived from the site's existing secret.
+    process.env.AUTH_TOTP_ENCRYPTION_KEY = randomBytes(32).toString("base64");
+    assert.equal(decryptCredentials(encryptCredentials("derived")), "derived");
     process.env.AFFILIATE_CREDENTIALS_KEY = randomBytes(32).toString("base64");
     const stored = encryptCredentials("api-key-123");
     assert.ok(!stored.includes("api-key-123"));
@@ -74,5 +79,6 @@ test("stored credentials are encrypted, round-trip, and need the key", () => {
     assert.throws(() => decryptCredentials(stored.slice(0, -2) + "xx"));
   } finally {
     if (key === undefined) delete process.env.AFFILIATE_CREDENTIALS_KEY; else process.env.AFFILIATE_CREDENTIALS_KEY = key;
+    if (base === undefined) delete process.env.AUTH_TOTP_ENCRYPTION_KEY; else process.env.AUTH_TOTP_ENCRYPTION_KEY = base;
   }
 });

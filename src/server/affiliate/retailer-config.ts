@@ -1,3 +1,4 @@
+import { createHmac } from "node:crypto";
 import { decryptTotpSecret, encryptTotpSecret } from "@/server/auth/crypto";
 import type { ConvertedLinkResult } from "./adapters/types";
 
@@ -69,10 +70,13 @@ export function earningVia(config: Pick<RetailerAffiliateConfig, "mode" | "provi
   return cuelinksOn ? "Cuelinks" : "Not monetised";
 }
 
+/** No setup for the owner: the key is derived from the site's existing AUTH_TOTP_ENCRYPTION_KEY (different purpose label, so it is a different key). AFFILIATE_CREDENTIALS_KEY still wins when set. */
 function credentialsKey(): string {
-  const key = process.env.AFFILIATE_CREDENTIALS_KEY ?? "";
-  if (!/^[A-Za-z0-9+/]{43}=$/.test(key)) throw new Error("AFFILIATE_CREDENTIALS_KEY is not set (a base64 32-byte key is needed to store API credentials).");
-  return key;
+  const explicit = process.env.AFFILIATE_CREDENTIALS_KEY ?? "";
+  if (/^[A-Za-z0-9+/]{43}=$/.test(explicit)) return explicit;
+  const base = process.env.AUTH_TOTP_ENCRYPTION_KEY ?? "";
+  if (base.length < 40) throw new Error("Storing API credentials is not available: the site's encryption key is missing.");
+  return createHmac("sha256", base).update("metadeals:affiliate-credentials:v1").digest("base64");
 }
 export const encryptCredentials = (plain: string) => encryptTotpSecret(plain, credentialsKey());
 export const decryptCredentials = (stored: string) => decryptTotpSecret(stored, credentialsKey());
