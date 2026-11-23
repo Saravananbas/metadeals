@@ -124,7 +124,7 @@ export async function addRetailerFromUrl(actor: Actor, rawUrl: unknown) {
 }
 
 /** Builds a sample link with the saved setting so the owner can see exactly what a visitor would be sent to. Makes no request to any network. */
-export async function testRetailer(actor: Actor, ref: string) {
+export async function testRetailer(actor: Actor, ref: string, productUrl?: unknown) {
   await assertCan(actor, "affiliate:view");
   const db = getDatabase();
   let site: string;
@@ -139,7 +139,13 @@ export async function testRetailer(actor: Actor, ref: string) {
     site = m.websiteUrl; c = m.affiliateConfig;
   }
   const config = asConfig(c);
-  const sample = `${site.replace(/\/+$/, "")}/sample-product`;
+  // An optional real product address of this store makes the test link open that product.
+  let sample = `${site.replace(/\/+$/, "")}/sample-product`;
+  if (typeof productUrl === "string" && productUrl.trim()) {
+    const given = z.string().trim().max(2048).url().parse(productUrl);
+    if (!/^https:\/\//i.test(given) || hostOf(given) !== hostOf(site)) throw new DealError(`Enter an https product link from ${hostOf(site)}.`, 422);
+    sample = given;
+  }
   const result = convertMerchantUrl(sample, hostOf(site), { dealId: "test", subId: "web" }, config);
   return { via: earningVia(config, cuelinksOn()), provider: result.provider, isAffiliate: result.isAffiliate, sampleLink: result.url, problem: config ? configProblem(config) : null };
 }

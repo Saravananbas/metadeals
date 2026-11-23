@@ -82,6 +82,8 @@ function RetailerForm({ retailer, canManage, onSaved }: { retailer: Retailer; ca
   const [publicId, setPublicId] = useState(c?.publicId ?? "");
   const [template, setTemplate] = useState(c?.linkTemplate ?? "");
   const [credentials, setCredentials] = useState("");
+  const [productUrl, setProductUrl] = useState("");
+  const [opened, setOpened] = useState<string | null>(null);
   const [message, setMessage] = useState<{ ok: boolean; text: string } | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -96,7 +98,7 @@ function RetailerForm({ retailer, canManage, onSaved }: { retailer: Retailer; ca
       setCredentials(""); onSaved(saved.id);
     }, () => "Saved.");
   };
-  const test = () => void run(() => call<{ via: string; sampleLink: string; problem: string | null }>(`/api/v1/admin/affiliate/retailers/${encodeURIComponent(retailer.id)}/test`, "POST", {}), (r) => `${r.via}${r.problem ? ` (${r.problem})` : ""}: ${r.sampleLink}`);
+  const test = () => { setOpened(null); void run(() => call<{ via: string; sampleLink: string; problem: string | null }>(`/api/v1/admin/affiliate/retailers/${encodeURIComponent(retailer.id)}/test`, "POST", { productUrl: productUrl || undefined }), (r) => { setOpened(r.sampleLink); return `${r.via}${r.problem ? ` (${r.problem})` : ""}: ${r.sampleLink}`; }); };
 
   const needsId = mode === "OWN" && (provider === "amazon" || provider === "flipkart");
   const needsTemplate = mode === "OWN" && (provider === "ajio" || provider === "custom");
@@ -126,11 +128,16 @@ function RetailerForm({ retailer, canManage, onSaved }: { retailer: Retailer; ca
           <input type="password" autoComplete="off" value={credentials} onChange={(e) => setCredentials(e.target.value)} placeholder={c?.hasCredentials ? "Saved. Type to replace." : "Not saved"} maxLength={2000} />
         </label>
       )}
+      <label className={styles.field}>Product link to test with (optional)
+        <input type="url" value={productUrl} onChange={(e) => setProductUrl(e.target.value)} maxLength={2048} placeholder={`A product page of ${retailer.websiteUrl.replace(/^https?:\/\//, "")}`} />
+        <small>Test link builds the earning link for this product, and Open in new tab shows where a visitor would land.</small>
+      </label>
       {c?.problem && <p className={styles.error}>{c.problem}</p>}
       {message && <p className={message.ok ? styles.okMsg : styles.error} role="status">{message.text}</p>}
       <div className={styles.actions}>
         {canManage && <button type="submit" className={styles.primary} disabled={busy}>Save</button>}
         <button type="button" className={styles.ghost} disabled={busy} onClick={test}>Test link</button>
+        {opened && <a className={styles.ghost} href={opened} target="_blank" rel="noopener noreferrer">Open in new tab</a>}
       </div>
     </form>
   );

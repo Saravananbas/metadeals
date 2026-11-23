@@ -7,5 +7,6 @@ export const runtime = "nodejs";
 
 export const POST = (request: Request, ctx: { params: Promise<{ id: string }> }) => adminApi(request, async (actor) => {
   const { id } = await ctx.params;
-  return json(await testRetailer(actor, id));
+  const body = (await request.json().catch(() => ({}))) as { productUrl?: unknown };
+  return json(await testRetailer(actor, id, body.productUrl));
 });

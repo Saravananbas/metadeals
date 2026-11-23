@@ -7,7 +7,7 @@
 .search { min-height: 40px; padding: 0 12px; border: 1px solid var(--md-purple-200); border-radius: 10px; font: inherit; font-size: 13px; background: var(--md-white); color: var(--md-color-text); width: 100%; max-width: 360px; }
 .primary { min-height: 40px; padding: 0 18px; font-size: 13px; border: 0; border-radius: 10px; background: var(--md-purple-700); color: var(--md-white); font: inherit; font-weight: 700; cursor: pointer; }
 .primary:disabled { opacity: .55; cursor: not-allowed; }
-.ghost { min-height: 40px; padding: 0 14px; font-size: 13px; border: 1px solid var(--md-purple-200); border-radius: 10px; background: var(--md-white); color: var(--md-purple-700); font: inherit; font-weight: 700; cursor: pointer; }
+.ghost { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; min-height: 40px; padding: 0 14px; font-size: 13px; border: 1px solid var(--md-purple-200); border-radius: 10px; background: var(--md-white); color: var(--md-purple-700); font: inherit; font-weight: 700; cursor: pointer; }
 .tableWrap { background: var(--md-white); border: 1px solid var(--md-purple-100); border-radius: 14px; overflow-x: auto; }
 .table { width: 100%; border-collapse: collapse; font-size: 13px; }
 .table th { text-align: left; padding: 10px 14px; background: var(--md-purple-50); color: var(--md-neutral-700); font-size: 11px; text-transform: uppercase; letter-spacing: .03em; white-space: nowrap; }
