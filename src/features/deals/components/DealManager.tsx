@@ -103,7 +103,11 @@ async function request<T>(path: string, method = "GET", body?: unknown, signal?:
     ...(body ? { headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) } : {}),
   });
   const data = await response.json();
-  if (!response.ok) throw new Error(data.error?.message ?? "Request failed.");
+  if (!response.ok) {
+    // Validation errors name the fields that failed, so the editor can see what to fix.
+    const detail = Array.isArray(data.error?.fields) ? data.error.fields.slice(0, 3).map((f: { path: string; message: string }) => `${f.path || "form"}: ${f.message}`).join("; ") : "";
+    throw new Error(`${data.error?.message ?? "Request failed."}${detail ? ` (${detail})` : ""}`);
+  }
   return data;
 }
 
