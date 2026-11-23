@@ -8,6 +8,8 @@ export interface ConvertedLinkResult {
   url: string;
   provider: string;
   isAffiliate: boolean;
+  /** The link's host was set by an administrator for this retailer (a custom network template), so the redirect may use it. */
+  trusted?: boolean;
 }
 
 export interface AffiliateProviderAdapter {

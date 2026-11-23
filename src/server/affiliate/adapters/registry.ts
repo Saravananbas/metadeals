@@ -2,6 +2,7 @@ import type { AffiliateProviderAdapter, AffiliateConversionContext, ConvertedLin
 import { CuelinksAdapter } from "./cuelinks";
 import { AmazonAdapter } from "./amazon";
 import { FlipkartAdapter } from "./flipkart";
+import { buildOwnLink, type RetailerAffiliateConfig } from "../retailer-config";
 
 /**
  * Cuelinks V3 is the primary and consolidated affiliate monetization provider for MetaDeals4U.
@@ -23,8 +24,15 @@ export function getProviderAdapter(name: string): AffiliateProviderAdapter | und
 export function convertMerchantUrl(
   originalUrl: string,
   merchantHost: string,
-  context: AffiliateConversionContext
+  context: AffiliateConversionContext,
+  config?: RetailerAffiliateConfig | null
 ): ConvertedLinkResult {
+  // The retailer's own setting comes first: our own account, or switched off. Anything else (no setting, or Cuelinks) is the old behaviour.
+  if (config?.mode === "NONE") return { url: originalUrl, provider: "direct", isAffiliate: false };
+  if (config?.mode === "OWN") {
+    const own = buildOwnLink(config, originalUrl, context.subId);
+    if (own) return own;
+  }
   for (const adapter of adapters) {
     if (adapter.canHandle(originalUrl, merchantHost)) {
       return adapter.convertUrl(originalUrl, context);

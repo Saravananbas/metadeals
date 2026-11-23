@@ -5,6 +5,7 @@ import { actorCan } from "@/server/auth/access";
 import { merchantSelect, type DealDatabase } from "@/server/deals/repository";
 import { ALLOWED_RETAILER_DOMAINS } from "@/server/product-extraction/security/domain-allowlist";
 import { convertMerchantUrl } from "./adapters/registry";
+import type { RetailerAffiliateConfig } from "./retailer-config";
 import {
   validateDestinationHost,
   isCrawlerOrPrefetch,
@@ -121,6 +122,7 @@ export async function resolveDealRedirect(
   };
 
   let targetUrl: string | null = null;
+  let affiliateProvider: string | null = null;
 
   if (candidateAffiliateUrl) {
     // Configured affiliate URL is present: validate destination host
@@ -132,12 +134,15 @@ export async function resolveDealRedirect(
     // Affiliate URL is missing: attempt adapter conversion on the original product URL
     try {
       const parsed = new URL(candidateProductUrl);
+      const row = await db.merchantAffiliateConfig.findUnique({ where: { merchantId: targetMerchant.id } });
+      const config = row ? { mode: row.mode as RetailerAffiliateConfig["mode"], provider: row.provider as RetailerAffiliateConfig["provider"], publicId: row.publicId, linkTemplate: row.linkTemplate } : null;
       const converted = convertMerchantUrl(candidateProductUrl, parsed.hostname, {
         dealId: deal.slug || deal.id,
         subId: normalizeClickChannel(requestMeta.channel),
-      });
-      if (converted.isAffiliate && converted.url && isUrlAllowed(converted.url)) {
+      }, config);
+      if (converted.isAffiliate && converted.url && (converted.trusted || isUrlAllowed(converted.url))) {
         targetUrl = converted.url;
+        affiliateProvider = converted.provider;
       }
     } catch {
       // Continue to direct product URL fallback
@@ -183,6 +188,7 @@ export async function resolveDealRedirect(
         optionId: selectedOptionId,
         merchantId: targetMerchant.id,
         channel,
+        provider: affiliateProvider,
         actorHash,
         createdAt: now,
       },

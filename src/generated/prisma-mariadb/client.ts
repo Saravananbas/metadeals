@@ -456,3 +456,8 @@ export type CommunityDealSubmissionImage = Prisma.CommunityDealSubmissionImageMo
  * A product brand ("ASUS", "Ninja"). Used to match a fetched brand to a known one; grows when staff approve a deal with a new brand.
  */
 export type Brand = Prisma.BrandModel
+/**
+ * Model MerchantAffiliateConfig
+ * How outgoing links for one retailer earn: through our own affiliate account (OWN) or Cuelinks. No row means Cuelinks.
+ */
+export type MerchantAffiliateConfig = Prisma.MerchantAffiliateConfigModel
