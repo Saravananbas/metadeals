@@ -9,7 +9,7 @@ import { getAuthEnv } from "@/config/env";
 import { getDatabase } from "@/server/db/client";
 import { hashOpaqueToken } from "@/server/auth/crypto";
 import { verifiedProviderEmail } from "@/features/customer/validation";
-import { loginCustomer } from "./service";
+import { CustomerError, loginCustomer } from "./service";
 import { customerForProvider } from "./provider-login";
 import { clientIpFromHeaders } from "@/server/client-ip";
 
@@ -30,7 +30,9 @@ export function getCustomerAuthOptions(): NextAuthOptions {
         try {
           const first = (name: string) => { const v = request?.headers?.[name]; return Array.isArray(v) ? v[0] : v ?? null; };
           return await loginCustomer(credentials, clientIpFromHeaders({ get: first }));
-        } catch {
+        } catch (error) {
+          // A locked account is told so (the sign-in screen shows the lock message); every other failure stays a plain "no".
+          if (error instanceof CustomerError && error.status === 423) throw new Error("AccountLocked");
           return null;
         }
       },

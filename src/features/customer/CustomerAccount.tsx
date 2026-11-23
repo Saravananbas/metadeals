@@ -83,6 +83,7 @@ export function CustomerAccount({ providers, delivery, oauthError, redirectTo = 
         setEmail(String(values.email)); setChallenge(result.challengeId); setStep("verify"); setCooldown(60); form.reset(); setPw("");
       } else {
         const result = await signIn("credentials", { email: values.email, password: values.password, remember: remember ? "1" : "0", redirect: false, callbackUrl: redirectTo });
+        if (result?.error === "AccountLocked") throw new Error("Too many failed attempts. This account is locked for 30 minutes. Try again later, or use Forgot password to unlock it with a new password.");
         if (result?.error || !result?.ok) throw new Error("Email or password is incorrect, or sign-in is temporarily limited.");
         const session = await fetch("/api/v1/customer/session", { cache: "no-store" }).then((r) => r.json());
         if (!session.user) throw new Error("Unable to start your session. Please retry.");

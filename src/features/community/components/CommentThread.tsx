@@ -69,7 +69,7 @@ function CommentItem({ c, all, op, slug, locked, signedIn, onReply, onQuote, onC
 
   return (
     <div id={`c-${c.id}`} className={`${styles.comment} ${c.depth ? styles.reply : ""}`}>
-      <span className={styles.cAvatar} aria-hidden>{c.author?.avatarUrl ? /* eslint-disable-next-line @next/next/no-img-element */ <img src={c.author.avatarUrl} alt="" /> : (c.author?.handle ?? "?").slice(0, 1).toUpperCase()}</span>
+      <span className={styles.cAvatar} aria-hidden>{c.author?.avatarUrl ? <img src={c.author.avatarUrl} alt="" /> : (c.author?.handle ?? "?").slice(0, 1).toUpperCase()}</span>
       <div style={{ minWidth: 0 }}>
         <div className={styles.cMeta}>
           <Link href={`/community/u/${c.author?.handle}`}>{c.author?.handle}</Link>

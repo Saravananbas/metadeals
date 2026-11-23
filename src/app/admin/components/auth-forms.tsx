@@ -3,8 +3,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { type FormEvent, useState } from "react";
+import { type FormEvent, useEffect, useState } from "react";
 import styles from "../admin.module.css";
+import { rememberEmail } from "./reset-forms";
 
 type AuthResponse = {
   error?: string;
@@ -12,6 +13,7 @@ type AuthResponse = {
   qrCodeDataUrl?: string;
   secret?: string;
   recoveryCodes?: string[];
+  passwordChangeRequired?: boolean;
 };
 
 async function postJson(url: string, body: unknown): Promise<AuthResponse> {
@@ -32,7 +34,9 @@ function Brand() {
 export function LoginForm() {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [changed, setChanged] = useState(false);
   const router = useRouter();
+  useEffect(() => { setChanged(new URLSearchParams(window.location.search).get("changed") === "1"); }, []);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -40,11 +44,13 @@ export function LoginForm() {
     setBusy(true);
     const data = new FormData(event.currentTarget);
     try {
-      await postJson("/api/auth/login", {
+      const result = await postJson("/api/auth/login", {
         email: data.get("email"),
         password: data.get("password"),
         mfaCode: data.get("mfaCode"),
       });
+      // The emailed temporary password opens no session: it only leads to the page where a new password is chosen.
+      if (result.passwordChangeRequired) { rememberEmail(String(data.get("email") ?? "")); router.replace("/admin/password-reset/change"); return; }
       router.replace("/admin");
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : "Sign-in failed.");
@@ -59,6 +65,7 @@ export function LoginForm() {
         <Brand />
         <h1 className={styles.title}>Admin sign in</h1>
         <p className={styles.subtitle}>Sign in with your password and authenticator code or an unused recovery code.</p>
+        {changed && <p className={styles.notice} role="status">Password changed. Please sign in with your new password.</p>}
         <form className={styles.form} onSubmit={submit}>
           <label className={styles.field}>Email<input name="email" type="email" autoComplete="username" required maxLength={254} /></label>
           <label className={styles.field}>Password<input name="password" type="password" autoComplete="current-password" required maxLength={128} /></label>

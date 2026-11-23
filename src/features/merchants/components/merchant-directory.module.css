@@ -146,7 +146,7 @@
   background: var(--md-white);
   border: 1px solid var(--md-color-border);
   border-radius: 0.75rem;
-  overflow: hidden;
+  overflow-x: auto;
   box-shadow: 0 1px 3px color-mix(in srgb, var(--md-black) 4%, transparent);
 }
 
@@ -433,3 +433,24 @@
   font-size: 0.875rem;
 }
 
+
+/* Phones: each merchant becomes a card, with the column name in front of every value. */
+@media (max-width: 720px) {
+  .tableWrapper { border: 0; background: none; box-shadow: none; overflow: visible; }
+  .table, .table tbody, .table tr, .table td { display: block; width: 100%; }
+  .table thead { display: none; }
+  .table tbody { display: grid; gap: 12px; }
+  .tr { padding: 10px 12px; background: var(--md-white); border: 1px solid var(--md-color-border); border-radius: 12px; }
+  .table .td { display: grid; grid-template-columns: 84px minmax(0, 1fr); align-items: center; gap: 10px; width: auto !important; min-width: 0 !important; padding: 8px 0 !important; border-bottom: 1px solid var(--md-neutral-100); text-align: left !important; overflow-wrap: anywhere; }
+  .table .td:last-child { border-bottom: 0; }
+  .table .td::before { color: var(--md-neutral-600); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; }
+  .table .td:nth-child(1)::before { content: "Logo"; }
+  .table .td:nth-child(2)::before { content: "Merchant"; }
+  .table .td:nth-child(3)::before { content: "Website"; }
+  .table .td:nth-child(4)::before { content: "Category"; }
+  .table .td:nth-child(5)::before { content: "Status"; }
+  .table .td:nth-child(6)::before { content: "Actions"; }
+  .table .td[colspan] { display: block; text-align: center !important; }
+  .table .td[colspan]::before { content: none; }
+  .domainBadge { padding: 6px 10px; margin-top: 0; }
+}

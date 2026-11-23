@@ -2,6 +2,10 @@
 
 Also read `AGENTS.md` (Next.js version notes; it is rewritten by `next dev`, so project standards live here).
 
+# MANDATORY RELEASE RULE (owner decision, 22 Nov 2026)
+
+Every change goes to **staging first** and reaches **production only by a pull request from `staging` to `main`** after it was tested on https://staging.metadeals4u.in. Never push to `main`. Never edit production directly: no production files, settings, database changes or Redeploy except as the explicit last step of a promotion the owner asked for. Full procedure: `docs/RELEASE-PIPELINE.md`.
+
 # MANDATORY CROSS-PLATFORM DEVELOPMENT STANDARD
 
 This is a permanent architectural requirement for all MetaDeals4U development.
@@ -143,6 +147,6 @@ Mobile website and future Android/iOS compatibility must be considered from the 
 
 - Stack: Next.js 16 (read `node_modules/next/dist/docs/` before writing Next code), React 19, Prisma 7 with MariaDB (`prisma/schema.mariadb.prisma`, `prisma/migrations_mariadb`) and a parallel PostgreSQL schema that must be kept in sync, next-auth for customers, custom staff auth with TOTP.
 - Local app: http://localhost:4123. Use only disposable databases whose name contains `test` for DB tests; never run tests that create deals/candidates against the development or staging database.
-- Staging: https://staging.metadeals4u.in (Hostinger). Production is not deployed; `metadeals4u.in` currently runs WordPress. Staging migrations are applied by hand in phpMyAdmin (SQL from `prisma/migrations_mariadb`, plus a row in `_prisma_migrations` with the file's sha256) and need the owner's approval each time.
+- Staging: https://staging.metadeals4u.in (Hostinger, deploys from the `staging` branch). Production: https://metadeals4u.in (Hostinger Node.js, deploys from `main`); WordPress was retired on 22 Nov 2026. Staging migrations are applied by hand in phpMyAdmin (SQL from `prisma/migrations_mariadb`, plus a row in `_prisma_migrations` with the file's sha256) and need the owner's approval each time.
 - Current Android/iOS app in `mobile/` is Flutter (WebView tabs plus native deal list). The standard above plans React Native / Expo for the future apps: treat that as a pending owner decision, do not start a second native codebase without it.
 - Security status and open items: `docs/security/PRODUCTION_LAUNCH_TRACKER.md`.

@@ -133,7 +133,7 @@ export function PostDetail({ post, safeHtml, signedIn }: { post: DetailPost; saf
             {post.images.length > 0 && (
               <div className={styles.gallery}>
                 {post.images.map((img) => (
-                  <a key={img.id} href={img.url} target="_blank" rel="noopener noreferrer">{/* eslint-disable-next-line @next/next/no-img-element */}<img src={img.url} alt="" loading="lazy" width={img.width} height={img.height} /></a>
+                  <a key={img.id} href={img.url} target="_blank" rel="noopener noreferrer"><img src={img.url} alt="" loading="lazy" width={img.width} height={img.height} /></a>
                 ))}
               </div>
             )}

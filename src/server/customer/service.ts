@@ -11,6 +11,9 @@ import { logger } from "@/server/logging/logger";
 export class CustomerError extends Error { constructor(message: string, public status = 400) { super(message); } }
 const digest = (value: string) => hashOpaqueToken("customer:" + value, getAuthEnv().AUTH_SESSION_SECRET);
 const dummyHash = hashPassword(randomUUID());
+/** Five wrong passwords on one account (typed as email or user name) lock it for 30 minutes. A new password through "Forgot password" unlocks it at once. */
+export const MEMBER_LOCKED_MESSAGE = "Too many failed attempts. This account is locked for 30 minutes. Try again later, or use Forgot password to unlock it with a new password.";
+const MEMBER_LOCK_AFTER = 5, MEMBER_LOCK_SECONDS = 30 * 60;
 /** Counts one event in a rolling window and returns the new count. Portable (PostgreSQL and MariaDB): atomic increment while the window is open, otherwise start a new window. */
 export async function bumpCustomerCounter(subject: string, seconds = 900): Promise<number> {
   const db = getDatabase(), now = new Date(), expiresAt = new Date(Date.now() + seconds * 1000);
@@ -88,7 +91,10 @@ export async function verifyCustomer(id: string, code: string) {
   });
 }
 /**
- * Password sign-in. Design goals: slow guessing down, never let a stranger lock the real customer out, reveal nothing about which emails exist.
+ * Password sign-in. Design goals: slow guessing down, lock an account after five wrong passwords (owner decision, 22 Nov 2026: 30 minutes, or unlocked by a password reset),
+ * reveal nothing about which emails exist (an unknown email locks and answers exactly like a real one).
+ * Known trade-off of that decision: a stranger who keeps guessing can keep the real customer locked out; the reset by emailed code is the way out.
+ * The measures below still apply on top of the lock.
  * - Per address (an IPv6 /64 is one address): total attempts. A flood from one address stops; other addresses are unaffected.
  * - Per email AND address: counted BEFORE the password is checked (a parallel burst cannot slip past), cleared on a correct password, and each failure after the third adds a growing delay.
  * - Per email overall: "attack mode" when attempts for one email arrive from many addresses (more than 30 in 15 minutes). In attack mode only addresses that this customer has
@@ -104,6 +110,8 @@ export async function loginCustomer(raw:unknown, address?: string | null) {
   // Counters use one key per account however it was typed (email or user name), so switching between them does not reset the limits.
   const email = resolved.key;
   if ((await bumpCustomerCounter("login-ip:" + where)) > (address ? 60 : 600)) return null;
+  const lockKey = "login-locked:" + email, failKey = "login-fails:" + email;
+  if (await hasCustomerCounter(lockKey)) throw new CustomerError(MEMBER_LOCKED_MESSAGE, 423);
   const pairKey = `login-pair:${email}:${where}`, emailKey = "login-email:" + email, knownKey = `login-known:${email}:${where}`;
   // Pair first: once one address is over its limit it stops adding to the victim's overall counter (one address can add at most 8 to it).
   const pairCount = await bumpCustomerCounter(pairKey);
@@ -118,9 +126,13 @@ export async function loginCustomer(raw:unknown, address?: string | null) {
   if (pairCount > 3) await new Promise((resolve) => setTimeout(resolve, Math.min(100 * 2 ** (pairCount - 3), 1500)));
   const customer=resolved.email ? await getDatabase().customer.findUnique({where:{email:resolved.email}}) : null;
   const valid=await verifyPassword(customer?.passwordHash ?? await dummyHash,input.data.password);
-  if(!customer || customer.disabledAt || !valid || !customer.passwordHash)return null;
+  if(!customer || customer.disabledAt || !valid || !customer.passwordHash) {
+    // The fifth wrong password in 30 minutes locks the account; the next attempt gets the lock message.
+    if ((await bumpCustomerCounter(failKey, MEMBER_LOCK_SECONDS)) >= MEMBER_LOCK_AFTER) await bumpCustomerCounter(lockKey, MEMBER_LOCK_SECONDS);
+    return null;
+  }
   if (emailCount > 10 && !known) logger.warn({ event: "customer.login.success_after_failures", target: digest(email).slice(0, 12), attemptsInWindow: emailCount }, "sign-in from a new address after many failed attempts");
-  await Promise.all([clearCustomerCounter(pairKey), clearCustomerCounter(emailKey)]);
+  await Promise.all([clearCustomerCounter(pairKey), clearCustomerCounter(emailKey), clearCustomerCounter(failKey)]);
   await clearCustomerCounter(knownKey);
   await bumpCustomerCounter(knownKey, 30 * 86_400); // remember this address for 30 days
   return {id:customer.id,name:customer.name,email:customer.email,remember:["1","true","on"].includes(String(input.data.remember))};
@@ -179,7 +191,7 @@ export async function confirmPasswordReset(raw: unknown) {
     return current.email;
   });
   // The lockout counter for this account is cleared so the owner can sign in straight away with the new password.
-  await clearCustomerCounter("login-email:" + owner);
+  await Promise.all([clearCustomerCounter("login-email:" + owner), clearCustomerCounter("login-fails:" + owner), clearCustomerCounter("login-locked:" + owner)]);
   logger.info({ event: "customer.password.reset" }, "customer password reset");
   return { reset: true };
 }

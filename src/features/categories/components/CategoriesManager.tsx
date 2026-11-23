@@ -699,11 +699,13 @@ export function CategoriesManager({
                       display: "flex",
                       justifyContent: "space-between",
                       alignItems: "center",
+                      flexWrap: "wrap",
+                      gap: 8,
                       borderBottom: "1.5px solid var(--md-color-surface-muted)",
                       paddingBottom: 10,
                     }}
                   >
-                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, flex: "1 1 150px", minWidth: 0 }}>
                       <span
                         style={{ cursor: "grab", fontSize: "1.2rem", userSelect: "none" }}
                         title="Drag this card to reorder"
@@ -732,7 +734,7 @@ export function CategoriesManager({
                         style={{
                           fontSize: "0.75rem",
                           fontWeight: 700,
-                          padding: "2px 8px",
+                          padding: "7px 10px",
                           borderRadius: 10,
                           border: 0,
                           cursor: "pointer",
@@ -754,7 +756,7 @@ export function CategoriesManager({
                           border: "1px dashed var(--md-purple-300)",
                           color: "var(--md-color-primary)",
                           borderRadius: 6,
-                          padding: "3px 8px",
+                          padding: "7px 10px",
                           fontSize: 11,
                           fontWeight: 700,
                           cursor: "pointer",
@@ -774,7 +776,7 @@ export function CategoriesManager({
                           border: "1px solid var(--md-color-danger-border)",
                           color: "var(--md-red-600)",
                           borderRadius: 6,
-                          padding: "3px 7px",
+                          padding: "7px 10px",
                           fontSize: 11,
                           fontWeight: 700,
                           cursor: "pointer",

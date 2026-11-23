@@ -1,7 +1,7 @@
 "use client";
 
 /** Small SVG chart kit for the analytics dashboard. Colours come from the shared design tokens only. */
-import { Fragment, useId, useState, type ReactNode } from "react";
+import { Fragment, useEffect, useId, useRef, useState, type ReactNode } from "react";
 import styles from "./analytics-dashboard.module.css";
 
 export const PALETTE = ["var(--md-purple-600)", "var(--md-blue-600)", "var(--md-orange-500)", "var(--md-green-600)", "var(--md-red-600)", "var(--md-purple-300)", "var(--md-amber-600)", "var(--md-neutral-500)"];
@@ -25,7 +25,17 @@ export function TimeChart({ data, series, kind = "line", stacked = false, height
   const [hidden, setHidden] = useState<Set<string>>(new Set());
   const [hover, setHover] = useState<number | null>(null);
   const id = useId();
-  const w = 640, h = height, left = 36, right = 8, top = 8, bottom = 22;
+  // The drawing is as wide as its box, so labels keep their real size on a phone.
+  const box = useRef<HTMLDivElement>(null);
+  const [w, setW] = useState(640);
+  useEffect(() => {
+    const el = box.current; if (!el) return;
+    const read = () => setW(Math.max(260, Math.round(el.clientWidth)));
+    read();
+    const observer = new ResizeObserver(read); observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+  const h = height, left = 36, right = 8, top = 8, bottom = 22;
   const shown = series.filter((s) => !hidden.has(s.key));
   const color = (s: Series, i: number) => s.color ?? PALETTE[series.indexOf(s) % PALETTE.length] ?? PALETTE[i];
   const val = (d: (typeof data)[number], k: string) => Number(d[k] ?? 0);
@@ -35,11 +45,11 @@ export function TimeChart({ data, series, kind = "line", stacked = false, height
   const x = (i: number) => left + (kind === "line" ? (data.length <= 1 ? iw / 2 : (i / (data.length - 1)) * iw) : ((i + 0.5) / data.length) * iw);
   const y = (v: number) => top + ih - (v / max) * ih;
   const ticks = [0, 0.5, 1].map((t) => Math.round(max * t));
-  const step = Math.max(1, Math.ceil(data.length / 7));
+  const step = Math.max(1, Math.ceil(data.length / Math.max(3, Math.floor(w / 80))));
   const bw = Math.max(2, Math.min(28, (iw / Math.max(1, data.length)) * (stacked ? 0.7 : 0.8) / (stacked ? 1 : Math.max(1, shown.length))));
   const tipLeft = hover === null ? 0 : Math.min(Math.max(((x(hover)) / w) * 100, 14), 80);
   return (
-    <div className={styles.chartBox}>
+    <div className={styles.chartBox} ref={box}>
       <div className={styles.legend}>
         {series.map((s, i) => (
           <button key={s.key} type="button" aria-pressed={!hidden.has(s.key)} className={`${styles.legendBtn} ${hidden.has(s.key) ? styles.legendOff : ""}`} onClick={() => setHidden((p) => { const n = new Set(p); if (n.has(s.key)) n.delete(s.key); else n.add(s.key); return n; })}>

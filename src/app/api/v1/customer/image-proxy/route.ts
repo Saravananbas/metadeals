@@ -1,4 +1,4 @@
-import { customerApi, customerJson } from "@/server/customer/http";
+import { customerApi } from "@/server/customer/http";
 import { proxyImage } from "@/server/customer/image-proxy";
 
 export const dynamic = "force-dynamic";

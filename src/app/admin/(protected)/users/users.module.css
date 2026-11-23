@@ -37,3 +37,21 @@
 
 .pager span { font-size: 12px; }
 .error, .empty { font-size: 12px; }
+
+/* Phones: one card per person or visit, with the column name in front of every value. */
+@media (max-width: 720px) {
+  .tableWrap { border: 0; background: none; overflow: visible; }
+  .table, .table tbody, .table tr, .table td { display: block; width: 100%; }
+  .table thead { display: none; }
+  .table tbody { display: grid; gap: 10px; }
+  .table tr { padding: 8px 12px; background: var(--md-white); border: 1px solid var(--md-purple-100); border-radius: 12px; }
+  .table td { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 8px; padding: 7px 0; border-top: 1px solid var(--md-neutral-100); overflow-wrap: anywhere; }
+  .table td:first-child { border-top: 0; }
+  .table td::before { content: attr(data-label); color: var(--md-neutral-600); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; }
+  .table td small { grid-column: 2; margin-top: 0; }
+  .table td[colspan] { display: block; }
+  .table td[colspan]::before { content: none; }
+  .path { max-width: none; }
+  .tab, .primary, .link, .pager button { min-height: 40px; }
+  .head { align-items: start; }
+}

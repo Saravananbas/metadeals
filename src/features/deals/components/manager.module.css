@@ -1000,6 +1000,7 @@
 .dealActiveButton { border: 1px solid var(--md-color-success); border-radius: 6px; padding: 7px 12px; background: var(--md-green-100); color: var(--md-green-700); font: inherit; font-weight: 700; }
 .dealActiveButtonDisabled { border-color: var(--md-color-border); background: var(--md-color-surface-muted); color: var(--md-neutral-500); cursor: not-allowed; }
 .expiredCheckbox { width: 18px; height: 18px; margin: 0; cursor: pointer; }
+@media (pointer: coarse) { .expiredCheckbox { width: 24px; height: 24px; } }
 
 /* ---- Add New Deal: two-column card layout (matches the approved reference) ---- */
 .addPanel { padding: 0; margin: 16px 0; background: transparent; border: 0; border-radius: 0; }

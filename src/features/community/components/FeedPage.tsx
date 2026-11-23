@@ -5,7 +5,7 @@ import { OfficialBadge } from "./OfficialBadge";
 import { communityOverview, CURATED_COMMUNITIES, FEED_FILTERS, FEED_SORTS, FEED_VIEWS, getCommunity, listCommunities, listDiscussions, type PostDto } from "@/server/community/service";
 import { CommunityShell } from "./Shell";
 import { FollowButton } from "./PostActions";
-import { Empty, PostCard, ago } from "./parts";
+import { Empty, PostCard } from "./parts";
 import styles from "../community.module.css";
 
 export type FeedParams = { filter?: string; sort?: string; type?: string; view?: string; q?: string; page?: string; window?: string };
