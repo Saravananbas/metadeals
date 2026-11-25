@@ -8,8 +8,7 @@ export function BankOffers({ offers, priceMinor }: { offers: BankOfferView[]; pr
   if (!offers.length) return null;
   const best = bestOffer(offers, priceMinor);
   return (
-    <section className={styles.wrap} aria-labelledby="bank-offers-title">
-      <h3 id="bank-offers-title">Bank offers</h3>
+    <section className={styles.wrap} aria-label="Bank offers">
       {best && <p className={styles.effective}>Effective price <strong>{formatPaise(best.effectiveMinor)}</strong> with {offerWith(best.offer)}</p>}
       <ul className={`${styles.list} ${offers.length > 1 ? styles.two : ""}`}>
         {offers.map((o) => (
