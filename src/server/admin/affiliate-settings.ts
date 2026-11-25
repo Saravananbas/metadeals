@@ -64,7 +64,7 @@ export async function listRetailers(actor: Actor) {
 }
 
 /** A row id is a store id, or "dir:<id>" for a directory store that has no store record yet; this makes the record (the directory website is the only host its buy links may use). */
-async function resolveMerchantId(db: ReturnType<typeof getDatabase>, ref: string): Promise<string> {
+export async function resolveMerchantId(db: ReturnType<typeof getDatabase>, ref: string): Promise<string> {
   if (!ref.startsWith("dir:")) {
     if (!(await db.merchant.findUnique({ where: { id: ref }, select: { id: true } }))) throw new DealError("Store not found.", 404);
     return ref;
@@ -101,7 +101,7 @@ export async function saveRetailerConfig(actor: Actor, ref: string, raw: unknown
   return { ok: true, id: merchantId };
 }
 
-const hostOf = (raw: string) => { try { return new URL(/^https?:\/\//i.test(raw) ? raw : `https://${raw}`).hostname.toLowerCase().replace(/^www\./, ""); } catch { return ""; } };
+export const hostOf = (raw: string) => { try { return new URL(/^https?:\/\//i.test(raw) ? raw : `https://${raw}`).hostname.toLowerCase().replace(/^www\./, ""); } catch { return ""; } };
 
 /** "Add a retailer from its website link": finds the store by website or creates it, then the page opens its affiliate setting. */
 export async function addRetailerFromUrl(actor: Actor, rawUrl: unknown) {

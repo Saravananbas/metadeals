@@ -461,3 +461,18 @@ export type Brand = Prisma.BrandModel
  * How outgoing links for one retailer earn: through our own affiliate account (OWN) or Cuelinks. No row means Cuelinks.
  */
 export type MerchantAffiliateConfig = Prisma.MerchantAffiliateConfigModel
+/**
+ * Model Bank
+ * A bank (or card issuer) that can be named in a deal's bank offers. Names are seeded; staff add more and upload logos on /admin/banks.
+ */
+export type Bank = Prisma.BankModel
+/**
+ * Model DealBankOffer
+ * "Extra Rs 1,000 off with HDFC credit cards": one row per offer on a deal.
+ */
+export type DealBankOffer = Prisma.DealBankOfferModel
+/**
+ * Model MerchantBankOffer
+ * A store-wide bank offer ("15% off up to Rs 1,000 with HDFC cards on Wednesdays"): shown on every deal of that store while it is in force, so it is set up once instead of on each deal.
+ */
+export type MerchantBankOffer = Prisma.MerchantBankOfferModel

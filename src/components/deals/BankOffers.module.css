@@ -1,0 +1,11 @@
+/* Bank offers on the deal page. Design tokens only. */
+.wrap { display: grid; gap: 8px; }
+.wrap h3 { margin: 0; }
+.effective { margin: 0; padding: 8px 12px; border-radius: 10px; background: var(--md-green-50); color: var(--md-green-700); font-size: 13px; }
+.list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; grid-template-columns: minmax(0, 1fr); }
+/* One offer takes the whole row; two or more sit two to a row (a lone last one leaves the other half empty). Phones always get one column. */
+@media (min-width: 640px) { .two { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.item { min-width: 0; display: flex; gap: 12px; align-items: flex-start; padding: 10px 12px; border: 1px solid var(--md-purple-100); border-radius: 12px; background: var(--md-white); font-size: 14px; }
+.meta { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 4px; font-size: 12px; color: var(--md-neutral-600); }
+.terms { margin-top: 4px; font-size: 12px; color: var(--md-neutral-600); }
+.note { margin: 0; font-size: 11px; color: var(--md-neutral-600); }

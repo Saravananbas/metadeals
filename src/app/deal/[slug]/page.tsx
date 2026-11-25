@@ -20,6 +20,7 @@ import { DealTabs, type DealTab } from "@/components/deals/DealTabs";
 import { DealNotes } from "@/components/deals/DealNotes";
 import { StickyBuyBar } from "@/components/deals/StickyBuyBar";
 import { CouponChip } from "@/components/deals/CouponChip";
+import { BankOffers } from "@/components/deals/BankOffers";
 import { PosterCard } from "@/components/deals/PosterCard";
 import { getPoster } from "@/server/deals/poster";
 import { messagesEnabled } from "@/server/messages/service";
@@ -207,13 +208,16 @@ export default async function DealDetailPage({
         reviewCount={deal.reviewCount}
         ratingSource={deal.ratingSource}
         currency={deal.currency}
+        beforeDescription={<>
+          {deal.couponCode && (
+            <div>
+              <h3>Promo code</h3>
+              <CouponChip code={deal.couponCode} />
+            </div>
+          )}
+          <BankOffers offers={deal.bankOffers} priceMinor={deal.priceMinor} />
+        </>}
       />
-      {deal.couponCode && (
-        <div>
-          <h3>Promo code</h3>
-          <CouponChip code={deal.couponCode} />
-        </div>
-      )}
       {sharer && <p className={extra.thanks}>Thanks to community member <strong>@{sharer.handle}</strong> for sharing this deal.</p>}
       <p className={extra.valid}>{deal.expiresAt ? `Offer valid until ${new Date(deal.expiresAt).toLocaleDateString("en-IN", { dateStyle: "medium" })}.` : "No end date was announced for this offer. Prices can change at any time."}</p>
       {deal.editorNotes.length > 0 && (
@@ -280,6 +284,7 @@ export default async function DealDetailPage({
             images={deal.imageGallery.map((image) => image.url)}
             discountPercent={deal.discountPercent}
             expired={deal.status === "EXPIRED"}
+            shareData={{ slug: deal.slug, title: deal.title, priceMinor: deal.priceMinor, mrpMinor: deal.mrpMinor, storeName: deal.merchant.name, couponCode: deal.couponCode, bankOffers: deal.bankOffers, images: [deal.image.url, ...deal.imageGallery.map((image) => image.url)], expired: deal.status === "EXPIRED", brand: deal.brand, categoryName: deal.category.name, description: deal.description }}
           >
             <DealPriceBuy dealId={deal.id} priceMinor={deal.priceMinor} mrpMinor={deal.mrpMinor} discountPercent={deal.discountPercent} savingsMinor={deal.savingsMinor} merchantName={deal.merchant.name} merchantLogoUrl={deal.merchant.logoUrl} />
           </DealGallery>

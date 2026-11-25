@@ -14,6 +14,27 @@ export const publicUrl = z.string().trim().max(2048).refine(isPublicHttpsUrl, "U
 export const slugSchema = z.string().min(2).max(100).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
 export const purchaseOptionSchema = z.object({ merchantId: z.string().min(1).max(100), priceMinor: z.number().int().min(0).max(2_000_000_000), productUrl: publicUrl, affiliateUrl: publicUrl.nullable() }).strict();
 const optionalDate = z.iso.datetime({ offset: true }).nullable();
+export const BANK_CARD_TYPES = ["CREDIT", "DEBIT", "EMI", "UPI", "WALLET", "ANY"] as const;
+/** UPI and wallet offers belong to a payment method, not to one bank. */
+export const needsBank = (cardType: string) => cardType !== "UPI" && cardType !== "WALLET";
+/** One bank offer on a deal: a flat amount off, or a percentage (with an optional cap). Amounts are in paise. */
+export const bankOfferSchema = z.object({
+  bankId: z.string().min(1).max(100).nullable(),
+  cardType: z.enum(BANK_CARD_TYPES),
+  discountType: z.enum(["FLAT", "PERCENT"]),
+  flatMinor: z.number().int().min(1).max(2_000_000_000).nullable(),
+  percent: z.number().int().min(1).max(100).nullable(),
+  capMinor: z.number().int().min(1).max(2_000_000_000).nullable(),
+  minOrderMinor: z.number().int().min(1).max(2_000_000_000).nullable(),
+  code: z.string().trim().max(40).nullable(),
+  terms: z.string().trim().max(300).nullable(),
+  validUntil: optionalDate,
+}).strict().superRefine((o, ctx) => {
+  if (needsBank(o.cardType) && !o.bankId) ctx.addIssue({ code: "custom", path: ["bankId"], message: "Choose a bank." });
+  if (o.discountType === "FLAT" && o.flatMinor === null) ctx.addIssue({ code: "custom", path: ["flatMinor"], message: "Enter the discount amount." });
+  if (o.discountType === "PERCENT" && o.percent === null) ctx.addIssue({ code: "custom", path: ["percent"], message: "Enter the discount percentage." });
+});
+export type BankOfferInput = z.infer<typeof bankOfferSchema>;
 export const dealInputSchema = z.object({
   slug: slugSchema,
   title: z.string().trim().min(3).max(200),
@@ -43,6 +64,8 @@ export const dealInputSchema = z.object({
   featured: z.boolean(),
   trending: z.boolean(),
   options: z.array(purchaseOptionSchema).max(10).default([]),
+  /** Bank offers shown on the card and deal page. Omitted = leave as is. */
+  bankOffers: z.array(bankOfferSchema).max(10).optional(),
 }).strict().superRefine((value, ctx) => {
   const notes = parseEditorNotes(value.editorNotes);
   if (notes.error) ctx.addIssue({ code: "custom", path: ["editorNotes"], message: notes.error });

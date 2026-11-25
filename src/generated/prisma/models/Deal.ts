@@ -502,6 +502,7 @@ export type DealWhereInput = {
   savedBy?: Prisma.SavedDealListRelationFilter
   votes?: Prisma.DealVoteListRelationFilter
   notes?: Prisma.DealNoteListRelationFilter
+  bankOffers?: Prisma.DealBankOfferListRelationFilter
   comments?: Prisma.DealCommentListRelationFilter
 }
 
@@ -556,6 +557,7 @@ export type DealOrderByWithRelationInput = {
   savedBy?: Prisma.SavedDealOrderByRelationAggregateInput
   votes?: Prisma.DealVoteOrderByRelationAggregateInput
   notes?: Prisma.DealNoteOrderByRelationAggregateInput
+  bankOffers?: Prisma.DealBankOfferOrderByRelationAggregateInput
   comments?: Prisma.DealCommentOrderByRelationAggregateInput
 }
 
@@ -613,6 +615,7 @@ export type DealWhereUniqueInput = Prisma.AtLeast<{
   savedBy?: Prisma.SavedDealListRelationFilter
   votes?: Prisma.DealVoteListRelationFilter
   notes?: Prisma.DealNoteListRelationFilter
+  bankOffers?: Prisma.DealBankOfferListRelationFilter
   comments?: Prisma.DealCommentListRelationFilter
 }, "id" | "slug">
 
@@ -748,6 +751,7 @@ export type DealCreateInput = {
   savedBy?: Prisma.SavedDealCreateNestedManyWithoutDealInput
   votes?: Prisma.DealVoteCreateNestedManyWithoutDealInput
   notes?: Prisma.DealNoteCreateNestedManyWithoutDealInput
+  bankOffers?: Prisma.DealBankOfferCreateNestedManyWithoutDealInput
   comments?: Prisma.DealCommentCreateNestedManyWithoutDealInput
 }
 
@@ -797,6 +801,7 @@ export type DealUncheckedCreateInput = {
   savedBy?: Prisma.SavedDealUncheckedCreateNestedManyWithoutDealInput
   votes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutDealInput
   notes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutDealInput
+  bankOffers?: Prisma.DealBankOfferUncheckedCreateNestedManyWithoutDealInput
   comments?: Prisma.DealCommentUncheckedCreateNestedManyWithoutDealInput
 }
 
@@ -846,6 +851,7 @@ export type DealUpdateInput = {
   savedBy?: Prisma.SavedDealUpdateManyWithoutDealNestedInput
   votes?: Prisma.DealVoteUpdateManyWithoutDealNestedInput
   notes?: Prisma.DealNoteUpdateManyWithoutDealNestedInput
+  bankOffers?: Prisma.DealBankOfferUpdateManyWithoutDealNestedInput
   comments?: Prisma.DealCommentUpdateManyWithoutDealNestedInput
 }
 
@@ -895,6 +901,7 @@ export type DealUncheckedUpdateInput = {
   savedBy?: Prisma.SavedDealUncheckedUpdateManyWithoutDealNestedInput
   votes?: Prisma.DealVoteUncheckedUpdateManyWithoutDealNestedInput
   notes?: Prisma.DealNoteUncheckedUpdateManyWithoutDealNestedInput
+  bankOffers?: Prisma.DealBankOfferUncheckedUpdateManyWithoutDealNestedInput
   comments?: Prisma.DealCommentUncheckedUpdateManyWithoutDealNestedInput
 }
 
@@ -1535,6 +1542,20 @@ export type DealUpdateOneRequiredWithoutNotesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.DealUpdateToOneWithWhereWithoutNotesInput, Prisma.DealUpdateWithoutNotesInput>, Prisma.DealUncheckedUpdateWithoutNotesInput>
 }
 
+export type DealCreateNestedOneWithoutBankOffersInput = {
+  create?: Prisma.XOR<Prisma.DealCreateWithoutBankOffersInput, Prisma.DealUncheckedCreateWithoutBankOffersInput>
+  connectOrCreate?: Prisma.DealCreateOrConnectWithoutBankOffersInput
+  connect?: Prisma.DealWhereUniqueInput
+}
+
+export type DealUpdateOneRequiredWithoutBankOffersNestedInput = {
+  create?: Prisma.XOR<Prisma.DealCreateWithoutBankOffersInput, Prisma.DealUncheckedCreateWithoutBankOffersInput>
+  connectOrCreate?: Prisma.DealCreateOrConnectWithoutBankOffersInput
+  upsert?: Prisma.DealUpsertWithoutBankOffersInput
+  connect?: Prisma.DealWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DealUpdateToOneWithWhereWithoutBankOffersInput, Prisma.DealUpdateWithoutBankOffersInput>, Prisma.DealUncheckedUpdateWithoutBankOffersInput>
+}
+
 export type DealCreateWithoutCreatedByInput = {
   id?: string
   slug: string
@@ -1580,6 +1601,7 @@ export type DealCreateWithoutCreatedByInput = {
   savedBy?: Prisma.SavedDealCreateNestedManyWithoutDealInput
   votes?: Prisma.DealVoteCreateNestedManyWithoutDealInput
   notes?: Prisma.DealNoteCreateNestedManyWithoutDealInput
+  bankOffers?: Prisma.DealBankOfferCreateNestedManyWithoutDealInput
   comments?: Prisma.DealCommentCreateNestedManyWithoutDealInput
 }
 
@@ -1628,6 +1650,7 @@ export type DealUncheckedCreateWithoutCreatedByInput = {
   savedBy?: Prisma.SavedDealUncheckedCreateNestedManyWithoutDealInput
   votes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutDealInput
   notes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutDealInput
+  bankOffers?: Prisma.DealBankOfferUncheckedCreateNestedManyWithoutDealInput
   comments?: Prisma.DealCommentUncheckedCreateNestedManyWithoutDealInput
 }
 
@@ -1686,6 +1709,7 @@ export type DealCreateWithoutUpdatedByInput = {
   savedBy?: Prisma.SavedDealCreateNestedManyWithoutDealInput
   votes?: Prisma.DealVoteCreateNestedManyWithoutDealInput
   notes?: Prisma.DealNoteCreateNestedManyWithoutDealInput
+  bankOffers?: Prisma.DealBankOfferCreateNestedManyWithoutDealInput
   comments?: Prisma.DealCommentCreateNestedManyWithoutDealInput
 }
 
@@ -1734,6 +1758,7 @@ export type DealUncheckedCreateWithoutUpdatedByInput = {
   savedBy?: Prisma.SavedDealUncheckedCreateNestedManyWithoutDealInput
   votes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutDealInput
   notes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutDealInput
+  bankOffers?: Prisma.DealBankOfferUncheckedCreateNestedManyWithoutDealInput
   comments?: Prisma.DealCommentUncheckedCreateNestedManyWithoutDealInput
 }
 
@@ -1866,6 +1891,7 @@ export type DealCreateWithoutCategoryInput = {
   savedBy?: Prisma.SavedDealCreateNestedManyWithoutDealInput
   votes?: Prisma.DealVoteCreateNestedManyWithoutDealInput
   notes?: Prisma.DealNoteCreateNestedManyWithoutDealInput
+  bankOffers?: Prisma.DealBankOfferCreateNestedManyWithoutDealInput
   comments?: Prisma.DealCommentCreateNestedManyWithoutDealInput
 }
 
@@ -1914,6 +1940,7 @@ export type DealUncheckedCreateWithoutCategoryInput = {
   savedBy?: Prisma.SavedDealUncheckedCreateNestedManyWithoutDealInput
   votes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutDealInput
   notes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutDealInput
+  bankOffers?: Prisma.DealBankOfferUncheckedCreateNestedManyWithoutDealInput
   comments?: Prisma.DealCommentUncheckedCreateNestedManyWithoutDealInput
 }
 
@@ -1988,6 +2015,7 @@ export type DealCreateWithoutMerchantInput = {
   savedBy?: Prisma.SavedDealCreateNestedManyWithoutDealInput
   votes?: Prisma.DealVoteCreateNestedManyWithoutDealInput
   notes?: Prisma.DealNoteCreateNestedManyWithoutDealInput
+  bankOffers?: Prisma.DealBankOfferCreateNestedManyWithoutDealInput
   comments?: Prisma.DealCommentCreateNestedManyWithoutDealInput
 }
 
@@ -2036,6 +2064,7 @@ export type DealUncheckedCreateWithoutMerchantInput = {
   savedBy?: Prisma.SavedDealUncheckedCreateNestedManyWithoutDealInput
   votes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutDealInput
   notes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutDealInput
+  bankOffers?: Prisma.DealBankOfferUncheckedCreateNestedManyWithoutDealInput
   comments?: Prisma.DealCommentUncheckedCreateNestedManyWithoutDealInput
 }
 
@@ -2110,6 +2139,7 @@ export type DealCreateWithoutMediaInput = {
   savedBy?: Prisma.SavedDealCreateNestedManyWithoutDealInput
   votes?: Prisma.DealVoteCreateNestedManyWithoutDealInput
   notes?: Prisma.DealNoteCreateNestedManyWithoutDealInput
+  bankOffers?: Prisma.DealBankOfferCreateNestedManyWithoutDealInput
   comments?: Prisma.DealCommentCreateNestedManyWithoutDealInput
 }
 
@@ -2158,6 +2188,7 @@ export type DealUncheckedCreateWithoutMediaInput = {
   savedBy?: Prisma.SavedDealUncheckedCreateNestedManyWithoutDealInput
   votes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutDealInput
   notes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutDealInput
+  bankOffers?: Prisma.DealBankOfferUncheckedCreateNestedManyWithoutDealInput
   comments?: Prisma.DealCommentUncheckedCreateNestedManyWithoutDealInput
 }
 
@@ -2232,6 +2263,7 @@ export type DealCreateWithoutOptionsInput = {
   savedBy?: Prisma.SavedDealCreateNestedManyWithoutDealInput
   votes?: Prisma.DealVoteCreateNestedManyWithoutDealInput
   notes?: Prisma.DealNoteCreateNestedManyWithoutDealInput
+  bankOffers?: Prisma.DealBankOfferCreateNestedManyWithoutDealInput
   comments?: Prisma.DealCommentCreateNestedManyWithoutDealInput
 }
 
@@ -2280,6 +2312,7 @@ export type DealUncheckedCreateWithoutOptionsInput = {
   savedBy?: Prisma.SavedDealUncheckedCreateNestedManyWithoutDealInput
   votes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutDealInput
   notes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutDealInput
+  bankOffers?: Prisma.DealBankOfferUncheckedCreateNestedManyWithoutDealInput
   comments?: Prisma.DealCommentUncheckedCreateNestedManyWithoutDealInput
 }
 
@@ -2344,6 +2377,7 @@ export type DealUpdateWithoutOptionsInput = {
   savedBy?: Prisma.SavedDealUpdateManyWithoutDealNestedInput
   votes?: Prisma.DealVoteUpdateManyWithoutDealNestedInput
   notes?: Prisma.DealNoteUpdateManyWithoutDealNestedInput
+  bankOffers?: Prisma.DealBankOfferUpdateManyWithoutDealNestedInput
   comments?: Prisma.DealCommentUpdateManyWithoutDealNestedInput
 }
 
@@ -2392,6 +2426,7 @@ export type DealUncheckedUpdateWithoutOptionsInput = {
   savedBy?: Prisma.SavedDealUncheckedUpdateManyWithoutDealNestedInput
   votes?: Prisma.DealVoteUncheckedUpdateManyWithoutDealNestedInput
   notes?: Prisma.DealNoteUncheckedUpdateManyWithoutDealNestedInput
+  bankOffers?: Prisma.DealBankOfferUncheckedUpdateManyWithoutDealNestedInput
   comments?: Prisma.DealCommentUncheckedUpdateManyWithoutDealNestedInput
 }
 
@@ -2440,6 +2475,7 @@ export type DealCreateWithoutGalleryImagesInput = {
   savedBy?: Prisma.SavedDealCreateNestedManyWithoutDealInput
   votes?: Prisma.DealVoteCreateNestedManyWithoutDealInput
   notes?: Prisma.DealNoteCreateNestedManyWithoutDealInput
+  bankOffers?: Prisma.DealBankOfferCreateNestedManyWithoutDealInput
   comments?: Prisma.DealCommentCreateNestedManyWithoutDealInput
 }
 
@@ -2488,6 +2524,7 @@ export type DealUncheckedCreateWithoutGalleryImagesInput = {
   savedBy?: Prisma.SavedDealUncheckedCreateNestedManyWithoutDealInput
   votes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutDealInput
   notes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutDealInput
+  bankOffers?: Prisma.DealBankOfferUncheckedCreateNestedManyWithoutDealInput
   comments?: Prisma.DealCommentUncheckedCreateNestedManyWithoutDealInput
 }
 
@@ -2552,6 +2589,7 @@ export type DealUpdateWithoutGalleryImagesInput = {
   savedBy?: Prisma.SavedDealUpdateManyWithoutDealNestedInput
   votes?: Prisma.DealVoteUpdateManyWithoutDealNestedInput
   notes?: Prisma.DealNoteUpdateManyWithoutDealNestedInput
+  bankOffers?: Prisma.DealBankOfferUpdateManyWithoutDealNestedInput
   comments?: Prisma.DealCommentUpdateManyWithoutDealNestedInput
 }
 
@@ -2600,6 +2638,7 @@ export type DealUncheckedUpdateWithoutGalleryImagesInput = {
   savedBy?: Prisma.SavedDealUncheckedUpdateManyWithoutDealNestedInput
   votes?: Prisma.DealVoteUncheckedUpdateManyWithoutDealNestedInput
   notes?: Prisma.DealNoteUncheckedUpdateManyWithoutDealNestedInput
+  bankOffers?: Prisma.DealBankOfferUncheckedUpdateManyWithoutDealNestedInput
   comments?: Prisma.DealCommentUncheckedUpdateManyWithoutDealNestedInput
 }
 
@@ -2648,6 +2687,7 @@ export type DealCreateWithoutCandidatesInput = {
   savedBy?: Prisma.SavedDealCreateNestedManyWithoutDealInput
   votes?: Prisma.DealVoteCreateNestedManyWithoutDealInput
   notes?: Prisma.DealNoteCreateNestedManyWithoutDealInput
+  bankOffers?: Prisma.DealBankOfferCreateNestedManyWithoutDealInput
   comments?: Prisma.DealCommentCreateNestedManyWithoutDealInput
 }
 
@@ -2696,6 +2736,7 @@ export type DealUncheckedCreateWithoutCandidatesInput = {
   savedBy?: Prisma.SavedDealUncheckedCreateNestedManyWithoutDealInput
   votes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutDealInput
   notes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutDealInput
+  bankOffers?: Prisma.DealBankOfferUncheckedCreateNestedManyWithoutDealInput
   comments?: Prisma.DealCommentUncheckedCreateNestedManyWithoutDealInput
 }
 
@@ -2760,6 +2801,7 @@ export type DealUpdateWithoutCandidatesInput = {
   savedBy?: Prisma.SavedDealUpdateManyWithoutDealNestedInput
   votes?: Prisma.DealVoteUpdateManyWithoutDealNestedInput
   notes?: Prisma.DealNoteUpdateManyWithoutDealNestedInput
+  bankOffers?: Prisma.DealBankOfferUpdateManyWithoutDealNestedInput
   comments?: Prisma.DealCommentUpdateManyWithoutDealNestedInput
 }
 
@@ -2808,6 +2850,7 @@ export type DealUncheckedUpdateWithoutCandidatesInput = {
   savedBy?: Prisma.SavedDealUncheckedUpdateManyWithoutDealNestedInput
   votes?: Prisma.DealVoteUncheckedUpdateManyWithoutDealNestedInput
   notes?: Prisma.DealNoteUncheckedUpdateManyWithoutDealNestedInput
+  bankOffers?: Prisma.DealBankOfferUncheckedUpdateManyWithoutDealNestedInput
   comments?: Prisma.DealCommentUncheckedUpdateManyWithoutDealNestedInput
 }
 
@@ -2856,6 +2899,7 @@ export type DealCreateWithoutPriceObservationsInput = {
   savedBy?: Prisma.SavedDealCreateNestedManyWithoutDealInput
   votes?: Prisma.DealVoteCreateNestedManyWithoutDealInput
   notes?: Prisma.DealNoteCreateNestedManyWithoutDealInput
+  bankOffers?: Prisma.DealBankOfferCreateNestedManyWithoutDealInput
   comments?: Prisma.DealCommentCreateNestedManyWithoutDealInput
 }
 
@@ -2904,6 +2948,7 @@ export type DealUncheckedCreateWithoutPriceObservationsInput = {
   savedBy?: Prisma.SavedDealUncheckedCreateNestedManyWithoutDealInput
   votes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutDealInput
   notes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutDealInput
+  bankOffers?: Prisma.DealBankOfferUncheckedCreateNestedManyWithoutDealInput
   comments?: Prisma.DealCommentUncheckedCreateNestedManyWithoutDealInput
 }
 
@@ -2968,6 +3013,7 @@ export type DealUpdateWithoutPriceObservationsInput = {
   savedBy?: Prisma.SavedDealUpdateManyWithoutDealNestedInput
   votes?: Prisma.DealVoteUpdateManyWithoutDealNestedInput
   notes?: Prisma.DealNoteUpdateManyWithoutDealNestedInput
+  bankOffers?: Prisma.DealBankOfferUpdateManyWithoutDealNestedInput
   comments?: Prisma.DealCommentUpdateManyWithoutDealNestedInput
 }
 
@@ -3016,6 +3062,7 @@ export type DealUncheckedUpdateWithoutPriceObservationsInput = {
   savedBy?: Prisma.SavedDealUncheckedUpdateManyWithoutDealNestedInput
   votes?: Prisma.DealVoteUncheckedUpdateManyWithoutDealNestedInput
   notes?: Prisma.DealNoteUncheckedUpdateManyWithoutDealNestedInput
+  bankOffers?: Prisma.DealBankOfferUncheckedUpdateManyWithoutDealNestedInput
   comments?: Prisma.DealCommentUncheckedUpdateManyWithoutDealNestedInput
 }
 
@@ -3064,6 +3111,7 @@ export type DealCreateWithoutVideoReviewsInput = {
   savedBy?: Prisma.SavedDealCreateNestedManyWithoutDealInput
   votes?: Prisma.DealVoteCreateNestedManyWithoutDealInput
   notes?: Prisma.DealNoteCreateNestedManyWithoutDealInput
+  bankOffers?: Prisma.DealBankOfferCreateNestedManyWithoutDealInput
   comments?: Prisma.DealCommentCreateNestedManyWithoutDealInput
 }
 
@@ -3112,6 +3160,7 @@ export type DealUncheckedCreateWithoutVideoReviewsInput = {
   savedBy?: Prisma.SavedDealUncheckedCreateNestedManyWithoutDealInput
   votes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutDealInput
   notes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutDealInput
+  bankOffers?: Prisma.DealBankOfferUncheckedCreateNestedManyWithoutDealInput
   comments?: Prisma.DealCommentUncheckedCreateNestedManyWithoutDealInput
 }
 
@@ -3176,6 +3225,7 @@ export type DealUpdateWithoutVideoReviewsInput = {
   savedBy?: Prisma.SavedDealUpdateManyWithoutDealNestedInput
   votes?: Prisma.DealVoteUpdateManyWithoutDealNestedInput
   notes?: Prisma.DealNoteUpdateManyWithoutDealNestedInput
+  bankOffers?: Prisma.DealBankOfferUpdateManyWithoutDealNestedInput
   comments?: Prisma.DealCommentUpdateManyWithoutDealNestedInput
 }
 
@@ -3224,6 +3274,7 @@ export type DealUncheckedUpdateWithoutVideoReviewsInput = {
   savedBy?: Prisma.SavedDealUncheckedUpdateManyWithoutDealNestedInput
   votes?: Prisma.DealVoteUncheckedUpdateManyWithoutDealNestedInput
   notes?: Prisma.DealNoteUncheckedUpdateManyWithoutDealNestedInput
+  bankOffers?: Prisma.DealBankOfferUncheckedUpdateManyWithoutDealNestedInput
   comments?: Prisma.DealCommentUncheckedUpdateManyWithoutDealNestedInput
 }
 
@@ -3273,6 +3324,7 @@ export type DealCreateWithoutCommentsInput = {
   savedBy?: Prisma.SavedDealCreateNestedManyWithoutDealInput
   votes?: Prisma.DealVoteCreateNestedManyWithoutDealInput
   notes?: Prisma.DealNoteCreateNestedManyWithoutDealInput
+  bankOffers?: Prisma.DealBankOfferCreateNestedManyWithoutDealInput
 }
 
 export type DealUncheckedCreateWithoutCommentsInput = {
@@ -3321,6 +3373,7 @@ export type DealUncheckedCreateWithoutCommentsInput = {
   savedBy?: Prisma.SavedDealUncheckedCreateNestedManyWithoutDealInput
   votes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutDealInput
   notes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutDealInput
+  bankOffers?: Prisma.DealBankOfferUncheckedCreateNestedManyWithoutDealInput
 }
 
 export type DealCreateOrConnectWithoutCommentsInput = {
@@ -3385,6 +3438,7 @@ export type DealUpdateWithoutCommentsInput = {
   savedBy?: Prisma.SavedDealUpdateManyWithoutDealNestedInput
   votes?: Prisma.DealVoteUpdateManyWithoutDealNestedInput
   notes?: Prisma.DealNoteUpdateManyWithoutDealNestedInput
+  bankOffers?: Prisma.DealBankOfferUpdateManyWithoutDealNestedInput
 }
 
 export type DealUncheckedUpdateWithoutCommentsInput = {
@@ -3433,6 +3487,7 @@ export type DealUncheckedUpdateWithoutCommentsInput = {
   savedBy?: Prisma.SavedDealUncheckedUpdateManyWithoutDealNestedInput
   votes?: Prisma.DealVoteUncheckedUpdateManyWithoutDealNestedInput
   notes?: Prisma.DealNoteUncheckedUpdateManyWithoutDealNestedInput
+  bankOffers?: Prisma.DealBankOfferUncheckedUpdateManyWithoutDealNestedInput
 }
 
 export type DealCreateWithoutCommunitySubmissionInput = {
@@ -3480,6 +3535,7 @@ export type DealCreateWithoutCommunitySubmissionInput = {
   savedBy?: Prisma.SavedDealCreateNestedManyWithoutDealInput
   votes?: Prisma.DealVoteCreateNestedManyWithoutDealInput
   notes?: Prisma.DealNoteCreateNestedManyWithoutDealInput
+  bankOffers?: Prisma.DealBankOfferCreateNestedManyWithoutDealInput
   comments?: Prisma.DealCommentCreateNestedManyWithoutDealInput
 }
 
@@ -3528,6 +3584,7 @@ export type DealUncheckedCreateWithoutCommunitySubmissionInput = {
   savedBy?: Prisma.SavedDealUncheckedCreateNestedManyWithoutDealInput
   votes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutDealInput
   notes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutDealInput
+  bankOffers?: Prisma.DealBankOfferUncheckedCreateNestedManyWithoutDealInput
   comments?: Prisma.DealCommentUncheckedCreateNestedManyWithoutDealInput
 }
 
@@ -3592,6 +3649,7 @@ export type DealUpdateWithoutCommunitySubmissionInput = {
   savedBy?: Prisma.SavedDealUpdateManyWithoutDealNestedInput
   votes?: Prisma.DealVoteUpdateManyWithoutDealNestedInput
   notes?: Prisma.DealNoteUpdateManyWithoutDealNestedInput
+  bankOffers?: Prisma.DealBankOfferUpdateManyWithoutDealNestedInput
   comments?: Prisma.DealCommentUpdateManyWithoutDealNestedInput
 }
 
@@ -3640,6 +3698,7 @@ export type DealUncheckedUpdateWithoutCommunitySubmissionInput = {
   savedBy?: Prisma.SavedDealUncheckedUpdateManyWithoutDealNestedInput
   votes?: Prisma.DealVoteUncheckedUpdateManyWithoutDealNestedInput
   notes?: Prisma.DealNoteUncheckedUpdateManyWithoutDealNestedInput
+  bankOffers?: Prisma.DealBankOfferUncheckedUpdateManyWithoutDealNestedInput
   comments?: Prisma.DealCommentUncheckedUpdateManyWithoutDealNestedInput
 }
 
@@ -3688,6 +3747,7 @@ export type DealCreateWithoutSavedByInput = {
   communitySubmission?: Prisma.CommunityDealSubmissionCreateNestedOneWithoutDealInput
   votes?: Prisma.DealVoteCreateNestedManyWithoutDealInput
   notes?: Prisma.DealNoteCreateNestedManyWithoutDealInput
+  bankOffers?: Prisma.DealBankOfferCreateNestedManyWithoutDealInput
   comments?: Prisma.DealCommentCreateNestedManyWithoutDealInput
 }
 
@@ -3736,6 +3796,7 @@ export type DealUncheckedCreateWithoutSavedByInput = {
   communitySubmission?: Prisma.CommunityDealSubmissionUncheckedCreateNestedOneWithoutDealInput
   votes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutDealInput
   notes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutDealInput
+  bankOffers?: Prisma.DealBankOfferUncheckedCreateNestedManyWithoutDealInput
   comments?: Prisma.DealCommentUncheckedCreateNestedManyWithoutDealInput
 }
 
@@ -3800,6 +3861,7 @@ export type DealUpdateWithoutSavedByInput = {
   communitySubmission?: Prisma.CommunityDealSubmissionUpdateOneWithoutDealNestedInput
   votes?: Prisma.DealVoteUpdateManyWithoutDealNestedInput
   notes?: Prisma.DealNoteUpdateManyWithoutDealNestedInput
+  bankOffers?: Prisma.DealBankOfferUpdateManyWithoutDealNestedInput
   comments?: Prisma.DealCommentUpdateManyWithoutDealNestedInput
 }
 
@@ -3848,6 +3910,7 @@ export type DealUncheckedUpdateWithoutSavedByInput = {
   communitySubmission?: Prisma.CommunityDealSubmissionUncheckedUpdateOneWithoutDealNestedInput
   votes?: Prisma.DealVoteUncheckedUpdateManyWithoutDealNestedInput
   notes?: Prisma.DealNoteUncheckedUpdateManyWithoutDealNestedInput
+  bankOffers?: Prisma.DealBankOfferUncheckedUpdateManyWithoutDealNestedInput
   comments?: Prisma.DealCommentUncheckedUpdateManyWithoutDealNestedInput
 }
 
@@ -3896,6 +3959,7 @@ export type DealCreateWithoutVotesInput = {
   communitySubmission?: Prisma.CommunityDealSubmissionCreateNestedOneWithoutDealInput
   savedBy?: Prisma.SavedDealCreateNestedManyWithoutDealInput
   notes?: Prisma.DealNoteCreateNestedManyWithoutDealInput
+  bankOffers?: Prisma.DealBankOfferCreateNestedManyWithoutDealInput
   comments?: Prisma.DealCommentCreateNestedManyWithoutDealInput
 }
 
@@ -3944,6 +4008,7 @@ export type DealUncheckedCreateWithoutVotesInput = {
   communitySubmission?: Prisma.CommunityDealSubmissionUncheckedCreateNestedOneWithoutDealInput
   savedBy?: Prisma.SavedDealUncheckedCreateNestedManyWithoutDealInput
   notes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutDealInput
+  bankOffers?: Prisma.DealBankOfferUncheckedCreateNestedManyWithoutDealInput
   comments?: Prisma.DealCommentUncheckedCreateNestedManyWithoutDealInput
 }
 
@@ -4008,6 +4073,7 @@ export type DealUpdateWithoutVotesInput = {
   communitySubmission?: Prisma.CommunityDealSubmissionUpdateOneWithoutDealNestedInput
   savedBy?: Prisma.SavedDealUpdateManyWithoutDealNestedInput
   notes?: Prisma.DealNoteUpdateManyWithoutDealNestedInput
+  bankOffers?: Prisma.DealBankOfferUpdateManyWithoutDealNestedInput
   comments?: Prisma.DealCommentUpdateManyWithoutDealNestedInput
 }
 
@@ -4056,6 +4122,7 @@ export type DealUncheckedUpdateWithoutVotesInput = {
   communitySubmission?: Prisma.CommunityDealSubmissionUncheckedUpdateOneWithoutDealNestedInput
   savedBy?: Prisma.SavedDealUncheckedUpdateManyWithoutDealNestedInput
   notes?: Prisma.DealNoteUncheckedUpdateManyWithoutDealNestedInput
+  bankOffers?: Prisma.DealBankOfferUncheckedUpdateManyWithoutDealNestedInput
   comments?: Prisma.DealCommentUncheckedUpdateManyWithoutDealNestedInput
 }
 
@@ -4104,6 +4171,7 @@ export type DealCreateWithoutNotesInput = {
   communitySubmission?: Prisma.CommunityDealSubmissionCreateNestedOneWithoutDealInput
   savedBy?: Prisma.SavedDealCreateNestedManyWithoutDealInput
   votes?: Prisma.DealVoteCreateNestedManyWithoutDealInput
+  bankOffers?: Prisma.DealBankOfferCreateNestedManyWithoutDealInput
   comments?: Prisma.DealCommentCreateNestedManyWithoutDealInput
 }
 
@@ -4152,6 +4220,7 @@ export type DealUncheckedCreateWithoutNotesInput = {
   communitySubmission?: Prisma.CommunityDealSubmissionUncheckedCreateNestedOneWithoutDealInput
   savedBy?: Prisma.SavedDealUncheckedCreateNestedManyWithoutDealInput
   votes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutDealInput
+  bankOffers?: Prisma.DealBankOfferUncheckedCreateNestedManyWithoutDealInput
   comments?: Prisma.DealCommentUncheckedCreateNestedManyWithoutDealInput
 }
 
@@ -4216,6 +4285,7 @@ export type DealUpdateWithoutNotesInput = {
   communitySubmission?: Prisma.CommunityDealSubmissionUpdateOneWithoutDealNestedInput
   savedBy?: Prisma.SavedDealUpdateManyWithoutDealNestedInput
   votes?: Prisma.DealVoteUpdateManyWithoutDealNestedInput
+  bankOffers?: Prisma.DealBankOfferUpdateManyWithoutDealNestedInput
   comments?: Prisma.DealCommentUpdateManyWithoutDealNestedInput
 }
 
@@ -4264,6 +4334,219 @@ export type DealUncheckedUpdateWithoutNotesInput = {
   communitySubmission?: Prisma.CommunityDealSubmissionUncheckedUpdateOneWithoutDealNestedInput
   savedBy?: Prisma.SavedDealUncheckedUpdateManyWithoutDealNestedInput
   votes?: Prisma.DealVoteUncheckedUpdateManyWithoutDealNestedInput
+  bankOffers?: Prisma.DealBankOfferUncheckedUpdateManyWithoutDealNestedInput
+  comments?: Prisma.DealCommentUncheckedUpdateManyWithoutDealNestedInput
+}
+
+export type DealCreateWithoutBankOffersInput = {
+  id?: string
+  slug: string
+  title: string
+  brand: string
+  description: string
+  descriptionHtml?: string | null
+  mrpMinor: number
+  priceMinor: number
+  currency?: string
+  rating?: number | null
+  reviewCount?: number | null
+  viewCount?: number
+  shareCount?: number
+  ratingSource?: string | null
+  productUrl: string
+  affiliateUrl?: string | null
+  couponCode?: string | null
+  editorNotes?: string | null
+  editorNotesBy?: string | null
+  status?: $Enums.DealStatus
+  publishedAt?: Date | string | null
+  startsAt?: Date | string | null
+  expiresAt?: Date | string | null
+  featured?: boolean
+  trending?: boolean
+  everPublished?: boolean
+  version?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  youtubeReviewStatus?: string
+  youtubeLastSearchedAt?: Date | string | null
+  category: Prisma.CategoryCreateNestedOneWithoutDealsInput
+  merchant: Prisma.MerchantCreateNestedOneWithoutDealsInput
+  media: Prisma.MediaCreateNestedOneWithoutDealsInput
+  galleryImages?: Prisma.DealGalleryImageCreateNestedManyWithoutDealInput
+  createdBy: Prisma.UserCreateNestedOneWithoutCreatedDealsInput
+  updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedDealsInput
+  options?: Prisma.PurchaseOptionCreateNestedManyWithoutDealInput
+  candidates?: Prisma.DealCandidateCreateNestedManyWithoutDealInput
+  priceObservations?: Prisma.PriceObservationCreateNestedManyWithoutDealInput
+  videoReviews?: Prisma.DealVideoReviewCreateNestedManyWithoutDealInput
+  communitySubmission?: Prisma.CommunityDealSubmissionCreateNestedOneWithoutDealInput
+  savedBy?: Prisma.SavedDealCreateNestedManyWithoutDealInput
+  votes?: Prisma.DealVoteCreateNestedManyWithoutDealInput
+  notes?: Prisma.DealNoteCreateNestedManyWithoutDealInput
+  comments?: Prisma.DealCommentCreateNestedManyWithoutDealInput
+}
+
+export type DealUncheckedCreateWithoutBankOffersInput = {
+  id?: string
+  slug: string
+  title: string
+  brand: string
+  description: string
+  descriptionHtml?: string | null
+  categoryId: string
+  merchantId: string
+  mediaId: string
+  mrpMinor: number
+  priceMinor: number
+  currency?: string
+  rating?: number | null
+  reviewCount?: number | null
+  viewCount?: number
+  shareCount?: number
+  ratingSource?: string | null
+  productUrl: string
+  affiliateUrl?: string | null
+  couponCode?: string | null
+  editorNotes?: string | null
+  editorNotesBy?: string | null
+  status?: $Enums.DealStatus
+  publishedAt?: Date | string | null
+  startsAt?: Date | string | null
+  expiresAt?: Date | string | null
+  featured?: boolean
+  trending?: boolean
+  everPublished?: boolean
+  version?: number
+  createdById: string
+  updatedById: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  youtubeReviewStatus?: string
+  youtubeLastSearchedAt?: Date | string | null
+  galleryImages?: Prisma.DealGalleryImageUncheckedCreateNestedManyWithoutDealInput
+  options?: Prisma.PurchaseOptionUncheckedCreateNestedManyWithoutDealInput
+  candidates?: Prisma.DealCandidateUncheckedCreateNestedManyWithoutDealInput
+  priceObservations?: Prisma.PriceObservationUncheckedCreateNestedManyWithoutDealInput
+  videoReviews?: Prisma.DealVideoReviewUncheckedCreateNestedManyWithoutDealInput
+  communitySubmission?: Prisma.CommunityDealSubmissionUncheckedCreateNestedOneWithoutDealInput
+  savedBy?: Prisma.SavedDealUncheckedCreateNestedManyWithoutDealInput
+  votes?: Prisma.DealVoteUncheckedCreateNestedManyWithoutDealInput
+  notes?: Prisma.DealNoteUncheckedCreateNestedManyWithoutDealInput
+  comments?: Prisma.DealCommentUncheckedCreateNestedManyWithoutDealInput
+}
+
+export type DealCreateOrConnectWithoutBankOffersInput = {
+  where: Prisma.DealWhereUniqueInput
+  create: Prisma.XOR<Prisma.DealCreateWithoutBankOffersInput, Prisma.DealUncheckedCreateWithoutBankOffersInput>
+}
+
+export type DealUpsertWithoutBankOffersInput = {
+  update: Prisma.XOR<Prisma.DealUpdateWithoutBankOffersInput, Prisma.DealUncheckedUpdateWithoutBankOffersInput>
+  create: Prisma.XOR<Prisma.DealCreateWithoutBankOffersInput, Prisma.DealUncheckedCreateWithoutBankOffersInput>
+  where?: Prisma.DealWhereInput
+}
+
+export type DealUpdateToOneWithWhereWithoutBankOffersInput = {
+  where?: Prisma.DealWhereInput
+  data: Prisma.XOR<Prisma.DealUpdateWithoutBankOffersInput, Prisma.DealUncheckedUpdateWithoutBankOffersInput>
+}
+
+export type DealUpdateWithoutBankOffersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  brand?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mrpMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  priceMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  reviewCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  shareCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  productUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  trending?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  everPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  youtubeReviewStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  youtubeLastSearchedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  category?: Prisma.CategoryUpdateOneRequiredWithoutDealsNestedInput
+  merchant?: Prisma.MerchantUpdateOneRequiredWithoutDealsNestedInput
+  media?: Prisma.MediaUpdateOneRequiredWithoutDealsNestedInput
+  galleryImages?: Prisma.DealGalleryImageUpdateManyWithoutDealNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedDealsNestedInput
+  updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedDealsNestedInput
+  options?: Prisma.PurchaseOptionUpdateManyWithoutDealNestedInput
+  candidates?: Prisma.DealCandidateUpdateManyWithoutDealNestedInput
+  priceObservations?: Prisma.PriceObservationUpdateManyWithoutDealNestedInput
+  videoReviews?: Prisma.DealVideoReviewUpdateManyWithoutDealNestedInput
+  communitySubmission?: Prisma.CommunityDealSubmissionUpdateOneWithoutDealNestedInput
+  savedBy?: Prisma.SavedDealUpdateManyWithoutDealNestedInput
+  votes?: Prisma.DealVoteUpdateManyWithoutDealNestedInput
+  notes?: Prisma.DealNoteUpdateManyWithoutDealNestedInput
+  comments?: Prisma.DealCommentUpdateManyWithoutDealNestedInput
+}
+
+export type DealUncheckedUpdateWithoutBankOffersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  brand?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionHtml?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  merchantId?: Prisma.StringFieldUpdateOperationsInput | string
+  mediaId?: Prisma.StringFieldUpdateOperationsInput | string
+  mrpMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  priceMinor?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  reviewCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  shareCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  productUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  trending?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  everPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  updatedById?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  youtubeReviewStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  youtubeLastSearchedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  galleryImages?: Prisma.DealGalleryImageUncheckedUpdateManyWithoutDealNestedInput
+  options?: Prisma.PurchaseOptionUncheckedUpdateManyWithoutDealNestedInput
+  candidates?: Prisma.DealCandidateUncheckedUpdateManyWithoutDealNestedInput
+  priceObservations?: Prisma.PriceObservationUncheckedUpdateManyWithoutDealNestedInput
+  videoReviews?: Prisma.DealVideoReviewUncheckedUpdateManyWithoutDealNestedInput
+  communitySubmission?: Prisma.CommunityDealSubmissionUncheckedUpdateOneWithoutDealNestedInput
+  savedBy?: Prisma.SavedDealUncheckedUpdateManyWithoutDealNestedInput
+  votes?: Prisma.DealVoteUncheckedUpdateManyWithoutDealNestedInput
+  notes?: Prisma.DealNoteUncheckedUpdateManyWithoutDealNestedInput
   comments?: Prisma.DealCommentUncheckedUpdateManyWithoutDealNestedInput
 }
 
@@ -4388,6 +4671,7 @@ export type DealUpdateWithoutCreatedByInput = {
   savedBy?: Prisma.SavedDealUpdateManyWithoutDealNestedInput
   votes?: Prisma.DealVoteUpdateManyWithoutDealNestedInput
   notes?: Prisma.DealNoteUpdateManyWithoutDealNestedInput
+  bankOffers?: Prisma.DealBankOfferUpdateManyWithoutDealNestedInput
   comments?: Prisma.DealCommentUpdateManyWithoutDealNestedInput
 }
 
@@ -4436,6 +4720,7 @@ export type DealUncheckedUpdateWithoutCreatedByInput = {
   savedBy?: Prisma.SavedDealUncheckedUpdateManyWithoutDealNestedInput
   votes?: Prisma.DealVoteUncheckedUpdateManyWithoutDealNestedInput
   notes?: Prisma.DealNoteUncheckedUpdateManyWithoutDealNestedInput
+  bankOffers?: Prisma.DealBankOfferUncheckedUpdateManyWithoutDealNestedInput
   comments?: Prisma.DealCommentUncheckedUpdateManyWithoutDealNestedInput
 }
 
@@ -4522,6 +4807,7 @@ export type DealUpdateWithoutUpdatedByInput = {
   savedBy?: Prisma.SavedDealUpdateManyWithoutDealNestedInput
   votes?: Prisma.DealVoteUpdateManyWithoutDealNestedInput
   notes?: Prisma.DealNoteUpdateManyWithoutDealNestedInput
+  bankOffers?: Prisma.DealBankOfferUpdateManyWithoutDealNestedInput
   comments?: Prisma.DealCommentUpdateManyWithoutDealNestedInput
 }
 
@@ -4570,6 +4856,7 @@ export type DealUncheckedUpdateWithoutUpdatedByInput = {
   savedBy?: Prisma.SavedDealUncheckedUpdateManyWithoutDealNestedInput
   votes?: Prisma.DealVoteUncheckedUpdateManyWithoutDealNestedInput
   notes?: Prisma.DealNoteUncheckedUpdateManyWithoutDealNestedInput
+  bankOffers?: Prisma.DealBankOfferUncheckedUpdateManyWithoutDealNestedInput
   comments?: Prisma.DealCommentUncheckedUpdateManyWithoutDealNestedInput
 }
 
@@ -4694,6 +4981,7 @@ export type DealUpdateWithoutCategoryInput = {
   savedBy?: Prisma.SavedDealUpdateManyWithoutDealNestedInput
   votes?: Prisma.DealVoteUpdateManyWithoutDealNestedInput
   notes?: Prisma.DealNoteUpdateManyWithoutDealNestedInput
+  bankOffers?: Prisma.DealBankOfferUpdateManyWithoutDealNestedInput
   comments?: Prisma.DealCommentUpdateManyWithoutDealNestedInput
 }
 
@@ -4742,6 +5030,7 @@ export type DealUncheckedUpdateWithoutCategoryInput = {
   savedBy?: Prisma.SavedDealUncheckedUpdateManyWithoutDealNestedInput
   votes?: Prisma.DealVoteUncheckedUpdateManyWithoutDealNestedInput
   notes?: Prisma.DealNoteUncheckedUpdateManyWithoutDealNestedInput
+  bankOffers?: Prisma.DealBankOfferUncheckedUpdateManyWithoutDealNestedInput
   comments?: Prisma.DealCommentUncheckedUpdateManyWithoutDealNestedInput
 }
 
@@ -4866,6 +5155,7 @@ export type DealUpdateWithoutMerchantInput = {
   savedBy?: Prisma.SavedDealUpdateManyWithoutDealNestedInput
   votes?: Prisma.DealVoteUpdateManyWithoutDealNestedInput
   notes?: Prisma.DealNoteUpdateManyWithoutDealNestedInput
+  bankOffers?: Prisma.DealBankOfferUpdateManyWithoutDealNestedInput
   comments?: Prisma.DealCommentUpdateManyWithoutDealNestedInput
 }
 
@@ -4914,6 +5204,7 @@ export type DealUncheckedUpdateWithoutMerchantInput = {
   savedBy?: Prisma.SavedDealUncheckedUpdateManyWithoutDealNestedInput
   votes?: Prisma.DealVoteUncheckedUpdateManyWithoutDealNestedInput
   notes?: Prisma.DealNoteUncheckedUpdateManyWithoutDealNestedInput
+  bankOffers?: Prisma.DealBankOfferUncheckedUpdateManyWithoutDealNestedInput
   comments?: Prisma.DealCommentUncheckedUpdateManyWithoutDealNestedInput
 }
 
@@ -5038,6 +5329,7 @@ export type DealUpdateWithoutMediaInput = {
   savedBy?: Prisma.SavedDealUpdateManyWithoutDealNestedInput
   votes?: Prisma.DealVoteUpdateManyWithoutDealNestedInput
   notes?: Prisma.DealNoteUpdateManyWithoutDealNestedInput
+  bankOffers?: Prisma.DealBankOfferUpdateManyWithoutDealNestedInput
   comments?: Prisma.DealCommentUpdateManyWithoutDealNestedInput
 }
 
@@ -5086,6 +5378,7 @@ export type DealUncheckedUpdateWithoutMediaInput = {
   savedBy?: Prisma.SavedDealUncheckedUpdateManyWithoutDealNestedInput
   votes?: Prisma.DealVoteUncheckedUpdateManyWithoutDealNestedInput
   notes?: Prisma.DealNoteUncheckedUpdateManyWithoutDealNestedInput
+  bankOffers?: Prisma.DealBankOfferUncheckedUpdateManyWithoutDealNestedInput
   comments?: Prisma.DealCommentUncheckedUpdateManyWithoutDealNestedInput
 }
 
@@ -5141,6 +5434,7 @@ export type DealCountOutputType = {
   savedBy: number
   votes: number
   notes: number
+  bankOffers: number
   comments: number
 }
 
@@ -5153,6 +5447,7 @@ export type DealCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   savedBy?: boolean | DealCountOutputTypeCountSavedByArgs
   votes?: boolean | DealCountOutputTypeCountVotesArgs
   notes?: boolean | DealCountOutputTypeCountNotesArgs
+  bankOffers?: boolean | DealCountOutputTypeCountBankOffersArgs
   comments?: boolean | DealCountOutputTypeCountCommentsArgs
 }
 
@@ -5225,6 +5520,13 @@ export type DealCountOutputTypeCountNotesArgs<ExtArgs extends runtime.Types.Exte
 /**
  * DealCountOutputType without action
  */
+export type DealCountOutputTypeCountBankOffersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DealBankOfferWhereInput
+}
+
+/**
+ * DealCountOutputType without action
+ */
 export type DealCountOutputTypeCountCommentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.DealCommentWhereInput
 }
@@ -5281,6 +5583,7 @@ export type DealSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   savedBy?: boolean | Prisma.Deal$savedByArgs<ExtArgs>
   votes?: boolean | Prisma.Deal$votesArgs<ExtArgs>
   notes?: boolean | Prisma.Deal$notesArgs<ExtArgs>
+  bankOffers?: boolean | Prisma.Deal$bankOffersArgs<ExtArgs>
   comments?: boolean | Prisma.Deal$commentsArgs<ExtArgs>
   _count?: boolean | Prisma.DealCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["deal"]>
@@ -5428,6 +5731,7 @@ export type DealInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   savedBy?: boolean | Prisma.Deal$savedByArgs<ExtArgs>
   votes?: boolean | Prisma.Deal$votesArgs<ExtArgs>
   notes?: boolean | Prisma.Deal$notesArgs<ExtArgs>
+  bankOffers?: boolean | Prisma.Deal$bankOffersArgs<ExtArgs>
   comments?: boolean | Prisma.Deal$commentsArgs<ExtArgs>
   _count?: boolean | Prisma.DealCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -5463,6 +5767,7 @@ export type $DealPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     savedBy: Prisma.$SavedDealPayload<ExtArgs>[]
     votes: Prisma.$DealVotePayload<ExtArgs>[]
     notes: Prisma.$DealNotePayload<ExtArgs>[]
+    bankOffers: Prisma.$DealBankOfferPayload<ExtArgs>[]
     comments: Prisma.$DealCommentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -5916,6 +6221,7 @@ export interface Prisma__DealClient<T, Null = never, ExtArgs extends runtime.Typ
   savedBy<T extends Prisma.Deal$savedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Deal$savedByArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SavedDealPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   votes<T extends Prisma.Deal$votesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Deal$votesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DealVotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   notes<T extends Prisma.Deal$notesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Deal$notesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DealNotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  bankOffers<T extends Prisma.Deal$bankOffersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Deal$bankOffersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DealBankOfferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   comments<T extends Prisma.Deal$commentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Deal$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DealCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -6591,6 +6897,30 @@ export type Deal$notesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
   take?: number
   skip?: number
   distinct?: Prisma.DealNoteScalarFieldEnum | Prisma.DealNoteScalarFieldEnum[]
+}
+
+/**
+ * Deal.bankOffers
+ */
+export type Deal$bankOffersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DealBankOffer
+   */
+  select?: Prisma.DealBankOfferSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DealBankOffer
+   */
+  omit?: Prisma.DealBankOfferOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DealBankOfferInclude<ExtArgs> | null
+  where?: Prisma.DealBankOfferWhereInput
+  orderBy?: Prisma.DealBankOfferOrderByWithRelationInput | Prisma.DealBankOfferOrderByWithRelationInput[]
+  cursor?: Prisma.DealBankOfferWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DealBankOfferScalarFieldEnum | Prisma.DealBankOfferScalarFieldEnum[]
 }
 
 /**

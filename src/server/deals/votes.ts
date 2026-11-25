@@ -14,30 +14,52 @@ async function publicDealId(slug: string): Promise<string> {
   return deal.id;
 }
 
-/** Good Deal score: thumbs up minus thumbs down. `mine` is the caller's own vote (0 when none or signed out). */
-export async function voteSummary(slug: string, customerId: string | null) {
+/** Who is voting: a signed-in member, or (while voting needs no sign-in) an anonymous browser identified by a cookie id. */
+export type Voter = { customerId: string; visitorId?: undefined } | { customerId?: undefined; visitorId: string };
+const who = (v: Voter) => (v.customerId ? { customerId: v.customerId } : { visitorId: v.visitorId as string });
+
+/**
+ * Likes and dislikes are separate: each is counted on its own, and one person can have a like and a dislike at the same time (neither
+ * removes the other). `liked` and `disliked` say what the caller has done; `mine` is kept for older apps (1 like, -1 dislike, 0 none).
+ */
+export async function voteSummary(slug: string, whoVotes: Voter | string | null) {
+  const voter: Voter | null = typeof whoVotes === "string" ? { customerId: whoVotes } : whoVotes;
   const db = getDatabase();
   const dealId = await publicDealId(slug);
   const [up, down, mine] = await Promise.all([
     db.dealVote.count({ where: { dealId, value: 1 } }),
     db.dealVote.count({ where: { dealId, value: -1 } }),
-    customerId ? db.dealVote.findUnique({ where: { customerId_dealId: { customerId, dealId } }, select: { value: true } }) : null,
+    voter ? db.dealVote.findMany({ where: { dealId, ...who(voter) }, select: { value: true } }) : [],
   ]);
-  return { score: up - down, up, down, mine: mine?.value ?? 0 };
+  const liked = mine.some((m) => m.value === 1), disliked = mine.some((m) => m.value === -1);
+  return { score: up - down, up, down, liked, disliked, mine: liked ? 1 : disliked ? -1 : 0 };
 }
 
-const voteSchema = z.object({ value: z.union([z.literal(1), z.literal(-1), z.literal(0)]), reason: z.enum(DISLIKE_REASONS).optional() }).strict();
+/** `clear` names which kind to take back; value 0 without it clears both (the old behaviour). */
+const voteSchema = z.object({ value: z.union([z.literal(1), z.literal(-1), z.literal(0)]), reason: z.enum(DISLIKE_REASONS).optional(), clear: z.union([z.literal(1), z.literal(-1)]).optional() }).strict();
 
-/** 1 or -1 sets (or switches) the vote, 0 clears it. One row per member per deal. */
-export async function castVote(customerId: string, slug: string, raw: unknown) {
-  const { value, reason } = voteSchema.parse(raw);
-  await assertActiveCustomer(customerId);
-  await limitCustomerRequests(`deal-vote:${customerId}`, 120, 3600);
+/** value 1 adds a like and -1 a dislike (each at most once per voter and deal); 0 takes one back (see `clear`). */
+export async function castVote(whoVotes: Voter | string, slug: string, raw: unknown, ip?: string | null) {
+  const { value, reason, clear } = voteSchema.parse(raw);
+  const voter: Voter = typeof whoVotes === "string" ? { customerId: whoVotes } : whoVotes;
+  if (voter.customerId) {
+    await assertActiveCustomer(voter.customerId);
+    await limitCustomerRequests(`deal-vote:${voter.customerId}`, 120, 3600);
+  } else {
+    // shortcut: anonymous votes are one per browser cookie and kind, so clearing cookies allows more; add sign-in (or a stronger check) when abuse shows up.
+    await limitCustomerRequests(`deal-vote:v:${voter.visitorId}`, 120, 3600);
+    if (ip) await limitCustomerRequests(`deal-vote:ip:${ip}`, 300, 3600);
+  }
   const dealId = await publicDealId(slug);
   const db = getDatabase();
-  if (value === 0) await db.dealVote.deleteMany({ where: { customerId, dealId } });
-  else await db.dealVote.upsert({ where: { customerId_dealId: { customerId, dealId } }, create: { customerId, dealId, value, reason: value === -1 ? reason ?? null : null }, update: { value, reason: value === -1 ? reason ?? null : null } });
-  return voteSummary(slug, customerId);
+  if (value === 0) await db.dealVote.deleteMany({ where: { dealId, ...who(voter), ...(clear ? { value: clear } : {}) } });
+  else {
+    const reasonValue = value === -1 ? reason ?? null : null;
+    const existing = await db.dealVote.findFirst({ where: { dealId, ...who(voter), value }, select: { id: true } });
+    if (existing) await db.dealVote.update({ where: { id: existing.id }, data: { reason: reasonValue } });
+    else await db.dealVote.create({ data: { dealId, value, reason: reasonValue, ...who(voter) } }).catch((e: { code?: string }) => { if (e.code !== "P2002") throw e; }); // a double tap hits the unique index: already counted
+  }
+  return voteSummary(slug, voter);
 }
 
 const noteSchema = z.object({ content: z.string() }).strict();

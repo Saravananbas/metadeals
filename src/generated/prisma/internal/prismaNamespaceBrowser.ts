@@ -134,7 +134,10 @@ export const ModelName = {
   DealCommentLike: 'DealCommentLike',
   CommunityDealSubmissionImage: 'CommunityDealSubmissionImage',
   Brand: 'Brand',
-  MerchantAffiliateConfig: 'MerchantAffiliateConfig'
+  MerchantAffiliateConfig: 'MerchantAffiliateConfig',
+  Bank: 'Bank',
+  DealBankOffer: 'DealBankOffer',
+  MerchantBankOffer: 'MerchantBankOffer'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1429,6 +1432,7 @@ export const DealVoteScalarFieldEnum = {
   id: 'id',
   dealId: 'dealId',
   customerId: 'customerId',
+  visitorId: 'visitorId',
   value: 'value',
   reason: 'reason',
   createdAt: 'createdAt',
@@ -1510,6 +1514,63 @@ export const MerchantAffiliateConfigScalarFieldEnum = {
 } as const
 
 export type MerchantAffiliateConfigScalarFieldEnum = (typeof MerchantAffiliateConfigScalarFieldEnum)[keyof typeof MerchantAffiliateConfigScalarFieldEnum]
+
+
+export const BankScalarFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  name: 'name',
+  logoUrl: 'logoUrl',
+  active: 'active',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BankScalarFieldEnum = (typeof BankScalarFieldEnum)[keyof typeof BankScalarFieldEnum]
+
+
+export const DealBankOfferScalarFieldEnum = {
+  id: 'id',
+  dealId: 'dealId',
+  bankId: 'bankId',
+  cardType: 'cardType',
+  discountType: 'discountType',
+  flatMinor: 'flatMinor',
+  percent: 'percent',
+  capMinor: 'capMinor',
+  minOrderMinor: 'minOrderMinor',
+  code: 'code',
+  terms: 'terms',
+  validUntil: 'validUntil',
+  position: 'position',
+  createdAt: 'createdAt'
+} as const
+
+export type DealBankOfferScalarFieldEnum = (typeof DealBankOfferScalarFieldEnum)[keyof typeof DealBankOfferScalarFieldEnum]
+
+
+export const MerchantBankOfferScalarFieldEnum = {
+  id: 'id',
+  merchantId: 'merchantId',
+  bankId: 'bankId',
+  cardType: 'cardType',
+  discountType: 'discountType',
+  flatMinor: 'flatMinor',
+  percent: 'percent',
+  capMinor: 'capMinor',
+  minOrderMinor: 'minOrderMinor',
+  code: 'code',
+  terms: 'terms',
+  startsOn: 'startsOn',
+  endsOn: 'endsOn',
+  weekdays: 'weekdays',
+  active: 'active',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MerchantBankOfferScalarFieldEnum = (typeof MerchantBankOfferScalarFieldEnum)[keyof typeof MerchantBankOfferScalarFieldEnum]
 
 
 export const SortOrder = {

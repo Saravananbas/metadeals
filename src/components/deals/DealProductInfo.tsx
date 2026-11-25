@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { Star, Tag, Building2 } from "lucide-react";
 import { sanitizeRichHtml } from "@/server/community/richtext";
 import styles from "@/app/deal/[slug]/deal-detail.module.css";
@@ -14,6 +15,8 @@ interface DealProductInfoProps {
   reviewCount?: number | null;
   ratingSource?: string | null;
   currency: string;
+  /** Shown above "About this item" (the bank offers). */
+  beforeDescription?: ReactNode;
 }
 
 export function DealProductInfo({
@@ -27,6 +30,7 @@ export function DealProductInfo({
   reviewCount,
   ratingSource,
   currency,
+  beforeDescription,
 }: DealProductInfoProps) {
   const hasRating = rating !== null && rating !== undefined && rating > 0;
 
@@ -72,6 +76,9 @@ export function DealProductInfo({
           )}
         </div>
       )}
+
+      {/* Slot for the bank offers, shown just above the description */}
+      {beforeDescription}
 
       {/* Product Description */}
       <div>

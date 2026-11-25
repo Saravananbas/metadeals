@@ -731,10 +731,12 @@ export type CustomerCreateNestedOneWithoutDealVotesInput = {
   connect?: Prisma.CustomerWhereUniqueInput
 }
 
-export type CustomerUpdateOneRequiredWithoutDealVotesNestedInput = {
+export type CustomerUpdateOneWithoutDealVotesNestedInput = {
   create?: Prisma.XOR<Prisma.CustomerCreateWithoutDealVotesInput, Prisma.CustomerUncheckedCreateWithoutDealVotesInput>
   connectOrCreate?: Prisma.CustomerCreateOrConnectWithoutDealVotesInput
   upsert?: Prisma.CustomerUpsertWithoutDealVotesInput
+  disconnect?: Prisma.CustomerWhereInput | boolean
+  delete?: Prisma.CustomerWhereInput | boolean
   connect?: Prisma.CustomerWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.CustomerUpdateToOneWithWhereWithoutDealVotesInput, Prisma.CustomerUpdateWithoutDealVotesInput>, Prisma.CustomerUncheckedUpdateWithoutDealVotesInput>
 }

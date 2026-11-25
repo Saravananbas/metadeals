@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { ThumbsDown, ThumbsUp } from "lucide-react";
 import { sendDealVote } from "@/features/deals/vote-client";
 import type { DislikeReason } from "@/features/deals/vote-reasons";
@@ -10,21 +9,19 @@ import styles from "./DealExtras.module.css";
 
 /** Appears at the top once the main Buy Now button scrolls out of view, so shoppers can buy without scrolling back up. */
 export function StickyBuyBar({ title, price, mrp, savings, slug, merchantName, imageUrl, href }: { title: string; price: string; mrp?: string; savings?: string; slug: string; merchantName: string; imageUrl: string; href: string }) {
-  const router = useRouter();
   const [show, setShow] = useState(false);
-  const [votes, setVotes] = useState({ score: 0, mine: 0 });
+  const [votes, setVotes] = useState({ up: 0, down: 0, liked: false, disliked: false });
   const [menu, setMenu] = useState(false);
   useEffect(() => {
     const c = new AbortController();
-    fetch(`/api/v1/deals/${encodeURIComponent(slug)}/vote`, { signal: c.signal, cache: "no-store" }).then((r) => r.json()).then((b) => { if (b?.data) setVotes({ score: b.data.score, mine: b.data.mine }); }).catch(() => {});
-    const on = (e: Event) => { const d = (e as CustomEvent<{ slug: string; score: number; mine: number }>).detail; if (d.slug === slug) setVotes({ score: d.score, mine: d.mine }); };
+    fetch(`/api/v1/deals/${encodeURIComponent(slug)}/vote`, { signal: c.signal, cache: "no-store" }).then((r) => r.json()).then((b) => { if (b?.data) setVotes({ up: b.data.up, down: b.data.down, liked: Boolean(b.data.liked), disliked: Boolean(b.data.disliked) }); }).catch(() => {});
+    const on = (e: Event) => { const d = (e as CustomEvent<{ slug: string; up: number; down: number; liked: boolean; disliked: boolean }>).detail; if (d.slug === slug) setVotes({ up: d.up, down: d.down, liked: d.liked, disliked: d.disliked }); };
     window.addEventListener("deal-vote", on);
     return () => { c.abort(); window.removeEventListener("deal-vote", on); };
   }, [slug]);
-  async function vote(value: 1 | -1 | 0, reason?: DislikeReason) {
+  async function vote(value: 1 | -1 | 0, reason?: DislikeReason, clear?: 1 | -1) {
     setMenu(false);
-    const result = await sendDealVote(slug, value, reason);
-    if (result.status === 401) router.push("/account");
+    await sendDealVote(slug, value, reason, clear);
   }
   useEffect(() => {
     const target = document.getElementById("buy-now-btn");
@@ -41,9 +38,8 @@ export function StickyBuyBar({ title, price, mrp, savings, slug, merchantName, i
         <img className={styles.stickyThumb} src={imageUrl} alt="" width={40} height={40} loading="lazy" />
         <div className={styles.stickyTitle}><strong>{title}</strong><span>at {merchantName}</span></div>
         <div className={styles.stickyVote} role="group" aria-label="Good Deal?">
-          <button type="button" className={styles.voteBtn} aria-pressed={votes.mine === 1} aria-label="Good deal" tabIndex={show ? 0 : -1} onClick={() => void vote(votes.mine === 1 ? 0 : 1)}><ThumbsUp size={17} aria-hidden="true" /></button>
-          <span className={styles.score}>{votes.score}</span>
-          <button type="button" className={styles.voteBtn} aria-pressed={votes.mine === -1} aria-haspopup="true" aria-expanded={menu} aria-label="Not a good deal" tabIndex={show ? 0 : -1} onClick={() => (votes.mine === -1 ? void vote(0) : setMenu((o) => !o))}><ThumbsDown size={17} aria-hidden="true" /></button>
+          <button type="button" className={styles.voteBtn} aria-pressed={votes.liked} aria-label="Good deal" tabIndex={show ? 0 : -1} onClick={() => void (votes.liked ? vote(0, undefined, 1) : vote(1))}><ThumbsUp size={17} aria-hidden="true" /><span className={styles.count}>{votes.up}</span></button>
+          <button type="button" className={styles.voteBtn} aria-pressed={votes.disliked} aria-haspopup="true" aria-expanded={menu} aria-label="Not a good deal" tabIndex={show ? 0 : -1} onClick={() => (votes.disliked ? void vote(0, undefined, -1) : setMenu((o) => !o))}><ThumbsDown size={17} aria-hidden="true" /><span className={styles.count}>{votes.down}</span></button>
           {menu && <DislikeMenu down onPick={(reason) => void vote(-1, reason)} onClose={() => setMenu(false)} />}
         </div>
         {(mrp || savings) && <div className={styles.stickyPrices}>{mrp && <del>MRP {mrp}</del>}{savings && <span>{savings}</span>}</div>}

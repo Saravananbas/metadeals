@@ -1,0 +1,28 @@
+/* Share This Deal: a centred dialog on desktop, a bottom sheet on phones. Design tokens only. */
+.overlay { position: fixed; inset: 0; z-index: 1400; display: flex; align-items: center; justify-content: center; padding: 12px; background: rgba(20, 12, 40, .55); }
+.dialog { width: min(520px, 100%); max-height: calc(100dvh - 24px); overflow-y: auto; display: grid; gap: 12px; padding: 18px; border-radius: 20px; background: var(--md-white); box-shadow: 0 24px 60px rgba(40, 10, 90, .35); outline: none; }
+.head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.head h2 { margin: 0; font-size: 20px; font-weight: 800; color: var(--md-color-text); }
+.close { display: grid; place-items: center; width: 40px; height: 40px; border: 1px solid var(--md-purple-200); border-radius: 50%; background: var(--md-white); color: var(--md-purple-700); cursor: pointer; }
+.preview { display: grid; place-items: center; min-height: 160px; padding: 8px; border: 1px solid var(--md-purple-100); border-radius: 14px; background: var(--md-purple-50); }
+.preview img { max-width: 100%; max-height: 46dvh; width: auto; height: auto; object-fit: contain; border-radius: 10px; }
+.preview p { margin: 0; font-size: 13px; color: var(--md-neutral-600); text-align: center; }
+.coupon { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 44px; padding: 0 16px; border: 1px dashed var(--md-purple-300); border-radius: 12px; background: var(--md-purple-50); color: var(--md-purple-700); font: inherit; font-weight: 800; cursor: pointer; }
+.coupon code { font-size: 16px; letter-spacing: .04em; }
+.coupon:focus-visible, .main button:focus-visible, .more button:focus-visible, .close:focus-visible { outline: 3px solid var(--md-purple-400, #a78bfa); outline-offset: 2px; }
+.toast { margin: -6px 0 0; min-height: 18px; text-align: center; font-size: 13px; font-weight: 700; color: var(--md-green-700); }
+.main { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.main button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 52px; border: 0; border-radius: 14px; color: var(--md-white); font: inherit; font-size: 16px; font-weight: 800; cursor: pointer; }
+.main button:disabled { opacity: .55; cursor: not-allowed; }
+.whatsapp { background: #128c4a; }
+.telegram { background: #1d7fc1; }
+.more { display: flex; flex-wrap: wrap; gap: 8px; }
+.more button { flex: 1 1 150px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 0 10px; border: 1px solid var(--md-purple-200); border-radius: 12px; background: var(--md-white); color: var(--md-purple-700); font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
+.more button:disabled { opacity: .55; cursor: not-allowed; }
+.notice { margin: 0; min-height: 18px; font-size: 12px; color: var(--md-neutral-700); overflow-wrap: anywhere; }
+.closeBottom { min-height: 44px; border: 1px solid var(--md-purple-200); border-radius: 12px; background: var(--md-white); color: var(--md-color-text); font: inherit; font-weight: 700; cursor: pointer; }
+@media (max-width: 640px) {
+  .overlay { align-items: flex-end; padding: 0; }
+  .dialog { width: 100%; max-height: 92dvh; border-radius: 20px 20px 0 0; padding: 16px 14px calc(16px + env(safe-area-inset-bottom)); }
+  .preview img { max-height: 38dvh; }
+}

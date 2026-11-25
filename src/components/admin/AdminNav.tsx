@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import {
   BarChart3,
+  Landmark,
   ChevronDown,
   ExternalLink,
   FolderOpen,
@@ -31,6 +32,7 @@ type NavLink = { href: string; label: string; Icon: typeof Gauge; match: (path: 
 const dealLinks: NavLink[] = [
   { href: "/admin/deals", label: "Deal Management", Icon: Tag, match: (path) => path.startsWith("/admin/deals"), needs: ["deal:edit"] },
   { href: "/admin/intelligence", label: "Deal Intelligence", Icon: BarChart3, match: (path) => path.startsWith("/admin/intelligence"), needs: ["intelligence:view"] },
+  { href: "/admin/banks", label: "Banks", Icon: Landmark, match: (path) => path.startsWith("/admin/banks"), needs: ["deal:edit"] },
   { href: "/admin/scraper", label: "Deal Scraper", Icon: Zap, match: (path) => path.startsWith("/admin/scraper"), needs: ["scraper:use"] },
 ];
 
