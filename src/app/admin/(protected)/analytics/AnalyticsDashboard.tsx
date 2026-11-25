@@ -68,8 +68,8 @@ function Overview({ d, go }: { d: D; go: (t: TabKey) => void }) {
     <div className={styles.overview}>
       <div className={styles.kpis}>
         <Kpi icon={<Eye size={20} />} label="Page views" value={fmt(c.views)} now={c.views} before={p.views} />
-        <Kpi icon={<Users size={20} />} label="Visitors (per day)" value={fmt(c.visitors)} now={c.visitors} before={p.visitors} tone="blue" />
-        <Kpi icon={<UserCheck size={20} />} label="Unique visitors (accepted)" value={fmt(c.uniqueVisitors)} now={c.uniqueVisitors} before={p.uniqueVisitors} tone="green" />
+        <Kpi icon={<Users size={20} />} label="Daily visitors (all)" value={fmt(c.visitors)} now={c.visitors} before={p.visitors} tone="blue" />
+        <Kpi icon={<UserCheck size={20} />} label="Unique visitors (cookies accepted)" value={fmt(c.uniqueVisitors)} now={c.uniqueVisitors} before={p.uniqueVisitors} tone="green" />
         <Kpi icon={<Activity size={20} />} label="Accepted sessions" value={fmt(c.sessions)} now={c.sessions} before={p.sessions} tone="amber" />
         <Kpi icon={<Clock size={20} />} label="Avg. time on site" value={duration(c.avgSessionSeconds)} now={c.avgSessionSeconds} before={p.avgSessionSeconds} />
         <Kpi icon={<Layers size={20} />} label="Pages / session" value={String(c.pagesPerSession)} now={c.pagesPerSession} before={p.pagesPerSession} tone="red" />
@@ -149,7 +149,7 @@ function Audience({ d, query }: { d: D; query: string }) {
     <div className={styles.stack}>
       <div className={styles.kpis4}>
         <Kpi icon={<Eye size={20} />} label="Total visitors (per day)" value={fmt(c.visitors)} now={c.visitors} before={p.visitors} />
-        <Kpi icon={<UserCheck size={20} />} label="Unique visitors (accepted)" value={fmt(c.uniqueVisitors)} now={c.uniqueVisitors} before={p.uniqueVisitors} tone="green" />
+        <Kpi icon={<UserCheck size={20} />} label="Unique visitors (cookies accepted)" value={fmt(c.uniqueVisitors)} now={c.uniqueVisitors} before={p.uniqueVisitors} tone="green" />
         <Kpi icon={<Users size={20} />} label="Returning visitors" value={fmt(d.returningVisitors)} tone="blue" />
         <Kpi icon={<Users size={20} />} label="New visitors" value={fmt(d.newVisitors)} tone="amber" />
         <Kpi icon={<Activity size={20} />} label="Accepted sessions" value={fmt(c.sessions)} now={c.sessions} before={p.sessions} />

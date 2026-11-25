@@ -64,4 +64,4 @@ export function scheduleLabel(weekdays: string): string | null {
 const SHARE_SUFFIX: Record<string, string> = { CREDIT: " on credit cards", DEBIT: " on debit cards", EMI: " on EMI" };
 /** One line for the share message and card: "HDFC Bank: ₹1,000 off on credit cards, min. order ₹5,000 (Every Wednesday)". */
 export const offerShareLine = (o: BankOfferView) =>
-  `${o.bankName}: ${offerHeadline(o)}${o.bankId ? SHARE_SUFFIX[o.cardType] ?? "" : ""}${o.minOrderMinor ? `, min. order ${formatPaise(o.minOrderMinor)}` : ""}${o.schedule ? ` (${o.schedule})` : ""}`;
+  `${o.bankName}: ${offerHeadline(o)}${o.bankId ? SHARE_SUFFIX[o.cardType] ?? "" : ""}${o.minOrderMinor ? `, min. order ${formatPaise(o.minOrderMinor)}` : ""}${o.schedule ? ` (${o.schedule})` : ""}.`;

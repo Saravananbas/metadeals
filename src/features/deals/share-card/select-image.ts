@@ -27,3 +27,20 @@ export function pickBestImage(probes: ImageProbe[]): ImageProbe | null {
   }
   return best;
 }
+
+/** Browser only: loads each picture to learn its size, picks the best, and returns it decoded, unchanged. A picture that fails to load is simply not considered. */
+export async function chooseProductImageBitmap(urls: string[]): Promise<{ url: string; bitmap: ImageBitmap } | null> {
+  const loaded = await Promise.all(urls.slice(0, 6).map((url) => new Promise<{ url: string; img: HTMLImageElement } | null>((resolve) => {
+    const img = new Image();
+    const timer = setTimeout(() => resolve(null), 8000);
+    img.crossOrigin = "anonymous"; // a picture from another site would taint the canvas, so it fails here instead
+    img.onload = () => { clearTimeout(timer); resolve(img.naturalWidth ? { url, img } : null); };
+    img.onerror = () => { clearTimeout(timer); resolve(null); };
+    img.src = url;
+  })));
+  const probes: ImageProbe[] = loaded.flatMap((l, i) => (l ? [{ url: l.url, width: l.img.naturalWidth, height: l.img.naturalHeight, primary: i === 0 }] : []));
+  const best = pickBestImage(probes);
+  const found = best ? loaded.find((l) => l?.url === best.url) : null;
+  if (!found) return null;
+  try { return { url: found.url, bitmap: await createImageBitmap(found.img) }; } catch { return null; }
+}
