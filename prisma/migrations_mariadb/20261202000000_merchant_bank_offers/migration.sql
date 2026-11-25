@@ -28,13 +28,3 @@ ALTER TABLE `MerchantBankOffer` ADD CONSTRAINT `MerchantBankOffer_merchantId_fke
 
 -- AddForeignKey
 ALTER TABLE `MerchantBankOffer` ADD CONSTRAINT `MerchantBankOffer_bankId_fkey` FOREIGN KEY (`bankId`) REFERENCES `Bank`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-┌─────────────────────────────────────────────────────────┐
-│  Update available 7.10.1 -> 8.0.0-rc.35                 │
-│                                                         │
-│  This is a major update - please follow the guide at    │
-│  https://pris.ly/d/major-version-upgrade                │
-│                                                         │
-│  Run the following to update                            │
-│    npm i --save-dev prisma@latest                       │
-│    npm i @prisma/client@latest                          │
-└─────────────────────────────────────────────────────────┘
