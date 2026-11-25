@@ -1,9 +1,9 @@
 "use client";
 
 import { trackEvent } from "@/lib/analytics-client";
+import { dealShareUrl } from "@/features/deals/short-link";
 import { ShareDealModal } from "@/components/deals/ShareDealModal";
 import type { ShareDealData } from "@/features/deals/share-card/types";
-import { publicDealUrl } from "@/features/deals/share-card/message";
 import { sendDealVote } from "@/features/deals/vote-client";
 import type { DislikeReason } from "@/features/deals/vote-reasons";
 import { DislikeMenu } from "@/components/deals/DislikeMenu";
@@ -194,7 +194,7 @@ export function DealCard({
 
   return (
     <>
-    {shareOpen && <ShareDealModal deal={shareData()} url={publicDealUrl(window.location.origin, deal)} onShared={countShare} onClose={() => setShareOpen(false)} />}
+    {shareOpen && <ShareDealModal deal={shareData()} url={dealShareUrl(window.location.origin, deal)} onShared={countShare} onClose={() => setShareOpen(false)} />}
     <article
       ref={cardRef}
       className="deal-card"
