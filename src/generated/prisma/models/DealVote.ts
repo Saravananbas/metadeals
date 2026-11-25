@@ -38,6 +38,7 @@ export type DealVoteMinAggregateOutputType = {
   id: string | null
   dealId: string | null
   customerId: string | null
+  visitorId: string | null
   value: number | null
   reason: string | null
   createdAt: Date | null
@@ -48,6 +49,7 @@ export type DealVoteMaxAggregateOutputType = {
   id: string | null
   dealId: string | null
   customerId: string | null
+  visitorId: string | null
   value: number | null
   reason: string | null
   createdAt: Date | null
@@ -58,6 +60,7 @@ export type DealVoteCountAggregateOutputType = {
   id: number
   dealId: number
   customerId: number
+  visitorId: number
   value: number
   reason: number
   createdAt: number
@@ -78,6 +81,7 @@ export type DealVoteMinAggregateInputType = {
   id?: true
   dealId?: true
   customerId?: true
+  visitorId?: true
   value?: true
   reason?: true
   createdAt?: true
@@ -88,6 +92,7 @@ export type DealVoteMaxAggregateInputType = {
   id?: true
   dealId?: true
   customerId?: true
+  visitorId?: true
   value?: true
   reason?: true
   createdAt?: true
@@ -98,6 +103,7 @@ export type DealVoteCountAggregateInputType = {
   id?: true
   dealId?: true
   customerId?: true
+  visitorId?: true
   value?: true
   reason?: true
   createdAt?: true
@@ -194,7 +200,8 @@ export type DealVoteGroupByArgs<ExtArgs extends runtime.Types.Extensions.Interna
 export type DealVoteGroupByOutputType = {
   id: string
   dealId: string
-  customerId: string
+  customerId: string | null
+  visitorId: string | null
   value: number
   reason: string | null
   createdAt: Date
@@ -227,19 +234,21 @@ export type DealVoteWhereInput = {
   NOT?: Prisma.DealVoteWhereInput | Prisma.DealVoteWhereInput[]
   id?: Prisma.StringFilter<"DealVote"> | string
   dealId?: Prisma.StringFilter<"DealVote"> | string
-  customerId?: Prisma.StringFilter<"DealVote"> | string
+  customerId?: Prisma.StringNullableFilter<"DealVote"> | string | null
+  visitorId?: Prisma.StringNullableFilter<"DealVote"> | string | null
   value?: Prisma.IntFilter<"DealVote"> | number
   reason?: Prisma.StringNullableFilter<"DealVote"> | string | null
   createdAt?: Prisma.DateTimeFilter<"DealVote"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DealVote"> | Date | string
   deal?: Prisma.XOR<Prisma.DealScalarRelationFilter, Prisma.DealWhereInput>
-  customer?: Prisma.XOR<Prisma.CustomerScalarRelationFilter, Prisma.CustomerWhereInput>
+  customer?: Prisma.XOR<Prisma.CustomerNullableScalarRelationFilter, Prisma.CustomerWhereInput> | null
 }
 
 export type DealVoteOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   dealId?: Prisma.SortOrder
-  customerId?: Prisma.SortOrder
+  customerId?: Prisma.SortOrderInput | Prisma.SortOrder
+  visitorId?: Prisma.SortOrderInput | Prisma.SortOrder
   value?: Prisma.SortOrder
   reason?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -251,23 +260,26 @@ export type DealVoteOrderByWithRelationInput = {
 export type DealVoteWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   customerId_dealId?: Prisma.DealVoteCustomerIdDealIdCompoundUniqueInput
+  visitorId_dealId?: Prisma.DealVoteVisitorIdDealIdCompoundUniqueInput
   AND?: Prisma.DealVoteWhereInput | Prisma.DealVoteWhereInput[]
   OR?: Prisma.DealVoteWhereInput[]
   NOT?: Prisma.DealVoteWhereInput | Prisma.DealVoteWhereInput[]
   dealId?: Prisma.StringFilter<"DealVote"> | string
-  customerId?: Prisma.StringFilter<"DealVote"> | string
+  customerId?: Prisma.StringNullableFilter<"DealVote"> | string | null
+  visitorId?: Prisma.StringNullableFilter<"DealVote"> | string | null
   value?: Prisma.IntFilter<"DealVote"> | number
   reason?: Prisma.StringNullableFilter<"DealVote"> | string | null
   createdAt?: Prisma.DateTimeFilter<"DealVote"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DealVote"> | Date | string
   deal?: Prisma.XOR<Prisma.DealScalarRelationFilter, Prisma.DealWhereInput>
-  customer?: Prisma.XOR<Prisma.CustomerScalarRelationFilter, Prisma.CustomerWhereInput>
-}, "id" | "customerId_dealId">
+  customer?: Prisma.XOR<Prisma.CustomerNullableScalarRelationFilter, Prisma.CustomerWhereInput> | null
+}, "id" | "customerId_dealId" | "visitorId_dealId">
 
 export type DealVoteOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   dealId?: Prisma.SortOrder
-  customerId?: Prisma.SortOrder
+  customerId?: Prisma.SortOrderInput | Prisma.SortOrder
+  visitorId?: Prisma.SortOrderInput | Prisma.SortOrder
   value?: Prisma.SortOrder
   reason?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -285,7 +297,8 @@ export type DealVoteScalarWhereWithAggregatesInput = {
   NOT?: Prisma.DealVoteScalarWhereWithAggregatesInput | Prisma.DealVoteScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"DealVote"> | string
   dealId?: Prisma.StringWithAggregatesFilter<"DealVote"> | string
-  customerId?: Prisma.StringWithAggregatesFilter<"DealVote"> | string
+  customerId?: Prisma.StringNullableWithAggregatesFilter<"DealVote"> | string | null
+  visitorId?: Prisma.StringNullableWithAggregatesFilter<"DealVote"> | string | null
   value?: Prisma.IntWithAggregatesFilter<"DealVote"> | number
   reason?: Prisma.StringNullableWithAggregatesFilter<"DealVote"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"DealVote"> | Date | string
@@ -294,18 +307,20 @@ export type DealVoteScalarWhereWithAggregatesInput = {
 
 export type DealVoteCreateInput = {
   id?: string
+  visitorId?: string | null
   value: number
   reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deal: Prisma.DealCreateNestedOneWithoutVotesInput
-  customer: Prisma.CustomerCreateNestedOneWithoutDealVotesInput
+  customer?: Prisma.CustomerCreateNestedOneWithoutDealVotesInput
 }
 
 export type DealVoteUncheckedCreateInput = {
   id?: string
   dealId: string
-  customerId: string
+  customerId?: string | null
+  visitorId?: string | null
   value: number
   reason?: string | null
   createdAt?: Date | string
@@ -314,18 +329,20 @@ export type DealVoteUncheckedCreateInput = {
 
 export type DealVoteUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  visitorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   value?: Prisma.IntFieldUpdateOperationsInput | number
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deal?: Prisma.DealUpdateOneRequiredWithoutVotesNestedInput
-  customer?: Prisma.CustomerUpdateOneRequiredWithoutDealVotesNestedInput
+  customer?: Prisma.CustomerUpdateOneWithoutDealVotesNestedInput
 }
 
 export type DealVoteUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   dealId?: Prisma.StringFieldUpdateOperationsInput | string
-  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visitorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   value?: Prisma.IntFieldUpdateOperationsInput | number
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -335,7 +352,8 @@ export type DealVoteUncheckedUpdateInput = {
 export type DealVoteCreateManyInput = {
   id?: string
   dealId: string
-  customerId: string
+  customerId?: string | null
+  visitorId?: string | null
   value: number
   reason?: string | null
   createdAt?: Date | string
@@ -344,6 +362,7 @@ export type DealVoteCreateManyInput = {
 
 export type DealVoteUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  visitorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   value?: Prisma.IntFieldUpdateOperationsInput | number
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -353,7 +372,8 @@ export type DealVoteUpdateManyMutationInput = {
 export type DealVoteUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   dealId?: Prisma.StringFieldUpdateOperationsInput | string
-  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visitorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   value?: Prisma.IntFieldUpdateOperationsInput | number
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -375,10 +395,16 @@ export type DealVoteCustomerIdDealIdCompoundUniqueInput = {
   dealId: string
 }
 
+export type DealVoteVisitorIdDealIdCompoundUniqueInput = {
+  visitorId: string
+  dealId: string
+}
+
 export type DealVoteCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   dealId?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
+  visitorId?: Prisma.SortOrder
   value?: Prisma.SortOrder
   reason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -393,6 +419,7 @@ export type DealVoteMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   dealId?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
+  visitorId?: Prisma.SortOrder
   value?: Prisma.SortOrder
   reason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -403,6 +430,7 @@ export type DealVoteMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   dealId?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
+  visitorId?: Prisma.SortOrder
   value?: Prisma.SortOrder
   reason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -499,16 +527,18 @@ export type DealVoteUncheckedUpdateManyWithoutCustomerNestedInput = {
 
 export type DealVoteCreateWithoutDealInput = {
   id?: string
+  visitorId?: string | null
   value: number
   reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  customer: Prisma.CustomerCreateNestedOneWithoutDealVotesInput
+  customer?: Prisma.CustomerCreateNestedOneWithoutDealVotesInput
 }
 
 export type DealVoteUncheckedCreateWithoutDealInput = {
   id?: string
-  customerId: string
+  customerId?: string | null
+  visitorId?: string | null
   value: number
   reason?: string | null
   createdAt?: Date | string
@@ -547,7 +577,8 @@ export type DealVoteScalarWhereInput = {
   NOT?: Prisma.DealVoteScalarWhereInput | Prisma.DealVoteScalarWhereInput[]
   id?: Prisma.StringFilter<"DealVote"> | string
   dealId?: Prisma.StringFilter<"DealVote"> | string
-  customerId?: Prisma.StringFilter<"DealVote"> | string
+  customerId?: Prisma.StringNullableFilter<"DealVote"> | string | null
+  visitorId?: Prisma.StringNullableFilter<"DealVote"> | string | null
   value?: Prisma.IntFilter<"DealVote"> | number
   reason?: Prisma.StringNullableFilter<"DealVote"> | string | null
   createdAt?: Prisma.DateTimeFilter<"DealVote"> | Date | string
@@ -556,6 +587,7 @@ export type DealVoteScalarWhereInput = {
 
 export type DealVoteCreateWithoutCustomerInput = {
   id?: string
+  visitorId?: string | null
   value: number
   reason?: string | null
   createdAt?: Date | string
@@ -566,6 +598,7 @@ export type DealVoteCreateWithoutCustomerInput = {
 export type DealVoteUncheckedCreateWithoutCustomerInput = {
   id?: string
   dealId: string
+  visitorId?: string | null
   value: number
   reason?: string | null
   createdAt?: Date | string
@@ -600,7 +633,8 @@ export type DealVoteUpdateManyWithWhereWithoutCustomerInput = {
 
 export type DealVoteCreateManyDealInput = {
   id?: string
-  customerId: string
+  customerId?: string | null
+  visitorId?: string | null
   value: number
   reason?: string | null
   createdAt?: Date | string
@@ -609,16 +643,18 @@ export type DealVoteCreateManyDealInput = {
 
 export type DealVoteUpdateWithoutDealInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  visitorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   value?: Prisma.IntFieldUpdateOperationsInput | number
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  customer?: Prisma.CustomerUpdateOneRequiredWithoutDealVotesNestedInput
+  customer?: Prisma.CustomerUpdateOneWithoutDealVotesNestedInput
 }
 
 export type DealVoteUncheckedUpdateWithoutDealInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visitorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   value?: Prisma.IntFieldUpdateOperationsInput | number
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -627,7 +663,8 @@ export type DealVoteUncheckedUpdateWithoutDealInput = {
 
 export type DealVoteUncheckedUpdateManyWithoutDealInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visitorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   value?: Prisma.IntFieldUpdateOperationsInput | number
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -637,6 +674,7 @@ export type DealVoteUncheckedUpdateManyWithoutDealInput = {
 export type DealVoteCreateManyCustomerInput = {
   id?: string
   dealId: string
+  visitorId?: string | null
   value: number
   reason?: string | null
   createdAt?: Date | string
@@ -645,6 +683,7 @@ export type DealVoteCreateManyCustomerInput = {
 
 export type DealVoteUpdateWithoutCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  visitorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   value?: Prisma.IntFieldUpdateOperationsInput | number
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -655,6 +694,7 @@ export type DealVoteUpdateWithoutCustomerInput = {
 export type DealVoteUncheckedUpdateWithoutCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   dealId?: Prisma.StringFieldUpdateOperationsInput | string
+  visitorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   value?: Prisma.IntFieldUpdateOperationsInput | number
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -664,6 +704,7 @@ export type DealVoteUncheckedUpdateWithoutCustomerInput = {
 export type DealVoteUncheckedUpdateManyWithoutCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   dealId?: Prisma.StringFieldUpdateOperationsInput | string
+  visitorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   value?: Prisma.IntFieldUpdateOperationsInput | number
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -676,72 +717,80 @@ export type DealVoteSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   id?: boolean
   dealId?: boolean
   customerId?: boolean
+  visitorId?: boolean
   value?: boolean
   reason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deal?: boolean | Prisma.DealDefaultArgs<ExtArgs>
-  customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
+  customer?: boolean | Prisma.DealVote$customerArgs<ExtArgs>
 }, ExtArgs["result"]["dealVote"]>
 
 export type DealVoteSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   dealId?: boolean
   customerId?: boolean
+  visitorId?: boolean
   value?: boolean
   reason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deal?: boolean | Prisma.DealDefaultArgs<ExtArgs>
-  customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
+  customer?: boolean | Prisma.DealVote$customerArgs<ExtArgs>
 }, ExtArgs["result"]["dealVote"]>
 
 export type DealVoteSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   dealId?: boolean
   customerId?: boolean
+  visitorId?: boolean
   value?: boolean
   reason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deal?: boolean | Prisma.DealDefaultArgs<ExtArgs>
-  customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
+  customer?: boolean | Prisma.DealVote$customerArgs<ExtArgs>
 }, ExtArgs["result"]["dealVote"]>
 
 export type DealVoteSelectScalar = {
   id?: boolean
   dealId?: boolean
   customerId?: boolean
+  visitorId?: boolean
   value?: boolean
   reason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type DealVoteOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "dealId" | "customerId" | "value" | "reason" | "createdAt" | "updatedAt", ExtArgs["result"]["dealVote"]>
+export type DealVoteOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "dealId" | "customerId" | "visitorId" | "value" | "reason" | "createdAt" | "updatedAt", ExtArgs["result"]["dealVote"]>
 export type DealVoteInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   deal?: boolean | Prisma.DealDefaultArgs<ExtArgs>
-  customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
+  customer?: boolean | Prisma.DealVote$customerArgs<ExtArgs>
 }
 export type DealVoteIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   deal?: boolean | Prisma.DealDefaultArgs<ExtArgs>
-  customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
+  customer?: boolean | Prisma.DealVote$customerArgs<ExtArgs>
 }
 export type DealVoteIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   deal?: boolean | Prisma.DealDefaultArgs<ExtArgs>
-  customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
+  customer?: boolean | Prisma.DealVote$customerArgs<ExtArgs>
 }
 
 export type $DealVotePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "DealVote"
   objects: {
     deal: Prisma.$DealPayload<ExtArgs>
-    customer: Prisma.$CustomerPayload<ExtArgs>
+    customer: Prisma.$CustomerPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     dealId: string
-    customerId: string
+    customerId: string | null
+    /**
+     * Anonymous voter: a random id kept in a browser cookie. Used while voting needs no sign-in; null for member votes.
+     */
+    visitorId: string | null
     value: number
     /**
      * Why a member voted down (one of DISLIKE_REASONS); null for up votes.
@@ -1144,7 +1193,7 @@ readonly fields: DealVoteFieldRefs;
 export interface Prisma__DealVoteClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   deal<T extends Prisma.DealDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DealDefaultArgs<ExtArgs>>): Prisma.Prisma__DealClient<runtime.Types.Result.GetResult<Prisma.$DealPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  customer<T extends Prisma.CustomerDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CustomerDefaultArgs<ExtArgs>>): Prisma.Prisma__CustomerClient<runtime.Types.Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  customer<T extends Prisma.DealVote$customerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DealVote$customerArgs<ExtArgs>>): Prisma.Prisma__CustomerClient<runtime.Types.Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1177,6 +1226,7 @@ export interface DealVoteFieldRefs {
   readonly id: Prisma.FieldRef<"DealVote", 'String'>
   readonly dealId: Prisma.FieldRef<"DealVote", 'String'>
   readonly customerId: Prisma.FieldRef<"DealVote", 'String'>
+  readonly visitorId: Prisma.FieldRef<"DealVote", 'String'>
   readonly value: Prisma.FieldRef<"DealVote", 'Int'>
   readonly reason: Prisma.FieldRef<"DealVote", 'String'>
   readonly createdAt: Prisma.FieldRef<"DealVote", 'DateTime'>
@@ -1579,6 +1629,25 @@ export type DealVoteDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Limit how many DealVotes to delete.
    */
   limit?: number
+}
+
+/**
+ * DealVote.customer
+ */
+export type DealVote$customerArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Customer
+   */
+  select?: Prisma.CustomerSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Customer
+   */
+  omit?: Prisma.CustomerOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CustomerInclude<ExtArgs> | null
+  where?: Prisma.CustomerWhereInput
 }
 
 /**

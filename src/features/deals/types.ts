@@ -1,3 +1,4 @@
+import type { BankOfferView } from "./bank-offers";
 export type StoreId = string;
 export type Deal = {
   id: string;
@@ -28,6 +29,7 @@ export type Deal = {
   commentCount?: number;
   likeCount?: number;
   couponCode?: string | null;
+  bankOffers?: BankOfferView[];
 };
 
 export type DealFilters = { query: string; category: string; store: string; view: "top" | "latest" | "featured" };

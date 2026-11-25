@@ -19,6 +19,7 @@ import { htmlToPlain, textToHtml } from "@/features/deal-form/text";
 import { RichEditor } from "@/features/community/components/RichEditor";
 import { classifyDeal, type DealTab } from "../tabs";
 import styles from "./manager.module.css";
+import { BankOffersEditor, draftsFromSaved, draftsToInput, type BankOfferDraft, type BankOption } from "./BankOffersEditor";
 
 type Entry = { id: string; name: string; slug: string; parentId?: string | null; websiteUrl?: string };
 type DirectoryMerchant = {
@@ -53,7 +54,8 @@ type YouTubeVideoCandidate = {
 type YouTubeReviewRow = { isActive?: boolean; videoUrl?: string | null };
 type PreviewEditField = "title" | "photos" | "brand" | "description" | "category" | "merchant" | "price" | "coupon" | "rating" | "youtube";
 
-interface AdminDealForm extends Omit<DealInput, "mrpMinor" | "priceMinor" | "options"> {
+interface AdminDealForm extends Omit<DealInput, "mrpMinor" | "priceMinor" | "options" | "bankOffers"> {
+  bankOffers: BankOfferDraft[];
   mrpRupees: string;
   priceRupees: string;
   youtubeVideoUrls?: string[];
@@ -94,6 +96,7 @@ const empty: AdminDealForm = {
   galleryMediaIds: [],
   galleryImageUrls: [],
   options: [],
+  bankOffers: [],
 };
 
 /** Lower-case words joined by single hyphens, the only form the server accepts for a slug. */
@@ -119,6 +122,8 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
   const [categories, setCategories] = useState<Entry[]>([]);
   const [merchants, setMerchants] = useState<Entry[]>([]);
   const [directoryMerchants, setDirectoryMerchants] = useState<DirectoryMerchant[]>([]);
+  const [banks, setBanks] = useState<BankOption[]>([]);
+  useEffect(() => { fetch("/api/v1/admin/banks", { cache: "no-store" }).then((r) => (r.ok ? r.json() : null)).then((d) => d && setBanks(d.items)).catch(() => {}); }, []);
   const [form, setForm] = useState<AdminDealForm>(empty);
   const [selectedParentCategoryId, setSelectedParentCategoryId] = useState<string>("");
   const [selected, setSelected] = useState<Row | null>(null);
@@ -758,6 +763,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
 
       await load();
       setShowHtmlReviewModal(false);
+      resetToNewDeal();
       setMessage(`🎉 "${publishRes.data.title}" has been successfully published to the live store!`);
     } catch (err) {
       alert(err instanceof Error ? err.message : "Publish failed.");
@@ -1207,11 +1213,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
 
       await load();
 
-      setShowPreviewModal(false);
-      setExtractionResult(null);
-      setExtractProgress("");
-      setForm(empty);
-      setSelected(publishRes.data);
+      resetToNewDeal(); // back to an empty Add New Deal form
       setMessage(`🎉 "${publishRes.data.title}" has been successfully published to the live store!`);
     } catch (err) {
       setMessage(err instanceof Error ? err.message : "Failed to publish deal directly.");
@@ -1408,6 +1410,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
       affiliateUrl: row.affiliateUrl,
       couponCode: row.couponCode ?? null,
       editorNotes: row.editorNotes ?? null,
+      bankOffers: draftsFromSaved((row as unknown as { bankOffers?: Parameters<typeof draftsFromSaved>[0] }).bankOffers),
       status: row.status === "EXPIRED" ? "EXPIRED" : "DRAFT",
       publishedAt: row.publishedAt,
       startsAt: row.startsAt,
@@ -1504,6 +1507,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
         affiliateUrl: form.affiliateUrl,
         couponCode: form.couponCode?.trim() || null,
         editorNotes: form.editorNotes ?? null,
+        bankOffers: draftsToInput(form.bankOffers),
         descriptionHtml: form.descriptionHtml === undefined ? undefined : form.descriptionHtml || null,
         status: form.status,
         publishedAt: form.publishedAt,
@@ -2908,6 +2912,9 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
                 onChange={(e) => field("couponCode", e.target.value ? e.target.value.toUpperCase() : null)}
               />
             </label>
+            <div className={styles.span2}>
+              <BankOffersEditor banks={banks} value={form.bankOffers} onChange={(next) => field("bankOffers", next)} />
+            </div>
             <label className={styles.span2}>
               Editor&apos;s Notes (optional, one point per line)
               <textarea
@@ -3270,8 +3277,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
                       "POST",
                       { version: preview.data.version, previewToken: preview.previewToken }
                     );
-                    setSelected(result.data);
-                    setPreview(null);
+                    if (editModal) { setSelected(result.data); setPreview(null); } else resetToNewDeal();
                     await load();
                     setMessage("Published or scheduled according to the saved dates.");
                   })

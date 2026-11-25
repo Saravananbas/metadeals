@@ -480,7 +480,10 @@ export const ModelName = {
   DealCommentLike: 'DealCommentLike',
   CommunityDealSubmissionImage: 'CommunityDealSubmissionImage',
   Brand: 'Brand',
-  MerchantAffiliateConfig: 'MerchantAffiliateConfig'
+  MerchantAffiliateConfig: 'MerchantAffiliateConfig',
+  Bank: 'Bank',
+  DealBankOffer: 'DealBankOffer',
+  MerchantBankOffer: 'MerchantBankOffer'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -496,7 +499,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "account" | "session" | "verificationToken" | "authSession" | "recoveryCode" | "authToken" | "authRateLimit" | "bootstrapState" | "auditEvent" | "category" | "merchant" | "affiliateClick" | "affiliateTransaction" | "media" | "deal" | "purchaseOption" | "dealGalleryImage" | "customer" | "customerIdentity" | "customerSignupChallenge" | "customerPasswordReset" | "customerRateLimit" | "distributionDestination" | "distributionPost" | "dealCandidate" | "priceObservation" | "scraperJob" | "productExtractionLog" | "dealVideoReview" | "youTubeQuotaLedger" | "merchantWebsiteDirectory" | "productMaster" | "productVariant" | "productOffer" | "priceObservationRecord" | "sourceHealthRecord" | "publicationAuthorization" | "shadowCandidate" | "dealLifecycleEvent" | "dealComment" | "analyticsSession" | "analyticsEvent" | "analyticsDaily" | "communityDealSubmission" | "forumCommunity" | "forumProfile" | "forumPost" | "forumComment" | "forumPostVote" | "forumCommentVote" | "forumPostLike" | "forumCommentLike" | "forumSave" | "forumFollow" | "forumPostImage" | "forumPostDraft" | "forumNotification" | "forumAnnouncement" | "staffPermissionGrant" | "forumReport" | "forumModerationAction" | "dmThread" | "dmMessage" | "dmBlock" | "dmReport" | "customerAppToken" | "forumMemberFollow" | "devicePushToken" | "moderatorAppointment" | "moderatorAppointmentEvent" | "memberWarning" | "memberRestriction" | "moderationAppeal" | "moderationEscalation" | "customerPreference" | "savedDeal" | "dealVote" | "dealNote" | "memberStar" | "dealCommentLike" | "communityDealSubmissionImage" | "brand" | "merchantAffiliateConfig"
+    modelProps: "user" | "account" | "session" | "verificationToken" | "authSession" | "recoveryCode" | "authToken" | "authRateLimit" | "bootstrapState" | "auditEvent" | "category" | "merchant" | "affiliateClick" | "affiliateTransaction" | "media" | "deal" | "purchaseOption" | "dealGalleryImage" | "customer" | "customerIdentity" | "customerSignupChallenge" | "customerPasswordReset" | "customerRateLimit" | "distributionDestination" | "distributionPost" | "dealCandidate" | "priceObservation" | "scraperJob" | "productExtractionLog" | "dealVideoReview" | "youTubeQuotaLedger" | "merchantWebsiteDirectory" | "productMaster" | "productVariant" | "productOffer" | "priceObservationRecord" | "sourceHealthRecord" | "publicationAuthorization" | "shadowCandidate" | "dealLifecycleEvent" | "dealComment" | "analyticsSession" | "analyticsEvent" | "analyticsDaily" | "communityDealSubmission" | "forumCommunity" | "forumProfile" | "forumPost" | "forumComment" | "forumPostVote" | "forumCommentVote" | "forumPostLike" | "forumCommentLike" | "forumSave" | "forumFollow" | "forumPostImage" | "forumPostDraft" | "forumNotification" | "forumAnnouncement" | "staffPermissionGrant" | "forumReport" | "forumModerationAction" | "dmThread" | "dmMessage" | "dmBlock" | "dmReport" | "customerAppToken" | "forumMemberFollow" | "devicePushToken" | "moderatorAppointment" | "moderatorAppointmentEvent" | "memberWarning" | "memberRestriction" | "moderationAppeal" | "moderationEscalation" | "customerPreference" | "savedDeal" | "dealVote" | "dealNote" | "memberStar" | "dealCommentLike" | "communityDealSubmissionImage" | "brand" | "merchantAffiliateConfig" | "bank" | "dealBankOffer" | "merchantBankOffer"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -6044,6 +6047,204 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Bank: {
+      payload: Prisma.$BankPayload<ExtArgs>
+      fields: Prisma.BankFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.BankFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.BankFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankPayload>
+        }
+        findFirst: {
+          args: Prisma.BankFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.BankFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankPayload>
+        }
+        findMany: {
+          args: Prisma.BankFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankPayload>[]
+        }
+        create: {
+          args: Prisma.BankCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankPayload>
+        }
+        createMany: {
+          args: Prisma.BankCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.BankDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankPayload>
+        }
+        update: {
+          args: Prisma.BankUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankPayload>
+        }
+        deleteMany: {
+          args: Prisma.BankDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.BankUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.BankUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankPayload>
+        }
+        aggregate: {
+          args: Prisma.BankAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateBank>
+        }
+        groupBy: {
+          args: Prisma.BankGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BankGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.BankCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BankCountAggregateOutputType> | number
+        }
+      }
+    }
+    DealBankOffer: {
+      payload: Prisma.$DealBankOfferPayload<ExtArgs>
+      fields: Prisma.DealBankOfferFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DealBankOfferFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealBankOfferPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DealBankOfferFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealBankOfferPayload>
+        }
+        findFirst: {
+          args: Prisma.DealBankOfferFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealBankOfferPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DealBankOfferFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealBankOfferPayload>
+        }
+        findMany: {
+          args: Prisma.DealBankOfferFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealBankOfferPayload>[]
+        }
+        create: {
+          args: Prisma.DealBankOfferCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealBankOfferPayload>
+        }
+        createMany: {
+          args: Prisma.DealBankOfferCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.DealBankOfferDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealBankOfferPayload>
+        }
+        update: {
+          args: Prisma.DealBankOfferUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealBankOfferPayload>
+        }
+        deleteMany: {
+          args: Prisma.DealBankOfferDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DealBankOfferUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.DealBankOfferUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealBankOfferPayload>
+        }
+        aggregate: {
+          args: Prisma.DealBankOfferAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDealBankOffer>
+        }
+        groupBy: {
+          args: Prisma.DealBankOfferGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DealBankOfferGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DealBankOfferCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DealBankOfferCountAggregateOutputType> | number
+        }
+      }
+    }
+    MerchantBankOffer: {
+      payload: Prisma.$MerchantBankOfferPayload<ExtArgs>
+      fields: Prisma.MerchantBankOfferFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MerchantBankOfferFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantBankOfferPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MerchantBankOfferFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantBankOfferPayload>
+        }
+        findFirst: {
+          args: Prisma.MerchantBankOfferFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantBankOfferPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MerchantBankOfferFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantBankOfferPayload>
+        }
+        findMany: {
+          args: Prisma.MerchantBankOfferFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantBankOfferPayload>[]
+        }
+        create: {
+          args: Prisma.MerchantBankOfferCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantBankOfferPayload>
+        }
+        createMany: {
+          args: Prisma.MerchantBankOfferCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.MerchantBankOfferDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantBankOfferPayload>
+        }
+        update: {
+          args: Prisma.MerchantBankOfferUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantBankOfferPayload>
+        }
+        deleteMany: {
+          args: Prisma.MerchantBankOfferDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MerchantBankOfferUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.MerchantBankOfferUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MerchantBankOfferPayload>
+        }
+        aggregate: {
+          args: Prisma.MerchantBankOfferAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMerchantBankOffer>
+        }
+        groupBy: {
+          args: Prisma.MerchantBankOfferGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MerchantBankOfferGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MerchantBankOfferCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MerchantBankOfferCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -7359,6 +7560,7 @@ export const DealVoteScalarFieldEnum = {
   id: 'id',
   dealId: 'dealId',
   customerId: 'customerId',
+  visitorId: 'visitorId',
   value: 'value',
   reason: 'reason',
   createdAt: 'createdAt',
@@ -7440,6 +7642,63 @@ export const MerchantAffiliateConfigScalarFieldEnum = {
 } as const
 
 export type MerchantAffiliateConfigScalarFieldEnum = (typeof MerchantAffiliateConfigScalarFieldEnum)[keyof typeof MerchantAffiliateConfigScalarFieldEnum]
+
+
+export const BankScalarFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  name: 'name',
+  logoUrl: 'logoUrl',
+  active: 'active',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BankScalarFieldEnum = (typeof BankScalarFieldEnum)[keyof typeof BankScalarFieldEnum]
+
+
+export const DealBankOfferScalarFieldEnum = {
+  id: 'id',
+  dealId: 'dealId',
+  bankId: 'bankId',
+  cardType: 'cardType',
+  discountType: 'discountType',
+  flatMinor: 'flatMinor',
+  percent: 'percent',
+  capMinor: 'capMinor',
+  minOrderMinor: 'minOrderMinor',
+  code: 'code',
+  terms: 'terms',
+  validUntil: 'validUntil',
+  position: 'position',
+  createdAt: 'createdAt'
+} as const
+
+export type DealBankOfferScalarFieldEnum = (typeof DealBankOfferScalarFieldEnum)[keyof typeof DealBankOfferScalarFieldEnum]
+
+
+export const MerchantBankOfferScalarFieldEnum = {
+  id: 'id',
+  merchantId: 'merchantId',
+  bankId: 'bankId',
+  cardType: 'cardType',
+  discountType: 'discountType',
+  flatMinor: 'flatMinor',
+  percent: 'percent',
+  capMinor: 'capMinor',
+  minOrderMinor: 'minOrderMinor',
+  code: 'code',
+  terms: 'terms',
+  startsOn: 'startsOn',
+  endsOn: 'endsOn',
+  weekdays: 'weekdays',
+  active: 'active',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MerchantBankOfferScalarFieldEnum = (typeof MerchantBankOfferScalarFieldEnum)[keyof typeof MerchantBankOfferScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -8442,6 +8701,7 @@ export const DealVoteOrderByRelevanceFieldEnum = {
   id: 'id',
   dealId: 'dealId',
   customerId: 'customerId',
+  visitorId: 'visitorId',
   reason: 'reason'
 } as const
 
@@ -8507,6 +8767,45 @@ export const MerchantAffiliateConfigOrderByRelevanceFieldEnum = {
 } as const
 
 export type MerchantAffiliateConfigOrderByRelevanceFieldEnum = (typeof MerchantAffiliateConfigOrderByRelevanceFieldEnum)[keyof typeof MerchantAffiliateConfigOrderByRelevanceFieldEnum]
+
+
+export const BankOrderByRelevanceFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  name: 'name',
+  logoUrl: 'logoUrl'
+} as const
+
+export type BankOrderByRelevanceFieldEnum = (typeof BankOrderByRelevanceFieldEnum)[keyof typeof BankOrderByRelevanceFieldEnum]
+
+
+export const DealBankOfferOrderByRelevanceFieldEnum = {
+  id: 'id',
+  dealId: 'dealId',
+  bankId: 'bankId',
+  cardType: 'cardType',
+  discountType: 'discountType',
+  code: 'code',
+  terms: 'terms'
+} as const
+
+export type DealBankOfferOrderByRelevanceFieldEnum = (typeof DealBankOfferOrderByRelevanceFieldEnum)[keyof typeof DealBankOfferOrderByRelevanceFieldEnum]
+
+
+export const MerchantBankOfferOrderByRelevanceFieldEnum = {
+  id: 'id',
+  merchantId: 'merchantId',
+  bankId: 'bankId',
+  cardType: 'cardType',
+  discountType: 'discountType',
+  code: 'code',
+  terms: 'terms',
+  startsOn: 'startsOn',
+  endsOn: 'endsOn',
+  weekdays: 'weekdays'
+} as const
+
+export type MerchantBankOfferOrderByRelevanceFieldEnum = (typeof MerchantBankOfferOrderByRelevanceFieldEnum)[keyof typeof MerchantBankOfferOrderByRelevanceFieldEnum]
 
 
 
@@ -8945,6 +9244,9 @@ export type GlobalOmitConfig = {
   communityDealSubmissionImage?: Prisma.CommunityDealSubmissionImageOmit
   brand?: Prisma.BrandOmit
   merchantAffiliateConfig?: Prisma.MerchantAffiliateConfigOmit
+  bank?: Prisma.BankOmit
+  dealBankOffer?: Prisma.DealBankOfferOmit
+  merchantBankOffer?: Prisma.MerchantBankOfferOmit
 }
 
 /* Types for Logging */

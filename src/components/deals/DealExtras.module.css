@@ -6,9 +6,12 @@
 .on .round { background: var(--md-purple-700); color: var(--md-white); border-color: var(--md-purple-700); }
 .vote { display: grid; justify-items: center; gap: 4px; }
 .voteBox { display: inline-flex; align-items: center; height: 44px; border: 1px solid var(--md-purple-200); border-radius: 999px; background: var(--md-white); }
-.voteBtn { display: grid; place-items: center; width: 40px; height: 44px; border: 0; border-radius: 999px; background: none; color: var(--md-purple-700); cursor: pointer; }
+.voteBtn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-width: 40px; padding: 0 12px; height: 44px; border: 0; border-radius: 999px; background: none; color: var(--md-purple-700); cursor: pointer; }
 .voteBtn:hover, .voteBtn:focus-visible { background: var(--md-purple-50); }
 .voteBtn[aria-pressed="true"] { background: var(--md-purple-700); color: var(--md-white); }
+.count { font-weight: 800; font-size: 14px; color: var(--md-color-text); }
+.voteBtn[aria-pressed="true"] .count { color: var(--md-white); }
+.voteBtn + span .voteBtn, .voteBox > span .voteBtn { border-left: 1px solid var(--md-purple-100); border-radius: 0 999px 999px 0; }
 .score { min-width: 28px; text-align: center; font-weight: 800; font-size: 15px; color: var(--md-color-text); }
 .label { font-size: 12px; font-weight: 600; color: var(--md-color-text-secondary); }
 .hint { margin: 6px 0 0; font-size: 12px; color: var(--md-color-text-secondary); width: 100%; }
@@ -116,7 +119,19 @@
 .stickyPrices del { font-size: 12px; color: var(--md-neutral-600); }
 .stickyPrices span { font-size: 12px; font-weight: 700; color: var(--md-green-700); }
 .stickyVote { position: relative; display: inline-flex; align-items: center; height: 40px; border: 1px solid var(--md-purple-200); border-radius: 999px; background: var(--md-white); }
-.stickyVote .voteBtn { width: 36px; height: 38px; }
+.stickyVote .voteBtn { min-width: 36px; padding: 0 10px; height: 38px; }
 .stickyVote .score { min-width: 22px; font-size: 14px; }
 @media (max-width: 720px) { .stickyPrices del, .stickyPrices span { display: none; } }
 @media (max-width: 520px) { .stickyVote { display: none; } }
+
+/* Phones: like/dislike, comments, save and share stay on one line, icons only (the names stay available to screen readers). */
+@media (max-width: 639px) {
+  .actions { flex-wrap: wrap; align-items: center; gap: 6px; }
+  .hint { flex: 1 0 100%; order: 10; margin: 4px 0 0; }
+  .act { min-width: 0; gap: 0; }
+  .act > span:not(.round), .label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .vote { gap: 0; }
+  .round { width: 40px; height: 40px; }
+  .voteBox { height: 40px; }
+  .voteBtn { min-width: 36px; padding: 0 10px; height: 40px; }
+}

@@ -2,6 +2,8 @@
 
 import { trackEvent } from "@/lib/analytics-client";
 import { dealShareUrl } from "@/features/deals/short-link";
+import { ShareDealModal } from "@/components/deals/ShareDealModal";
+import type { ShareDealData } from "@/features/deals/share-card/types";
 import { sendDealVote } from "@/features/deals/vote-client";
 import type { DislikeReason } from "@/features/deals/vote-reasons";
 import { DislikeMenu } from "@/components/deals/DislikeMenu";
@@ -27,6 +29,9 @@ import {
 import type { Deal } from "@/features/deals/types";
 import { formatINR, getSavings } from "@/features/deals/pricing";
 import { StoreLogo } from "./StoreLogo";
+import { BankLogo } from "@/components/deals/BankLogo";
+import { bestOffer, offerHeadline } from "@/features/deals/bank-offers";
+import { OfferPopover } from "./OfferPopover";
 
 const CARD_WIDTHS = [240, 320, 400, 480, 640];
 
@@ -127,8 +132,24 @@ export function DealCard({
 
   const postedDate = formatPostedDate(deal.publishedAt);
   const viewCount = deal.viewCount && deal.viewCount > 0 ? deal.viewCount : 0;
+  // A coupon keeps the card's offer row; otherwise the best bank offer for this price is shown there.
+  const bank = bestOffer(deal.bankOffers, Math.round(deal.price * 100));
+  const shownOffer = bank?.offer ?? deal.bankOffers?.[0];
+  // One item fits on the card; a "+N" opens the rest (coupon and every bank offer) in a pop-up on hover, focus or tap.
+  const moreOffers = (deal.couponCode ? 1 : 0) + (deal.bankOffers?.length ?? 0) - 1;
+  const offerRowRef = useRef<HTMLDivElement>(null);
+  const [offerAnchor, setOfferAnchor] = useState<DOMRect | null>(null);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const openOffers = () => { if (closeTimer.current) clearTimeout(closeTimer.current); if (offerRowRef.current) setOfferAnchor(offerRowRef.current.getBoundingClientRect()); };
+  const closeOffers = () => { if (closeTimer.current) clearTimeout(closeTimer.current); closeTimer.current = setTimeout(() => setOfferAnchor(null), 150); };
+  useEffect(() => {
+    if (!offerAnchor) return;
+    const close = () => setOfferAnchor(null);
+    const key = (e: KeyboardEvent) => { if (e.key === "Escape") close(); };
+    window.addEventListener("scroll", close, true); window.addEventListener("keydown", key);
+    return () => { window.removeEventListener("scroll", close, true); window.removeEventListener("keydown", key); };
+  }, [offerAnchor]);
   const [shareCount, setShareCount] = useState<number>(deal.shareCount || 0);
-  const [copiedShare, setCopiedShare] = useState(false);
 
   const handleCopyCoupon = (e: React.MouseEvent, code: string) => {
     e.stopPropagation();
@@ -158,27 +179,22 @@ export function DealCard({
     else setDislikeOpen((open) => !open);
   };
 
-  const handleShare = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-    const url = typeof window !== "undefined" ? dealShareUrl(window.location.origin, deal) : "";
-    if (url) {
-      if (navigator.clipboard) {
-        await navigator.clipboard.writeText(url);
-      }
-      setCopiedShare(true);
-      setTimeout(() => setCopiedShare(false), 2000);
-
-      trackEvent("SHARE", deal.slug || deal.id);
-      // Increment share count
-      setShareCount((prev) => prev + 1);
-      fetch(`/api/v1/deals/${encodeURIComponent(deal.slug || deal.id)}/share`, {
-        method: "POST",
-      }).catch(() => {});
-    }
+  const [shareOpen, setShareOpen] = useState(false);
+  const shareData = (): ShareDealData => ({
+    slug: deal.slug || deal.id, title: deal.name, priceMinor: Math.round(deal.price * 100), mrpMinor: Math.round(deal.originalPrice * 100),
+    storeName: deal.storeName ?? null, couponCode: deal.couponCode ?? null, bankOffers: deal.bankOffers ?? [],
+    images: [deal.image, ...(deal.imageGallery ?? [])].filter(Boolean), expired: deal.expiry === "expired",
+  });
+  const countShare = () => {
+    trackEvent("SHARE", deal.slug || deal.id);
+    setShareCount((prev) => prev + 1);
+    fetch(`/api/v1/deals/${encodeURIComponent(deal.slug || deal.id)}/share`, { method: "POST" }).catch(() => {});
   };
+  const handleShare = (e: React.MouseEvent) => { e.stopPropagation(); setShareOpen(true); };
 
   return (
     <>
+    {shareOpen && <ShareDealModal deal={shareData()} url={dealShareUrl(window.location.origin, deal)} onShared={countShare} onClose={() => setShareOpen(false)} />}
     <article
       ref={cardRef}
       className="deal-card"
@@ -316,7 +332,7 @@ export function DealCard({
         </div>
 
         {/* ROW 5: Coupon Row (Code + copy action OR aligned empty placeholder) */}
-        <div className="deal-row-coupon">
+        <div className="deal-row-coupon" ref={offerRowRef} onMouseEnter={moreOffers > 0 ? openOffers : undefined} onMouseLeave={moreOffers > 0 ? closeOffers : undefined}>
           {deal.couponCode ? (
             <div className="deal-coupon-pill">
               <span className="deal-coupon-code">
@@ -332,9 +348,21 @@ export function DealCard({
                 <span>{copiedCoupon ? "Copied" : "Copy"}</span>
               </button>
             </div>
+          ) : shownOffer ? (
+            <div className="deal-bank-pill" title={`${offerHeadline(shownOffer)} with ${shownOffer.bankName}`}>
+              <BankLogo name={shownOffer.bankName} logoUrl={shownOffer.bankLogoUrl} size={18} />
+              <span>{offerHeadline(shownOffer)} · {shownOffer.bankName}</span>
+            </div>
           ) : (
             <div className="deal-coupon-placeholder" aria-hidden="true" />
           )}
+          {moreOffers > 0 && (
+            <button type="button" className="deal-offer-more" aria-haspopup="dialog" aria-expanded={Boolean(offerAnchor)} aria-label={`Show ${moreOffers} more offer${moreOffers === 1 ? "" : "s"}`}
+              onClick={(e) => { e.stopPropagation(); if (offerAnchor) setOfferAnchor(null); else openOffers(); }} onFocus={openOffers}>
+              +{moreOffers}
+            </button>
+          )}
+          {offerAnchor && <OfferPopover anchor={offerAnchor} coupon={deal.couponCode ?? null} offers={deal.bankOffers ?? []} copied={copiedCoupon} onCopy={handleCopyCoupon} onEnter={openOffers} onLeave={closeOffers} />}
         </div>
 
         {/* ROW 6: Action Row (Details & Buy Now) */}
@@ -399,10 +427,10 @@ export function DealCard({
             type="button"
             className="deal-social-btn deal-social-share"
             onClick={handleShare}
-            aria-label={`${copiedShare ? "Link copied" : "Share this deal"}${shareCount ? `, shared ${shareCount} times` : ""}`}
-            title={copiedShare ? "Link copied to clipboard!" : "Share deal"}
+            aria-label={`Share this deal${shareCount ? `, shared ${shareCount} times` : ""}`}
+            title="Share deal"
           >
-            {copiedShare ? <Check size={13} /> : <Share2 size={13} />}
+            <Share2 size={13} />
             {shareCount > 0 && <span>{formatCompactNumber(shareCount)}</span>}
           </button>
 

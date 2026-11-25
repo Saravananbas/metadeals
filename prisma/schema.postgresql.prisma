@@ -205,6 +205,7 @@ model Merchant {
   deals          Deal[]
   options        PurchaseOption[]
   affiliateConfig MerchantAffiliateConfig?
+  bankOffers      MerchantBankOffer[]
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
 }
@@ -296,6 +297,7 @@ model Deal {
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
   options        PurchaseOption[]
+  bankOffers      DealBankOffer[]
   candidates     DealCandidate[]
   priceObservations PriceObservation[]
   videoReviews   DealVideoReview[]
@@ -683,4 +685,71 @@ model MerchantAffiliateConfig {
   merchant             Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
+}
+
+/// A bank (or card issuer) that can be named in a deal's bank offers. Names are seeded; staff add more and upload logos on /admin/banks.
+model Bank {
+  id        String          @id @default(cuid())
+  slug      String          @unique @db.VarChar(60)
+  name      String          @db.VarChar(80)
+  logoUrl   String?         @db.VarChar(2048)
+  active    Boolean         @default(true)
+  sortOrder Int             @default(0)
+  offers    DealBankOffer[]
+  merchantOffers MerchantBankOffer[]
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  @@index([active, sortOrder])
+}
+
+/// "Extra Rs 1,000 off with HDFC credit cards": one row per offer on a deal.
+model DealBankOffer {
+  id            String    @id @default(cuid())
+  dealId        String
+  deal          Deal      @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  bankId        String
+  bank          Bank      @relation(fields: [bankId], references: [id], onDelete: Restrict)
+  cardType      String    @db.VarChar(12)
+  discountType  String    @db.VarChar(8)
+  flatMinor     Int?
+  percent       Int?
+  capMinor      Int?
+  minOrderMinor Int?
+  code          String?   @db.VarChar(40)
+  terms         String?   @db.VarChar(300)
+  validUntil    DateTime?
+  position      Int       @default(0)
+  createdAt     DateTime  @default(now())
+
+  @@index([dealId, position])
+  @@index([bankId])
+}
+
+/// A store-wide bank offer ("15% off up to Rs 1,000 with HDFC cards on Wednesdays"): shown on every deal of that store while it is in force, so it is set up once instead of on each deal.
+model MerchantBankOffer {
+  id            String   @id @default(cuid())
+  merchantId    String
+  merchant      Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  bankId        String
+  bank          Bank     @relation(fields: [bankId], references: [id], onDelete: Cascade)
+  cardType      String   @db.VarChar(12)
+  discountType  String   @db.VarChar(8)
+  flatMinor     Int?
+  percent       Int?
+  capMinor      Int?
+  minOrderMinor Int?
+  code          String?  @db.VarChar(40)
+  terms         String?  @db.VarChar(300)
+  /// First and last day (YYYY-MM-DD, Indian time); no last day means it runs until switched off.
+  startsOn      String   @db.VarChar(10)
+  endsOn        String?  @db.VarChar(10)
+  /// Weekdays it applies to, 0 = Sunday ... 6 = Saturday, comma separated; empty = every day in the range.
+  weekdays      String   @default("") @db.VarChar(20)
+  active        Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([merchantId, active])
+  @@index([bankId])
 }

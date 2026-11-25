@@ -56,7 +56,12 @@ export async function saveDeal(db: DealDatabase, actor: DealActor, raw: unknown,
   ]);
   if (!category || !merchant || !media) throw new DealError("Select an existing category, merchant and uploaded image.");
   if (galleryMedia.length !== galleryMediaIds.length) throw new DealError("One or more gallery images are unavailable. Import them again before saving.");
-  const { options, editorNotes, descriptionHtml, ...fields } = input;
+  const { options, editorNotes, descriptionHtml, bankOffers, ...fields } = input;
+  if (bankOffers?.some((o) => o.bankId)) {
+    const ids = [...new Set(bankOffers.flatMap((o) => (o.bankId ? [o.bankId] : [])))];
+    const banks = await db.bank.findMany({ where: { id: { in: ids }, active: true }, select: { id: true } });
+    if (ids.length !== banks.length) throw new DealError("One of the selected banks is not available. Pick it again.");
+  }
   // Formatted description: sanitized when sent; dropped when the plain text was edited without it, so the two never disagree.
   const htmlData: { descriptionHtml?: string | null } = {};
   if (descriptionHtml !== undefined) htmlData.descriptionHtml = descriptionHtml ? sanitizeRichHtml(descriptionHtml) || null : null;
@@ -89,6 +94,10 @@ export async function saveDeal(db: DealDatabase, actor: DealActor, raw: unknown,
   }
   await db.purchaseOption.deleteMany({ where: { dealId: result.id } });
   if (options.length) await db.purchaseOption.createMany({ data: options.map((o) => ({ ...o, dealId: result.id })) });
+  if (bankOffers && !saveOptions.moderatorDraft) {
+    await db.dealBankOffer.deleteMany({ where: { dealId: result.id } });
+    if (bankOffers.length) await db.dealBankOffer.createMany({ data: bankOffers.map((o, position) => ({ ...o, validUntil: o.validUntil ? new Date(o.validUntil) : null, dealId: result.id, position })) });
+  }
   result = await getAdminDeal(db, result.id);
   await audit(db, actor, before ? "deal.updated" : "deal.created", result.id, before, result);
   return result;

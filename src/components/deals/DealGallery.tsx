@@ -5,6 +5,7 @@ import Image from "next/image";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import styles from "@/app/deal/[slug]/deal-detail.module.css";
 import { DealActionRow } from "./DealActionRow";
+import type { ShareDealData } from "@/features/deals/share-card/types";
 
 interface DealGalleryProps {
   dealId: string;
@@ -15,6 +16,8 @@ interface DealGalleryProps {
   discountPercent: number;
   /** Same "Expired" overlay as the deal card on the home page. */
   expired?: boolean;
+  /** Everything the Share This Deal picture and message are made from. */
+  shareData: ShareDealData;
   /** Shown directly under the picture (price and Buy Now). */
   children?: ReactNode;
 }
@@ -29,6 +32,7 @@ export function DealGallery({
   images: additionalImages = [],
   discountPercent,
   expired = false,
+  shareData,
   children,
 }: DealGalleryProps) {
   const galleryImages = Array.from(new Set([primaryImage, ...additionalImages].filter(Boolean)));
@@ -102,7 +106,7 @@ export function DealGallery({
 
       {children}
 
-      <DealActionRow dealId={dealId} slug={slug} />
+      <DealActionRow dealId={dealId} slug={slug} shareData={shareData} />
 
       {/* Zoom Lightbox Modal */}
       {isZoomOpen && (

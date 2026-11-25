@@ -689,3 +689,22 @@ body.md-modal-open { overflow: hidden; }
 @keyframes new-deals-in { from { opacity: 0; transform: translate(-50%, -40%); } to { opacity: 1; transform: translate(-50%, -50%); } }
 @keyframes new-deals-pulse { 70% { box-shadow: 0 0 0 10px rgba(255, 138, 31, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 138, 31, 0); } }
 @media (prefers-reduced-motion: reduce) { .new-deals-toast, .new-deals-dot { animation: none; } }
+
+/* Bank offer on a deal card (takes the coupon row when the deal has no coupon). */
+.deal-bank-pill { display: flex; align-items: center; gap: 6px; min-width: 0; padding: 4px 8px; border-radius: 8px; background: var(--md-purple-50); color: var(--md-purple-700); font-size: 12px; font-weight: 700; }
+.deal-bank-pill span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* "+N" after the offer on a deal card, and the pop-up that lists the coupon and every bank offer. */
+.deal-row-coupon { gap: 6px; }
+.deal-row-coupon .deal-coupon-pill, .deal-row-coupon .deal-bank-pill { flex: 1 1 auto; min-width: 0; width: auto; }
+.deal-offer-more { flex: none; min-width: 34px; height: 28px; padding: 0 8px; border: 1px solid var(--md-purple-200); border-radius: 8px; background: var(--md-white); color: var(--md-purple-700); font: inherit; font-size: 12px; font-weight: 800; cursor: pointer; }
+.deal-offer-more:hover, .deal-offer-more[aria-expanded="true"] { background: var(--md-purple-50); }
+.offer-popover { max-height: 320px; overflow-y: auto; padding: 12px; border: 1px solid var(--md-purple-200); border-radius: 14px; background: var(--md-white); box-shadow: 0 14px 36px rgba(40, 10, 90, .25); font-size: 12px; color: var(--md-color-text); display: grid; gap: 10px; }
+.offer-popover-block { display: grid; gap: 6px; }
+.offer-popover-block > strong { display: flex; align-items: center; gap: 4px; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--md-neutral-600); }
+.offer-popover-coupon { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 8px; border: 1px dashed var(--md-purple-300); border-radius: 8px; background: var(--md-color-primary-subtle); }
+.offer-popover-coupon code { font-weight: 800; color: var(--md-purple-700); }
+.offer-popover-coupon button { display: inline-flex; align-items: center; gap: 4px; border: 0; border-radius: 6px; padding: 4px 8px; background: var(--md-white); color: var(--md-purple-700); font: inherit; font-weight: 700; cursor: pointer; }
+.offer-popover ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.offer-popover li { display: flex; gap: 8px; align-items: flex-start; }
+.offer-popover li small { display: block; margin-top: 2px; color: var(--md-neutral-600); }

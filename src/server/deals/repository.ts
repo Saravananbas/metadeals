@@ -2,16 +2,18 @@ import "server-only";
 import type { Prisma } from "@/generated/prisma/client";
 import type { ListingInput } from "@/features/deals/validation";
 import { minorSavings } from "@/features/deals/validation";
+import { indiaToday, PAYMENT_NAME, scheduleActive, scheduleLabel } from "@/features/deals/bank-offers";
 import { searchDealIdsMariaDb, usesMariaDb } from "@/server/community/like-search";
 
 export type DealDatabase = Prisma.TransactionClient;
 export const merchantSelect = { id: true, slug: true, name: true, websiteUrl: true, affiliateHosts: true, createdAt: true, updatedAt: true } as const;
 export const dealInclude = {
   category: true,
-  merchant: { select: merchantSelect },
+  merchant: { select: { ...merchantSelect, bankOffers: { where: { active: true }, include: { bank: { select: { id: true, name: true, logoUrl: true, active: true } } } } } },
   media: true,
   galleryImages: { orderBy: { position: "asc" }, include: { media: true } },
   options: { include: { merchant: { select: merchantSelect } } },
+  bankOffers: { orderBy: { position: "asc" }, include: { bank: { select: { id: true, name: true, slug: true, logoUrl: true, active: true } } } },
   _count: { select: { videoReviews: { where: { isActive: true } }, comments: true, votes: { where: { value: 1 } } } },
 } as const;
 export type DealRecord = Prisma.DealGetPayload<{ include: typeof dealInclude }>;
@@ -112,6 +114,18 @@ export function publicDeal(record: DealRecord, merchantLogoUrl: string | null = 
     publishedAt: record.publishedAt?.toISOString() ?? null, startsAt: record.startsAt?.toISOString() ?? null,
     expiresAt: record.expiresAt?.toISOString() ?? null,
     options: record.options.map((o) => ({ id: o.id, merchant: o.merchant.name, priceMinor: o.priceMinor, destinationUrl: o.affiliateUrl ?? o.productUrl, isAffiliate: Boolean(o.affiliateUrl) })),
+    // Offers set on this deal, then the store-wide ones in force today. An offer past its date, or from a bank switched off, is not shown.
+    bankOffers: [
+      ...record.bankOffers.filter((o) => (!o.bank || o.bank.active) && (!o.validUntil || o.validUntil > new Date())).map((o) => ({
+        id: o.id, bankId: o.bankId, bankName: o.bank?.name ?? PAYMENT_NAME[o.cardType] ?? "Payment offer", bankLogoUrl: o.bank?.logoUrl ?? null, cardType: o.cardType, discountType: o.discountType,
+        flatMinor: o.flatMinor, percent: o.percent, capMinor: o.capMinor, minOrderMinor: o.minOrderMinor, code: o.code, terms: o.terms, validUntil: o.validUntil?.toISOString() ?? null, schedule: null as string | null,
+      })),
+      ...(() => { const today = indiaToday(); return record.merchant.bankOffers.filter((r) => (!r.bank || r.bank.active) && scheduleActive(r, today)).map((r) => ({
+        id: `store:${r.id}`, bankId: r.bankId, bankName: r.bank?.name ?? PAYMENT_NAME[r.cardType] ?? "Payment offer", bankLogoUrl: r.bank?.logoUrl ?? null, cardType: r.cardType, discountType: r.discountType,
+        flatMinor: r.flatMinor, percent: r.percent, capMinor: r.capMinor, minOrderMinor: r.minOrderMinor, code: r.code, terms: r.terms,
+        validUntil: r.endsOn ? new Date(`${r.endsOn}T23:59:59+05:30`).toISOString() : null, schedule: scheduleLabel(r.weekdays),
+      })); })(),
+    ],
   };
 }
 export type PublicDeal = ReturnType<typeof publicDeal>;
