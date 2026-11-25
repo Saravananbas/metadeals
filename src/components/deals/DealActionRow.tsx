@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import { Heart, MessageCircle, Share2, ThumbsDown, ThumbsUp } from "lucide-react";
 import { useSavedDeals } from "@/features/home/saved-store";
-import { dealShareUrl } from "@/features/deals/short-link";
 import type { ShareDealData } from "@/features/deals/share-card/types";
+import { publicDealUrl } from "@/features/deals/share-card/message";
 import { ShareDealModal } from "./ShareDealModal";
 import { sendDealVote } from "@/features/deals/vote-client";
 import type { DislikeReason } from "@/features/deals/vote-reasons";
@@ -63,7 +63,7 @@ export function DealActionRow({ dealId, slug, shareData }: { dealId: string; slu
         <span className={styles.round}><Heart size={20} fill={isSaved ? "currentColor" : "none"} aria-hidden="true" /></span>
         <span>{isSaved ? "Saved" : "Save"}</span>
       </button>
-      {shareOpen && <ShareDealModal deal={shareData} url={dealShareUrl(window.location.origin, { id: dealId, slug })} onShared={count} onClose={() => setShareOpen(false)} />}
+      {shareOpen && <ShareDealModal deal={shareData} url={publicDealUrl(window.location.origin, { id: dealId, slug })} onShared={count} onClose={() => setShareOpen(false)} />}
       <button type="button" className={styles.act} onClick={() => setShareOpen(true)}>
         <span className={styles.round}><Share2 size={20} aria-hidden="true" /></span>
         <span>Share</span>

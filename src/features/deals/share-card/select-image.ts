@@ -27,3 +27,24 @@ export function pickBestImage(probes: ImageProbe[]): ImageProbe | null {
   }
   return best;
 }
+
+/** Browser only: loads each picture to learn its size, picks the best, and returns the picture file itself, unchanged (no editing, no new image). */
+export async function chooseProductImage(urls: string[]): Promise<{ url: string; file: File } | null> {
+  const probes = (await Promise.all(urls.slice(0, 6).map((url, i) => new Promise<ImageProbe | null>((resolve) => {
+    const img = new Image();
+    const timer = setTimeout(() => resolve(null), 8000);
+    img.onload = () => { clearTimeout(timer); resolve(img.naturalWidth ? { url, width: img.naturalWidth, height: img.naturalHeight, primary: i === 0 } : null); };
+    img.onerror = () => { clearTimeout(timer); resolve(null); };
+    img.src = url;
+  })))).filter((p): p is ImageProbe => p !== null);
+  const best = pickBestImage(probes);
+  if (!best) return null;
+  try {
+    const response = await fetch(best.url);
+    if (!response.ok) return null;
+    const blob = await response.blob();
+    if (!blob.type.startsWith("image/")) return null;
+    const ext = blob.type.split("/")[1]?.replace("jpeg", "jpg").replace(/[^a-z0-9]/g, "") || "jpg";
+    return { url: best.url, file: new File([blob], `deal.${ext}`, { type: blob.type }) };
+  } catch { return null; }
+}
