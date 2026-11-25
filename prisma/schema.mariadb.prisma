@@ -1665,8 +1665,8 @@ model DealVote {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  @@unique([customerId, dealId])
-  @@unique([visitorId, dealId])
+  @@unique([customerId, dealId, value])
+  @@unique([visitorId, dealId, value])
   @@index([dealId, value])
 }
 

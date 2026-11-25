@@ -259,8 +259,8 @@ export type DealVoteOrderByWithRelationInput = {
 
 export type DealVoteWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  customerId_dealId?: Prisma.DealVoteCustomerIdDealIdCompoundUniqueInput
-  visitorId_dealId?: Prisma.DealVoteVisitorIdDealIdCompoundUniqueInput
+  customerId_dealId_value?: Prisma.DealVoteCustomerIdDealIdValueCompoundUniqueInput
+  visitorId_dealId_value?: Prisma.DealVoteVisitorIdDealIdValueCompoundUniqueInput
   AND?: Prisma.DealVoteWhereInput | Prisma.DealVoteWhereInput[]
   OR?: Prisma.DealVoteWhereInput[]
   NOT?: Prisma.DealVoteWhereInput | Prisma.DealVoteWhereInput[]
@@ -273,7 +273,7 @@ export type DealVoteWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"DealVote"> | Date | string
   deal?: Prisma.XOR<Prisma.DealScalarRelationFilter, Prisma.DealWhereInput>
   customer?: Prisma.XOR<Prisma.CustomerNullableScalarRelationFilter, Prisma.CustomerWhereInput> | null
-}, "id" | "customerId_dealId" | "visitorId_dealId">
+}, "id" | "customerId_dealId_value" | "visitorId_dealId_value">
 
 export type DealVoteOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -390,14 +390,16 @@ export type DealVoteOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type DealVoteCustomerIdDealIdCompoundUniqueInput = {
+export type DealVoteCustomerIdDealIdValueCompoundUniqueInput = {
   customerId: string
   dealId: string
+  value: number
 }
 
-export type DealVoteVisitorIdDealIdCompoundUniqueInput = {
+export type DealVoteVisitorIdDealIdValueCompoundUniqueInput = {
   visitorId: string
   dealId: string
+  value: number
 }
 
 export type DealVoteCountOrderByAggregateInput = {

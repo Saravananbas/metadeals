@@ -284,7 +284,7 @@ export default async function DealDetailPage({
             images={deal.imageGallery.map((image) => image.url)}
             discountPercent={deal.discountPercent}
             expired={deal.status === "EXPIRED"}
-            shareData={{ slug: deal.slug, title: deal.title, priceMinor: deal.priceMinor, mrpMinor: deal.mrpMinor, storeName: deal.merchant.name, couponCode: deal.couponCode, bankOffers: deal.bankOffers, images: [deal.image.url, ...deal.imageGallery.map((image) => image.url)], expired: deal.status === "EXPIRED" }}
+            shareData={{ slug: deal.slug, title: deal.title, priceMinor: deal.priceMinor, mrpMinor: deal.mrpMinor, storeName: deal.merchant.name, couponCode: deal.couponCode, bankOffers: deal.bankOffers, images: [deal.image.url, ...deal.imageGallery.map((image) => image.url)], expired: deal.status === "EXPIRED", brand: deal.brand, categoryName: deal.category.name, description: deal.description }}
           >
             <DealPriceBuy dealId={deal.id} priceMinor={deal.priceMinor} mrpMinor={deal.mrpMinor} discountPercent={deal.discountPercent} savingsMinor={deal.savingsMinor} merchantName={deal.merchant.name} merchantLogoUrl={deal.merchant.logoUrl} />
           </DealGallery>

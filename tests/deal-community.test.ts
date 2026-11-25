@@ -32,14 +32,17 @@ test("deal votes, dislike reasons, notes, comment likes and member stars", { ski
   const deal = await db.deal.create({ data: { slug: `zzdealcom-${stamp}`, title: "Fixture deal", brand: "Fixture", description: "Fixture", categoryId: category.id, merchantId: merchant.id, mediaId: media.id, mrpMinor: 1000, priceMinor: 500, productUrl: "https://amazon.in/dp/B000000000", status: "PUBLISHED", everPublished: true, publishedAt: new Date(Date.now() - 1000), createdById: boss.id, updatedById: boss.id } });
   const extraDealIds: string[] = [];
   try {
-    // Votes: one per member, switching replaces, clearing removes, the reason is kept only on a down vote
-    assert.deepEqual(await votes.castVote(a.id, deal.slug, { value: 1 }), { score: 1, up: 1, down: 0, mine: 1 });
-    assert.deepEqual(await votes.castVote(a.id, deal.slug, { value: 1 }), { score: 1, up: 1, down: 0, mine: 1 }, "voting twice counts once");
+    // Votes: a like and a dislike are separate (neither removes the other), each counts once per member, clearing removes, the reason stays on the dislike
+    assert.deepEqual(await votes.castVote(a.id, deal.slug, { value: 1 }), { score: 1, up: 1, down: 0, liked: true, disliked: false, mine: 1 });
+    assert.deepEqual(await votes.castVote(a.id, deal.slug, { value: 1 }), { score: 1, up: 1, down: 0, liked: true, disliked: false, mine: 1 }, "liking twice counts once");
     assert.equal((await votes.castVote(b.id, deal.slug, { value: -1, reason: "Spam" })).score, 0);
-    assert.equal((await db.dealVote.findFirstOrThrow({ where: { customerId: b.id } })).reason, "Spam");
-    await votes.castVote(b.id, deal.slug, { value: 1 });
-    assert.equal((await db.dealVote.findFirstOrThrow({ where: { customerId: b.id } })).reason, null, "an up vote drops the reason");
-    assert.equal((await votes.castVote(b.id, deal.slug, { value: 0 })).up, 1);
+    assert.equal((await db.dealVote.findFirstOrThrow({ where: { customerId: b.id, value: -1 } })).reason, "Spam");
+    const both = await votes.castVote(b.id, deal.slug, { value: 1 });
+    assert.deepEqual([both.up, both.down, both.liked, both.disliked], [2, 1, true, true], "a like does not remove the member's dislike");
+    assert.equal((await db.dealVote.findFirstOrThrow({ where: { customerId: b.id, value: 1 } })).reason, null, "a like carries no reason");
+    assert.deepEqual((await votes.castVote(b.id, deal.slug, { value: 0, clear: -1 })).down, 0, "clear names the kind to take back");
+    assert.equal((await votes.voteSummary(deal.slug, b.id)).liked, true);
+    assert.equal((await votes.castVote(b.id, deal.slug, { value: 0 })).up, 1, "value 0 alone clears both");
     assert.equal((await votes.voteSummary(deal.slug, null)).mine, 0, "a visitor sees the score but no own vote");
     await assert.rejects(() => votes.castVote(a.id, deal.slug, { value: -1, reason: "Because" }), "only the listed reasons are accepted");
     await assert.rejects(() => votes.castVote(a.id, deal.slug, { value: 5 }));

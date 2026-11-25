@@ -11,4 +11,9 @@ export type ShareDealData = {
   bankOffers: BankOfferView[];
   images: string[];
   expired: boolean;
+  /** Optional facts shown beside the photo when the title leaves room; nothing is shown for a missing one. */
+  brand?: string | null;
+  categoryName?: string | null;
+  /** Plain-text description: a short "About" is shown only when the title leaves room beside the photo. */
+  description?: string | null;
 };

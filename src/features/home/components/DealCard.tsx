@@ -89,11 +89,11 @@ export function DealCard({
   const [failedImage, setFailedImage] = useState<string | null>(null);
   const [copiedCoupon, setCopiedCoupon] = useState(false);
   // Members' Good Deal vote (1 up, -1 down). No count is shown on the card; the score is on the deal page.
-  const [vote, setVote] = useState<0 | 1 | -1>(0);
+  const [liked, setLiked] = useState(false);
+  const [disliked, setDisliked] = useState(false);
   const [dislikeOpen, setDislikeOpen] = useState(false);
   const [voteNote, setVoteNote] = useState("");
   const [likes, setLikes] = useState<number>(deal.likeCount ?? 0);
-  const liked = vote === 1;
 
   useEffect(() => {
     const card = cardRef.current;
@@ -159,23 +159,23 @@ export function DealCard({
     setTimeout(() => setCopiedCoupon(false), 2000);
   };
 
-  const castVote = async (value: 1 | -1 | 0, reason?: DislikeReason) => {
+  const castVote = async (value: 1 | -1 | 0, reason?: DislikeReason, clear?: 1 | -1) => {
     setDislikeOpen(false);
-    const result = await sendDealVote(deal.slug || deal.id, value, reason);
+    const result = await sendDealVote(deal.slug || deal.id, value, reason, clear);
     if (result.status === 401) { setVoteNote("Sign in to vote"); setTimeout(() => setVoteNote(""), 3000); return; }
     if (result.status === 200) setLikes(result.up ?? likes);
-    if (result.status === 200) setVote(result.mine === 1 ? 1 : result.mine === -1 ? -1 : 0);
+    if (result.status === 200) { setLiked(Boolean(result.liked)); setDisliked(Boolean(result.disliked)); }
   };
 
   const handleToggleLike = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (vote !== 1) trackEvent("LIKE", deal.slug || deal.id);
-    void castVote(vote === 1 ? 0 : 1);
+    if (!liked) trackEvent("LIKE", deal.slug || deal.id);
+    void (liked ? castVote(0, undefined, 1) : castVote(1));
   };
 
   const handleDislike = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (vote === -1) void castVote(0);
+    if (disliked) void castVote(0, undefined, -1);
     else setDislikeOpen((open) => !open);
   };
 
@@ -184,6 +184,7 @@ export function DealCard({
     slug: deal.slug || deal.id, title: deal.name, priceMinor: Math.round(deal.price * 100), mrpMinor: Math.round(deal.originalPrice * 100),
     storeName: deal.storeName ?? null, couponCode: deal.couponCode ?? null, bankOffers: deal.bankOffers ?? [],
     images: [deal.image, ...(deal.imageGallery ?? [])].filter(Boolean), expired: deal.expiry === "expired",
+    brand: deal.brand, categoryName: deal.category.split("-").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" "), description: deal.description ?? null,
   });
   const countShare = () => {
     trackEvent("SHARE", deal.slug || deal.id);
@@ -411,14 +412,14 @@ export function DealCard({
           <span style={{ position: "relative", display: "inline-flex" }}>
             <button
               type="button"
-              className={`deal-social-btn deal-social-dislike ${vote === -1 ? "deal-social-liked" : ""}`}
+              className={`deal-social-btn deal-social-dislike ${disliked ? "deal-social-liked" : ""}`}
               onClick={handleDislike}
               aria-haspopup="true"
               aria-expanded={dislikeOpen}
-              aria-label={vote === -1 ? "Remove your downvote" : "Downvote this deal"}
+              aria-label={disliked ? "Remove your downvote" : "Downvote this deal"}
               title="Dislike deal"
             >
-              <ThumbsDown size={13} fill={vote === -1 ? "currentColor" : "none"} />
+              <ThumbsDown size={13} fill={disliked ? "currentColor" : "none"} />
             </button>
             {dislikeOpen && <DislikeMenu onPick={(reason) => void castVote(-1, reason)} onClose={() => setDislikeOpen(false)} />}
           </span>
