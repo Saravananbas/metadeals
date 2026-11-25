@@ -12,7 +12,7 @@ type Actor = { id: string; role: AdminRole };
 const bankSchema = z.object({
   name: z.string().trim().min(2).max(80),
   /** A logo uploaded through the media endpoint (/api/v1/media/<id>) or an https address. Empty removes it. */
-  logoUrl: z.string().trim().max(2048).regex(/^(\/api\/v1\/media\/[A-Za-z0-9_-]+|https:\/\/[^\s]+)$/, "Use an uploaded logo or an https address.").nullable().optional(),
+  logoUrl: z.string().trim().max(2048).regex(/^(\/api\/v1\/media\/[A-Za-z0-9_-]+|\/bank-logos\/[a-z0-9-]+\.(?:webp|png|jpg|svg)|https:\/\/[^\s]+)$/, "Use an uploaded logo or an https address.").nullable().optional(),
   active: z.boolean().optional(),
 }).strict();
 
