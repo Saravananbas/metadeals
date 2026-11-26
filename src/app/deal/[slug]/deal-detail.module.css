@@ -843,4 +843,11 @@
   .dealPrice { font-size: 30px; }
   .buyNowBtn { padding: 10px 16px; font-size: 14px; gap: 8px; border-radius: 10px; }
   .priceBuy > a { padding-left: 16px; padding-right: 16px; }
+  .breadcrumbNav { display: none; }
+  /* Less margin on phones so the content gets the width. */
+  .container { padding: 0 6px; }
+  .categoryBarInner { padding-inline: 10px; }
+  .galleryCard { padding: 10px; border-radius: 16px; }
+  .infoCard { padding: 14px 12px; border-radius: 16px; }
+  .trustStrip, .purchasePanel, .videoSection { padding: 14px 12px; }
 }

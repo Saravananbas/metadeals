@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { MobileTabBar } from "@/features/messages/MobileTabBar";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Heart } from "lucide-react";
@@ -237,7 +236,6 @@ export function Homepage({
       </div>
     </main>
     <Footer />
-    <MobileTabBar community={communityEnabled} />
     {notice && <div className="save-notice" role="status"><span>{notice}</span><button aria-label="Dismiss notification" onClick={() => setNotice("")}>×</button></div>}
     <Dialog open={Boolean(panel)} title={panel ? titles[panel] : ""} onClose={closeDialog}>
       {panel === "stores" ? <PopularStores items={catalog.merchants.length ? catalog.merchants.map(m=>({id:m.slug,name:m.name})) : stores} onStore={chooseStore} />

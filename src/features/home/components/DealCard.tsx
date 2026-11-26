@@ -64,6 +64,9 @@ function formatCompactNumber(num: number): string {
   return num.toString();
 }
 
+/** On a phone the details and comments open in the same page; on larger screens they keep opening in a new tab. */
+const sameTabOnPhone = (e: { currentTarget: HTMLAnchorElement }) => { if (window.matchMedia("(max-width: 639px)").matches) e.currentTarget.target = "_self"; };
+
 export function DealCard({
   deal,
   saved,
@@ -374,7 +377,7 @@ export function DealCard({
             rel="noopener noreferrer"
             className="deal-view-details-btn"
             aria-label={`View deal details for ${deal.name}`}
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e) => { sameTabOnPhone(e); e.stopPropagation(); }}
           >
             <FileText size={16} aria-hidden="true" /> Details
           </a>
@@ -440,7 +443,7 @@ export function DealCard({
             href={`/deal/${encodeURIComponent(deal.slug || deal.id)}#comments`}
             target="_blank"
             rel="noopener noreferrer"
-            onClick={(e) => { e.stopPropagation(); trackEvent("COMMENT", deal.slug || deal.id); }}
+            onClick={(e) => { sameTabOnPhone(e); e.stopPropagation(); trackEvent("COMMENT", deal.slug || deal.id); }}
             aria-label={`Open the comments for ${deal.name} in a new tab${deal.commentCount ? ` (${deal.commentCount})` : ""}`}
             title={deal.commentCount ? `${deal.commentCount} comment${deal.commentCount === 1 ? "" : "s"}` : "Comments"}
           >

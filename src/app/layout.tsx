@@ -5,6 +5,8 @@ import "./globals.css";
 import { AnalyticsTracker } from "@/components/analytics/AnalyticsTracker";
 import { GoogleTagManager } from "@/components/analytics/GoogleTagManager";
 import { ConsentBanner } from "@/components/analytics/ConsentBanner";
+import { MobileTabBar } from "@/features/messages/MobileTabBar";
+import { communityEnabled } from "@/server/community/config";
 
 const allowIndexing = isProductionIndexingEnabled({
   nodeEnv: process.env.NODE_ENV,
@@ -42,6 +44,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       </head>
       <body className={manrope.variable}>
         {children}
+        <MobileTabBar community={communityEnabled()} />
         <AnalyticsTracker />
         <ConsentBanner />
       </body>

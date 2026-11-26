@@ -2,23 +2,24 @@
 import { useSyncExternalStore } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { House, Mail, MessagesSquare, Tag, UserRound } from "lucide-react";
+import { House, Mail, MessagesSquare, Plus, SquarePen, UserRound } from "lucide-react";
 import { useUnreadMessages } from "./useUnread";
 import styles from "./tabbar.module.css";
 
 const inApp = () => navigator.userAgent.includes("MetaDeals4UApp");
 const noSubscribe = () => () => {};
 
-/** Home, Deals, Community, Inbox, Profile: phone widths only. Saved deals stay reachable from the heart icon on the deals page. */
+/** Home, + Deal (post a deal), Community, Inbox, Profile: phone widths only. Saved deals stay reachable from the heart icon on the deals page. */
 export function MobileTabBar({ community = true }: { community?: boolean }) {
   const path = usePathname() ?? "/";
   const unread = useUnreadMessages();
   const hidden = useSyncExternalStore(noSubscribe, inApp, () => false);
-  if (hidden) return null;
+  if (hidden || path.startsWith("/admin") || path.startsWith("/moderator")) return null;
   const tabs = [
     { href: "/", label: "Home", icon: House, on: path === "/" },
-    { href: "/#top-deals", label: "Deals", icon: Tag, on: path.startsWith("/deal") },
-    ...(community ? [{ href: "/community", label: "Community", icon: MessagesSquare, on: path.startsWith("/community") && !path.startsWith("/community/u/") }] : []),
+    { href: "/post-deal", label: "Deal", icon: Plus, on: path.startsWith("/post-deal") },
+    ...(community ? [{ href: "/community/submit", label: "Post", icon: SquarePen, on: path.startsWith("/community/submit") }] : []),
+    ...(community ? [{ href: "/community", label: "Community", icon: MessagesSquare, on: path.startsWith("/community") && !path.startsWith("/community/u/") && !path.startsWith("/community/submit") }] : []),
     { href: "/messages", label: "Inbox", icon: Mail, on: path.startsWith("/messages"), badge: unread ?? 0 },
     { href: "/profile", label: "Profile", icon: UserRound, on: path.startsWith("/community/u/") || path.startsWith("/account") },
   ];
