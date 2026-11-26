@@ -555,7 +555,8 @@ body { background: radial-gradient(ellipse at 12% 18%, color-mix(in srgb, var(--
   .header-actions .menu-toggle { order: -1; display: inline-flex; }
   .header-inner .brand { order: 0; margin-right: auto; }
   .header-actions > :not(.menu-toggle) { order: 1; }
-  .header-actions .account-button, .header-actions .notification-button { display: inline-flex !important; }
+  .header-actions .notification-button { display: inline-flex !important; }
+  .header-actions .account-button { display: none !important; }
   .header-inner .brand { margin-left: 8px; }
   .header-actions > a.icon-button[aria-label*="aved"], .header-actions > .icon-button:not(.notification-button):not(.menu-toggle):not(.account-button) { display: none; }
   .brand-tagline { display: none; }

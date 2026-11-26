@@ -294,7 +294,7 @@ export function CustomerProfile({ section = "profile", embedded = false }: { sec
             <div><span className={`${styles.stripStatIcon} ${styles.toneWait}`} aria-hidden="true"><Hourglass size={22} /></span><dt>Awaiting Review</dt><dd>{c?.pendingReview ?? "–"}</dd></div>
             <div><span className={`${styles.stripStatIcon} ${styles.toneOnair}`} aria-hidden="true"><Radio size={22} /></span><dt>Live</dt><dd>{c?.live ?? "–"}</dd></div>
           </dl>
-          <Link href="/" className={styles.stripCta}><Compass size={26} aria-hidden="true" /> <span>Explore<br />Deals</span></Link>
+          <Link href="/" className={styles.stripCta}><Compass size={26} aria-hidden="true" /> <span>Explore <br />Deals</span></Link>
         </section>
       )}
       {!embedded && !deals && <div className={styles.head}>

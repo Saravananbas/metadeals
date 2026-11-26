@@ -263,3 +263,17 @@
 .stripStats dd{font-size:30px;line-height:1}
 .stripCta{min-height:48px;padding:0 18px;border-radius:14px;font-size:14px;gap:8px}
 .stripCta svg{width:22px;height:22px}
+
+/* Post a Deal on phones: nothing may be wider than the screen; the editor toolbar scrolls instead of stretching the form, and fields stack one per row. */
+@media(max-width:640px){.dealLayout>*,.dealFormCard,.dealForm,.dealStep{min-width:0;max-width:100%}.dealForm,.dealStep{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:520px){.dealGrid3,.dealGrid2{grid-template-columns:minmax(0,1fr)}.dealStep{overflow-x:clip}}
+/* Phones: the picture box fills the row, so it lines up with the buttons below it. */
+@media(max-width:640px){.uploadBox{flex:1 1 270px;box-sizing:border-box}}
+/* Phones: the five counts stay in one row. */
+@media(max-width:640px){.stripStats{grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}.stripStats>div,.stripStats>div:last-child{padding:8px 2px;border-radius:10px;gap:2px}.stripStatIcon,.stripStatIcon svg{width:24px;height:24px}.stripStatIcon svg{width:14px;height:14px}.stripStats dt{font-size:10px;white-space:normal;text-align:center;line-height:1.15}.stripStats dd{font-size:20px}}
+/* Phones: icon, "Post a Deal" and the Explore Deals button share one row; the tagline is dropped. */
+@media(max-width:640px){.dealStrip{flex-wrap:wrap;align-items:center;gap:10px}.stripIcon{width:44px;height:44px;margin-right:0}.stripIcon svg{width:22px;height:22px}.stripText{flex:1 1 0;min-width:0;border-right:0;padding-right:0}.stripText h1{font-size:18px;margin:0}.stripText p{display:none}.stripCta{order:0;flex:none;width:auto;margin-left:0;min-height:44px;padding:8px 12px;font-size:13px;gap:6px}.stripCta{white-space:nowrap}.stripCta br{display:none}.stripCta svg{width:18px;height:18px}.stripStats{order:3}}
+/* Phones: shorter count cards. */
+@media(max-width:640px){.stripStats>div,.stripStats>div:last-child{padding:5px 2px;gap:0;min-height:0}.stripStatIcon{width:20px;height:20px}.stripStatIcon svg{width:12px;height:12px}.stripStats dt{font-size:9.5px;line-height:1.1}.stripStats dd{font-size:17px;line-height:1.1}}
+/* Phones: the submission filters fit in two rows. */
+@media(max-width:640px){.actions[aria-label="Filter my deals"]{gap:5px}.actions[aria-label="Filter my deals"]>button{padding:5px 9px;font-size:12px;min-height:0;line-height:1.3}}

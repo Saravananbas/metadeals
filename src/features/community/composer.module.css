@@ -132,7 +132,7 @@
   .types { grid-template-columns: 1fr; gap: 10px; }
   .two { grid-template-columns: 1fr; }
   .card { padding: 14px; }
-  .toolbar { overflow-x: auto; flex-wrap: nowrap; }
+  .toolbar { flex-wrap: wrap; row-gap: 4px; }
   .tb { flex: none; }
   .bar { flex-direction: column; align-items: stretch; }
   .actions { display: grid; grid-template-columns: 1fr 1fr; }
@@ -177,3 +177,5 @@
 .tips h2 { font-size: 15px; }
 .tips li { font-size: 13px; }
 @media (max-width: 760px) { .head h1 { font-size: 21px; } .ghost, .primary { height: 44px; } }
+/* The text-style dropdown keeps its own size even when a page styles every select (Post a Deal): the label was cut off. */
+@media (max-width: 760px) { .toolbar .blockSelect { width: auto; min-height: 0; height: 36px; padding: 0 8px; box-sizing: border-box; line-height: 1.2; border: 0; background: transparent; font-size: 13px; } }

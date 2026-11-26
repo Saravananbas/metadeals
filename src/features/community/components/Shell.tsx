@@ -8,7 +8,6 @@ import { BrandLogo } from "@/components/BrandLogo";
 import { Avatar } from "./parts";
 import { NotificationBell } from "./NotificationBell";
 import { MessagesLink } from "@/features/messages/MessagesLink";
-import { MobileTabBar } from "@/features/messages/MobileTabBar";
 import styles from "../community.module.css";
 
 // The main shop categories rarely change, so they are looked up at most once a minute per server.
@@ -72,7 +71,6 @@ export async function CommunityShell({ active, children, q }: { active?: "feed" 
         </div>
       </header>
       <main className={styles.shell}>{children}</main>
-      <MobileTabBar />
     </div>
   );
 }

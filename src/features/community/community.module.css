@@ -243,3 +243,21 @@
 .skel { border-radius: 8px; background: linear-gradient(90deg, var(--md-c-ede9fe), var(--md-c-f8f6ff), var(--md-c-ede9fe)); background-size: 200% 100%; animation: skelShimmer 1.2s infinite; }
 @keyframes skelShimmer { to { background-position: -200% 0; } }
 @media (prefers-reduced-motion: reduce) { .skel { animation: none; } }
+@media (max-width: 760px) { .topbar .navLinks { flex-wrap: nowrap; gap: 0; justify-content: space-between; } .topbar .navLink { padding: 7px 8px; font-size: 13px; white-space: nowrap; } }
+@media (max-width: 760px) { .topbar a[href="/messages"], .topbar .userMenu { display: none; } }
+@media (max-width: 760px) { .logoWrap { order: 1; flex: 1 1 auto; } .bellWrap { order: 2; } }
+/* Phones: almost no side margin, so the cards use the full width. */
+@media (max-width: 760px) { .shell { padding-inline: 6px; } }
+/* Phones: smaller text and cards closer together on the community feed. */
+@media (max-width: 760px) {
+  .shell { gap: 8px; padding-top: 10px; }
+  .layout { gap: 8px; }
+  .hero { padding: 12px 14px; border-radius: 14px; }
+  .hero h1 { font-size: 17px; margin-bottom: 2px; }
+  .hero p { font-size: 13px; line-height: 1.35; }
+  .mobileNav summary { padding: 9px 12px; font-size: 14px; }
+  .searchRow { flex-wrap: nowrap; gap: 6px; }
+  .searchRow input { padding: 8px 12px; font-size: 14px; }
+  .searchRow button { padding: 8px 14px; font-size: 13px; }
+}
+@media (max-width: 760px) { .mobileNav { display: none; } }

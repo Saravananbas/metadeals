@@ -6,6 +6,7 @@
 
 .listHead { display: flex; align-items: center; gap: 10px; padding: 14px 14px 8px; }
 .listHead h1 { margin: 0; font-size: 22px; flex: 1; color: var(--md-neutral-900); }
+@media (max-width: 639px) { .listHead h1 { font-size: 19px; } }
 .badge { min-width: 22px; height: 22px; padding: 0 6px; border-radius: 11px; background: var(--md-purple-600); color: var(--md-white); font-size: 12px; font-weight: 800; display: inline-grid; place-items: center; }
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 40px; padding: 8px 14px; border-radius: 10px; border: 1px solid var(--md-purple-300); background: var(--md-white); color: var(--md-purple-700); font-weight: 700; font-size: 13px; cursor: pointer; text-decoration: none; }
 .btn:disabled { opacity: .55; cursor: not-allowed; }
