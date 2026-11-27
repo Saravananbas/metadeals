@@ -1,6 +1,9 @@
 import { parseEditorNotes } from "./notes";
 import { z } from "zod";
 
+export const DEAL_KINDS = ["PRODUCT", "TRAVEL", "SALE_PAGE"] as const;
+export type DealKind = (typeof DEAL_KINDS)[number];
+
 export function isPublicHttpsUrl(value: string): boolean {
   try {
     const url = new URL(value);
@@ -46,7 +49,10 @@ export const dealInputSchema = z.object({
   merchantId: z.string().min(1).max(100),
   mediaId: z.string().min(1).max(100),
   galleryMediaIds: z.array(z.string().min(1).max(100)).max(10).optional(),
-  mrpMinor: z.number().int().min(1).max(2_000_000_000),
+  /** PRODUCT keeps every rule below; TRAVEL and SALE_PAGE have no fixed price or MRP (0 is allowed) and need a headline. */
+  kind: z.enum(DEAL_KINDS).default("PRODUCT"),
+  headline: z.string().trim().max(80).nullable().optional(),
+  mrpMinor: z.number().int().min(0).max(2_000_000_000),
   priceMinor: z.number().int().min(0).max(2_000_000_000),
   currency: z.literal("INR"),
   rating: z.number().min(0).max(5).nullable(),
@@ -69,7 +75,10 @@ export const dealInputSchema = z.object({
 }).strict().superRefine((value, ctx) => {
   const notes = parseEditorNotes(value.editorNotes);
   if (notes.error) ctx.addIssue({ code: "custom", path: ["editorNotes"], message: notes.error });
-  if (value.priceMinor > value.mrpMinor) ctx.addIssue({ code: "custom", path: ["priceMinor"], message: "Deal price cannot exceed MRP." });
+  if (value.kind === "PRODUCT") {
+    if (value.mrpMinor < 1) ctx.addIssue({ code: "custom", path: ["mrpMinor"], message: "MRP is required." });
+    if (value.priceMinor > value.mrpMinor) ctx.addIssue({ code: "custom", path: ["priceMinor"], message: "Deal price cannot exceed MRP." });
+  } else if (!value.headline) ctx.addIssue({ code: "custom", path: ["headline"], message: "Add a short headline, e.g. \"Up to 80% off clothing\"." });
   if (new Set(value.options.map((o) => o.merchantId)).size !== value.options.length || value.options.some((o) => o.priceMinor > value.mrpMinor)) ctx.addIssue({ code: "custom", path: ["options"], message: "Options need distinct merchants and prices at or below MRP." });
   if (value.galleryMediaIds && (new Set(value.galleryMediaIds).size !== value.galleryMediaIds.length || value.galleryMediaIds.includes(value.mediaId))) ctx.addIssue({ code: "custom", path: ["galleryMediaIds"], message: "Gallery images must be unique and exclude the primary image." });
   if ((value.rating !== null || value.reviewCount !== null) && !value.ratingSource) ctx.addIssue({ code: "custom", path: ["ratingSource"], message: "Ratings/review counts require a source label." });
@@ -77,6 +86,8 @@ export const dealInputSchema = z.object({
   if (value.expiresAt && Date.parse(value.expiresAt) <= start) ctx.addIssue({ code: "custom", path: ["expiresAt"], message: "Expiry must be later than start/publication." });
 });
 export type DealInput = z.infer<typeof dealInputSchema>;
+/** A normal product deal: one real price and MRP. Travel and sale-page deals show their headline instead (a travel deal may still carry a "from" price in priceMinor). */
+export const hasFixedPrice = (d: { kind?: string | null }) => (d.kind ?? "PRODUCT") === "PRODUCT";
 export const categoryInputSchema = z.object({ slug: slugSchema, name: z.string().trim().min(2).max(100), parentId: z.string().min(1).max(100).nullable().default(null) }).strict();
 export const merchantInputSchema = categoryInputSchema.omit({ parentId: true }).extend({
   websiteUrl: publicUrl,

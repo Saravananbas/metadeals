@@ -29,12 +29,13 @@ interface DealPurchasePanelProps {
 }
 
 /** Price, MRP, savings and the Buy Now button: shown directly under the product picture. */
-export function DealPriceBuy({ dealId, priceMinor, mrpMinor, discountPercent, savingsMinor, merchantName, merchantLogoUrl }: { dealId: string; priceMinor: number; mrpMinor: number; discountPercent: number; savingsMinor: number; merchantName: string; merchantLogoUrl?: string | null }) {
+export function DealPriceBuy({ dealId, priceMinor, mrpMinor, discountPercent, savingsMinor, merchantName, merchantLogoUrl, headline }: { headline?: string | null; dealId: string; priceMinor: number; mrpMinor: number; discountPercent: number; savingsMinor: number; merchantName: string; merchantLogoUrl?: string | null }) {
   const buyNowUrl = `/go/${dealId}`;
   return (
     <div className={styles.priceBuy}>
     {/* Price Typography */}
     <div className={styles.priceBlock}>
+      {headline ? <div className={styles.dealPrice} style={{ fontSize: 24, lineHeight: 1.2 }}>{headline}</div> : <>
       <div className={styles.dealPrice}>
         {formatINR(priceMinor / 100)}
       </div>
@@ -49,6 +50,7 @@ export function DealPriceBuy({ dealId, priceMinor, mrpMinor, discountPercent, sa
           </span>
         )}
       </div>
+      </>}
     </div>
 
     <div className={styles.buyCol}>
@@ -61,7 +63,7 @@ export function DealPriceBuy({ dealId, priceMinor, mrpMinor, discountPercent, sa
       id="buy-now-btn"
     >
       <ShoppingCart size={19} />
-      <span>Buy Now</span>
+      <span>{headline ? "View Deal" : "Buy Now"}</span>
     </a>
       <StoreLogo store={merchantName.toLowerCase()} name={merchantName} logoUrl={merchantLogoUrl} logoOnly />
     </div>

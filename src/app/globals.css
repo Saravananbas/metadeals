@@ -709,3 +709,4 @@ body.md-modal-open { overflow: hidden; }
 .offer-popover ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
 .offer-popover li { display: flex; gap: 8px; align-items: flex-start; }
 .offer-popover li small { display: block; margin-top: 2px; color: var(--md-neutral-600); }
+.deal-headline { display: block; font-size: 18px; line-height: 1.25; font-weight: 800; color: var(--md-purple-800); overflow-wrap: anywhere; }

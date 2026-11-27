@@ -2,7 +2,7 @@ import type { PublicDeal } from "@/server/deals/repository";
 import type { Deal } from "./types";
 export function toCard(deal: PublicDeal): Deal {
   return { id: deal.id, slug: deal.slug, name: deal.title, brand: deal.brand, description: deal.description,
-    category: deal.category.slug, image: deal.image.url, imageGallery: deal.imageGallery.map((image) => image.url), originalPrice: deal.mrpMinor / 100, price: deal.priceMinor / 100,
+    category: deal.category.slug, image: deal.image.url, imageGallery: deal.imageGallery.map((image) => image.url), kind: deal.kind, headline: deal.headline, originalPrice: deal.mrpMinor / 100, price: deal.priceMinor / 100,
     rating: deal.rating, reviewCount: deal.reviewCount, ratingSource: deal.ratingSource, store: deal.merchant.slug,
     storeName: deal.merchant.name, storeLogoUrl: deal.merchant.logoUrl, retailerUrl: `/go/${deal.id}`,
     expiry: deal.status === "EXPIRED" ? "expired" : deal.expiresAt ? "active" : "unknown",

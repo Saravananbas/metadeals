@@ -97,7 +97,7 @@ export function UsersAdmin() {
         {tab === "members" && members && (
           <div className={styles.tableWrap}>
             <table className={styles.table}>
-              <thead><tr><th>Member</th><th>Email</th><th>Signed up with</th><th>Joined</th><th>Last seen</th><th>Status</th><th>Comments</th><th>Votes</th><th>Saved</th><th>Posted deals</th></tr></thead>
+              <thead><tr><th>Member</th><th>Email</th><th>Signed up with</th><th>Joined</th><th>Last seen</th><th>Status</th><th className={styles.center}>Comments</th><th className={styles.center}>Votes</th><th className={styles.center}>Saved</th><th className={styles.center}>Posted deals</th></tr></thead>
               <tbody>
                 {members.data.map((m) => (
                   <tr key={m.id}>
@@ -107,7 +107,7 @@ export function UsersAdmin() {
                     <td data-label="Joined">{when(m.joinedAt)}</td>
                     <td data-label="Last seen">{when(m.lastSeenAt)}</td>
                     <td data-label="Status"><span className={`${styles.badge} ${m.status === "Active" ? styles.ok : styles.bad}`}>{m.status}</span></td>
-                    <td data-label="Comments">{m.comments}</td><td data-label="Votes">{m.votes}</td><td data-label="Saved">{m.saved}</td><td data-label="Posted deals">{m.submissions}</td>
+                    <td data-label="Comments" className={styles.center}>{m.comments}</td><td data-label="Votes" className={styles.center}>{m.votes}</td><td data-label="Saved" className={styles.center}>{m.saved}</td><td data-label="Posted deals" className={styles.center}>{m.submissions}</td>
                   </tr>
                 ))}
                 {members.data.length === 0 && <tr><td colSpan={10} className={styles.empty}>{query ? "No member matches that search." : "No registered members yet."}</td></tr>}

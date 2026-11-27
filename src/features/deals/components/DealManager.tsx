@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useEffect, useState, type FormEvent, type ReactNode, useRef } from "react";
-import type { DealInput } from "../validation";
+import type { DealInput, DealKind } from "../validation";
 import { minorSavings } from "../validation";
 import type { ClientExtractionResult } from "../extraction-types";
 import {
@@ -11,7 +11,7 @@ import {
   formatINR,
 } from "../currency";
 import { can, type AdminRole } from "@/server/auth/permissions";
-import { Calendar, Eye, ImageIcon, Link2, Save, Send, Settings, Tag, UploadCloud, Plus, Wand2, X } from "lucide-react";
+import { Calendar, Eye, ImageIcon, Info, Link2, Save, Send, Settings, Tag, UploadCloud, Plus, Wand2, X } from "lucide-react";
 import { AdminNav } from "@/components/admin/AdminNav";
 import { ProgressPanel } from "@/features/deal-form/ProgressPanel";
 import { SameLinkNotice, SimilarDeals, useDealCheck } from "@/features/deal-form/SimilarDeals";
@@ -69,6 +69,8 @@ interface AdminDealForm extends Omit<DealInput, "mrpMinor" | "priceMinor" | "opt
 }
 
 const empty: AdminDealForm = {
+  kind: "PRODUCT",
+  headline: null,
   slug: "",
   title: "",
   brand: "",
@@ -125,6 +127,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
   const [banks, setBanks] = useState<BankOption[]>([]);
   useEffect(() => { fetch("/api/v1/admin/banks", { cache: "no-store" }).then((r) => (r.ok ? r.json() : null)).then((d) => d && setBanks(d.items)).catch(() => {}); }, []);
   const [form, setForm] = useState<AdminDealForm>(empty);
+  const [showKindGuide, setShowKindGuide] = useState(false);
   const [selectedParentCategoryId, setSelectedParentCategoryId] = useState<string>("");
   const [selected, setSelected] = useState<Row | null>(null);
   // The Edit button on the deals table opens the form in a pop-up. Saving a NEW deal also selects it, but that must not pop anything up, so the pop-up is tied to the id it was opened for.
@@ -707,6 +710,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
 
       const operationalMerchantId = await resolveOperationalMerchant(htmlExtractedFields.merchantId);
       const payload: DealInput = {
+        kind: "PRODUCT",
         slug,
         title: htmlExtractedFields.title.trim(),
         brand: htmlExtractedFields.brand.trim() || "Brand",
@@ -1152,6 +1156,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
     );
 
     const payload: DealInput = {
+      kind: "PRODUCT",
       slug,
       title,
       brand,
@@ -1400,8 +1405,10 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
       })(),
       mediaId: row.mediaId,
       galleryMediaIds: row.galleryImages?.map((image) => image.mediaId) ?? [],
-      mrpRupees: paiseToRupeeInputString(row.mrpMinor),
-      priceRupees: paiseToRupeeInputString(row.priceMinor),
+      kind: (row.kind as DealKind) ?? "PRODUCT",
+      headline: row.headline ?? null,
+      mrpRupees: row.mrpMinor ? paiseToRupeeInputString(row.mrpMinor) : "",
+      priceRupees: row.priceMinor || (row.kind ?? "PRODUCT") === "PRODUCT" ? paiseToRupeeInputString(row.priceMinor) : "",
       currency: "INR",
       rating: row.rating,
       reviewCount: row.reviewCount,
@@ -1460,13 +1467,15 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
     await run(async () => {
       let mrpMinor: number;
       let priceMinor: number;
+      const isProduct = form.kind === "PRODUCT";
       try {
-        mrpMinor = rupeesToPaise(form.mrpRupees);
+        // Travel and sale-page deals have no MRP; their price is an optional "from" price.
+        mrpMinor = isProduct ? rupeesToPaise(form.mrpRupees) : 0;
       } catch {
         throw new Error("Invalid MRP. Please enter a valid rupee amount (e.g. ₹999 or 999.50).");
       }
       try {
-        priceMinor = rupeesToPaise(form.priceRupees);
+        priceMinor = isProduct || form.priceRupees.trim() ? rupeesToPaise(form.priceRupees) : 0;
       } catch {
         throw new Error("Invalid Deal price. Please enter a valid rupee amount (e.g. ₹799 or 799.50).");
       }
@@ -1497,6 +1506,8 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
         merchantId: await resolveMerchantSelection(form.merchantId),
         mediaId: form.mediaId,
         galleryMediaIds,
+        kind: form.kind,
+        headline: form.kind === "PRODUCT" ? null : form.headline?.trim() || null,
         mrpMinor,
         priceMinor,
         currency: "INR",
@@ -2490,12 +2501,46 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
         <form id="deal-form" onSubmit={save}>
           <fieldset disabled={busy || selected?.status === "ARCHIVED"} className={styles.addLayout}>
             <div className={styles.addMain}>
+            <div className={styles.kindRow}>
+              <div className={styles.kindPicker} role="radiogroup" aria-label="Deal type">
+                {([["PRODUCT", "Product"], ["TRAVEL", "Travel"], ["SALE_PAGE", "Sale page"]] as const).map(([value, label]) => (
+                  <label key={value} className={`${styles.kindOption} ${form.kind === value ? styles.kindOptionOn : ""}`}>
+                    <input type="radio" name="deal-kind" value={value} checked={form.kind === value} onChange={() => field("kind", value)} />
+                    <span>{label}</span>
+                  </label>
+                ))}
+              </div>
+              <button type="button" className={styles.kindInfo} aria-expanded={showKindGuide} aria-controls="kind-guide" aria-label="How to post this type of deal" title="How to post this type of deal" onClick={() => setShowKindGuide((v) => !v)}>
+                <Info size={16} aria-hidden="true" /><b aria-hidden="true">*</b>
+              </button>
+            </div>
+            {showKindGuide && (
+              <div id="kind-guide" className={`${styles.addCard} ${styles.kindGuide}`}>
+                {form.kind === "PRODUCT" && <><h3>Posting a product deal</h3><ol>
+                  <li>Paste the product page link below and click Fetch Details.</li>
+                  <li>Check the title, price, MRP, picture and category, then publish.</li>
+                </ol></>}
+                {form.kind === "TRAVEL" && <><h3>Posting a travel deal</h3><ol>
+                  <li>Choose the store below (MakeMyTrip, RedBus, IRCTC, Cleartrip...).</li>
+                  <li>Paste the store&apos;s offer or search-results page as the link. No product page is needed.</li>
+                  <li>Write a headline, e.g. &quot;Flights from ₹2,499&quot; or &quot;Flat 15% off bus tickets&quot;. It is shown instead of a price.</li>
+                  <li>Add the coupon code, any bank offer, and an expiry date. The price is optional because fares change.</li>
+                </ol></>}
+                {form.kind === "SALE_PAGE" && <><h3>Posting a sale page</h3><ol>
+                  <li>Choose the store below and paste its sale or category page as the link.</li>
+                  <li>Write a headline, e.g. &quot;Up to 80% off men&apos;s clothing&quot;. It is shown instead of a price.</li>
+                  <li>Add one picture (a banner or a product from the sale) and a short description.</li>
+                  <li>Add the coupon code, if any, and the sale&apos;s end date.</li>
+                </ol></>}
+              </div>
+            )}
             <div className={`${styles.scrapeContainer} ${styles.addCard} ${styles.fetchCard}`}>
               <div className={styles.fetchTitle}>
                 <span className={styles.fetchIcon}><Link2 size={18} aria-hidden="true" /></span>
                 <div>
-                  <h3>Fetch Deal from URL <em>(Recommended)</em></h3>
-                  <p>Paste an Amazon, Flipkart or other product URL to auto-fill the details.</p>
+                  {form.kind === "PRODUCT"
+                    ? <><h3>Fetch Deal from URL <em>(Recommended)</em></h3><p>Paste an Amazon, Flipkart or other product URL to auto-fill the details.</p></>
+                    : <><h3>Deal link</h3><p>{form.kind === "TRAVEL" ? "Paste the store's offer or search-results page." : "Paste the store's sale or category page."} Buy Now opens this link.</p></>}
                 </div>
               </div>
               <div className={styles.scrapeInputRow}>
@@ -2507,7 +2552,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
                   <input
                     required
                     type="url"
-                    placeholder="https://www.amazon.in/dp/... or https://www.flipkart.com/..."
+                    placeholder={form.kind === "PRODUCT" ? "https://www.amazon.in/dp/... or https://www.flipkart.com/..." : "https://www.makemytrip.com/... or the store's sale page"}
                     value={form.productUrl}
                     onChange={(e) => {
                       field("productUrl", e.target.value);
@@ -2515,14 +2560,14 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
                     }}
                   />
                 </label>
-                <button
+                {form.kind === "PRODUCT" && <button
                   type="button"
                   disabled={extracting || busy || !form.productUrl.trim()}
                   onClick={handleScrape}
                   className={styles.scrapeBtn}
                 >
                   <Wand2 size={15} aria-hidden="true" /> {extracting ? "Fetching..." : extractionResult ? "Try again" : "Fetch Details"}
-                </button>
+                </button>}
                 <button
                   type="button"
                   className={styles.resetBtn}
@@ -2718,6 +2763,13 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
                 <div><h3>Deal Details</h3><p>Enter the basic information about the product/deal.</p></div>
               </div>
               <div className={styles.fieldGrid}>
+            {form.kind !== "PRODUCT" && (
+              <label className={styles.fullRow}>
+                Headline <b aria-hidden="true">*</b>
+                <input type="text" maxLength={80} required placeholder={form.kind === "TRAVEL" ? "e.g. Flights from ₹2,499 or Flat 15% off bus tickets" : "e.g. Up to 80% off men's clothing"} value={form.headline ?? ""} onChange={(e) => field("headline", e.target.value)} />
+                <small>Shown on the deal card instead of a price. {(form.headline ?? "").length}/80</small>
+              </label>
+            )}
             <label className={styles.fullRow}>
               Product title <b aria-hidden="true">*</b>
               <input
@@ -2738,14 +2790,14 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
                 aria-readonly="true"
               />
             </label>
-            <label>
+            {form.kind === "PRODUCT" && <label>
               Brand
               <input
                 type="text"
                 value={form.brand}
                 onChange={(e) => field("brand", e.target.value)}
               />
-            </label>
+            </label>}
             <div className={styles.fullRow}>
               <span id="admin-description-label" style={{ fontWeight: 600 }}>Description <b aria-hidden="true">*</b></span>
               <div className={styles.richHost}>
@@ -2872,7 +2924,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
                 ))}
               </select>
             </label>
-            <label>
+            {form.kind === "PRODUCT" && <label>
               MRP (₹)
               <input
                 type="number"
@@ -2886,14 +2938,14 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
               {form.mrpRupees && !isNaN(Number(form.mrpRupees)) && Number(form.mrpRupees) > 0 && (
                 <small>{formatINR(Number(form.mrpRupees))}</small>
               )}
-            </label>
+            </label>}
             <label>
-              Deal price (₹)
+              {form.kind === "PRODUCT" ? "Deal price (₹)" : "Starting price (₹, optional)"}
               <input
                 type="number"
                 min="0"
                 step="0.01"
-                required
+                required={form.kind === "PRODUCT"}
                 placeholder="e.g. 1499.00"
                 value={form.priceRupees}
                 onChange={(e) => field("priceRupees", e.target.value)}
@@ -2962,6 +3014,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
                 />
               </label>
             ))}
+            {form.kind === "PRODUCT" && <>
             <label>
               Rating (optional)
               <input
@@ -2990,6 +3043,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
                 onChange={(e) => field("ratingSource", e.target.value || null)}
               />
             </label>
+            </>}
             <label>
               Status
               <select
@@ -3005,7 +3059,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
             </section>
             </>)}
 
-            {!editModal && (<>
+            {!editModal && form.kind === "PRODUCT" && (<>
             {/* YouTube Review Videos Configuration in Form */}
             <div className={styles.ytDiscoveryCard}>
               <div className={styles.ytDiscoveryHeader}>
@@ -3086,6 +3140,8 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
             </div>
             <aside className={styles.addSide}>
               <ProgressPanel values={{
+                kind: form.kind,
+                headline: form.headline ?? "",
                 // Fetched details sit in the extraction preview until they are applied to the form, so the ring counts those too.
                 productUrl: form.productUrl,
                 title: (extractionResult && previewTitle) || form.title,
@@ -3111,11 +3167,11 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
                   </div>
                   {form.title.trim() ? <strong className={styles.dpTitle}>{form.title}</strong> : <><span className={styles.dpBar} /><span className={`${styles.dpBar} ${styles.dpBarShort}`} /></>}
                   {(form.brand || dpMerchant) && <span className={styles.dpMeta}>{[form.brand, dpMerchant].filter(Boolean).join(" · ")}</span>}
-                  <div className={styles.dpPrice}>
+                  {form.kind !== "PRODUCT" ? <div className={styles.dpPrice}><b className={form.headline?.trim() ? "" : styles.dpGhost}>{form.headline?.trim() || "Your headline"}</b></div> : <div className={styles.dpPrice}>
                     <b className={form.priceRupees === "" ? styles.dpGhost : ""}>{form.priceRupees !== "" && !isNaN(dpPrice) ? formatINR(dpPrice) : "₹1,499"}</b>
                     <s className={form.mrpRupees === "" ? styles.dpGhost : ""}>{form.mrpRupees !== "" && !isNaN(dpMrp) ? formatINR(dpMrp) : "₹1,999"}</s>
                     <span className={`${styles.dpOff} ${dpDiscount === null ? styles.dpGhost : ""}`}>{dpDiscount === null ? "25% OFF" : `${dpDiscount}% OFF`}</span>
-                  </div>
+                  </div>}
                   {form.couponCode ? <span className={styles.dpCoupon}>Coupon: {form.couponCode}</span> : null}
                 </div>
               </section>
