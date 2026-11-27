@@ -137,6 +137,17 @@ test("follows, verified badge, reported messages for staff, refresh tokens, Goog
     // a verified email that matches an existing customer links to it (no second account)
     const linked = await native.nativeProviderLogin("google", { idToken: await idToken("google", { ...good("2"), email: a.email }) }, "1.2.3.4");
     assert.equal(linked.customer.id, a.id); assert.equal(await db.customer.count({ where: { email: a.email } }), 1);
+    // the app's web view signs in with the app token (sent in a header) and receives the website's own session cookie
+    const { GET: webSession } = await import("../src/app/api/v1/mobile/auth/web-session/route");
+    const ws = await webSession(new Request("http://localhost:4123/api/v1/mobile/auth/web-session?next=/community", { headers: { authorization: `Bearer ${linked.token}` } }));
+    assert.equal(ws.status, 302); assert.equal(ws.headers.get("location"), "/community");
+    const cookieJwt = /md-customer-session=([^;]+)/.exec(ws.headers.get("set-cookie") ?? "")?.[1] ?? "";
+    const { decode } = await import("next-auth/jwt"); const { hashOpaqueToken } = await import("../src/server/auth/crypto");
+    assert.equal((await decode({ token: cookieJwt, secret: hashOpaqueToken("customer-nextauth", process.env.NEXTAUTH_SECRET!) }))?.customerId, a.id);
+    for (const evil of ["//evil.example", "https://evil.example", "/\\evil.example"])
+      assert.equal((await webSession(new Request(`http://localhost:4123/x?next=${encodeURIComponent(evil)}`, { headers: { authorization: `Bearer ${linked.token}` } }))).headers.get("location"), "/");
+    assert.equal((await webSession(new Request("http://localhost:4123/x", { headers: { authorization: "Bearer mdt_nope" } }))).status, 401);
+    assert.equal((await webSession(new Request("http://localhost:4123/x"))).status, 401);
     // refusals: unverified email, wrong audience, wrong issuer, expired, wrong signature, garbage, missing config
     await assert.rejects(async () => native.nativeProviderLogin("google", { idToken: await idToken("google", { ...good("3"), email_verified: false }) }, "1.2.3.4"), { status: 403 });
     for (const bad of [await idToken("google", good("4"), { aud: "someone-elses-app" }), await idToken("google", good("5"), { iss: "https://evil.example" }), await idToken("google", good("6"), { exp: Math.floor(Date.now() / 1000) - 600 }), "not.a.token", ""])
