@@ -19,8 +19,8 @@ export async function GET(request: Request, { params }: { params: Promise<{ code
   if (!DEAL_CODE_PATTERN.test(code)) return go("/");
   const deal = usesMariaDb()
     ? await findDealByCodeMariaDb(code)
-    : await getDatabase().deal.findFirst({ where: { id: { endsWith: code }, status: { in: ["PUBLISHED", "EXPIRED"] } }, select: { id: true, slug: true } });
+    : await getDatabase().deal.findFirst({ where: { id: { endsWith: code }, status: { in: ["PUBLISHED", "EXPIRED"] } }, select: { id: true, slug: true, canonicalPath: true } });
   if (!deal) return go("/");
   const search = new URL(request.url).search;
-  return go(`/deal/${encodeURIComponent(deal.slug)}${search}`);
+  return go(`${deal.canonicalPath ?? `/deal/${encodeURIComponent(deal.slug)}`}${search}`);
 }

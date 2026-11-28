@@ -23,6 +23,7 @@ import { Dialog } from "./components/Dialog";
 import { useSavedDeals } from "./saved-store";
 import { HOME_PAGE_SIZE } from "@/features/deals/page-size";
 import { Pagination } from "./components/Pagination";
+import { dealHref } from "@/features/deals/seo-url";
 
 const defaults: DealFilters = { query: "", category: "", store: "", view: "top" };
 const titles = { saved: "Your saved deals", stores: "Popular stores", account: "Your MetaDeals4U account", notifications: "Deal updates", blog: "The smart shopping journal", bank: "Bank offers" };
@@ -185,7 +186,7 @@ export function Homepage({
   };
 
   const openDealPage = (deal: Deal) => {
-    router.push(`/deal/${encodeURIComponent(deal.slug || deal.id)}`);
+    router.push(dealHref(deal));
   };
   const save = (id: string) => {
     const wasSaved = saved.ids.includes(id);

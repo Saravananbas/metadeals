@@ -32,6 +32,7 @@ import { StoreLogo } from "./StoreLogo";
 import { BankLogo } from "@/components/deals/BankLogo";
 import { bestOffer, offerHeadline } from "@/features/deals/bank-offers";
 import { OfferPopover } from "./OfferPopover";
+import { dealHref } from "@/features/deals/seo-url";
 
 const CARD_WIDTHS = [240, 320, 400, 480, 640];
 
@@ -372,7 +373,7 @@ export function DealCard({
         {/* ROW 6: Action Row (Details & Buy Now) */}
         <div className="deal-row-actions">
           <a
-            href={`/deal/${encodeURIComponent(deal.slug || deal.id)}`}
+            href={dealHref(deal)}
             target="_blank"
             rel="noopener noreferrer"
             className="deal-view-details-btn"
@@ -440,7 +441,7 @@ export function DealCard({
 
           <a
             className="deal-social-btn deal-social-comment"
-            href={`/deal/${encodeURIComponent(deal.slug || deal.id)}#comments`}
+            href={`${dealHref(deal)}#comments`}
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => { sameTabOnPhone(e); e.stopPropagation(); trackEvent("COMMENT", deal.slug || deal.id); }}

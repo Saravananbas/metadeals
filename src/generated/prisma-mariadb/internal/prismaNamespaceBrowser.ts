@@ -137,7 +137,8 @@ export const ModelName = {
   MerchantAffiliateConfig: 'MerchantAffiliateConfig',
   Bank: 'Bank',
   DealBankOffer: 'DealBankOffer',
-  MerchantBankOffer: 'MerchantBankOffer'
+  MerchantBankOffer: 'MerchantBankOffer',
+  DealUrlHistory: 'DealUrlHistory'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -375,6 +376,8 @@ export type MediaScalarFieldEnum = (typeof MediaScalarFieldEnum)[keyof typeof Me
 export const DealScalarFieldEnum = {
   id: 'id',
   slug: 'slug',
+  publicId: 'publicId',
+  canonicalPath: 'canonicalPath',
   title: 'title',
   brand: 'brand',
   description: 'description',
@@ -1573,6 +1576,18 @@ export const MerchantBankOfferScalarFieldEnum = {
 export type MerchantBankOfferScalarFieldEnum = (typeof MerchantBankOfferScalarFieldEnum)[keyof typeof MerchantBankOfferScalarFieldEnum]
 
 
+export const DealUrlHistoryScalarFieldEnum = {
+  id: 'id',
+  dealId: 'dealId',
+  path: 'path',
+  reason: 'reason',
+  redirectStatus: 'redirectStatus',
+  createdAt: 'createdAt'
+} as const
+
+export type DealUrlHistoryScalarFieldEnum = (typeof DealUrlHistoryScalarFieldEnum)[keyof typeof DealUrlHistoryScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -1790,6 +1805,8 @@ export type MediaOrderByRelevanceFieldEnum = (typeof MediaOrderByRelevanceFieldE
 export const DealOrderByRelevanceFieldEnum = {
   id: 'id',
   slug: 'slug',
+  publicId: 'publicId',
+  canonicalPath: 'canonicalPath',
   title: 'title',
   brand: 'brand',
   description: 'description',
@@ -2678,4 +2695,14 @@ export const MerchantBankOfferOrderByRelevanceFieldEnum = {
 } as const
 
 export type MerchantBankOfferOrderByRelevanceFieldEnum = (typeof MerchantBankOfferOrderByRelevanceFieldEnum)[keyof typeof MerchantBankOfferOrderByRelevanceFieldEnum]
+
+
+export const DealUrlHistoryOrderByRelevanceFieldEnum = {
+  id: 'id',
+  dealId: 'dealId',
+  path: 'path',
+  reason: 'reason'
+} as const
+
+export type DealUrlHistoryOrderByRelevanceFieldEnum = (typeof DealUrlHistoryOrderByRelevanceFieldEnum)[keyof typeof DealUrlHistoryOrderByRelevanceFieldEnum]
 

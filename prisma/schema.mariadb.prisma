@@ -286,6 +286,10 @@ model Media {
 model Deal {
   id             String     @id @default(cuid())
   slug           String     @unique @db.VarChar(120)
+  /// Permanent public identifier, generated once (never changes with title, category, price or store). Last part of the address.
+  publicId       String?    @unique @db.VarChar(12)
+  /// The one address of this deal, /deal/{primary-category}/{product-slug}-{publicId}. Older addresses live in DealUrlHistory.
+  canonicalPath  String?    @unique @db.VarChar(300)
   title          String     @db.VarChar(200)
   brand          String     @db.VarChar(100)
   description    String     @db.VarChar(2000)
@@ -1816,4 +1820,17 @@ model MerchantBankOffer {
 
   @@index([merchantId, active])
   @@index([bankId])
+}
+
+/// Every earlier address of a deal. A request for one of these is redirected (permanently) to the deal's current canonicalPath.
+/// dealId has no relation on purpose: when a deal is deleted its addresses stay, so the old address can answer 410 Gone.
+model DealUrlHistory {
+  id             String   @id @default(cuid())
+  dealId         String
+  path           String   @unique @db.VarChar(300)
+  reason         String   @db.VarChar(20)
+  redirectStatus Int      @default(301)
+  createdAt      DateTime @default(now())
+
+  @@index([dealId])
 }

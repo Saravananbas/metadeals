@@ -94,7 +94,7 @@ export function publicWhere(input: ListingInput, now = new Date()): Prisma.DealW
 
 export function publicDeal(record: DealRecord, merchantLogoUrl: string | null = null) {
   return {
-    id: record.id, slug: record.slug, title: record.title, brand: record.brand, description: record.description, descriptionHtml: record.descriptionHtml ?? null,
+    id: record.id, slug: record.slug, path: record.canonicalPath ?? null, title: record.title, brand: record.brand, description: record.description, descriptionHtml: record.descriptionHtml ?? null,
     status: record.status,
     category: { id: record.category.id, slug: record.category.slug, name: record.category.name },
     merchant: { id: record.merchant.id, slug: record.merchant.slug, name: record.merchant.name, logoUrl: merchantLogoUrl },

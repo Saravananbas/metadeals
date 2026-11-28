@@ -452,3 +452,9 @@ export type DealBankOffer = Prisma.DealBankOfferModel
  * A store-wide bank offer ("15% off up to Rs 1,000 with HDFC cards on Wednesdays"): shown on every deal of that store while it is in force, so it is set up once instead of on each deal.
  */
 export type MerchantBankOffer = Prisma.MerchantBankOfferModel
+/**
+ * Model DealUrlHistory
+ * Every earlier address of a deal. A request for one of these is redirected (permanently) to the deal's current canonicalPath.
+ * dealId has no relation on purpose: when a deal is deleted its addresses stay, so the old address can answer 410 Gone.
+ */
+export type DealUrlHistory = Prisma.DealUrlHistoryModel
