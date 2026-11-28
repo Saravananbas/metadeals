@@ -86,13 +86,13 @@ export function ShareDealModal({ deal, url, onClose, onShared }: { deal: ShareDe
         if ((error as Error).name === "AbortError") return; // the visitor closed the sheet
       }
     }
-    // Desktop: the picture goes on the clipboard (paste it first), then the message is copied on request, so the picture comes before the text in the chat.
+    // Desktop: picture and message go on the clipboard together, so one paste gives the picture with the message as caption where the app supports it.
     const target = app === "whatsapp" ? "https://web.whatsapp.com/" : "https://web.telegram.org/";
     window.open(target, "_blank", "noopener"); // opened first, while the click still counts as the visitor's own action
     let pictureCopied = false;
-    try { await navigator.clipboard.write([new ClipboardItem({ "image/png": f })]); pictureCopied = true; } catch { download(); }
+    try { await navigator.clipboard.write([new ClipboardItem({ "image/png": f, "text/plain": new Blob([message], { type: "text/plain" }) })]); pictureCopied = true; } catch { download(); }
     counts();
-    setNotice(`${pictureCopied ? "Picture copied" : "Picture saved to your downloads"}. In ${app === "whatsapp" ? "WhatsApp" : "Telegram"} ${pictureCopied ? "paste it (Ctrl+V)" : "attach it"} and send, then press "Copy message" here and paste the message after it.`);
+    setNotice(`${pictureCopied ? "Picture and message copied" : "Picture saved to your downloads"}. In ${app === "whatsapp" ? "WhatsApp" : "Telegram"} ${pictureCopied ? "press Ctrl+V: the picture comes with the message as its caption (if only the picture appears, press \"Copy message\" and paste it)" : "attach it"}.`);
   }
 
   async function copyMessage() { if (await copyText(message)) { counts(); setNotice("Message copied."); } else setNotice("Could not copy the message."); }
