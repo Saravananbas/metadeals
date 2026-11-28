@@ -313,6 +313,10 @@ model Deal {
   productUrl     String     @db.VarChar(2048)
   affiliateUrl   String?    @db.VarChar(2048)
   couponCode     String?    @db.VarChar(50)
+  /// PRODUCT (one product, fixed price) | TRAVEL (price moves; "from" price optional) | SALE_PAGE (a store sale or listing page).
+  kind           String     @default("PRODUCT") @db.VarChar(12)
+  /// Short line shown instead of the price when a deal has no single fixed price, e.g. "Up to 80% off clothing".
+  headline       String?    @db.VarChar(80)
   /// One point per line, written by staff; shown on the deal page under Editor's Notes.
   editorNotes    String?    @db.VarChar(2800)
   editorNotesBy  String?    @db.VarChar(80)

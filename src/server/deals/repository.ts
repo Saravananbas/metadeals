@@ -1,6 +1,6 @@
 import "server-only";
 import type { Prisma } from "@/generated/prisma/client";
-import type { ListingInput } from "@/features/deals/validation";
+import type { DealKind, ListingInput } from "@/features/deals/validation";
 import { minorSavings } from "@/features/deals/validation";
 import { indiaToday, PAYMENT_NAME, scheduleActive, scheduleLabel } from "@/features/deals/bank-offers";
 import { searchDealIdsMariaDb, usesMariaDb } from "@/server/community/like-search";
@@ -100,6 +100,7 @@ export function publicDeal(record: DealRecord, merchantLogoUrl: string | null = 
     merchant: { id: record.merchant.id, slug: record.merchant.slug, name: record.merchant.name, logoUrl: merchantLogoUrl },
     image: { url: `/api/v1/media/${record.mediaId}`, alt: record.media.alt, width: record.media.width, height: record.media.height },
     imageGallery: record.galleryImages.map((image) => ({ url: `/api/v1/media/${image.mediaId}`, alt: image.media.alt, width: image.media.width, height: image.media.height })),
+    kind: (record.kind ?? "PRODUCT") as DealKind, headline: record.headline ?? null,
     mrpMinor: record.mrpMinor, priceMinor: record.priceMinor, currency: record.currency,
     ...minorSavings(record.mrpMinor, record.priceMinor),
     rating: record.rating, reviewCount: record.reviewCount, ratingSource: record.ratingSource,

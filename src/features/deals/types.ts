@@ -7,6 +7,9 @@ export type Deal = {
   category: string;
   image: string;
   imageGallery?: string[];
+  /** PRODUCT (default) or TRAVEL / SALE_PAGE: those show `headline` instead of a price and MRP. */
+  kind?: "PRODUCT" | "TRAVEL" | "SALE_PAGE";
+  headline?: string | null;
   originalPrice: number;
   price: number;
   rating: number | null;

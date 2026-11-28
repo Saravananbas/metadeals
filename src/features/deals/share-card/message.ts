@@ -33,8 +33,8 @@ export function publicDealUrl(origin: string, deal: { id: string; slug?: string 
  */
 export function buildShareMessage(deal: ShareDealData, url: string, options: { includeUrl?: boolean; links?: ShareLinks } = {}): string {
   const links = options.links ?? configuredShareLinks();
-  const lines = [`Deal Price: ${formatPaise(deal.priceMinor).replace("\u20B9", "Rs. ")}`];
-  if (options.includeUrl !== false) lines.push("Buy Now:", url);
+  const lines = [deal.headline || `Deal Price: ${formatPaise(deal.priceMinor).replace("\u20B9", "Rs. ")}`];
+  if (options.includeUrl !== false) lines.push(deal.headline ? "View Deal:" : "Buy Now:", url);
   lines.push("Follow Us for More Deals on MetaDeals4U!");
   for (const s of links.social) lines.push(`${s.label}: ${s.url}`);
   if (links.playStore || links.appStore) {

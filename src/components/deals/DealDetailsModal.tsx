@@ -331,6 +331,7 @@ export function DealDetailsModal({
 
               {/* Price Card */}
               <div className={styles.priceCard}>
+                {activeDeal.kind && activeDeal.kind !== "PRODUCT" ? <strong className={styles.dealPrice} style={{ fontSize: 24, lineHeight: 1.2 }}>{activeDeal.headline}</strong> : <>
                 <div className={styles.priceLine}>
                   <strong className={styles.dealPrice}>
                     {formatINR(activeDeal.price)}
@@ -345,6 +346,7 @@ export function DealDetailsModal({
                 <span className={styles.savingsPill}>
                   Save {formatINR(savings.amount)}
                 </span>
+              </>}
               </div>
 
               <div className={styles.metaInfoRow}>

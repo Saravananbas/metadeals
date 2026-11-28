@@ -277,3 +277,5 @@
 @media(max-width:640px){.stripStats>div,.stripStats>div:last-child{padding:5px 2px;gap:0;min-height:0}.stripStatIcon{width:20px;height:20px}.stripStatIcon svg{width:12px;height:12px}.stripStats dt{font-size:9.5px;line-height:1.1}.stripStats dd{font-size:17px;line-height:1.1}}
 /* Phones: the submission filters fit in two rows. */
 @media(max-width:640px){.actions[aria-label="Filter my deals"]{gap:5px}.actions[aria-label="Filter my deals"]>button{padding:5px 9px;font-size:12px;min-height:0;line-height:1.3}}
+.simIgnore{justify-self:end;margin:8px 10px 10px auto;display:block;padding:6px 14px;border:1px solid var(--md-purple-200);border-radius:999px;background:var(--md-white);color:var(--md-purple-700);font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.simIgnore:hover{background:var(--md-purple-50)}

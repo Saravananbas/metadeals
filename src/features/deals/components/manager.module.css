@@ -1145,3 +1145,18 @@
 .richHost [role="listbox"] button:hover { background: var(--md-purple-100); }
 .richHost input[type="url"] { flex: 1 1 220px; width: auto; height: 40px; padding: 0 12px; border: 1px solid var(--md-purple-200); border-radius: 10px; font: inherit; }
 .richHost input[type="url"] ~ button { height: 40px; padding: 0 14px; border-radius: 10px; background: var(--md-purple-700); color: var(--md-white); font-weight: 700; }
+
+/* Deal type: three radio buttons in one row (Product is the default), with an info button that opens the instructions. */
+.kindRow { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.kindPicker { display: flex; gap: 8px; flex-wrap: wrap; }
+.kindRow .kindOption { display: inline-flex; flex-direction: row; align-items: center; gap: 8px; width: auto; padding: 8px 14px; border: 1px solid var(--md-purple-200); border-radius: 999px; background: var(--md-white); cursor: pointer; font-size: 14px; font-weight: 700; color: var(--md-neutral-900); }
+.kindRow .kindOption input[type="radio"] { width: 16px; height: 16px; min-width: 0; min-height: 0; padding: 0; margin: 0; flex: none; accent-color: var(--md-purple-600); }
+.kindRow .kindOptionOn { border-color: var(--md-purple-600); background: var(--md-purple-50); box-shadow: 0 0 0 2px var(--md-purple-200); }
+.kindInfo { display: inline-flex; align-items: center; gap: 2px; padding: 6px 10px; border: 1px solid var(--md-purple-200); border-radius: 999px; background: var(--md-white); color: var(--md-purple-700); cursor: pointer; font: inherit; font-weight: 800; }
+.kindInfo[aria-expanded="true"] { background: var(--md-purple-50); border-color: var(--md-purple-600); }
+.kindGuide h3 { margin: 0 0 8px; font-size: 16px; }
+.kindGuide ol { margin: 0; padding-left: 22px; display: grid; gap: 6px; font-size: 14px; color: var(--md-color-text-secondary); list-style: decimal; }
+.kindGuide li { display: list-item; }
+.kindRow .kindInfo, .kindRow .kindInfo:hover, .kindRow .kindInfo[aria-expanded="true"] { color: var(--md-purple-700) !important; }
+.kindRow .kindInfo svg { stroke: currentColor; }
+.kindRow .kindInfo, .kindRow .kindInfo:hover, .kindRow .kindInfo:focus, .kindRow .kindInfo:active { background: var(--md-purple-50) !important; }

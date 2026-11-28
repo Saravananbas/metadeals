@@ -1,10 +1,9 @@
 import "server-only";
-import type { Prisma } from "@/generated/prisma/client";
+import type { Prisma, PrismaClient } from "@/generated/prisma/client";
 import { randomInt } from "node:crypto";
-import { getDatabase } from "@/server/db/client";
 import { canonicalPath, primaryCategorySlug, publicIdFromSlugPart, type CategoryLike } from "@/features/deals/seo-url";
 
-type Db = ReturnType<typeof getDatabase>;
+type Db = PrismaClient | Prisma.TransactionClient;
 const ID_ALPHABET = "0123456789abcdefghjkmnpqrstvwxyz";
 
 export function generatePublicId(): string {
@@ -49,7 +48,9 @@ export async function assignCanonicalPath(db: Db, dealId: string, categories?: M
     if (!path) return { path: deal.canonicalPath, publicId, changed: false, skipped: "no-category" };
     if (path === deal.canonicalPath) return { path, publicId, changed: false };
     try {
-      await db.$transaction(async (tx) => {
+      // Inside a caller's transaction the steps simply join it; on a plain client they get their own.
+      const inTransaction = <T,>(work: (tx: Prisma.TransactionClient) => Promise<T>) => ("$transaction" in db ? db.$transaction(work) : work(db));
+      await inTransaction(async (tx) => {
         const old = deal.canonicalPath;
         const moved = await tx.deal.updateMany({ where: { id: dealId, canonicalPath: old }, data: { canonicalPath: path } });
         if (moved.count !== 1) throw new Error("canonical-race");

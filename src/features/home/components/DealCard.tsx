@@ -83,6 +83,8 @@ export function DealCard({
   priority?: boolean;
 }) {
   const savings = getSavings(deal.originalPrice, deal.price);
+  // Travel and sale-page deals have no single price: the headline takes its place.
+  const noPrice = Boolean(deal.kind && deal.kind !== "PRODUCT");
   const galleryImages = useMemo(
     () => [...new Set([deal.image, ...(deal.imageGallery ?? [])].filter(Boolean))],
     [deal.image, deal.imageGallery],
@@ -137,7 +139,7 @@ export function DealCard({
   const postedDate = formatPostedDate(deal.publishedAt);
   const viewCount = deal.viewCount && deal.viewCount > 0 ? deal.viewCount : 0;
   // A coupon keeps the card's offer row; otherwise the best bank offer for this price is shown there.
-  const bank = bestOffer(deal.bankOffers, Math.round(deal.price * 100));
+  const bank = bestOffer(deal.bankOffers, noPrice ? 0 : Math.round(deal.price * 100));
   const shownOffer = bank?.offer ?? deal.bankOffers?.[0];
   // One item fits on the card; a "+N" opens the rest (coupon and every bank offer) in a pop-up on hover, focus or tap.
   const moreOffers = (deal.couponCode ? 1 : 0) + (deal.bankOffers?.length ?? 0) - 1;
@@ -186,6 +188,7 @@ export function DealCard({
   const [shareOpen, setShareOpen] = useState(false);
   const shareData = (): ShareDealData => ({
     slug: deal.slug || deal.id, title: deal.name, priceMinor: Math.round(deal.price * 100), mrpMinor: Math.round(deal.originalPrice * 100),
+    headline: noPrice ? deal.headline ?? null : null,
     storeName: deal.storeName ?? null, couponCode: deal.couponCode ?? null, bankOffers: deal.bankOffers ?? [],
     images: [deal.image, ...(deal.imageGallery ?? [])].filter(Boolean), expired: deal.expiry === "expired",
     brand: deal.brand, categoryName: deal.category.split("-").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" "), description: deal.description ?? null,
@@ -217,7 +220,7 @@ export function DealCard({
     >
       {/* ROW 1: Product Image, Discount Badge, Wishlist Icon */}
       <div className="deal-image-wrap">
-        <span className="discount-badge">{savings.percent}% OFF</span>
+        <span className="discount-badge">{noPrice ? (deal.kind === "TRAVEL" ? "TRAVEL" : "SALE") : `${savings.percent}% OFF`}</span>
         <button
           type="button"
           className={`save-deal ${saved ? "is-saved" : ""}`}
@@ -286,12 +289,12 @@ export function DealCard({
         {/* ROW 3: Price, MRP, Savings Badge & Star Rating */}
         <div className="deal-row-price">
           <div className="deal-price-col">
-            <div className="deal-price-numbers">
+            {noPrice ? <strong className="deal-headline">{deal.headline}</strong> : <div className="deal-price-numbers">
               <strong>{formatINR(Math.round(deal.price), { decimals: "never" })}</strong>
               {deal.originalPrice > 0 && (
                 <del>{formatINR(Math.round(deal.originalPrice), { decimals: "never" })}</del>
               )}
-            </div>
+            </div>}
 
             <div className="deal-savings-row">
               {savings.amount > 0 && (
@@ -390,7 +393,7 @@ export function DealCard({
             aria-label={`Buy ${deal.name} now`}
             onClick={(e) => e.stopPropagation()}
           >
-            <ShoppingCart size={16} aria-hidden="true" /> Buy Now <span className="deal-btn-divider" aria-hidden="true" /> <ExternalLink size={15} aria-hidden="true" />
+            <ShoppingCart size={16} aria-hidden="true" /> {noPrice ? "View Deal" : "Buy Now"} <span className="deal-btn-divider" aria-hidden="true" /> <ExternalLink size={15} aria-hidden="true" />
           </a>
         </div>
 

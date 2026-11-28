@@ -7294,6 +7294,8 @@ export const DealScalarFieldEnum = {
   productUrl: 'productUrl',
   affiliateUrl: 'affiliateUrl',
   couponCode: 'couponCode',
+  kind: 'kind',
+  headline: 'headline',
   editorNotes: 'editorNotes',
   editorNotesBy: 'editorNotesBy',
   status: 'status',

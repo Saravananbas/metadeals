@@ -57,10 +57,13 @@ export async function generateMetadata({
   const [deal] = await publicDealsWithMerchantLogos(db, [row]);
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://metadeals4u.in";
   const canonical = `${baseUrl}${resolution.canonical}`;
+  const noPrice = deal.kind !== "PRODUCT";
   const cut = (text: string, max: number) => (text.length <= max ? text : text.slice(0, max).replace(/\s+\S*$/, "") + "…");
-  const title = `${cut(deal.title, 68)} Deal – Latest Price | MetaDeals4U`;
+  const title = `${cut(deal.title, 68)} Deal – ${noPrice ? "Latest Offer" : "Latest Price"} | MetaDeals4U`;
   const saving = deal.discountPercent > 0 ? `, ${deal.discountPercent}% off MRP ${formatINR(deal.mrpMinor / 100)}` : "";
-  const description = cut(`Explore the ${deal.title} deal at ${deal.merchant.name} for ${formatINR(deal.priceMinor / 100)}${saving}. Compare the latest price, savings and available retailer offers on MetaDeals4U.`, 158);
+  const description = cut(noPrice
+    ? `${deal.headline}. Explore the ${deal.title} deal at ${deal.merchant.name} and compare the latest offers on MetaDeals4U.`
+    : `Explore the ${deal.title} deal at ${deal.merchant.name} for ${formatINR(deal.priceMinor / 100)}${saving}. Compare the latest price, savings and available retailer offers on MetaDeals4U.`, 158);
 
   return {
     title: { absolute: title },
@@ -158,7 +161,8 @@ export default async function DealDetailPage({
   const relatedDeals = await publicDealsWithMerchantLogos(db, relatedRows.slice(0, 5));
 
   // 3. Schema.org JSON-LD
-  const jsonLd = {
+  const noPrice = deal.kind !== "PRODUCT";
+  const productLd = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: deal.title,
@@ -188,6 +192,8 @@ export default async function DealDetailPage({
         }
       : {}),
   };
+  // A travel or sale-page deal has no single price to claim, so it is described as a plain page, not a Product with an Offer.
+  const jsonLd = noPrice ? { "@context": "https://schema.org", "@type": "WebPage", name: deal.title, description: deal.headline || deal.description || deal.title, url: `${baseUrl}${resolution.canonical}`, image: productLd.image } : productLd;
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
@@ -227,7 +233,7 @@ export default async function DealDetailPage({
               <CouponChip code={deal.couponCode} />
             </div>
           )}
-          <BankOffers offers={deal.bankOffers} priceMinor={deal.priceMinor} />
+          <BankOffers offers={deal.bankOffers} priceMinor={noPrice ? 0 : deal.priceMinor} />
         </>}
       />
       {sharer && <p className={extra.thanks}>Thanks to community member <strong>@{sharer.handle}</strong> for sharing this deal.</p>}
@@ -250,7 +256,7 @@ export default async function DealDetailPage({
   return (
     <div className={styles.pageWrapper}>
       <DealViewTracker slug={deal.slug} />
-      {deal.status !== "EXPIRED" && <StickyBuyBar title={deal.title} price={formatINR(deal.priceMinor / 100)} mrp={deal.mrpMinor > deal.priceMinor ? formatINR(deal.mrpMinor / 100) : undefined} savings={deal.savingsMinor > 0 ? `Save ${formatINR(deal.savingsMinor / 100)} (${deal.discountPercent}% OFF)` : undefined} slug={deal.slug} merchantName={deal.merchant.name} imageUrl={`${deal.image.url}?w=80`} href={`/go/${deal.id}`} />}
+      {deal.status !== "EXPIRED" && <StickyBuyBar buyLabel={noPrice ? "View Deal" : "Buy Now"} title={deal.title} price={noPrice ? deal.headline ?? "" : formatINR(deal.priceMinor / 100)} mrp={deal.mrpMinor > deal.priceMinor ? formatINR(deal.mrpMinor / 100) : undefined} savings={deal.savingsMinor > 0 ? `Save ${formatINR(deal.savingsMinor / 100)} (${deal.discountPercent}% OFF)` : undefined} slug={deal.slug} merchantName={deal.merchant.name} imageUrl={`${deal.image.url}?w=80`} href={`/go/${deal.id}`} />}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd([jsonLd, breadcrumbJsonLd]) }}
@@ -296,9 +302,9 @@ export default async function DealDetailPage({
             images={deal.imageGallery.map((image) => image.url)}
             discountPercent={deal.discountPercent}
             expired={deal.status === "EXPIRED"}
-            shareData={{ slug: deal.slug, title: deal.title, priceMinor: deal.priceMinor, mrpMinor: deal.mrpMinor, storeName: deal.merchant.name, couponCode: deal.couponCode, bankOffers: deal.bankOffers, images: [deal.image.url, ...deal.imageGallery.map((image) => image.url)], expired: deal.status === "EXPIRED", brand: deal.brand, categoryName: deal.category.name, description: deal.description }}
+            shareData={{ slug: deal.slug, title: deal.title, priceMinor: deal.priceMinor, mrpMinor: deal.mrpMinor, headline: noPrice ? deal.headline : null, storeName: deal.merchant.name, couponCode: deal.couponCode, bankOffers: deal.bankOffers, images: [deal.image.url, ...deal.imageGallery.map((image) => image.url)], expired: deal.status === "EXPIRED", brand: deal.brand, categoryName: deal.category.name, description: deal.description }}
           >
-            <DealPriceBuy dealId={deal.id} priceMinor={deal.priceMinor} mrpMinor={deal.mrpMinor} discountPercent={deal.discountPercent} savingsMinor={deal.savingsMinor} merchantName={deal.merchant.name} merchantLogoUrl={deal.merchant.logoUrl} />
+            <DealPriceBuy dealId={deal.id} priceMinor={deal.priceMinor} mrpMinor={deal.mrpMinor} discountPercent={deal.discountPercent} savingsMinor={deal.savingsMinor} merchantName={deal.merchant.name} merchantLogoUrl={deal.merchant.logoUrl} headline={deal.kind !== "PRODUCT" ? deal.headline : null} />
           </DealGallery>
           </div>
 
@@ -413,11 +419,11 @@ export default async function DealDetailPage({
 
                   <div style={{ display: "flex", gap: 8, alignItems: "baseline" }}>
                     <strong style={{ color: "var(--md-color-text)", fontSize: 16 }}>
-                      {formatINR(rel.priceMinor / 100)}
+                      {rel.kind !== "PRODUCT" ? rel.headline : formatINR(rel.priceMinor / 100)}
                     </strong>
-                    <del style={{ fontSize: 12, color: "var(--md-color-text-muted)" }}>
+                    {rel.kind === "PRODUCT" && <del style={{ fontSize: 12, color: "var(--md-color-text-muted)" }}>
                       {formatINR(rel.mrpMinor / 100)}
-                    </del>
+                    </del>}
                   </div>
 
                   <div

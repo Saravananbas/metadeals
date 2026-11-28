@@ -42,24 +42,35 @@ const Row = ({ d }: { d: Item }) => {
     : <span className={styles.simRow}>{inner}</span>}</li>;
 };
 
+/** The Ignore button: hides a notice for the matches it lists; a different set of matches shows it again. */
+function useIgnore(key: string) {
+  const [ignored, setIgnored] = useState("");
+  return [ignored === key, () => setIgnored(key)] as const;
+}
+const IgnoreButton = ({ onClick }: { onClick: () => void }) => <button type="button" className={styles.simIgnore} onClick={onClick}>Ignore</button>;
+
 /** "This product was already posted" notice for the link box. */
 export function SameLinkNotice({ check }: { check: DealCheck | null }) {
-  if (!check || (!check.sameLink.length && !check.pending)) return null;
+  const [ignored, ignore] = useIgnore(check ? `${check.sameLink.map((d) => d.slug).join(",")}|${check.pending}` : "");
+  if (!check || (!check.sameLink.length && !check.pending) || ignored) return null;
   return (
     <div className={styles.dupNotice} role="status">
       {check.sameLink.length > 0 && <><b>This product was already posted.</b> Check it before you post again:<ul>{check.sameLink.map((d) => <Row key={d.slug} d={d} />)}</ul></>}
       {check.pending && <p>Someone has already sent this link for review.</p>}
+      <IgnoreButton onClick={ignore} />
     </div>
   );
 }
 
 /** "Similar deals on MetaDeals4U" under the title box. */
 export function SimilarDeals({ check }: { check: DealCheck | null }) {
-  if (!check?.similar.length) return null;
+  const [ignored, ignore] = useIgnore(check ? check.similar.map((d) => d.slug).join(",") : "");
+  if (!check?.similar.length || ignored) return null;
   return (
     <div className={styles.similar}>
       <p>Similar deals on MetaDeals4U</p>
       <ul>{check.similar.map((d) => <Row key={d.slug} d={d} />)}</ul>
+      <IgnoreButton onClick={ignore} />
     </div>
   );
 }

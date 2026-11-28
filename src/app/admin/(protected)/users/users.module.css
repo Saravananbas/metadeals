@@ -55,3 +55,5 @@
   .tab, .primary, .link, .pager button { min-height: 40px; }
   .head { align-items: start; }
 }
+
+@media (min-width: 721px) { .table th.center, .table td.center { text-align: center; } }

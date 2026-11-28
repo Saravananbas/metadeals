@@ -132,6 +132,7 @@ export async function publishDealToDestinations(
       brand: deal.brand,
       priceMinor: deal.priceMinor,
       mrpMinor: deal.mrpMinor,
+      headline: deal.kind !== "PRODUCT" ? deal.headline : null,
       merchantName: deal.merchant.name,
       siteBaseUrl: process.env.NEXT_PUBLIC_APP_URL,
     };

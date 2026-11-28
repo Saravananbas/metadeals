@@ -6,6 +6,8 @@ export type ShareDealData = {
   title: string;
   priceMinor: number;
   mrpMinor: number;
+  /** Travel and sale-page deals: shown instead of the price (they have no fixed price or MRP). */
+  headline?: string | null;
   storeName: string | null;
   couponCode: string | null;
   bankOffers: BankOfferView[];

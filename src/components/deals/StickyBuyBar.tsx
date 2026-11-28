@@ -8,7 +8,7 @@ import { DislikeMenu } from "./DislikeMenu";
 import styles from "./DealExtras.module.css";
 
 /** Appears at the top once the main Buy Now button scrolls out of view, so shoppers can buy without scrolling back up. */
-export function StickyBuyBar({ title, price, mrp, savings, slug, merchantName, imageUrl, href }: { title: string; price: string; mrp?: string; savings?: string; slug: string; merchantName: string; imageUrl: string; href: string }) {
+export function StickyBuyBar({ title, price, mrp, savings, slug, merchantName, imageUrl, href, buyLabel = "Buy Now" }: { buyLabel?: string; title: string; price: string; mrp?: string; savings?: string; slug: string; merchantName: string; imageUrl: string; href: string }) {
   const [show, setShow] = useState(false);
   const [votes, setVotes] = useState({ up: 0, down: 0, liked: false, disliked: false });
   const [menu, setMenu] = useState(false);
@@ -44,7 +44,7 @@ export function StickyBuyBar({ title, price, mrp, savings, slug, merchantName, i
         </div>
         {(mrp || savings) && <div className={styles.stickyPrices}>{mrp && <del>MRP {mrp}</del>}{savings && <span>{savings}</span>}</div>}
         <span className={styles.stickyPrice}>{price}</span>
-        <a className={styles.stickyBuy} href={href} target="_blank" rel="sponsored noopener noreferrer" tabIndex={show ? 0 : -1}>Buy Now</a>
+        <a className={styles.stickyBuy} href={href} target="_blank" rel="sponsored noopener noreferrer" tabIndex={show ? 0 : -1}>{buyLabel}</a>
       </div>
     </div>
   );
