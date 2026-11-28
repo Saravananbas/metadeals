@@ -6,6 +6,8 @@
 export const PUBLIC_ID_PATTERN = /^d[0-9a-z]{8}$/;
 const ID_AT_END = /(?:^|-)(d[0-9a-z]{8})$/;
 const MAX_SLUG = 90;
+// Placeholder brands that importers fill in when none is known: never part of an address.
+const GENERIC_BRANDS = new Set(["brand", "unknown", "generic", "na", "n a", "none", "unbranded", "no brand", "other", "others"]);
 
 /** Lower-case ASCII words joined with hyphens. Accents are folded, a few symbols are spelled out, everything else is dropped. */
 export function slugWords(text: string): string[] {
@@ -19,7 +21,7 @@ export function slugWords(text: string): string[] {
 
 /** Removes a word or phrase that is immediately repeated ("pigeon pigeon popular", "blue heaven blue heaven makeup"). Longest phrase first. */
 export function collapseRepeats(words: string[]): string[] {
-  let out = words.slice();
+  const out = words.slice();
   for (let n = Math.min(4, Math.floor(out.length / 2)); n >= 1; n--) {
     for (let i = 0; i + 2 * n <= out.length; ) {
       if (out.slice(i, i + n).join(" ") === out.slice(i + n, i + 2 * n).join(" ")) out.splice(i + n, n);
@@ -33,7 +35,7 @@ export function collapseRepeats(words: string[]): string[] {
 export function productSlug(title: string, brand?: string | null): string {
   let words = collapseRepeats(slugWords(title));
   // A title that does not mention the brand gets it in front (brand and model are the product's identity).
-  const brandWords = collapseRepeats(slugWords(brand ?? ""));
+  const brandWords = GENERIC_BRANDS.has(slugWords(brand ?? "").join(" ")) ? [] : collapseRepeats(slugWords(brand ?? ""));
   if (brandWords.length && !words.join(" ").includes(brandWords.join(" "))) words = [...brandWords, ...words];
   let slug = "";
   for (const word of words) {

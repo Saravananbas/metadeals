@@ -18,6 +18,8 @@ export type Deal = {
   storeName?: string;
   storeLogoUrl?: string | null;
   slug?: string;
+  /** Canonical address (/deal/{category}/{name}-{id}); links use this, falling back to the old slug address (which redirects). */
+  path?: string | null;
   description?: string;
   expiresAt?: string | null;
   status?: string;
