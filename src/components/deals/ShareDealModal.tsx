@@ -71,11 +71,13 @@ export function ShareDealModal({ deal, url, onClose, onShared }: { deal: ShareDe
     else setToast("Could not copy. Select the code and copy it by hand.");
   }
 
-  /** WhatsApp and Telegram: the device's share sheet with the picture when it can carry files, else the app's own share page with the message and the picture saved to attach. */
+  /** WhatsApp and Telegram: the device's share sheet with the picture when it can carry files, else (desktop) the app's own share page with the message and the picture saved to attach. */
   async function viaApp(app: "whatsapp" | "telegram") {
     const f = file();
     if (!f) return;
-    if (typeof navigator.canShare === "function" && navigator.canShare({ files: [f] })) {
+    // Desktop share sheets (Windows, Mac) hand the app only the picture and drop the text, so only touch devices use it; desktop opens the app's own share page with the message.
+    const touchDevice = window.matchMedia("(pointer: coarse)").matches;
+    if (touchDevice && typeof navigator.canShare === "function" && navigator.canShare({ files: [f] })) {
       try {
         await navigator.share({ files: [f], title: deal.title, text: message });
         counts(); setNotice("Shared.");
@@ -91,7 +93,7 @@ export function ShareDealModal({ deal, url, onClose, onShared }: { deal: ShareDe
     download();
     const copied = await copyText(message);
     counts();
-    setNotice(`The picture is saved to your downloads${copied ? " and the message is copied" : ""}. ${app === "whatsapp" ? "WhatsApp" : "Telegram"} could not take the picture from here, so attach the saved picture to your message.`);
+    setNotice(`The picture is saved to your downloads${copied ? " and the message is copied" : ""}. Attach the saved picture to your ${app === "whatsapp" ? "WhatsApp" : "Telegram"} message.`);
   }
 
   async function copyMessage() { if (await copyText(message)) { counts(); setNotice("Message copied."); } else setNotice("Could not copy the message."); }

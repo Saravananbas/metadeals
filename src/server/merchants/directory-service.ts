@@ -1,4 +1,5 @@
 import { ci } from "@/server/db/case-insensitive";
+import { searchMerchantDirectoryIdsMariaDb, usesMariaDb } from "@/server/community/like-search";
 import "server-only";
 import { z } from "zod";
 import { getDatabase } from "@/server/db/client";
@@ -104,7 +105,8 @@ export class MerchantWebsiteDirectoryService {
 
     if (filters.search) {
       const q = filters.search.trim();
-      where.OR = [
+      if (usesMariaDb()) where.id = { in: await searchMerchantDirectoryIdsMariaDb(q) };
+      else where.OR = [
         { name: { contains: q, ...ci() } },
         { domain: { contains: q, ...ci() } },
         { productFocus: { contains: q, ...ci() } },

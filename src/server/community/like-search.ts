@@ -56,3 +56,17 @@ export async function dealIdsByUrlFragmentMariaDb(fragment: string): Promise<str
   const rows = await raw().$queryRaw<{ id: string }[]>(Prisma.sql`SELECT id FROM Deal WHERE productUrl LIKE ${p} OR affiliateUrl LIKE ${p} LIMIT 20`);
   return rows.map((r) => r.id);
 }
+
+/** Ids of directory merchants whose name, domain or focus contains the text (Prisma's generated LIKE fails on the MariaDB host, see the note at the top). */
+export async function searchMerchantDirectoryIdsMariaDb(text: string): Promise<string[]> {
+  const p = `%${escapeLike(text)}%`;
+  const rows = await raw().$queryRaw<{ id: string }[]>(Prisma.sql`SELECT id FROM MerchantWebsiteDirectory WHERE name LIKE ${p} OR domain LIKE ${p} OR productFocus LIKE ${p} LIMIT 2000`);
+  return rows.map((r) => r.id);
+}
+
+/** Ids of staff accounts whose email or name contains the text. */
+export async function searchStaffIdsMariaDb(text: string): Promise<string[]> {
+  const p = `%${escapeLike(text)}%`;
+  const rows = await raw().$queryRaw<{ id: string }[]>(Prisma.sql`SELECT id FROM User WHERE email LIKE ${p} OR name LIKE ${p} LIMIT 2000`);
+  return rows.map((r) => r.id);
+}
