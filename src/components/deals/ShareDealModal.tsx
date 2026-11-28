@@ -86,14 +86,13 @@ export function ShareDealModal({ deal, url, onClose, onShared }: { deal: ShareDe
         if ((error as Error).name === "AbortError") return; // the visitor closed the sheet
       }
     }
-    const target = app === "whatsapp"
-      ? `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`
-      : `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(buildShareMessage(deal, url, { includeUrl: false }))}`;
+    // Desktop: the picture goes on the clipboard (paste it first), then the message is copied on request, so the picture comes before the text in the chat.
+    const target = app === "whatsapp" ? "https://web.whatsapp.com/" : "https://web.telegram.org/";
     window.open(target, "_blank", "noopener"); // opened first, while the click still counts as the visitor's own action
-    download();
-    const copied = await copyText(message);
+    let pictureCopied = false;
+    try { await navigator.clipboard.write([new ClipboardItem({ "image/png": f })]); pictureCopied = true; } catch { download(); }
     counts();
-    setNotice(`The picture is saved to your downloads${copied ? " and the message is copied" : ""}. Attach the saved picture to your ${app === "whatsapp" ? "WhatsApp" : "Telegram"} message.`);
+    setNotice(`${pictureCopied ? "Picture copied" : "Picture saved to your downloads"}. In ${app === "whatsapp" ? "WhatsApp" : "Telegram"} ${pictureCopied ? "paste it (Ctrl+V)" : "attach it"} and send, then press "Copy message" here and paste the message after it.`);
   }
 
   async function copyMessage() { if (await copyText(message)) { counts(); setNotice("Message copied."); } else setNotice("Could not copy the message."); }
