@@ -1167,3 +1167,9 @@
 .cardHead > div, .fetchTitle > div { display: flex; align-items: baseline; gap: 4px 10px; flex-wrap: wrap; min-width: 0; }
 .cardHead p, .fetchTitle p { margin: 0; }
 
+/* Desktop: label and field on one row (label left, field filling the rest). Phones keep the stacked layout. */
+@media (min-width: 721px) {
+  .inlineFields > label:has(> input:not([type="checkbox"]):not([type="radio"]), > select) { display: grid; grid-template-columns: max-content minmax(0, 1fr); align-items: center; column-gap: 12px; row-gap: 2px; }
+  .inlineFields > label:has(> input:not([type="checkbox"]):not([type="radio"]), > select) > small { grid-column: 2; }
+}
+

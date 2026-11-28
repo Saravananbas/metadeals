@@ -2762,7 +2762,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
                 <span className={styles.cardIcon}><Tag size={18} aria-hidden="true" /></span>
                 <div><h3>Deal Details</h3><p>Enter the basic information about the product/deal.</p></div>
               </div>
-              <div className={styles.fieldGrid}>
+              <div className={`${styles.fieldGrid} ${styles.inlineFields}`}>
             {form.kind !== "PRODUCT" && (
               <label className={styles.fullRow}>
                 Headline <b aria-hidden="true">*</b>
@@ -2899,7 +2899,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
                 <span className={styles.cardIcon}><Tag size={18} aria-hidden="true" /></span>
                 <div><h3>Pricing &amp; Merchant</h3><p>Set the price, merchant and affiliate details.</p></div>
               </div>
-              <div className={`${styles.fieldGrid} ${styles.cols3}`}>
+              <div className={`${styles.fieldGrid} ${styles.cols3} ${styles.inlineFields}`}>
             <label>
               Primary merchant
               <select required value={form.merchantId} onChange={(e) => field("merchantId", e.target.value)}>
