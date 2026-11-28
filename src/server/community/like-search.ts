@@ -26,8 +26,8 @@ export async function findPostByCodeMariaDb(code: string): Promise<{ id: string;
 }
 
 /** Deal that people can open (published or expired) whose id ends with the code. */
-export async function findDealByCodeMariaDb(code: string): Promise<{ id: string; slug: string } | null> {
-  const rows = await raw().$queryRaw<{ id: string; slug: string }[]>(Prisma.sql`SELECT id, slug FROM Deal WHERE status IN ('PUBLISHED', 'EXPIRED') AND RIGHT(id, ${code.length}) = ${code} LIMIT 1`);
+export async function findDealByCodeMariaDb(code: string): Promise<{ id: string; slug: string; canonicalPath: string | null } | null> {
+  const rows = await raw().$queryRaw<{ id: string; slug: string; canonicalPath: string | null }[]>(Prisma.sql`SELECT id, slug, canonicalPath FROM Deal WHERE status IN ('PUBLISHED', 'EXPIRED') AND RIGHT(id, ${code.length}) = ${code} LIMIT 1`);
   return rows[0] ?? null;
 }
 

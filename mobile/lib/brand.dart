@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'auth.dart';
 import 'saved_store.dart';
 import 'web_tab.dart';
 import 'widgets.dart';
@@ -50,6 +52,8 @@ class ProfileButton extends StatelessWidget {
               nav.push(MaterialPageRoute(builder: (_) => const WebPage(path: '/privacy', title: 'Privacy policy')));
             case 'signout':
               // The website's sign-in lives in the web view's cookies: clearing them signs the member out.
+              await AppAuth.instance.signOut();
+              (await SharedPreferences.getInstance()).remove('login_skip_until');
               await WebViewCookieManager().clearCookies();
               nav.popUntil((route) => route.isFirst);
               appStage.value = Stage.login;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'api.dart';
+import 'auth.dart';
 import 'brand.dart';
 import 'onboarding.dart';
 import 'saved_store.dart';
@@ -14,7 +15,12 @@ Future<void> main() async {
   await saved.load();
   sharedSaved = saved;
   final prefs = await SharedPreferences.getInstance();
-  appStage.value = (prefs.getBool('onboarded_v1') ?? false) ? Stage.login : Stage.onboarding;
+  // Signed in natively, or recently signed in / skipped (7 days): straight to the app.
+  final skipUntil = prefs.getInt('login_skip_until') ?? 0;
+  final signedIn = await AppAuth.instance.signedIn;
+  appStage.value = !(prefs.getBool('onboarded_v1') ?? false)
+      ? Stage.onboarding
+      : (signedIn || skipUntil > DateTime.now().millisecondsSinceEpoch) ? Stage.app : Stage.login;
   runApp(MetaDealsApp(api: Api(), saved: saved));
 }
 
@@ -26,6 +32,11 @@ class MetaDealsApp extends StatelessWidget {
   Future<void> _finishOnboarding() async {
     (await SharedPreferences.getInstance()).setBool('onboarded_v1', true);
     appStage.value = Stage.login;
+  }
+
+  Future<void> _skipLogin() async {
+    (await SharedPreferences.getInstance()).setInt('login_skip_until', DateTime.now().add(const Duration(days: 7)).millisecondsSinceEpoch);
+    appStage.value = Stage.app;
   }
 
   @override
@@ -44,7 +55,7 @@ class MetaDealsApp extends StatelessWidget {
           builder: (_, stage, _) => switch (stage) {
             Stage.loading => const Scaffold(body: Center(child: CircularProgressIndicator())),
             Stage.onboarding => Onboarding(onDone: _finishOnboarding),
-            Stage.login => LoginGate(onDone: () => appStage.value = Stage.app, onSkip: () => appStage.value = Stage.app),
+            Stage.login => LoginGate(onDone: () => appStage.value = Stage.app, onSkip: _skipLogin),
             Stage.app => Shell(api: api, saved: saved),
           },
         ),

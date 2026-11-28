@@ -130,7 +130,7 @@ function plan(deal: ShareDealData, picture: ImageBitmap | null, family: string, 
 
   // B. Price panel: Deal Price | MRP | You Save, in one row.
   const showSave = savingsMinor > 0;
-  const price = formatPaise(deal.priceMinor), mrp = formatPaise(deal.mrpMinor), save = `${formatPaise(savingsMinor)} (${discountPercent}%)`;
+  const price = deal.headline || formatPaise(deal.priceMinor), mrp = formatPaise(deal.mrpMinor), save = `${formatPaise(savingsMinor)} (${discountPercent}%)`;
   let priceSize = 70, otherSize = 38;
   const widths = () => {
     m.font = font(900, priceSize); const a = m.measureText(price).width;
@@ -140,6 +140,8 @@ function plan(deal: ShareDealData, picture: ImageBitmap | null, family: string, 
   const panelInner = innerW - 44;
   // The three parts shrink together (never below a readable size) until the row fits the panel.
   for (let { a, b, c } = widths(); showSave && a + b + c + 40 + 90 > panelInner && priceSize > 50; { a, b, c } = widths()) { priceSize -= 3; otherSize = Math.max(30, otherSize - 2); }
+  // A headline replaces the price and can be long: shrink it to fit the panel.
+  if (deal.headline) while (widths().a > panelInner && priceSize > 28) priceSize -= 2;
   const w = widths();
   const panelH = 150;
   const panelTop = y;
@@ -224,7 +226,7 @@ function plan(deal: ShareDealData, picture: ImageBitmap | null, family: string, 
     ctx.fillStyle = C.panel; roundRect(ctx, PAD, panelTop, innerW, panelH, 34); ctx.fill();
     let x = PAD + 28;
     ctx.textBaseline = "alphabetic";
-    ctx.font = font(800, 32); ctx.fillStyle = C.purple; ctx.fillText("Deal Price:", x, panelTop + 46);
+    ctx.font = font(800, 32); ctx.fillStyle = C.purple; ctx.fillText(deal.headline ? "Offer:" : "Deal Price:", x, panelTop + 46);
     ctx.font = font(900, priceSize); ctx.fillText(price, x, panelTop + 46 + priceSize * 0.98);
     x += w.a + 28;
     if (showSave) {
@@ -296,4 +298,4 @@ export async function renderShareCard(deal: ShareDealData, _url: string): Promis
 }
 
 /** Cache key: changes whenever anything shown on the card changes. */
-export const cardKey = (deal: ShareDealData, url: string) => JSON.stringify([CARD_VERSION, url, deal.title, deal.priceMinor, deal.mrpMinor, deal.storeName, deal.couponCode, deal.expired, deal.images, deal.bankOffers.map((o) => [o.id, offerShareLine(o)])]);
+export const cardKey = (deal: ShareDealData, url: string) => JSON.stringify([CARD_VERSION, url, deal.title, deal.priceMinor, deal.mrpMinor, deal.headline ?? "", deal.storeName, deal.couponCode, deal.expired, deal.images, deal.bankOffers.map((o) => [o.id, offerShareLine(o)])]);

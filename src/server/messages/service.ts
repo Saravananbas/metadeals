@@ -1,3 +1,4 @@
+import { ci } from "@/server/db/case-insensitive";
 import "server-only";
 import { z } from "zod";
 import { Prisma } from "@/generated/prisma/client";
@@ -309,7 +310,7 @@ export async function searchMembers(customerId: string, q: string) {
     ids = rows.map((r) => r.id);
   }
   const found = await db.forumProfile.findMany({
-    where: { customer: { disabledAt: null }, ...(ids ? { id: { in: ids.filter((id) => id !== profile.id) } } : { id: { not: profile.id }, OR: [{ handle: { startsWith: text } }, { displayName: { startsWith: text, mode: "insensitive" } }] }) },
+    where: { customer: { disabledAt: null }, ...(ids ? { id: { in: ids.filter((id) => id !== profile.id) } } : { id: { not: profile.id }, OR: [{ handle: { startsWith: text } }, { displayName: { startsWith: text, ...ci() } }] }) },
     orderBy: { handle: "asc" }, take: 8, select: memberSelect,
   });
   const blocks = found.length ? await db.dmBlock.findMany({ where: { OR: [{ blockerId: profile.id, blockedId: { in: found.map((f) => f.id) } }, { blockedId: profile.id, blockerId: { in: found.map((f) => f.id) } }] }, select: { blockerId: true, blockedId: true } }) : [];

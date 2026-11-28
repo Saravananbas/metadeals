@@ -1,4 +1,5 @@
 import "server-only";
+import { assignCanonicalPath, rememberDeletedDeal } from "./seo-url-service";
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { getAuthEnv } from "@/config/env";
 import { can, type Permission, type AdminRole } from "@/server/auth/permissions";
@@ -86,6 +87,8 @@ export async function saveDeal(db: DealDatabase, actor: DealActor, raw: unknown,
   } else {
     result = await db.deal.create({ data: { ...data, createdById: actor.id }, include: dealInclude });
   }
+  // Keep the deal's public address in step with its title and primary category (the old address is remembered and redirected).
+  await assignCanonicalPath(db, result.id);
   await db.dealGalleryImage.deleteMany({ where: { dealId: result.id } });
   if (galleryMediaIds.length) {
     await db.dealGalleryImage.createMany({
@@ -122,6 +125,7 @@ export async function changeDealState(db: DealDatabase, actor: DealActor, id: st
   if (before.version !== version) throw new DealError("This deal changed. Reload first.", 409);
   if (action === "delete") {
     // Any status may be deleted (the admin UI confirms first); clicks and transactions keep their rows, the audit log keeps the snapshot.
+    await rememberDeletedDeal(db, { id, slug: before.slug, canonicalPath: before.canonicalPath ?? null }); // old links answer 410 Gone
     const result = await db.deal.deleteMany({ where: { id, version } });
     if (result.count !== 1) throw new DealError("Concurrent edit. Reload first.", 409);
     await audit(db, actor, "deal.deleted", id, before, null);

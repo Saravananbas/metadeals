@@ -22,21 +22,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const deals = await getDatabase().deal.findMany({
       where: {
+        canonicalPath: { not: null },
         status: "PUBLISHED",
         publishedAt: { not: null, lte: now },
         OR: [{ startsAt: null }, { startsAt: { lte: now } }],
         AND: [{ OR: [{ expiresAt: null }, { expiresAt: { gt: now } }] }],
       },
+      // Canonical addresses only: a deal without one has not been migrated (or has no usable category) and is left out, as are old, redirecting addresses.
       select: {
-        slug: true,
+        canonicalPath: true,
         updatedAt: true,
       },
-      take: 5000,
+      take: 45000, // one sitemap file holds up to 50,000 addresses
       orderBy: { updatedAt: "desc" },
     });
 
     const dealRoutes: MetadataRoute.Sitemap = deals.map((deal) => ({
-      url: `${baseUrl}/deal/${deal.slug}`,
+      url: `${baseUrl}${deal.canonicalPath}`,
       lastModified: deal.updatedAt,
       changeFrequency: "hourly",
       priority: 0.8,

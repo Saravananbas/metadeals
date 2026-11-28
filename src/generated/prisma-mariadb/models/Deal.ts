@@ -49,6 +49,8 @@ export type DealSumAggregateOutputType = {
 export type DealMinAggregateOutputType = {
   id: string | null
   slug: string | null
+  publicId: string | null
+  canonicalPath: string | null
   title: string | null
   brand: string | null
   description: string | null
@@ -67,6 +69,8 @@ export type DealMinAggregateOutputType = {
   productUrl: string | null
   affiliateUrl: string | null
   couponCode: string | null
+  kind: string | null
+  headline: string | null
   editorNotes: string | null
   editorNotesBy: string | null
   status: $Enums.DealStatus | null
@@ -88,6 +92,8 @@ export type DealMinAggregateOutputType = {
 export type DealMaxAggregateOutputType = {
   id: string | null
   slug: string | null
+  publicId: string | null
+  canonicalPath: string | null
   title: string | null
   brand: string | null
   description: string | null
@@ -106,6 +112,8 @@ export type DealMaxAggregateOutputType = {
   productUrl: string | null
   affiliateUrl: string | null
   couponCode: string | null
+  kind: string | null
+  headline: string | null
   editorNotes: string | null
   editorNotesBy: string | null
   status: $Enums.DealStatus | null
@@ -127,6 +135,8 @@ export type DealMaxAggregateOutputType = {
 export type DealCountAggregateOutputType = {
   id: number
   slug: number
+  publicId: number
+  canonicalPath: number
   title: number
   brand: number
   description: number
@@ -145,6 +155,8 @@ export type DealCountAggregateOutputType = {
   productUrl: number
   affiliateUrl: number
   couponCode: number
+  kind: number
+  headline: number
   editorNotes: number
   editorNotesBy: number
   status: number
@@ -188,6 +200,8 @@ export type DealSumAggregateInputType = {
 export type DealMinAggregateInputType = {
   id?: true
   slug?: true
+  publicId?: true
+  canonicalPath?: true
   title?: true
   brand?: true
   description?: true
@@ -206,6 +220,8 @@ export type DealMinAggregateInputType = {
   productUrl?: true
   affiliateUrl?: true
   couponCode?: true
+  kind?: true
+  headline?: true
   editorNotes?: true
   editorNotesBy?: true
   status?: true
@@ -227,6 +243,8 @@ export type DealMinAggregateInputType = {
 export type DealMaxAggregateInputType = {
   id?: true
   slug?: true
+  publicId?: true
+  canonicalPath?: true
   title?: true
   brand?: true
   description?: true
@@ -245,6 +263,8 @@ export type DealMaxAggregateInputType = {
   productUrl?: true
   affiliateUrl?: true
   couponCode?: true
+  kind?: true
+  headline?: true
   editorNotes?: true
   editorNotesBy?: true
   status?: true
@@ -266,6 +286,8 @@ export type DealMaxAggregateInputType = {
 export type DealCountAggregateInputType = {
   id?: true
   slug?: true
+  publicId?: true
+  canonicalPath?: true
   title?: true
   brand?: true
   description?: true
@@ -284,6 +306,8 @@ export type DealCountAggregateInputType = {
   productUrl?: true
   affiliateUrl?: true
   couponCode?: true
+  kind?: true
+  headline?: true
   editorNotes?: true
   editorNotesBy?: true
   status?: true
@@ -392,6 +416,8 @@ export type DealGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 export type DealGroupByOutputType = {
   id: string
   slug: string
+  publicId: string | null
+  canonicalPath: string | null
   title: string
   brand: string
   description: string
@@ -410,6 +436,8 @@ export type DealGroupByOutputType = {
   productUrl: string
   affiliateUrl: string | null
   couponCode: string | null
+  kind: string
+  headline: string | null
   editorNotes: string | null
   editorNotesBy: string | null
   status: $Enums.DealStatus
@@ -454,6 +482,8 @@ export type DealWhereInput = {
   NOT?: Prisma.DealWhereInput | Prisma.DealWhereInput[]
   id?: Prisma.StringFilter<"Deal"> | string
   slug?: Prisma.StringFilter<"Deal"> | string
+  publicId?: Prisma.StringNullableFilter<"Deal"> | string | null
+  canonicalPath?: Prisma.StringNullableFilter<"Deal"> | string | null
   title?: Prisma.StringFilter<"Deal"> | string
   brand?: Prisma.StringFilter<"Deal"> | string
   description?: Prisma.StringFilter<"Deal"> | string
@@ -472,6 +502,8 @@ export type DealWhereInput = {
   productUrl?: Prisma.StringFilter<"Deal"> | string
   affiliateUrl?: Prisma.StringNullableFilter<"Deal"> | string | null
   couponCode?: Prisma.StringNullableFilter<"Deal"> | string | null
+  kind?: Prisma.StringFilter<"Deal"> | string
+  headline?: Prisma.StringNullableFilter<"Deal"> | string | null
   editorNotes?: Prisma.StringNullableFilter<"Deal"> | string | null
   editorNotesBy?: Prisma.StringNullableFilter<"Deal"> | string | null
   status?: Prisma.EnumDealStatusFilter<"Deal"> | $Enums.DealStatus
@@ -509,6 +541,8 @@ export type DealWhereInput = {
 export type DealOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   slug?: Prisma.SortOrder
+  publicId?: Prisma.SortOrderInput | Prisma.SortOrder
+  canonicalPath?: Prisma.SortOrderInput | Prisma.SortOrder
   title?: Prisma.SortOrder
   brand?: Prisma.SortOrder
   description?: Prisma.SortOrder
@@ -527,6 +561,8 @@ export type DealOrderByWithRelationInput = {
   productUrl?: Prisma.SortOrder
   affiliateUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   couponCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  kind?: Prisma.SortOrder
+  headline?: Prisma.SortOrderInput | Prisma.SortOrder
   editorNotes?: Prisma.SortOrderInput | Prisma.SortOrder
   editorNotesBy?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -565,6 +601,8 @@ export type DealOrderByWithRelationInput = {
 export type DealWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   slug?: string
+  publicId?: string
+  canonicalPath?: string
   AND?: Prisma.DealWhereInput | Prisma.DealWhereInput[]
   OR?: Prisma.DealWhereInput[]
   NOT?: Prisma.DealWhereInput | Prisma.DealWhereInput[]
@@ -586,6 +624,8 @@ export type DealWhereUniqueInput = Prisma.AtLeast<{
   productUrl?: Prisma.StringFilter<"Deal"> | string
   affiliateUrl?: Prisma.StringNullableFilter<"Deal"> | string | null
   couponCode?: Prisma.StringNullableFilter<"Deal"> | string | null
+  kind?: Prisma.StringFilter<"Deal"> | string
+  headline?: Prisma.StringNullableFilter<"Deal"> | string | null
   editorNotes?: Prisma.StringNullableFilter<"Deal"> | string | null
   editorNotesBy?: Prisma.StringNullableFilter<"Deal"> | string | null
   status?: Prisma.EnumDealStatusFilter<"Deal"> | $Enums.DealStatus
@@ -618,11 +658,13 @@ export type DealWhereUniqueInput = Prisma.AtLeast<{
   votes?: Prisma.DealVoteListRelationFilter
   notes?: Prisma.DealNoteListRelationFilter
   bankOffers?: Prisma.DealBankOfferListRelationFilter
-}, "id" | "slug">
+}, "id" | "slug" | "publicId" | "canonicalPath">
 
 export type DealOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   slug?: Prisma.SortOrder
+  publicId?: Prisma.SortOrderInput | Prisma.SortOrder
+  canonicalPath?: Prisma.SortOrderInput | Prisma.SortOrder
   title?: Prisma.SortOrder
   brand?: Prisma.SortOrder
   description?: Prisma.SortOrder
@@ -641,6 +683,8 @@ export type DealOrderByWithAggregationInput = {
   productUrl?: Prisma.SortOrder
   affiliateUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   couponCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  kind?: Prisma.SortOrder
+  headline?: Prisma.SortOrderInput | Prisma.SortOrder
   editorNotes?: Prisma.SortOrderInput | Prisma.SortOrder
   editorNotesBy?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -670,6 +714,8 @@ export type DealScalarWhereWithAggregatesInput = {
   NOT?: Prisma.DealScalarWhereWithAggregatesInput | Prisma.DealScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Deal"> | string
   slug?: Prisma.StringWithAggregatesFilter<"Deal"> | string
+  publicId?: Prisma.StringNullableWithAggregatesFilter<"Deal"> | string | null
+  canonicalPath?: Prisma.StringNullableWithAggregatesFilter<"Deal"> | string | null
   title?: Prisma.StringWithAggregatesFilter<"Deal"> | string
   brand?: Prisma.StringWithAggregatesFilter<"Deal"> | string
   description?: Prisma.StringWithAggregatesFilter<"Deal"> | string
@@ -688,6 +734,8 @@ export type DealScalarWhereWithAggregatesInput = {
   productUrl?: Prisma.StringWithAggregatesFilter<"Deal"> | string
   affiliateUrl?: Prisma.StringNullableWithAggregatesFilter<"Deal"> | string | null
   couponCode?: Prisma.StringNullableWithAggregatesFilter<"Deal"> | string | null
+  kind?: Prisma.StringWithAggregatesFilter<"Deal"> | string
+  headline?: Prisma.StringNullableWithAggregatesFilter<"Deal"> | string | null
   editorNotes?: Prisma.StringNullableWithAggregatesFilter<"Deal"> | string | null
   editorNotesBy?: Prisma.StringNullableWithAggregatesFilter<"Deal"> | string | null
   status?: Prisma.EnumDealStatusWithAggregatesFilter<"Deal"> | $Enums.DealStatus
@@ -709,6 +757,8 @@ export type DealScalarWhereWithAggregatesInput = {
 export type DealCreateInput = {
   id?: string
   slug: string
+  publicId?: string | null
+  canonicalPath?: string | null
   title: string
   brand: string
   description: string
@@ -724,6 +774,8 @@ export type DealCreateInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  kind?: string
+  headline?: string | null
   editorNotes?: string | null
   editorNotesBy?: string | null
   status?: $Enums.DealStatus
@@ -759,6 +811,8 @@ export type DealCreateInput = {
 export type DealUncheckedCreateInput = {
   id?: string
   slug: string
+  publicId?: string | null
+  canonicalPath?: string | null
   title: string
   brand: string
   description: string
@@ -777,6 +831,8 @@ export type DealUncheckedCreateInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  kind?: string
+  headline?: string | null
   editorNotes?: string | null
   editorNotesBy?: string | null
   status?: $Enums.DealStatus
@@ -809,6 +865,8 @@ export type DealUncheckedCreateInput = {
 export type DealUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canonicalPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -824,6 +882,8 @@ export type DealUpdateInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
@@ -859,6 +919,8 @@ export type DealUpdateInput = {
 export type DealUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canonicalPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -877,6 +939,8 @@ export type DealUncheckedUpdateInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
@@ -909,6 +973,8 @@ export type DealUncheckedUpdateInput = {
 export type DealCreateManyInput = {
   id?: string
   slug: string
+  publicId?: string | null
+  canonicalPath?: string | null
   title: string
   brand: string
   description: string
@@ -927,6 +993,8 @@ export type DealCreateManyInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  kind?: string
+  headline?: string | null
   editorNotes?: string | null
   editorNotesBy?: string | null
   status?: $Enums.DealStatus
@@ -948,6 +1016,8 @@ export type DealCreateManyInput = {
 export type DealUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canonicalPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -963,6 +1033,8 @@ export type DealUpdateManyMutationInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
@@ -982,6 +1054,8 @@ export type DealUpdateManyMutationInput = {
 export type DealUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canonicalPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1000,6 +1074,8 @@ export type DealUncheckedUpdateManyInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
@@ -1037,6 +1113,8 @@ export type DealOrderByRelevanceInput = {
 export type DealCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   slug?: Prisma.SortOrder
+  publicId?: Prisma.SortOrder
+  canonicalPath?: Prisma.SortOrder
   title?: Prisma.SortOrder
   brand?: Prisma.SortOrder
   description?: Prisma.SortOrder
@@ -1055,6 +1133,8 @@ export type DealCountOrderByAggregateInput = {
   productUrl?: Prisma.SortOrder
   affiliateUrl?: Prisma.SortOrder
   couponCode?: Prisma.SortOrder
+  kind?: Prisma.SortOrder
+  headline?: Prisma.SortOrder
   editorNotes?: Prisma.SortOrder
   editorNotesBy?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -1086,6 +1166,8 @@ export type DealAvgOrderByAggregateInput = {
 export type DealMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   slug?: Prisma.SortOrder
+  publicId?: Prisma.SortOrder
+  canonicalPath?: Prisma.SortOrder
   title?: Prisma.SortOrder
   brand?: Prisma.SortOrder
   description?: Prisma.SortOrder
@@ -1104,6 +1186,8 @@ export type DealMaxOrderByAggregateInput = {
   productUrl?: Prisma.SortOrder
   affiliateUrl?: Prisma.SortOrder
   couponCode?: Prisma.SortOrder
+  kind?: Prisma.SortOrder
+  headline?: Prisma.SortOrder
   editorNotes?: Prisma.SortOrder
   editorNotesBy?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -1125,6 +1209,8 @@ export type DealMaxOrderByAggregateInput = {
 export type DealMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   slug?: Prisma.SortOrder
+  publicId?: Prisma.SortOrder
+  canonicalPath?: Prisma.SortOrder
   title?: Prisma.SortOrder
   brand?: Prisma.SortOrder
   description?: Prisma.SortOrder
@@ -1143,6 +1229,8 @@ export type DealMinOrderByAggregateInput = {
   productUrl?: Prisma.SortOrder
   affiliateUrl?: Prisma.SortOrder
   couponCode?: Prisma.SortOrder
+  kind?: Prisma.SortOrder
+  headline?: Prisma.SortOrder
   editorNotes?: Prisma.SortOrder
   editorNotesBy?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -1566,6 +1654,8 @@ export type DealUpdateOneRequiredWithoutBankOffersNestedInput = {
 export type DealCreateWithoutCreatedByInput = {
   id?: string
   slug: string
+  publicId?: string | null
+  canonicalPath?: string | null
   title: string
   brand: string
   description: string
@@ -1581,6 +1671,8 @@ export type DealCreateWithoutCreatedByInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  kind?: string
+  headline?: string | null
   editorNotes?: string | null
   editorNotesBy?: string | null
   status?: $Enums.DealStatus
@@ -1615,6 +1707,8 @@ export type DealCreateWithoutCreatedByInput = {
 export type DealUncheckedCreateWithoutCreatedByInput = {
   id?: string
   slug: string
+  publicId?: string | null
+  canonicalPath?: string | null
   title: string
   brand: string
   description: string
@@ -1633,6 +1727,8 @@ export type DealUncheckedCreateWithoutCreatedByInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  kind?: string
+  headline?: string | null
   editorNotes?: string | null
   editorNotesBy?: string | null
   status?: $Enums.DealStatus
@@ -1674,6 +1770,8 @@ export type DealCreateManyCreatedByInputEnvelope = {
 export type DealCreateWithoutUpdatedByInput = {
   id?: string
   slug: string
+  publicId?: string | null
+  canonicalPath?: string | null
   title: string
   brand: string
   description: string
@@ -1689,6 +1787,8 @@ export type DealCreateWithoutUpdatedByInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  kind?: string
+  headline?: string | null
   editorNotes?: string | null
   editorNotesBy?: string | null
   status?: $Enums.DealStatus
@@ -1723,6 +1823,8 @@ export type DealCreateWithoutUpdatedByInput = {
 export type DealUncheckedCreateWithoutUpdatedByInput = {
   id?: string
   slug: string
+  publicId?: string | null
+  canonicalPath?: string | null
   title: string
   brand: string
   description: string
@@ -1741,6 +1843,8 @@ export type DealUncheckedCreateWithoutUpdatedByInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  kind?: string
+  headline?: string | null
   editorNotes?: string | null
   editorNotesBy?: string | null
   status?: $Enums.DealStatus
@@ -1801,6 +1905,8 @@ export type DealScalarWhereInput = {
   NOT?: Prisma.DealScalarWhereInput | Prisma.DealScalarWhereInput[]
   id?: Prisma.StringFilter<"Deal"> | string
   slug?: Prisma.StringFilter<"Deal"> | string
+  publicId?: Prisma.StringNullableFilter<"Deal"> | string | null
+  canonicalPath?: Prisma.StringNullableFilter<"Deal"> | string | null
   title?: Prisma.StringFilter<"Deal"> | string
   brand?: Prisma.StringFilter<"Deal"> | string
   description?: Prisma.StringFilter<"Deal"> | string
@@ -1819,6 +1925,8 @@ export type DealScalarWhereInput = {
   productUrl?: Prisma.StringFilter<"Deal"> | string
   affiliateUrl?: Prisma.StringNullableFilter<"Deal"> | string | null
   couponCode?: Prisma.StringNullableFilter<"Deal"> | string | null
+  kind?: Prisma.StringFilter<"Deal"> | string
+  headline?: Prisma.StringNullableFilter<"Deal"> | string | null
   editorNotes?: Prisma.StringNullableFilter<"Deal"> | string | null
   editorNotesBy?: Prisma.StringNullableFilter<"Deal"> | string | null
   status?: Prisma.EnumDealStatusFilter<"Deal"> | $Enums.DealStatus
@@ -1856,6 +1964,8 @@ export type DealUpdateManyWithWhereWithoutUpdatedByInput = {
 export type DealCreateWithoutCategoryInput = {
   id?: string
   slug: string
+  publicId?: string | null
+  canonicalPath?: string | null
   title: string
   brand: string
   description: string
@@ -1871,6 +1981,8 @@ export type DealCreateWithoutCategoryInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  kind?: string
+  headline?: string | null
   editorNotes?: string | null
   editorNotesBy?: string | null
   status?: $Enums.DealStatus
@@ -1905,6 +2017,8 @@ export type DealCreateWithoutCategoryInput = {
 export type DealUncheckedCreateWithoutCategoryInput = {
   id?: string
   slug: string
+  publicId?: string | null
+  canonicalPath?: string | null
   title: string
   brand: string
   description: string
@@ -1922,6 +2036,8 @@ export type DealUncheckedCreateWithoutCategoryInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  kind?: string
+  headline?: string | null
   editorNotes?: string | null
   editorNotesBy?: string | null
   status?: $Enums.DealStatus
@@ -1980,6 +2096,8 @@ export type DealUpdateManyWithWhereWithoutCategoryInput = {
 export type DealCreateWithoutMerchantInput = {
   id?: string
   slug: string
+  publicId?: string | null
+  canonicalPath?: string | null
   title: string
   brand: string
   description: string
@@ -1995,6 +2113,8 @@ export type DealCreateWithoutMerchantInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  kind?: string
+  headline?: string | null
   editorNotes?: string | null
   editorNotesBy?: string | null
   status?: $Enums.DealStatus
@@ -2029,6 +2149,8 @@ export type DealCreateWithoutMerchantInput = {
 export type DealUncheckedCreateWithoutMerchantInput = {
   id?: string
   slug: string
+  publicId?: string | null
+  canonicalPath?: string | null
   title: string
   brand: string
   description: string
@@ -2046,6 +2168,8 @@ export type DealUncheckedCreateWithoutMerchantInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  kind?: string
+  headline?: string | null
   editorNotes?: string | null
   editorNotesBy?: string | null
   status?: $Enums.DealStatus
@@ -2104,6 +2228,8 @@ export type DealUpdateManyWithWhereWithoutMerchantInput = {
 export type DealCreateWithoutMediaInput = {
   id?: string
   slug: string
+  publicId?: string | null
+  canonicalPath?: string | null
   title: string
   brand: string
   description: string
@@ -2119,6 +2245,8 @@ export type DealCreateWithoutMediaInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  kind?: string
+  headline?: string | null
   editorNotes?: string | null
   editorNotesBy?: string | null
   status?: $Enums.DealStatus
@@ -2153,6 +2281,8 @@ export type DealCreateWithoutMediaInput = {
 export type DealUncheckedCreateWithoutMediaInput = {
   id?: string
   slug: string
+  publicId?: string | null
+  canonicalPath?: string | null
   title: string
   brand: string
   description: string
@@ -2170,6 +2300,8 @@ export type DealUncheckedCreateWithoutMediaInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  kind?: string
+  headline?: string | null
   editorNotes?: string | null
   editorNotesBy?: string | null
   status?: $Enums.DealStatus
@@ -2228,6 +2360,8 @@ export type DealUpdateManyWithWhereWithoutMediaInput = {
 export type DealCreateWithoutOptionsInput = {
   id?: string
   slug: string
+  publicId?: string | null
+  canonicalPath?: string | null
   title: string
   brand: string
   description: string
@@ -2243,6 +2377,8 @@ export type DealCreateWithoutOptionsInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  kind?: string
+  headline?: string | null
   editorNotes?: string | null
   editorNotesBy?: string | null
   status?: $Enums.DealStatus
@@ -2277,6 +2413,8 @@ export type DealCreateWithoutOptionsInput = {
 export type DealUncheckedCreateWithoutOptionsInput = {
   id?: string
   slug: string
+  publicId?: string | null
+  canonicalPath?: string | null
   title: string
   brand: string
   description: string
@@ -2295,6 +2433,8 @@ export type DealUncheckedCreateWithoutOptionsInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  kind?: string
+  headline?: string | null
   editorNotes?: string | null
   editorNotesBy?: string | null
   status?: $Enums.DealStatus
@@ -2342,6 +2482,8 @@ export type DealUpdateToOneWithWhereWithoutOptionsInput = {
 export type DealUpdateWithoutOptionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canonicalPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2357,6 +2499,8 @@ export type DealUpdateWithoutOptionsInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
@@ -2391,6 +2535,8 @@ export type DealUpdateWithoutOptionsInput = {
 export type DealUncheckedUpdateWithoutOptionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canonicalPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2409,6 +2555,8 @@ export type DealUncheckedUpdateWithoutOptionsInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
@@ -2440,6 +2588,8 @@ export type DealUncheckedUpdateWithoutOptionsInput = {
 export type DealCreateWithoutGalleryImagesInput = {
   id?: string
   slug: string
+  publicId?: string | null
+  canonicalPath?: string | null
   title: string
   brand: string
   description: string
@@ -2455,6 +2605,8 @@ export type DealCreateWithoutGalleryImagesInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  kind?: string
+  headline?: string | null
   editorNotes?: string | null
   editorNotesBy?: string | null
   status?: $Enums.DealStatus
@@ -2489,6 +2641,8 @@ export type DealCreateWithoutGalleryImagesInput = {
 export type DealUncheckedCreateWithoutGalleryImagesInput = {
   id?: string
   slug: string
+  publicId?: string | null
+  canonicalPath?: string | null
   title: string
   brand: string
   description: string
@@ -2507,6 +2661,8 @@ export type DealUncheckedCreateWithoutGalleryImagesInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  kind?: string
+  headline?: string | null
   editorNotes?: string | null
   editorNotesBy?: string | null
   status?: $Enums.DealStatus
@@ -2554,6 +2710,8 @@ export type DealUpdateToOneWithWhereWithoutGalleryImagesInput = {
 export type DealUpdateWithoutGalleryImagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canonicalPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2569,6 +2727,8 @@ export type DealUpdateWithoutGalleryImagesInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
@@ -2603,6 +2763,8 @@ export type DealUpdateWithoutGalleryImagesInput = {
 export type DealUncheckedUpdateWithoutGalleryImagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canonicalPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2621,6 +2783,8 @@ export type DealUncheckedUpdateWithoutGalleryImagesInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
@@ -2652,6 +2816,8 @@ export type DealUncheckedUpdateWithoutGalleryImagesInput = {
 export type DealCreateWithoutCandidatesInput = {
   id?: string
   slug: string
+  publicId?: string | null
+  canonicalPath?: string | null
   title: string
   brand: string
   description: string
@@ -2667,6 +2833,8 @@ export type DealCreateWithoutCandidatesInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  kind?: string
+  headline?: string | null
   editorNotes?: string | null
   editorNotesBy?: string | null
   status?: $Enums.DealStatus
@@ -2701,6 +2869,8 @@ export type DealCreateWithoutCandidatesInput = {
 export type DealUncheckedCreateWithoutCandidatesInput = {
   id?: string
   slug: string
+  publicId?: string | null
+  canonicalPath?: string | null
   title: string
   brand: string
   description: string
@@ -2719,6 +2889,8 @@ export type DealUncheckedCreateWithoutCandidatesInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  kind?: string
+  headline?: string | null
   editorNotes?: string | null
   editorNotesBy?: string | null
   status?: $Enums.DealStatus
@@ -2766,6 +2938,8 @@ export type DealUpdateToOneWithWhereWithoutCandidatesInput = {
 export type DealUpdateWithoutCandidatesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canonicalPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2781,6 +2955,8 @@ export type DealUpdateWithoutCandidatesInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
@@ -2815,6 +2991,8 @@ export type DealUpdateWithoutCandidatesInput = {
 export type DealUncheckedUpdateWithoutCandidatesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canonicalPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2833,6 +3011,8 @@ export type DealUncheckedUpdateWithoutCandidatesInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
@@ -2864,6 +3044,8 @@ export type DealUncheckedUpdateWithoutCandidatesInput = {
 export type DealCreateWithoutPriceObservationsInput = {
   id?: string
   slug: string
+  publicId?: string | null
+  canonicalPath?: string | null
   title: string
   brand: string
   description: string
@@ -2879,6 +3061,8 @@ export type DealCreateWithoutPriceObservationsInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  kind?: string
+  headline?: string | null
   editorNotes?: string | null
   editorNotesBy?: string | null
   status?: $Enums.DealStatus
@@ -2913,6 +3097,8 @@ export type DealCreateWithoutPriceObservationsInput = {
 export type DealUncheckedCreateWithoutPriceObservationsInput = {
   id?: string
   slug: string
+  publicId?: string | null
+  canonicalPath?: string | null
   title: string
   brand: string
   description: string
@@ -2931,6 +3117,8 @@ export type DealUncheckedCreateWithoutPriceObservationsInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  kind?: string
+  headline?: string | null
   editorNotes?: string | null
   editorNotesBy?: string | null
   status?: $Enums.DealStatus
@@ -2978,6 +3166,8 @@ export type DealUpdateToOneWithWhereWithoutPriceObservationsInput = {
 export type DealUpdateWithoutPriceObservationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canonicalPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2993,6 +3183,8 @@ export type DealUpdateWithoutPriceObservationsInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
@@ -3027,6 +3219,8 @@ export type DealUpdateWithoutPriceObservationsInput = {
 export type DealUncheckedUpdateWithoutPriceObservationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canonicalPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -3045,6 +3239,8 @@ export type DealUncheckedUpdateWithoutPriceObservationsInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
@@ -3076,6 +3272,8 @@ export type DealUncheckedUpdateWithoutPriceObservationsInput = {
 export type DealCreateWithoutVideoReviewsInput = {
   id?: string
   slug: string
+  publicId?: string | null
+  canonicalPath?: string | null
   title: string
   brand: string
   description: string
@@ -3091,6 +3289,8 @@ export type DealCreateWithoutVideoReviewsInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  kind?: string
+  headline?: string | null
   editorNotes?: string | null
   editorNotesBy?: string | null
   status?: $Enums.DealStatus
@@ -3125,6 +3325,8 @@ export type DealCreateWithoutVideoReviewsInput = {
 export type DealUncheckedCreateWithoutVideoReviewsInput = {
   id?: string
   slug: string
+  publicId?: string | null
+  canonicalPath?: string | null
   title: string
   brand: string
   description: string
@@ -3143,6 +3345,8 @@ export type DealUncheckedCreateWithoutVideoReviewsInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  kind?: string
+  headline?: string | null
   editorNotes?: string | null
   editorNotesBy?: string | null
   status?: $Enums.DealStatus
@@ -3190,6 +3394,8 @@ export type DealUpdateToOneWithWhereWithoutVideoReviewsInput = {
 export type DealUpdateWithoutVideoReviewsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canonicalPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -3205,6 +3411,8 @@ export type DealUpdateWithoutVideoReviewsInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
@@ -3239,6 +3447,8 @@ export type DealUpdateWithoutVideoReviewsInput = {
 export type DealUncheckedUpdateWithoutVideoReviewsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canonicalPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -3257,6 +3467,8 @@ export type DealUncheckedUpdateWithoutVideoReviewsInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
@@ -3288,6 +3500,8 @@ export type DealUncheckedUpdateWithoutVideoReviewsInput = {
 export type DealCreateWithoutCommentsInput = {
   id?: string
   slug: string
+  publicId?: string | null
+  canonicalPath?: string | null
   title: string
   brand: string
   description: string
@@ -3303,6 +3517,8 @@ export type DealCreateWithoutCommentsInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  kind?: string
+  headline?: string | null
   editorNotes?: string | null
   editorNotesBy?: string | null
   status?: $Enums.DealStatus
@@ -3337,6 +3553,8 @@ export type DealCreateWithoutCommentsInput = {
 export type DealUncheckedCreateWithoutCommentsInput = {
   id?: string
   slug: string
+  publicId?: string | null
+  canonicalPath?: string | null
   title: string
   brand: string
   description: string
@@ -3355,6 +3573,8 @@ export type DealUncheckedCreateWithoutCommentsInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  kind?: string
+  headline?: string | null
   editorNotes?: string | null
   editorNotesBy?: string | null
   status?: $Enums.DealStatus
@@ -3402,6 +3622,8 @@ export type DealUpdateToOneWithWhereWithoutCommentsInput = {
 export type DealUpdateWithoutCommentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canonicalPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -3417,6 +3639,8 @@ export type DealUpdateWithoutCommentsInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
@@ -3451,6 +3675,8 @@ export type DealUpdateWithoutCommentsInput = {
 export type DealUncheckedUpdateWithoutCommentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canonicalPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -3469,6 +3695,8 @@ export type DealUncheckedUpdateWithoutCommentsInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
@@ -3500,6 +3728,8 @@ export type DealUncheckedUpdateWithoutCommentsInput = {
 export type DealCreateWithoutCommunitySubmissionInput = {
   id?: string
   slug: string
+  publicId?: string | null
+  canonicalPath?: string | null
   title: string
   brand: string
   description: string
@@ -3515,6 +3745,8 @@ export type DealCreateWithoutCommunitySubmissionInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  kind?: string
+  headline?: string | null
   editorNotes?: string | null
   editorNotesBy?: string | null
   status?: $Enums.DealStatus
@@ -3549,6 +3781,8 @@ export type DealCreateWithoutCommunitySubmissionInput = {
 export type DealUncheckedCreateWithoutCommunitySubmissionInput = {
   id?: string
   slug: string
+  publicId?: string | null
+  canonicalPath?: string | null
   title: string
   brand: string
   description: string
@@ -3567,6 +3801,8 @@ export type DealUncheckedCreateWithoutCommunitySubmissionInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  kind?: string
+  headline?: string | null
   editorNotes?: string | null
   editorNotesBy?: string | null
   status?: $Enums.DealStatus
@@ -3614,6 +3850,8 @@ export type DealUpdateToOneWithWhereWithoutCommunitySubmissionInput = {
 export type DealUpdateWithoutCommunitySubmissionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canonicalPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -3629,6 +3867,8 @@ export type DealUpdateWithoutCommunitySubmissionInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
@@ -3663,6 +3903,8 @@ export type DealUpdateWithoutCommunitySubmissionInput = {
 export type DealUncheckedUpdateWithoutCommunitySubmissionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canonicalPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -3681,6 +3923,8 @@ export type DealUncheckedUpdateWithoutCommunitySubmissionInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
@@ -3712,6 +3956,8 @@ export type DealUncheckedUpdateWithoutCommunitySubmissionInput = {
 export type DealCreateWithoutSavedByInput = {
   id?: string
   slug: string
+  publicId?: string | null
+  canonicalPath?: string | null
   title: string
   brand: string
   description: string
@@ -3727,6 +3973,8 @@ export type DealCreateWithoutSavedByInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  kind?: string
+  headline?: string | null
   editorNotes?: string | null
   editorNotesBy?: string | null
   status?: $Enums.DealStatus
@@ -3761,6 +4009,8 @@ export type DealCreateWithoutSavedByInput = {
 export type DealUncheckedCreateWithoutSavedByInput = {
   id?: string
   slug: string
+  publicId?: string | null
+  canonicalPath?: string | null
   title: string
   brand: string
   description: string
@@ -3779,6 +4029,8 @@ export type DealUncheckedCreateWithoutSavedByInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  kind?: string
+  headline?: string | null
   editorNotes?: string | null
   editorNotesBy?: string | null
   status?: $Enums.DealStatus
@@ -3826,6 +4078,8 @@ export type DealUpdateToOneWithWhereWithoutSavedByInput = {
 export type DealUpdateWithoutSavedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canonicalPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -3841,6 +4095,8 @@ export type DealUpdateWithoutSavedByInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
@@ -3875,6 +4131,8 @@ export type DealUpdateWithoutSavedByInput = {
 export type DealUncheckedUpdateWithoutSavedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canonicalPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -3893,6 +4151,8 @@ export type DealUncheckedUpdateWithoutSavedByInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
@@ -3924,6 +4184,8 @@ export type DealUncheckedUpdateWithoutSavedByInput = {
 export type DealCreateWithoutVotesInput = {
   id?: string
   slug: string
+  publicId?: string | null
+  canonicalPath?: string | null
   title: string
   brand: string
   description: string
@@ -3939,6 +4201,8 @@ export type DealCreateWithoutVotesInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  kind?: string
+  headline?: string | null
   editorNotes?: string | null
   editorNotesBy?: string | null
   status?: $Enums.DealStatus
@@ -3973,6 +4237,8 @@ export type DealCreateWithoutVotesInput = {
 export type DealUncheckedCreateWithoutVotesInput = {
   id?: string
   slug: string
+  publicId?: string | null
+  canonicalPath?: string | null
   title: string
   brand: string
   description: string
@@ -3991,6 +4257,8 @@ export type DealUncheckedCreateWithoutVotesInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  kind?: string
+  headline?: string | null
   editorNotes?: string | null
   editorNotesBy?: string | null
   status?: $Enums.DealStatus
@@ -4038,6 +4306,8 @@ export type DealUpdateToOneWithWhereWithoutVotesInput = {
 export type DealUpdateWithoutVotesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canonicalPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -4053,6 +4323,8 @@ export type DealUpdateWithoutVotesInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
@@ -4087,6 +4359,8 @@ export type DealUpdateWithoutVotesInput = {
 export type DealUncheckedUpdateWithoutVotesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canonicalPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -4105,6 +4379,8 @@ export type DealUncheckedUpdateWithoutVotesInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
@@ -4136,6 +4412,8 @@ export type DealUncheckedUpdateWithoutVotesInput = {
 export type DealCreateWithoutNotesInput = {
   id?: string
   slug: string
+  publicId?: string | null
+  canonicalPath?: string | null
   title: string
   brand: string
   description: string
@@ -4151,6 +4429,8 @@ export type DealCreateWithoutNotesInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  kind?: string
+  headline?: string | null
   editorNotes?: string | null
   editorNotesBy?: string | null
   status?: $Enums.DealStatus
@@ -4185,6 +4465,8 @@ export type DealCreateWithoutNotesInput = {
 export type DealUncheckedCreateWithoutNotesInput = {
   id?: string
   slug: string
+  publicId?: string | null
+  canonicalPath?: string | null
   title: string
   brand: string
   description: string
@@ -4203,6 +4485,8 @@ export type DealUncheckedCreateWithoutNotesInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  kind?: string
+  headline?: string | null
   editorNotes?: string | null
   editorNotesBy?: string | null
   status?: $Enums.DealStatus
@@ -4250,6 +4534,8 @@ export type DealUpdateToOneWithWhereWithoutNotesInput = {
 export type DealUpdateWithoutNotesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canonicalPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -4265,6 +4551,8 @@ export type DealUpdateWithoutNotesInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
@@ -4299,6 +4587,8 @@ export type DealUpdateWithoutNotesInput = {
 export type DealUncheckedUpdateWithoutNotesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canonicalPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -4317,6 +4607,8 @@ export type DealUncheckedUpdateWithoutNotesInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
@@ -4348,6 +4640,8 @@ export type DealUncheckedUpdateWithoutNotesInput = {
 export type DealCreateWithoutBankOffersInput = {
   id?: string
   slug: string
+  publicId?: string | null
+  canonicalPath?: string | null
   title: string
   brand: string
   description: string
@@ -4363,6 +4657,8 @@ export type DealCreateWithoutBankOffersInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  kind?: string
+  headline?: string | null
   editorNotes?: string | null
   editorNotesBy?: string | null
   status?: $Enums.DealStatus
@@ -4397,6 +4693,8 @@ export type DealCreateWithoutBankOffersInput = {
 export type DealUncheckedCreateWithoutBankOffersInput = {
   id?: string
   slug: string
+  publicId?: string | null
+  canonicalPath?: string | null
   title: string
   brand: string
   description: string
@@ -4415,6 +4713,8 @@ export type DealUncheckedCreateWithoutBankOffersInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  kind?: string
+  headline?: string | null
   editorNotes?: string | null
   editorNotesBy?: string | null
   status?: $Enums.DealStatus
@@ -4462,6 +4762,8 @@ export type DealUpdateToOneWithWhereWithoutBankOffersInput = {
 export type DealUpdateWithoutBankOffersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canonicalPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -4477,6 +4779,8 @@ export type DealUpdateWithoutBankOffersInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
@@ -4511,6 +4815,8 @@ export type DealUpdateWithoutBankOffersInput = {
 export type DealUncheckedUpdateWithoutBankOffersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canonicalPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -4529,6 +4835,8 @@ export type DealUncheckedUpdateWithoutBankOffersInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
@@ -4560,6 +4868,8 @@ export type DealUncheckedUpdateWithoutBankOffersInput = {
 export type DealCreateManyCreatedByInput = {
   id?: string
   slug: string
+  publicId?: string | null
+  canonicalPath?: string | null
   title: string
   brand: string
   description: string
@@ -4578,6 +4888,8 @@ export type DealCreateManyCreatedByInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  kind?: string
+  headline?: string | null
   editorNotes?: string | null
   editorNotesBy?: string | null
   status?: $Enums.DealStatus
@@ -4598,6 +4910,8 @@ export type DealCreateManyCreatedByInput = {
 export type DealCreateManyUpdatedByInput = {
   id?: string
   slug: string
+  publicId?: string | null
+  canonicalPath?: string | null
   title: string
   brand: string
   description: string
@@ -4616,6 +4930,8 @@ export type DealCreateManyUpdatedByInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  kind?: string
+  headline?: string | null
   editorNotes?: string | null
   editorNotesBy?: string | null
   status?: $Enums.DealStatus
@@ -4636,6 +4952,8 @@ export type DealCreateManyUpdatedByInput = {
 export type DealUpdateWithoutCreatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canonicalPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -4651,6 +4969,8 @@ export type DealUpdateWithoutCreatedByInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
@@ -4685,6 +5005,8 @@ export type DealUpdateWithoutCreatedByInput = {
 export type DealUncheckedUpdateWithoutCreatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canonicalPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -4703,6 +5025,8 @@ export type DealUncheckedUpdateWithoutCreatedByInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
@@ -4734,6 +5058,8 @@ export type DealUncheckedUpdateWithoutCreatedByInput = {
 export type DealUncheckedUpdateManyWithoutCreatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canonicalPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -4752,6 +5078,8 @@ export type DealUncheckedUpdateManyWithoutCreatedByInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
@@ -4772,6 +5100,8 @@ export type DealUncheckedUpdateManyWithoutCreatedByInput = {
 export type DealUpdateWithoutUpdatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canonicalPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -4787,6 +5117,8 @@ export type DealUpdateWithoutUpdatedByInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
@@ -4821,6 +5153,8 @@ export type DealUpdateWithoutUpdatedByInput = {
 export type DealUncheckedUpdateWithoutUpdatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canonicalPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -4839,6 +5173,8 @@ export type DealUncheckedUpdateWithoutUpdatedByInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
@@ -4870,6 +5206,8 @@ export type DealUncheckedUpdateWithoutUpdatedByInput = {
 export type DealUncheckedUpdateManyWithoutUpdatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canonicalPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -4888,6 +5226,8 @@ export type DealUncheckedUpdateManyWithoutUpdatedByInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
@@ -4908,6 +5248,8 @@ export type DealUncheckedUpdateManyWithoutUpdatedByInput = {
 export type DealCreateManyCategoryInput = {
   id?: string
   slug: string
+  publicId?: string | null
+  canonicalPath?: string | null
   title: string
   brand: string
   description: string
@@ -4925,6 +5267,8 @@ export type DealCreateManyCategoryInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  kind?: string
+  headline?: string | null
   editorNotes?: string | null
   editorNotesBy?: string | null
   status?: $Enums.DealStatus
@@ -4946,6 +5290,8 @@ export type DealCreateManyCategoryInput = {
 export type DealUpdateWithoutCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canonicalPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -4961,6 +5307,8 @@ export type DealUpdateWithoutCategoryInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
@@ -4995,6 +5343,8 @@ export type DealUpdateWithoutCategoryInput = {
 export type DealUncheckedUpdateWithoutCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canonicalPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -5012,6 +5362,8 @@ export type DealUncheckedUpdateWithoutCategoryInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
@@ -5044,6 +5396,8 @@ export type DealUncheckedUpdateWithoutCategoryInput = {
 export type DealUncheckedUpdateManyWithoutCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canonicalPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -5061,6 +5415,8 @@ export type DealUncheckedUpdateManyWithoutCategoryInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
@@ -5082,6 +5438,8 @@ export type DealUncheckedUpdateManyWithoutCategoryInput = {
 export type DealCreateManyMerchantInput = {
   id?: string
   slug: string
+  publicId?: string | null
+  canonicalPath?: string | null
   title: string
   brand: string
   description: string
@@ -5099,6 +5457,8 @@ export type DealCreateManyMerchantInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  kind?: string
+  headline?: string | null
   editorNotes?: string | null
   editorNotesBy?: string | null
   status?: $Enums.DealStatus
@@ -5120,6 +5480,8 @@ export type DealCreateManyMerchantInput = {
 export type DealUpdateWithoutMerchantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canonicalPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -5135,6 +5497,8 @@ export type DealUpdateWithoutMerchantInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
@@ -5169,6 +5533,8 @@ export type DealUpdateWithoutMerchantInput = {
 export type DealUncheckedUpdateWithoutMerchantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canonicalPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -5186,6 +5552,8 @@ export type DealUncheckedUpdateWithoutMerchantInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
@@ -5218,6 +5586,8 @@ export type DealUncheckedUpdateWithoutMerchantInput = {
 export type DealUncheckedUpdateManyWithoutMerchantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canonicalPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -5235,6 +5605,8 @@ export type DealUncheckedUpdateManyWithoutMerchantInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
@@ -5256,6 +5628,8 @@ export type DealUncheckedUpdateManyWithoutMerchantInput = {
 export type DealCreateManyMediaInput = {
   id?: string
   slug: string
+  publicId?: string | null
+  canonicalPath?: string | null
   title: string
   brand: string
   description: string
@@ -5273,6 +5647,8 @@ export type DealCreateManyMediaInput = {
   productUrl: string
   affiliateUrl?: string | null
   couponCode?: string | null
+  kind?: string
+  headline?: string | null
   editorNotes?: string | null
   editorNotesBy?: string | null
   status?: $Enums.DealStatus
@@ -5294,6 +5670,8 @@ export type DealCreateManyMediaInput = {
 export type DealUpdateWithoutMediaInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canonicalPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -5309,6 +5687,8 @@ export type DealUpdateWithoutMediaInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
@@ -5343,6 +5723,8 @@ export type DealUpdateWithoutMediaInput = {
 export type DealUncheckedUpdateWithoutMediaInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canonicalPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -5360,6 +5742,8 @@ export type DealUncheckedUpdateWithoutMediaInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
@@ -5392,6 +5776,8 @@ export type DealUncheckedUpdateWithoutMediaInput = {
 export type DealUncheckedUpdateManyWithoutMediaInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canonicalPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   brand?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -5409,6 +5795,8 @@ export type DealUncheckedUpdateManyWithoutMediaInput = {
   productUrl?: Prisma.StringFieldUpdateOperationsInput | string
   affiliateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   couponCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.StringFieldUpdateOperationsInput | string
+  headline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editorNotesBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
@@ -5542,6 +5930,8 @@ export type DealCountOutputTypeCountBankOffersArgs<ExtArgs extends runtime.Types
 export type DealSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   slug?: boolean
+  publicId?: boolean
+  canonicalPath?: boolean
   title?: boolean
   brand?: boolean
   description?: boolean
@@ -5560,6 +5950,8 @@ export type DealSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   productUrl?: boolean
   affiliateUrl?: boolean
   couponCode?: boolean
+  kind?: boolean
+  headline?: boolean
   editorNotes?: boolean
   editorNotesBy?: boolean
   status?: boolean
@@ -5600,6 +5992,8 @@ export type DealSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
 export type DealSelectScalar = {
   id?: boolean
   slug?: boolean
+  publicId?: boolean
+  canonicalPath?: boolean
   title?: boolean
   brand?: boolean
   description?: boolean
@@ -5618,6 +6012,8 @@ export type DealSelectScalar = {
   productUrl?: boolean
   affiliateUrl?: boolean
   couponCode?: boolean
+  kind?: boolean
+  headline?: boolean
   editorNotes?: boolean
   editorNotesBy?: boolean
   status?: boolean
@@ -5636,7 +6032,7 @@ export type DealSelectScalar = {
   youtubeLastSearchedAt?: boolean
 }
 
-export type DealOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "title" | "brand" | "description" | "descriptionHtml" | "categoryId" | "merchantId" | "mediaId" | "mrpMinor" | "priceMinor" | "currency" | "rating" | "reviewCount" | "viewCount" | "shareCount" | "ratingSource" | "productUrl" | "affiliateUrl" | "couponCode" | "editorNotes" | "editorNotesBy" | "status" | "publishedAt" | "startsAt" | "expiresAt" | "featured" | "trending" | "everPublished" | "version" | "createdById" | "updatedById" | "createdAt" | "updatedAt" | "youtubeReviewStatus" | "youtubeLastSearchedAt", ExtArgs["result"]["deal"]>
+export type DealOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "publicId" | "canonicalPath" | "title" | "brand" | "description" | "descriptionHtml" | "categoryId" | "merchantId" | "mediaId" | "mrpMinor" | "priceMinor" | "currency" | "rating" | "reviewCount" | "viewCount" | "shareCount" | "ratingSource" | "productUrl" | "affiliateUrl" | "couponCode" | "kind" | "headline" | "editorNotes" | "editorNotesBy" | "status" | "publishedAt" | "startsAt" | "expiresAt" | "featured" | "trending" | "everPublished" | "version" | "createdById" | "updatedById" | "createdAt" | "updatedAt" | "youtubeReviewStatus" | "youtubeLastSearchedAt", ExtArgs["result"]["deal"]>
 export type DealInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   merchant?: boolean | Prisma.MerchantDefaultArgs<ExtArgs>
@@ -5680,6 +6076,14 @@ export type $DealPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     slug: string
+    /**
+     * Permanent public identifier, generated once (never changes with title, category, price or store). Last part of the address.
+     */
+    publicId: string | null
+    /**
+     * The one address of this deal, /deal/{primary-category}/{product-slug}-{publicId}. Older addresses live in DealUrlHistory.
+     */
+    canonicalPath: string | null
     title: string
     brand: string
     description: string
@@ -5701,6 +6105,14 @@ export type $DealPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     productUrl: string
     affiliateUrl: string | null
     couponCode: string | null
+    /**
+     * PRODUCT (one product, fixed price) | TRAVEL (price moves; "from" price optional) | SALE_PAGE (a store sale or listing page).
+     */
+    kind: string
+    /**
+     * Short line shown instead of the price when a deal has no single fixed price, e.g. "Up to 80% off clothing".
+     */
+    headline: string | null
     /**
      * One point per line, written by staff; shown on the deal page under Editor's Notes.
      */
@@ -6107,6 +6519,8 @@ export interface Prisma__DealClient<T, Null = never, ExtArgs extends runtime.Typ
 export interface DealFieldRefs {
   readonly id: Prisma.FieldRef<"Deal", 'String'>
   readonly slug: Prisma.FieldRef<"Deal", 'String'>
+  readonly publicId: Prisma.FieldRef<"Deal", 'String'>
+  readonly canonicalPath: Prisma.FieldRef<"Deal", 'String'>
   readonly title: Prisma.FieldRef<"Deal", 'String'>
   readonly brand: Prisma.FieldRef<"Deal", 'String'>
   readonly description: Prisma.FieldRef<"Deal", 'String'>
@@ -6125,6 +6539,8 @@ export interface DealFieldRefs {
   readonly productUrl: Prisma.FieldRef<"Deal", 'String'>
   readonly affiliateUrl: Prisma.FieldRef<"Deal", 'String'>
   readonly couponCode: Prisma.FieldRef<"Deal", 'String'>
+  readonly kind: Prisma.FieldRef<"Deal", 'String'>
+  readonly headline: Prisma.FieldRef<"Deal", 'String'>
   readonly editorNotes: Prisma.FieldRef<"Deal", 'String'>
   readonly editorNotesBy: Prisma.FieldRef<"Deal", 'String'>
   readonly status: Prisma.FieldRef<"Deal", 'DealStatus'>

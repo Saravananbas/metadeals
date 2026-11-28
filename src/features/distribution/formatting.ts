@@ -25,6 +25,8 @@ export interface DealDistributionPayload {
   brand: string;
   priceMinor: number;
   mrpMinor: number;
+  /** Travel and sale-page deals: shown instead of price and MRP. */
+  headline?: string | null;
   merchantName: string;
   siteBaseUrl?: string;
 }
@@ -46,7 +48,7 @@ export function formatTelegramMessage(deal: DealDistributionPayload): string {
   return [
     `🔥 <b>${escapeHtml(deal.title)}</b>`,
     deal.brand ? `🏷️ Brand: <b>${escapeHtml(deal.brand)}</b>` : null,
-    `💰 <b>${price}</b> <s>${mrp}</s> ${saving > 0 ? `(<b>${saving}% OFF</b>)` : ""}`,
+    deal.headline ? `💰 <b>${escapeHtml(deal.headline)}</b>` : `💰 <b>${price}</b> <s>${mrp}</s> ${saving > 0 ? `(<b>${saving}% OFF</b>)` : ""}`,
     `🏪 Store: <b>${escapeHtml(deal.merchantName)}</b>`,
     "",
     `👉 <a href="${link}">Get This Deal</a>`,
@@ -65,7 +67,7 @@ export function formatWhatsAppMessage(deal: DealDistributionPayload): string {
 
   return [
     `🔥 *${deal.title}*`,
-    `💰 *${price}* ~${mrp}~ ${saving > 0 ? `(*${saving}% OFF*)` : ""}`,
+    deal.headline ? `💰 *${deal.headline}*` : `💰 *${price}* ~${mrp}~ ${saving > 0 ? `(*${saving}% OFF*)` : ""}`,
     `🏪 Store: *${deal.merchantName}*`,
     "",
     `👉 Buy Now: ${link}`,

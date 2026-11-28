@@ -1,3 +1,4 @@
+import { ci } from "@/server/db/case-insensitive";
 import "server-only";
 import { getDatabase } from "@/server/db/client";
 import { youTubeQuotaService } from "./quota-service";
@@ -223,7 +224,7 @@ export class YouTubeReviewsService {
       const otherDeals = await db.deal.findMany({
         where: {
           id: { not: deal.id },
-          brand: { equals: deal.brand, mode: "insensitive" },
+          brand: { equals: deal.brand, ...ci() },
           videoReviews: { some: { isActive: true } },
         },
         include: {
@@ -619,7 +620,7 @@ export class YouTubeReviewsService {
       // Canonical product reuse: find all other deals matching this exact canonical product
       const matchingDeals = await db.deal.findMany({
         where: {
-          brand: { equals: deal.brand, mode: "insensitive" },
+          brand: { equals: deal.brand, ...ci() },
           id: { not: deal.id },
         },
         select: { id: true, brand: true, title: true },

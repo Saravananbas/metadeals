@@ -7,6 +7,9 @@ export type Deal = {
   category: string;
   image: string;
   imageGallery?: string[];
+  /** PRODUCT (default) or TRAVEL / SALE_PAGE: those show `headline` instead of a price and MRP. */
+  kind?: "PRODUCT" | "TRAVEL" | "SALE_PAGE";
+  headline?: string | null;
   originalPrice: number;
   price: number;
   rating: number | null;
@@ -15,6 +18,8 @@ export type Deal = {
   storeName?: string;
   storeLogoUrl?: string | null;
   slug?: string;
+  /** Canonical address (/deal/{category}/{name}-{id}); links use this, falling back to the old slug address (which redirects). */
+  path?: string | null;
   description?: string;
   expiresAt?: string | null;
   status?: string;

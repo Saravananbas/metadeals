@@ -1,3 +1,4 @@
+import { assignCanonicalPath } from "@/server/deals/seo-url-service";
 import { merchantSelect } from "@/server/deals/repository";
 import { z } from "zod";
 import { getDatabase } from "@/server/db/client";
@@ -395,18 +396,22 @@ async function handle(request: Request, { params }: { params: Promise<{ path: st
           // Check if category has child subcategories or associated deals
           const childCount = await db.category.count({ where: { parentId: id } });
           if (childCount > 0) throw new DealError(`Cannot delete category with ${childCount} child subcategories. Reassign or delete them first.`, 409);
+          let movedDealIds: string[] = [];
           await db.$transaction(async (tx) => {
             const dealCount = await tx.deal.count({ where: { categoryId: id } });
             if (dealCount > 0) {
               // Unlink or reassign to another category if any exist, or throw error
               const fallbackCat = await tx.category.findFirst({ where: { id: { not: id } }, orderBy: { name: "asc" } });
               if (!fallbackCat) throw new DealError(`Cannot delete category: ${dealCount} deals are attached to it.`, 409);
+              movedDealIds = (await tx.deal.findMany({ where: { categoryId: id }, select: { id: true } })).map((d) => d.id);
               await tx.deal.updateMany({ where: { categoryId: id }, data: { categoryId: fallbackCat.id } });
             }
             await tx.category.delete({ where: { id } });
             await tx.auditEvent.create({ data: { actorId: actor.id, action: "category.delete", targetId: id, success: true, metadata: { reassignedDeals: dealCount } } });
           });
           return json({ success: true, message: "Category deleted successfully." });
+          // Their public addresses follow the new primary category (old addresses are remembered and redirected).
+          for (const dealId of movedDealIds) await assignCanonicalPath(db, dealId);
         }
       }
     }

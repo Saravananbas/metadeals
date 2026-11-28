@@ -1,3 +1,4 @@
+import { ci } from "@/server/db/case-insensitive";
 import "server-only";
 import { z } from "zod";
 import { getAuthEnv } from "@/config/env";
@@ -65,7 +66,7 @@ export async function searchInvitableMembers(actor: Moderator, rawQuery: unknown
   const db = getDatabase();
   const rows = usesMariaDb()
     ? await searchMembersMariaDb(q, 8)
-    : (await db.forumProfile.findMany({ where: { status: { not: "SUSPENDED" }, customer: { disabledAt: null, emailVerifiedAt: { not: null } }, OR: [{ handle: { contains: q, mode: "insensitive" } }, { displayName: { contains: q, mode: "insensitive" } }] }, orderBy: { handle: "asc" }, take: 8, select: { handle: true, displayName: true, avatarKey: true, customerId: true } }));
+    : (await db.forumProfile.findMany({ where: { status: { not: "SUSPENDED" }, customer: { disabledAt: null, emailVerifiedAt: { not: null } }, OR: [{ handle: { contains: q, ...ci() } }, { displayName: { contains: q, ...ci() } }] }, orderBy: { handle: "asc" }, take: 8, select: { handle: true, displayName: true, avatarKey: true, customerId: true } }));
   const open = rows.length ? await db.moderatorAppointment.findMany({ where: { customerId: { in: rows.map((r) => r.customerId) }, status: { in: ["INVITED", "PROBATION", "CONFIRMED"] } }, select: { customerId: true } }) : [];
   const busy = new Set(open.map((o) => o.customerId));
   return rows.map((r) => ({ handle: r.handle, displayName: r.displayName, avatarUrl: r.avatarKey ? `/api/v1/avatars/${r.handle}` : null, alreadyModerator: busy.has(r.customerId) }));

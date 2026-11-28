@@ -137,7 +137,8 @@ export const ModelName = {
   MerchantAffiliateConfig: 'MerchantAffiliateConfig',
   Bank: 'Bank',
   DealBankOffer: 'DealBankOffer',
-  MerchantBankOffer: 'MerchantBankOffer'
+  MerchantBankOffer: 'MerchantBankOffer',
+  DealUrlHistory: 'DealUrlHistory'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -375,6 +376,8 @@ export type MediaScalarFieldEnum = (typeof MediaScalarFieldEnum)[keyof typeof Me
 export const DealScalarFieldEnum = {
   id: 'id',
   slug: 'slug',
+  publicId: 'publicId',
+  canonicalPath: 'canonicalPath',
   title: 'title',
   brand: 'brand',
   description: 'description',
@@ -393,6 +396,8 @@ export const DealScalarFieldEnum = {
   productUrl: 'productUrl',
   affiliateUrl: 'affiliateUrl',
   couponCode: 'couponCode',
+  kind: 'kind',
+  headline: 'headline',
   editorNotes: 'editorNotes',
   editorNotesBy: 'editorNotesBy',
   status: 'status',
@@ -1571,6 +1576,18 @@ export const MerchantBankOfferScalarFieldEnum = {
 } as const
 
 export type MerchantBankOfferScalarFieldEnum = (typeof MerchantBankOfferScalarFieldEnum)[keyof typeof MerchantBankOfferScalarFieldEnum]
+
+
+export const DealUrlHistoryScalarFieldEnum = {
+  id: 'id',
+  dealId: 'dealId',
+  path: 'path',
+  reason: 'reason',
+  redirectStatus: 'redirectStatus',
+  createdAt: 'createdAt'
+} as const
+
+export type DealUrlHistoryScalarFieldEnum = (typeof DealUrlHistoryScalarFieldEnum)[keyof typeof DealUrlHistoryScalarFieldEnum]
 
 
 export const SortOrder = {

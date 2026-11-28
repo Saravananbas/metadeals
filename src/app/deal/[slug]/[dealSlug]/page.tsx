@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { cache } from "react";
+import { notFound, permanentRedirect } from "next/navigation";
 import { ChevronRight } from "lucide-react";
 import { getDatabase } from "@/server/db/client";
 import { publicWhere, dealInclude, publicDealsWithMerchantLogos } from "@/server/deals/repository";
@@ -26,42 +27,53 @@ import { getPoster } from "@/server/deals/poster";
 import { messagesEnabled } from "@/server/messages/service";
 import extra from "@/components/deals/DealExtras.module.css";
 import { youtubeReviewsService } from "@/server/youtube/reviews-service";
-import styles from "./deal-detail.module.css";
+import styles from "../deal-detail.module.css";
+import { resolveDealAddress } from "@/server/deals/seo-url-service";
+import { dealHref } from "@/features/deals/seo-url";
 
 export const dynamic = "force-dynamic";
+
+/** One lookup per request, shared by the metadata and the page. */
+const loadDeal = cache(async (category: string, dealSlug: string) => {
+  const db = getDatabase();
+  const resolution = await resolveDealAddress(db, [category, dealSlug], publicWhere(listingSchema.parse({})));
+  const row = resolution.kind === "render" ? await db.deal.findFirst({ where: { id: resolution.dealId }, include: dealInclude }) : null;
+  return { resolution, row };
+});
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string; dealSlug: string }>;
 }): Promise<Metadata> {
-  const { slug } = await params;
+  const { slug: category, dealSlug } = await params;
   const db = getDatabase();
-  const row = await db.deal.findFirst({
-    where: { ...publicWhere(listingSchema.parse({})), OR: [{ slug }, { id: slug }] },
-    include: dealInclude,
-  });
+  const { resolution, row } = await loadDeal(category, dealSlug);
 
-  if (!row) {
-    return { title: "Deal Not Found · MetaDeals4U" };
+  if (!row || resolution.kind !== "render") {
+    return { title: "Deal Not Found · MetaDeals4U", robots: { index: false, follow: false } };
   }
 
   const [deal] = await publicDealsWithMerchantLogos(db, [row]);
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://metadeals4u.in";
-  const title = `${deal.title} - ${formatINR(deal.priceMinor / 100)} at ${deal.merchant.name} · MetaDeals4U`;
-  const description = `${deal.title} on sale for ${formatINR(deal.priceMinor / 100)} (${deal.discountPercent}% off MRP ${formatINR(deal.mrpMinor / 100)}). Compare options and get genuine verified deal alerts on MetaDeals4U.`;
+  const canonical = `${baseUrl}${resolution.canonical}`;
+  const noPrice = deal.kind !== "PRODUCT";
+  const cut = (text: string, max: number) => (text.length <= max ? text : text.slice(0, max).replace(/\s+\S*$/, "") + "…");
+  const title = `${cut(deal.title, 68)} Deal – ${noPrice ? "Latest Offer" : "Latest Price"} | MetaDeals4U`;
+  const saving = deal.discountPercent > 0 ? `, ${deal.discountPercent}% off MRP ${formatINR(deal.mrpMinor / 100)}` : "";
+  const description = cut(noPrice
+    ? `${deal.headline}. Explore the ${deal.title} deal at ${deal.merchant.name} and compare the latest offers on MetaDeals4U.`
+    : `Explore the ${deal.title} deal at ${deal.merchant.name} for ${formatINR(deal.priceMinor / 100)}${saving}. Compare the latest price, savings and available retailer offers on MetaDeals4U.`, 158);
 
   return {
-    title,
+    title: { absolute: title },
     description,
-    alternates: {
-      // Always the slug address, even when the page was opened by id.
-      canonical: `${baseUrl}/deal/${deal.slug}`,
-    },
+    robots: { index: true, follow: true },
+    alternates: { canonical },
     openGraph: {
       title,
       description,
-      url: `${baseUrl}/deal/${deal.slug}`,
+      url: canonical,
       siteName: "MetaDeals4U",
       images: [
         {
@@ -84,18 +96,21 @@ export async function generateMetadata({
 
 export default async function DealDetailPage({
   params,
+  searchParams,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string; dealSlug: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const { slug } = await params;
+  const { slug: category, dealSlug } = await params;
   const db = getDatabase();
-
-  const row = await db.deal.findFirst({
-    where: { ...publicWhere(listingSchema.parse({})), OR: [{ slug }, { id: slug }] },
-    include: dealInclude,
-  });
-
-  if (!row) notFound();
+  const { resolution, row } = await loadDeal(category, dealSlug);
+  if (resolution.kind === "redirect") {
+    // Wrong category or product words in the address: send the visitor (and search engines) once, straight to the current address. Tracking parameters survive.
+    const query = new URLSearchParams();
+    for (const [key, value] of Object.entries(await searchParams)) for (const v of [value].flat()) if (v !== undefined) query.append(key, v);
+    permanentRedirect(resolution.to + (query.size ? `?${query}` : ""));
+  }
+  if (resolution.kind !== "render" || !row) notFound();
 
   const [deal] = await publicDealsWithMerchantLogos(db, [row]);
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://metadeals4u.in";
@@ -146,7 +161,8 @@ export default async function DealDetailPage({
   const relatedDeals = await publicDealsWithMerchantLogos(db, relatedRows.slice(0, 5));
 
   // 3. Schema.org JSON-LD
-  const jsonLd = {
+  const noPrice = deal.kind !== "PRODUCT";
+  const productLd = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: deal.title,
@@ -155,11 +171,11 @@ export default async function DealDetailPage({
     image: deal.image.url.startsWith("http") ? deal.image.url : `${baseUrl}${deal.image.url}`,
     offers: {
       "@type": "Offer",
-      url: `${baseUrl}/deal/${deal.slug}`,
+      url: `${baseUrl}${resolution.canonical}`,
       priceCurrency: "INR",
       price: (deal.priceMinor / 100).toFixed(2),
-      priceValidUntil: deal.expiresAt || undefined,
-      availability: "https://schema.org/InStock",
+      priceValidUntil: deal.expiresAt ? deal.expiresAt.slice(0, 10) : undefined,
+      availability: deal.status === "EXPIRED" ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
       seller: {
         "@type": "Organization",
         name: deal.merchant.name,
@@ -176,6 +192,8 @@ export default async function DealDetailPage({
         }
       : {}),
   };
+  // A travel or sale-page deal has no single price to claim, so it is described as a plain page, not a Product with an Offer.
+  const jsonLd = noPrice ? { "@context": "https://schema.org", "@type": "WebPage", name: deal.title, description: deal.headline || deal.description || deal.title, url: `${baseUrl}${resolution.canonical}`, image: productLd.image } : productLd;
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
@@ -183,7 +201,7 @@ export default async function DealDetailPage({
     itemListElement: [
       { name: "Home", item: `${baseUrl}/` },
       { name: deal.category.name, item: `${baseUrl}/?category=${deal.category.slug}` },
-      { name: deal.title, item: `${baseUrl}/deal/${deal.slug}` },
+      { name: deal.title, item: `${baseUrl}${resolution.canonical}` },
     ].map((entry, index) => ({ "@type": "ListItem", position: index + 1, ...entry })),
   };
 
@@ -215,7 +233,7 @@ export default async function DealDetailPage({
               <CouponChip code={deal.couponCode} />
             </div>
           )}
-          <BankOffers offers={deal.bankOffers} priceMinor={deal.priceMinor} />
+          <BankOffers offers={deal.bankOffers} priceMinor={noPrice ? 0 : deal.priceMinor} />
         </>}
       />
       {sharer && <p className={extra.thanks}>Thanks to community member <strong>@{sharer.handle}</strong> for sharing this deal.</p>}
@@ -237,8 +255,8 @@ export default async function DealDetailPage({
 
   return (
     <div className={styles.pageWrapper}>
-      <DealViewTracker slug={slug} />
-      {deal.status !== "EXPIRED" && <StickyBuyBar title={deal.title} price={formatINR(deal.priceMinor / 100)} mrp={deal.mrpMinor > deal.priceMinor ? formatINR(deal.mrpMinor / 100) : undefined} savings={deal.savingsMinor > 0 ? `Save ${formatINR(deal.savingsMinor / 100)} (${deal.discountPercent}% OFF)` : undefined} slug={deal.slug} merchantName={deal.merchant.name} imageUrl={`${deal.image.url}?w=80`} href={`/go/${deal.id}`} />}
+      <DealViewTracker slug={deal.slug} />
+      {deal.status !== "EXPIRED" && <StickyBuyBar buyLabel={noPrice ? "View Deal" : "Buy Now"} title={deal.title} price={noPrice ? deal.headline ?? "" : formatINR(deal.priceMinor / 100)} mrp={deal.mrpMinor > deal.priceMinor ? formatINR(deal.mrpMinor / 100) : undefined} savings={deal.savingsMinor > 0 ? `Save ${formatINR(deal.savingsMinor / 100)} (${deal.discountPercent}% OFF)` : undefined} slug={deal.slug} merchantName={deal.merchant.name} imageUrl={`${deal.image.url}?w=80`} href={`/go/${deal.id}`} />}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd([jsonLd, breadcrumbJsonLd]) }}
@@ -284,9 +302,9 @@ export default async function DealDetailPage({
             images={deal.imageGallery.map((image) => image.url)}
             discountPercent={deal.discountPercent}
             expired={deal.status === "EXPIRED"}
-            shareData={{ slug: deal.slug, title: deal.title, priceMinor: deal.priceMinor, mrpMinor: deal.mrpMinor, storeName: deal.merchant.name, couponCode: deal.couponCode, bankOffers: deal.bankOffers, images: [deal.image.url, ...deal.imageGallery.map((image) => image.url)], expired: deal.status === "EXPIRED", brand: deal.brand, categoryName: deal.category.name, description: deal.description }}
+            shareData={{ slug: deal.slug, title: deal.title, priceMinor: deal.priceMinor, mrpMinor: deal.mrpMinor, headline: noPrice ? deal.headline : null, storeName: deal.merchant.name, couponCode: deal.couponCode, bankOffers: deal.bankOffers, images: [deal.image.url, ...deal.imageGallery.map((image) => image.url)], expired: deal.status === "EXPIRED", brand: deal.brand, categoryName: deal.category.name, description: deal.description }}
           >
-            <DealPriceBuy dealId={deal.id} priceMinor={deal.priceMinor} mrpMinor={deal.mrpMinor} discountPercent={deal.discountPercent} savingsMinor={deal.savingsMinor} merchantName={deal.merchant.name} merchantLogoUrl={deal.merchant.logoUrl} />
+            <DealPriceBuy dealId={deal.id} priceMinor={deal.priceMinor} mrpMinor={deal.mrpMinor} discountPercent={deal.discountPercent} savingsMinor={deal.savingsMinor} merchantName={deal.merchant.name} merchantLogoUrl={deal.merchant.logoUrl} headline={deal.kind !== "PRODUCT" ? deal.headline : null} />
           </DealGallery>
           </div>
 
@@ -331,7 +349,7 @@ export default async function DealDetailPage({
               {relatedDeals.map((rel) => (
                 <Link
                   key={rel.id}
-                  href={`/deal/${rel.slug || rel.id}`}
+                  href={dealHref(rel)}
                   style={{
                     padding: 16,
                     borderRadius: 16,
@@ -401,11 +419,11 @@ export default async function DealDetailPage({
 
                   <div style={{ display: "flex", gap: 8, alignItems: "baseline" }}>
                     <strong style={{ color: "var(--md-color-text)", fontSize: 16 }}>
-                      {formatINR(rel.priceMinor / 100)}
+                      {rel.kind !== "PRODUCT" ? rel.headline : formatINR(rel.priceMinor / 100)}
                     </strong>
-                    <del style={{ fontSize: 12, color: "var(--md-color-text-muted)" }}>
+                    {rel.kind === "PRODUCT" && <del style={{ fontSize: 12, color: "var(--md-color-text-muted)" }}>
                       {formatINR(rel.mrpMinor / 100)}
-                    </del>
+                    </del>}
                   </div>
 
                   <div

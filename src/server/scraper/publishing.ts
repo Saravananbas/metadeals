@@ -1,6 +1,7 @@
 import type { Prisma } from "@/generated/prisma/client";
 import { recordPriceObservation } from "./price-history";
 import { convertMerchantUrl } from "@/server/affiliate/adapters/registry";
+import { assignCanonicalPath } from "@/server/deals/seo-url-service";
 import { sendTelegramMessage } from "@/server/distribution/telegram";
 import { formatTelegramMessage } from "@/features/distribution/formatting";
 
@@ -220,6 +221,8 @@ export async function publishVerifiedCandidate(
       updatedById: adminId,
     },
   });
+  // Permanent public id and address. Publishing must not fail because of it: a deal without an address gets one on its first visit (or from the repair script).
+  await assignCanonicalPath(db, deal.id).catch((err) => console.warn("Could not assign the deal address yet:", err instanceof Error ? err.message : err));
 
   // 8. Update Candidate
   await db.dealCandidate.update({

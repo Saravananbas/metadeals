@@ -483,7 +483,8 @@ export const ModelName = {
   MerchantAffiliateConfig: 'MerchantAffiliateConfig',
   Bank: 'Bank',
   DealBankOffer: 'DealBankOffer',
-  MerchantBankOffer: 'MerchantBankOffer'
+  MerchantBankOffer: 'MerchantBankOffer',
+  DealUrlHistory: 'DealUrlHistory'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -499,7 +500,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "account" | "session" | "verificationToken" | "authSession" | "recoveryCode" | "authToken" | "authRateLimit" | "bootstrapState" | "auditEvent" | "category" | "merchant" | "affiliateClick" | "affiliateTransaction" | "media" | "deal" | "purchaseOption" | "dealGalleryImage" | "customer" | "customerIdentity" | "customerSignupChallenge" | "customerPasswordReset" | "customerRateLimit" | "distributionDestination" | "distributionPost" | "dealCandidate" | "priceObservation" | "scraperJob" | "productExtractionLog" | "dealVideoReview" | "youTubeQuotaLedger" | "merchantWebsiteDirectory" | "productMaster" | "productVariant" | "productOffer" | "priceObservationRecord" | "sourceHealthRecord" | "publicationAuthorization" | "shadowCandidate" | "dealLifecycleEvent" | "dealComment" | "analyticsSession" | "analyticsEvent" | "analyticsDaily" | "communityDealSubmission" | "forumCommunity" | "forumProfile" | "forumPost" | "forumComment" | "forumPostVote" | "forumCommentVote" | "forumPostLike" | "forumCommentLike" | "forumSave" | "forumFollow" | "forumPostImage" | "forumPostDraft" | "forumNotification" | "forumAnnouncement" | "staffPermissionGrant" | "forumReport" | "forumModerationAction" | "dmThread" | "dmMessage" | "dmBlock" | "dmReport" | "customerAppToken" | "forumMemberFollow" | "devicePushToken" | "moderatorAppointment" | "moderatorAppointmentEvent" | "memberWarning" | "memberRestriction" | "moderationAppeal" | "moderationEscalation" | "customerPreference" | "savedDeal" | "dealVote" | "dealNote" | "memberStar" | "dealCommentLike" | "communityDealSubmissionImage" | "brand" | "merchantAffiliateConfig" | "bank" | "dealBankOffer" | "merchantBankOffer"
+    modelProps: "user" | "account" | "session" | "verificationToken" | "authSession" | "recoveryCode" | "authToken" | "authRateLimit" | "bootstrapState" | "auditEvent" | "category" | "merchant" | "affiliateClick" | "affiliateTransaction" | "media" | "deal" | "purchaseOption" | "dealGalleryImage" | "customer" | "customerIdentity" | "customerSignupChallenge" | "customerPasswordReset" | "customerRateLimit" | "distributionDestination" | "distributionPost" | "dealCandidate" | "priceObservation" | "scraperJob" | "productExtractionLog" | "dealVideoReview" | "youTubeQuotaLedger" | "merchantWebsiteDirectory" | "productMaster" | "productVariant" | "productOffer" | "priceObservationRecord" | "sourceHealthRecord" | "publicationAuthorization" | "shadowCandidate" | "dealLifecycleEvent" | "dealComment" | "analyticsSession" | "analyticsEvent" | "analyticsDaily" | "communityDealSubmission" | "forumCommunity" | "forumProfile" | "forumPost" | "forumComment" | "forumPostVote" | "forumCommentVote" | "forumPostLike" | "forumCommentLike" | "forumSave" | "forumFollow" | "forumPostImage" | "forumPostDraft" | "forumNotification" | "forumAnnouncement" | "staffPermissionGrant" | "forumReport" | "forumModerationAction" | "dmThread" | "dmMessage" | "dmBlock" | "dmReport" | "customerAppToken" | "forumMemberFollow" | "devicePushToken" | "moderatorAppointment" | "moderatorAppointmentEvent" | "memberWarning" | "memberRestriction" | "moderationAppeal" | "moderationEscalation" | "customerPreference" | "savedDeal" | "dealVote" | "dealNote" | "memberStar" | "dealCommentLike" | "communityDealSubmissionImage" | "brand" | "merchantAffiliateConfig" | "bank" | "dealBankOffer" | "merchantBankOffer" | "dealUrlHistory"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -6941,6 +6942,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    DealUrlHistory: {
+      payload: Prisma.$DealUrlHistoryPayload<ExtArgs>
+      fields: Prisma.DealUrlHistoryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DealUrlHistoryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealUrlHistoryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DealUrlHistoryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealUrlHistoryPayload>
+        }
+        findFirst: {
+          args: Prisma.DealUrlHistoryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealUrlHistoryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DealUrlHistoryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealUrlHistoryPayload>
+        }
+        findMany: {
+          args: Prisma.DealUrlHistoryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealUrlHistoryPayload>[]
+        }
+        create: {
+          args: Prisma.DealUrlHistoryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealUrlHistoryPayload>
+        }
+        createMany: {
+          args: Prisma.DealUrlHistoryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DealUrlHistoryCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealUrlHistoryPayload>[]
+        }
+        delete: {
+          args: Prisma.DealUrlHistoryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealUrlHistoryPayload>
+        }
+        update: {
+          args: Prisma.DealUrlHistoryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealUrlHistoryPayload>
+        }
+        deleteMany: {
+          args: Prisma.DealUrlHistoryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DealUrlHistoryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DealUrlHistoryUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealUrlHistoryPayload>[]
+        }
+        upsert: {
+          args: Prisma.DealUrlHistoryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DealUrlHistoryPayload>
+        }
+        aggregate: {
+          args: Prisma.DealUrlHistoryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDealUrlHistory>
+        }
+        groupBy: {
+          args: Prisma.DealUrlHistoryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DealUrlHistoryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DealUrlHistoryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DealUrlHistoryCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -7199,6 +7274,8 @@ export type MediaScalarFieldEnum = (typeof MediaScalarFieldEnum)[keyof typeof Me
 export const DealScalarFieldEnum = {
   id: 'id',
   slug: 'slug',
+  publicId: 'publicId',
+  canonicalPath: 'canonicalPath',
   title: 'title',
   brand: 'brand',
   description: 'description',
@@ -7217,6 +7294,8 @@ export const DealScalarFieldEnum = {
   productUrl: 'productUrl',
   affiliateUrl: 'affiliateUrl',
   couponCode: 'couponCode',
+  kind: 'kind',
+  headline: 'headline',
   editorNotes: 'editorNotes',
   editorNotesBy: 'editorNotesBy',
   status: 'status',
@@ -8397,6 +8476,18 @@ export const MerchantBankOfferScalarFieldEnum = {
 export type MerchantBankOfferScalarFieldEnum = (typeof MerchantBankOfferScalarFieldEnum)[keyof typeof MerchantBankOfferScalarFieldEnum]
 
 
+export const DealUrlHistoryScalarFieldEnum = {
+  id: 'id',
+  dealId: 'dealId',
+  path: 'path',
+  reason: 'reason',
+  redirectStatus: 'redirectStatus',
+  createdAt: 'createdAt'
+} as const
+
+export type DealUrlHistoryScalarFieldEnum = (typeof DealUrlHistoryScalarFieldEnum)[keyof typeof DealUrlHistoryScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -9059,6 +9150,7 @@ export type GlobalOmitConfig = {
   bank?: Prisma.BankOmit
   dealBankOffer?: Prisma.DealBankOfferOmit
   merchantBankOffer?: Prisma.MerchantBankOfferOmit
+  dealUrlHistory?: Prisma.DealUrlHistoryOmit
 }
 
 /* Types for Logging */

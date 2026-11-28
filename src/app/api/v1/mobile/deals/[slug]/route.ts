@@ -40,6 +40,8 @@ export async function GET(
         slug: deal.merchant.slug,
         logoUrl: deal.merchant.logoUrl,
       },
+      kind: deal.kind,
+      headline: deal.headline,
       price: Math.round(deal.priceMinor / 100),
       mrp: Math.round(deal.mrpMinor / 100),
       discountPercent: deal.discountPercent,
