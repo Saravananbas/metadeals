@@ -179,3 +179,10 @@
 @media (max-width: 760px) { .head h1 { font-size: 21px; } .ghost, .primary { height: 44px; } }
 /* The text-style dropdown keeps its own size even when a page styles every select (Post a Deal): the label was cut off. */
 @media (max-width: 760px) { .toolbar .blockSelect { width: auto; min-height: 0; height: 36px; padding: 0 8px; box-sizing: border-box; line-height: 1.2; border: 0; background: transparent; font-size: 13px; } }
+
+/* Pasted tables (deal descriptions) stay tables in the editor. */
+.prose table { width: 100%; border-collapse: collapse; margin: 0 0 .75em; font-size: .92em; table-layout: auto; }
+.prose th, .prose td { border: 1px solid var(--md-color-border-strong); padding: 6px 10px; text-align: left; vertical-align: top; overflow-wrap: anywhere; }
+.prose th { font-weight: 700; background: var(--md-purple-50); white-space: nowrap; }
+.prose td p, .prose th p { margin: 0; }
+@media (max-width: 760px) { .prose th { white-space: normal; } }

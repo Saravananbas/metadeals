@@ -415,7 +415,7 @@ export function CustomerProfile({ section = "profile", embedded = false }: { sec
               <h2><span>3</span> Description</h2>
               <div className={styles.dealWide}>
                 <span id="deal-description-label" style={{ fontWeight: 700, fontSize: 14 }}>Deal details <b aria-hidden="true">*</b>{auto("description")}</span>
-                <RichEditor id="deal-description" initialHtml={editorHtml} version={editorVersion} limit={2000} minHeight={150} placeholder="Add key details, offer terms, validity, or why it’s a good buy..."
+                <RichEditor tables id="deal-description" initialHtml={editorHtml} version={editorVersion} limit={2000} minHeight={150} placeholder="Add key details, offer terms, validity, or why it’s a good buy..."
                   onChange={(html) => {
                     const plain = html ? htmlToPlain(html) : "";
                     setForm((f) => (f.descriptionHtml === html && f.description === plain ? f : { ...f, descriptionHtml: html, description: plain }));

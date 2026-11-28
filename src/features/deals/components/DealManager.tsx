@@ -2462,8 +2462,21 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
           <div className={editModal ? styles.editBackdrop : undefined} onMouseDown={(event) => { if (editModal && event.target === event.currentTarget && !busy) closeEditModal(); }}>
           <section className={`${styles.panel} ${styles.addPanel} ${editModal ? styles.editModal : ""}`} {...(editModal ? { role: "dialog", "aria-modal": true, "aria-label": "Edit deal" } : {})}>
             <div className={styles.addHead}>
-              <div>
+              <div className={styles.addTitleRow}>
                 <h2>{selected ? "Edit deal" : "Add New Deal"}</h2>
+                <div className={styles.kindRow}>
+              <div className={styles.kindPicker} role="radiogroup" aria-label="Deal type">
+                {([["PRODUCT", "Product"], ["TRAVEL", "Travel"], ["SALE_PAGE", "Sale page"]] as const).map(([value, label]) => (
+                  <label key={value} className={`${styles.kindOption} ${form.kind === value ? styles.kindOptionOn : ""}`}>
+                    <input type="radio" name="deal-kind" value={value} checked={form.kind === value} onChange={() => field("kind", value)} />
+                    <span>{label}</span>
+                  </label>
+                ))}
+              </div>
+              <button type="button" className={styles.kindInfo} aria-expanded={showKindGuide} aria-controls="kind-guide" aria-label="How to post this type of deal" title="How to post this type of deal" onClick={() => setShowKindGuide((v) => !v)}>
+                <Info size={16} aria-hidden="true" /><b aria-hidden="true">*</b>
+              </button>
+            </div>
                 {selected && <p>Update the details of this deal.</p>}
               </div>
               <div className={styles.addHeadActions}>
@@ -2501,19 +2514,6 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
         <form id="deal-form" onSubmit={save}>
           <fieldset disabled={busy || selected?.status === "ARCHIVED"} className={styles.addLayout}>
             <div className={styles.addMain}>
-            <div className={styles.kindRow}>
-              <div className={styles.kindPicker} role="radiogroup" aria-label="Deal type">
-                {([["PRODUCT", "Product"], ["TRAVEL", "Travel"], ["SALE_PAGE", "Sale page"]] as const).map(([value, label]) => (
-                  <label key={value} className={`${styles.kindOption} ${form.kind === value ? styles.kindOptionOn : ""}`}>
-                    <input type="radio" name="deal-kind" value={value} checked={form.kind === value} onChange={() => field("kind", value)} />
-                    <span>{label}</span>
-                  </label>
-                ))}
-              </div>
-              <button type="button" className={styles.kindInfo} aria-expanded={showKindGuide} aria-controls="kind-guide" aria-label="How to post this type of deal" title="How to post this type of deal" onClick={() => setShowKindGuide((v) => !v)}>
-                <Info size={16} aria-hidden="true" /><b aria-hidden="true">*</b>
-              </button>
-            </div>
             {showKindGuide && (
               <div id="kind-guide" className={`${styles.addCard} ${styles.kindGuide}`}>
                 {form.kind === "PRODUCT" && <><h3>Posting a product deal</h3><ol>
@@ -2762,16 +2762,16 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
                 <span className={styles.cardIcon}><Tag size={18} aria-hidden="true" /></span>
                 <div><h3>Deal Details</h3><p>Enter the basic information about the product/deal.</p></div>
               </div>
-              <div className={styles.fieldGrid}>
+              <div className={`${styles.fieldGrid} ${styles.inlineFields}`}>
             {form.kind !== "PRODUCT" && (
               <label className={styles.fullRow}>
-                Headline <b aria-hidden="true">*</b>
+                <span>Headline <b aria-hidden="true">*</b></span>
                 <input type="text" maxLength={80} required placeholder={form.kind === "TRAVEL" ? "e.g. Flights from ₹2,499 or Flat 15% off bus tickets" : "e.g. Up to 80% off men's clothing"} value={form.headline ?? ""} onChange={(e) => field("headline", e.target.value)} />
                 <small>Shown on the deal card instead of a price. {(form.headline ?? "").length}/80</small>
               </label>
             )}
             <label className={styles.fullRow}>
-              Product title <b aria-hidden="true">*</b>
+              <span>Product title <b aria-hidden="true">*</b></span>
               <input
                 id="product-title-input"
                 required
@@ -2781,7 +2781,8 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
               />
             </label>
             <div className={styles.fullRow}><SimilarDeals check={dealCheck} /></div>
-            <label>
+            <div className={`${styles.fullRow} ${styles.slugBrandRow}`}>
+            <label className={form.kind === "PRODUCT" ? undefined : styles.fullRow}>
               Stable slug (automatic)
               <input
                 type="text"
@@ -2798,10 +2799,11 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
                 onChange={(e) => field("brand", e.target.value)}
               />
             </label>}
+            </div>
             <div className={styles.fullRow}>
               <span id="admin-description-label" style={{ fontWeight: 600 }}>Description <b aria-hidden="true">*</b></span>
               <div className={styles.richHost}>
-              <RichEditor id="admin-description" initialHtml={descEditor.html} version={descEditor.version} limit={2000} minHeight={150} placeholder="Write a short and attractive deal description..."
+              <RichEditor tables id="admin-description" initialHtml={descEditor.html} version={descEditor.version} limit={2000} minHeight={150} placeholder="Write a short and attractive deal description..."
                 onChange={(html) => {
                   const plain = html ? htmlToPlain(html) : "";
                   setDescEditor((d) => (d.plain === plain ? d : { ...d, plain }));
@@ -2812,6 +2814,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
             <label>
               Category
               <select
+                required
                 value={(() => {
                   if (selectedParentCategoryId) return selectedParentCategoryId;
                   const currentCat = categories.find((c) => c.id === form.categoryId);
@@ -2849,32 +2852,21 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
               Sub Category
               <select
                 required
+                disabled={!(selectedParentCategoryId || (() => { const cur = categories.find((x) => x.id === form.categoryId); return cur ? cur.parentId || cur.id : null; })())}
                 value={form.categoryId}
                 onChange={(e) => field("categoryId", e.target.value)}
               >
                 <option value="">
                   {(() => {
                     const activeParentId =
-                      selectedParentCategoryId ||
-                      categories.find((c) => c.id === form.categoryId)?.parentId;
+                      (selectedParentCategoryId || (() => { const cur = categories.find((x) => x.id === form.categoryId); return cur ? cur.parentId || cur.id : null; })());
                     return activeParentId ? "Select Sub Category" : "First select a Category";
                   })()}
                 </option>
                 {(() => {
                   const activeParentId =
-                    selectedParentCategoryId ||
-                    categories.find((c) => c.id === form.categoryId)?.parentId;
-                  if (!activeParentId) {
-                    // If no parent selected yet, display all categories with parent names
-                    return categories.map((c) => {
-                      const p = categories.find((x) => x.id === c.parentId);
-                      return (
-                        <option key={c.id} value={c.id}>
-                          {p ? `${p.name} → ${c.name}` : `📁 ${c.name}`}
-                        </option>
-                      );
-                    });
-                  }
+                    (selectedParentCategoryId || (() => { const cur = categories.find((x) => x.id === form.categoryId); return cur ? cur.parentId || cur.id : null; })());
+                  if (!activeParentId) return null; // the picker is disabled until a Category is chosen
                   const subs = categories.filter((c) => c.parentId === activeParentId);
                   if (subs.length === 0) {
                     const parentObj = categories.find((c) => c.id === activeParentId);
@@ -2899,7 +2891,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
                 <span className={styles.cardIcon}><Tag size={18} aria-hidden="true" /></span>
                 <div><h3>Pricing &amp; Merchant</h3><p>Set the price, merchant and affiliate details.</p></div>
               </div>
-              <div className={`${styles.fieldGrid} ${styles.cols3}`}>
+              <div className={`${styles.fieldGrid} ${styles.cols3} ${styles.inlineFields}`}>
             <label>
               Primary merchant
               <select required value={form.merchantId} onChange={(e) => field("merchantId", e.target.value)}>
@@ -2954,7 +2946,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
                 <small>{formatINR(Number(form.priceRupees))}</small>
               )}
             </label>
-            <label className={styles.span2}>
+            <label className={form.kind === "PRODUCT" ? styles.span2 : undefined}>
               Coupon code (optional)
               <input
                 type="text"

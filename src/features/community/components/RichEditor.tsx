@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
+import { Table, TableCell, TableHeader, TableRow } from "@tiptap/extension-table";
 import { Bold, Eraser, ImageIcon, Italic, IndentDecrease, IndentIncrease, Link2, List, ListOrdered, Redo2, Smile, Strikethrough, Underline as UnderlineIcon, Undo2 } from "lucide-react";
 import styles from "../composer.module.css";
 
@@ -18,10 +19,12 @@ type Props = {
   onChange: (html: string, textLength: number) => void;
   onPickImage?: () => void;
   minHeight?: number;
+  /** Keep pasted tables (spec sheets) as tables. Off for posts and comments. */
+  tables?: boolean;
 };
 
 /** Rich text editor (TipTap). The browser only ever produces TipTap's own schema; the server sanitizes the HTML again before saving. */
-export function RichEditor({ id, initialHtml, version, placeholder, limit, onChange, onPickImage, minHeight = 180 }: Props) {
+export function RichEditor({ id, initialHtml, version, placeholder, limit, onChange, onPickImage, minHeight = 180, tables = false }: Props) {
   const [len, setLen] = useState(0);
   const [linkOpen, setLinkOpen] = useState(false), [emojiOpen, setEmojiOpen] = useState(false), [url, setUrl] = useState(""), [linkError, setLinkError] = useState("");
   const loaded = useRef(-1);
@@ -30,6 +33,7 @@ export function RichEditor({ id, initialHtml, version, placeholder, limit, onCha
     extensions: [
       StarterKit.configure({ heading: { levels: [2, 3] }, code: false, codeBlock: false, horizontalRule: false, link: { openOnClick: false, autolink: false, HTMLAttributes: { rel: "nofollow ugc noopener noreferrer", target: "_blank" } } }),
       Placeholder.configure({ placeholder }),
+      ...(tables ? [Table.configure({ resizable: false }), TableRow, TableHeader, TableCell] : []),
     ],
     content: initialHtml,
     editorProps: { attributes: { id, class: styles.prose, "aria-label": placeholder, role: "textbox", "aria-multiline": "true", style: `min-height:${minHeight}px` } },
