@@ -1,4 +1,5 @@
 import { ci } from "@/server/db/case-insensitive";
+import { searchStaffIdsMariaDb, usesMariaDb } from "@/server/community/like-search";
 import { z } from "zod";
 import { UserRole, UserStatus } from "@/generated/prisma/client";
 import { getAuthEnv } from "@/config/env";
@@ -34,10 +35,10 @@ export async function GET(request: Request) {
   const where = {
     role: { in: staffRoles },
     status: { not: UserStatus.DELETED },
-    ...(search ? { OR: [
+    ...(search ? (usesMariaDb() ? { id: { in: await searchStaffIdsMariaDb(search) } } : { OR: [
       { email: { contains: search, ...ci() } },
       { name: { contains: search, ...ci() } },
-    ] } : {}),
+    ] }) : {}),
   };
   const [users, total, totalAccounts, activeAccounts, suspendedAccounts, mfaEnabled] = await Promise.all([
     db.user.findMany({

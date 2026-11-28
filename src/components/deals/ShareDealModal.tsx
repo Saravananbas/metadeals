@@ -71,11 +71,13 @@ export function ShareDealModal({ deal, url, onClose, onShared }: { deal: ShareDe
     else setToast("Could not copy. Select the code and copy it by hand.");
   }
 
-  /** WhatsApp and Telegram: the device's share sheet with the picture when it can carry files, else the app's own share page with the message and the picture saved to attach. */
+  /** WhatsApp and Telegram: the device's share sheet with the picture when it can carry files, else (desktop) the app's own share page with the message and the picture saved to attach. */
   async function viaApp(app: "whatsapp" | "telegram") {
     const f = file();
     if (!f) return;
-    if (typeof navigator.canShare === "function" && navigator.canShare({ files: [f] })) {
+    // Desktop share sheets (Windows, Mac) hand the app only the picture and drop the text, so only touch devices use it; desktop opens the app's own share page with the message.
+    const touchDevice = window.matchMedia("(pointer: coarse)").matches;
+    if (touchDevice && typeof navigator.canShare === "function" && navigator.canShare({ files: [f] })) {
       try {
         await navigator.share({ files: [f], title: deal.title, text: message });
         counts(); setNotice("Shared.");
@@ -84,14 +86,13 @@ export function ShareDealModal({ deal, url, onClose, onShared }: { deal: ShareDe
         if ((error as Error).name === "AbortError") return; // the visitor closed the sheet
       }
     }
-    const target = app === "whatsapp"
-      ? `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`
-      : `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(buildShareMessage(deal, url, { includeUrl: false }))}`;
+    // Desktop: picture and message go on the clipboard together, so one paste gives the picture with the message as caption where the app supports it.
+    const target = app === "whatsapp" ? "https://web.whatsapp.com/" : "https://web.telegram.org/";
     window.open(target, "_blank", "noopener"); // opened first, while the click still counts as the visitor's own action
-    download();
-    const copied = await copyText(message);
+    let pictureCopied = false;
+    try { await navigator.clipboard.write([new ClipboardItem({ "image/png": f, "text/plain": new Blob([message], { type: "text/plain" }) })]); pictureCopied = true; } catch { download(); }
     counts();
-    setNotice(`The picture is saved to your downloads${copied ? " and the message is copied" : ""}. ${app === "whatsapp" ? "WhatsApp" : "Telegram"} could not take the picture from here, so attach the saved picture to your message.`);
+    setNotice(`${pictureCopied ? "Picture and message copied" : "Picture saved to your downloads"}. In ${app === "whatsapp" ? "WhatsApp" : "Telegram"} ${pictureCopied ? "press Ctrl+V: the picture comes with the message as its caption (if only the picture appears, press \"Copy message\" and paste it)" : "attach it"}.`);
   }
 
   async function copyMessage() { if (await copyText(message)) { counts(); setNotice("Message copied."); } else setNotice("Could not copy the message."); }
