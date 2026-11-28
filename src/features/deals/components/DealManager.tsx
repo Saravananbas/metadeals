@@ -2765,13 +2765,13 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
               <div className={`${styles.fieldGrid} ${styles.inlineFields}`}>
             {form.kind !== "PRODUCT" && (
               <label className={styles.fullRow}>
-                Headline <b aria-hidden="true">*</b>
+                <span>Headline <b aria-hidden="true">*</b></span>
                 <input type="text" maxLength={80} required placeholder={form.kind === "TRAVEL" ? "e.g. Flights from ₹2,499 or Flat 15% off bus tickets" : "e.g. Up to 80% off men's clothing"} value={form.headline ?? ""} onChange={(e) => field("headline", e.target.value)} />
                 <small>Shown on the deal card instead of a price. {(form.headline ?? "").length}/80</small>
               </label>
             )}
             <label className={styles.fullRow}>
-              Product title <b aria-hidden="true">*</b>
+              <span>Product title <b aria-hidden="true">*</b></span>
               <input
                 id="product-title-input"
                 required

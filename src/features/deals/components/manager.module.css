@@ -1172,4 +1172,8 @@
   .inlineFields > label:has(> input:not([type="checkbox"]):not([type="radio"]), > select) { display: grid; grid-template-columns: max-content minmax(0, 1fr); align-items: center; column-gap: 12px; row-gap: 2px; }
   .inlineFields > label:has(> input:not([type="checkbox"]):not([type="radio"]), > select) > small { grid-column: 2; }
 }
+@media (min-width: 721px) {
+  /* The wide rows (headline, title, slug) share one label width so their fields line up. */
+  .inlineFields > label.fullRow:has(> input, > select) { grid-template-columns: 11rem minmax(0, 1fr); }
+}
 
