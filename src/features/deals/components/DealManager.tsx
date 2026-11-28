@@ -2781,6 +2781,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
               />
             </label>
             <div className={styles.fullRow}><SimilarDeals check={dealCheck} /></div>
+            <div className={`${styles.fullRow} ${styles.slugBrandRow}`}>
             <label className={form.kind === "PRODUCT" ? undefined : styles.fullRow}>
               Stable slug (automatic)
               <input
@@ -2798,6 +2799,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
                 onChange={(e) => field("brand", e.target.value)}
               />
             </label>}
+            </div>
             <div className={styles.fullRow}>
               <span id="admin-description-label" style={{ fontWeight: 600 }}>Description <b aria-hidden="true">*</b></span>
               <div className={styles.richHost}>
