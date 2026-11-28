@@ -2462,8 +2462,21 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
           <div className={editModal ? styles.editBackdrop : undefined} onMouseDown={(event) => { if (editModal && event.target === event.currentTarget && !busy) closeEditModal(); }}>
           <section className={`${styles.panel} ${styles.addPanel} ${editModal ? styles.editModal : ""}`} {...(editModal ? { role: "dialog", "aria-modal": true, "aria-label": "Edit deal" } : {})}>
             <div className={styles.addHead}>
-              <div>
+              <div className={styles.addTitleRow}>
                 <h2>{selected ? "Edit deal" : "Add New Deal"}</h2>
+                <div className={styles.kindRow}>
+              <div className={styles.kindPicker} role="radiogroup" aria-label="Deal type">
+                {([["PRODUCT", "Product"], ["TRAVEL", "Travel"], ["SALE_PAGE", "Sale page"]] as const).map(([value, label]) => (
+                  <label key={value} className={`${styles.kindOption} ${form.kind === value ? styles.kindOptionOn : ""}`}>
+                    <input type="radio" name="deal-kind" value={value} checked={form.kind === value} onChange={() => field("kind", value)} />
+                    <span>{label}</span>
+                  </label>
+                ))}
+              </div>
+              <button type="button" className={styles.kindInfo} aria-expanded={showKindGuide} aria-controls="kind-guide" aria-label="How to post this type of deal" title="How to post this type of deal" onClick={() => setShowKindGuide((v) => !v)}>
+                <Info size={16} aria-hidden="true" /><b aria-hidden="true">*</b>
+              </button>
+            </div>
                 {selected && <p>Update the details of this deal.</p>}
               </div>
               <div className={styles.addHeadActions}>
@@ -2501,19 +2514,6 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
         <form id="deal-form" onSubmit={save}>
           <fieldset disabled={busy || selected?.status === "ARCHIVED"} className={styles.addLayout}>
             <div className={styles.addMain}>
-            <div className={styles.kindRow}>
-              <div className={styles.kindPicker} role="radiogroup" aria-label="Deal type">
-                {([["PRODUCT", "Product"], ["TRAVEL", "Travel"], ["SALE_PAGE", "Sale page"]] as const).map(([value, label]) => (
-                  <label key={value} className={`${styles.kindOption} ${form.kind === value ? styles.kindOptionOn : ""}`}>
-                    <input type="radio" name="deal-kind" value={value} checked={form.kind === value} onChange={() => field("kind", value)} />
-                    <span>{label}</span>
-                  </label>
-                ))}
-              </div>
-              <button type="button" className={styles.kindInfo} aria-expanded={showKindGuide} aria-controls="kind-guide" aria-label="How to post this type of deal" title="How to post this type of deal" onClick={() => setShowKindGuide((v) => !v)}>
-                <Info size={16} aria-hidden="true" /><b aria-hidden="true">*</b>
-              </button>
-            </div>
             {showKindGuide && (
               <div id="kind-guide" className={`${styles.addCard} ${styles.kindGuide}`}>
                 {form.kind === "PRODUCT" && <><h3>Posting a product deal</h3><ol>
@@ -2781,7 +2781,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
               />
             </label>
             <div className={styles.fullRow}><SimilarDeals check={dealCheck} /></div>
-            <label>
+            <label className={form.kind === "PRODUCT" ? undefined : styles.fullRow}>
               Stable slug (automatic)
               <input
                 type="text"
@@ -2954,7 +2954,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
                 <small>{formatINR(Number(form.priceRupees))}</small>
               )}
             </label>
-            <label className={styles.span2}>
+            <label className={form.kind === "PRODUCT" ? styles.span2 : undefined}>
               Coupon code (optional)
               <input
                 type="text"
