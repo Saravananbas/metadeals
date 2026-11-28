@@ -1,3 +1,4 @@
+import { ci } from "@/server/db/case-insensitive";
 import "server-only";
 import { z } from "zod";
 import { getDatabase } from "@/server/db/client";
@@ -104,9 +105,9 @@ export class MerchantWebsiteDirectoryService {
     if (filters.search) {
       const q = filters.search.trim();
       where.OR = [
-        { name: { contains: q, mode: "insensitive" } },
-        { domain: { contains: q, mode: "insensitive" } },
-        { productFocus: { contains: q, mode: "insensitive" } },
+        { name: { contains: q, ...ci() } },
+        { domain: { contains: q, ...ci() } },
+        { productFocus: { contains: q, ...ci() } },
       ];
     }
 

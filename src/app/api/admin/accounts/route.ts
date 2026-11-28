@@ -1,3 +1,4 @@
+import { ci } from "@/server/db/case-insensitive";
 import { z } from "zod";
 import { UserRole, UserStatus } from "@/generated/prisma/client";
 import { getAuthEnv } from "@/config/env";
@@ -34,8 +35,8 @@ export async function GET(request: Request) {
     role: { in: staffRoles },
     status: { not: UserStatus.DELETED },
     ...(search ? { OR: [
-      { email: { contains: search, mode: "insensitive" as const } },
-      { name: { contains: search, mode: "insensitive" as const } },
+      { email: { contains: search, ...ci() } },
+      { name: { contains: search, ...ci() } },
     ] } : {}),
   };
   const [users, total, totalAccounts, activeAccounts, suspendedAccounts, mfaEnabled] = await Promise.all([
