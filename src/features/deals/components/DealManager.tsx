@@ -2814,6 +2814,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
             <label>
               Category
               <select
+                required
                 value={(() => {
                   if (selectedParentCategoryId) return selectedParentCategoryId;
                   const currentCat = categories.find((c) => c.id === form.categoryId);
@@ -2851,32 +2852,21 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
               Sub Category
               <select
                 required
+                disabled={!(selectedParentCategoryId || (() => { const cur = categories.find((x) => x.id === form.categoryId); return cur ? cur.parentId || cur.id : null; })())}
                 value={form.categoryId}
                 onChange={(e) => field("categoryId", e.target.value)}
               >
                 <option value="">
                   {(() => {
                     const activeParentId =
-                      selectedParentCategoryId ||
-                      categories.find((c) => c.id === form.categoryId)?.parentId;
+                      (selectedParentCategoryId || (() => { const cur = categories.find((x) => x.id === form.categoryId); return cur ? cur.parentId || cur.id : null; })());
                     return activeParentId ? "Select Sub Category" : "First select a Category";
                   })()}
                 </option>
                 {(() => {
                   const activeParentId =
-                    selectedParentCategoryId ||
-                    categories.find((c) => c.id === form.categoryId)?.parentId;
-                  if (!activeParentId) {
-                    // If no parent selected yet, display all categories with parent names
-                    return categories.map((c) => {
-                      const p = categories.find((x) => x.id === c.parentId);
-                      return (
-                        <option key={c.id} value={c.id}>
-                          {p ? `${p.name} → ${c.name}` : `📁 ${c.name}`}
-                        </option>
-                      );
-                    });
-                  }
+                    (selectedParentCategoryId || (() => { const cur = categories.find((x) => x.id === form.categoryId); return cur ? cur.parentId || cur.id : null; })());
+                  if (!activeParentId) return null; // the picker is disabled until a Category is chosen
                   const subs = categories.filter((c) => c.parentId === activeParentId);
                   if (subs.length === 0) {
                     const parentObj = categories.find((c) => c.id === activeParentId);
