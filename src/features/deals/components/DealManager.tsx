@@ -2803,7 +2803,7 @@ export function DealManager({ role, permissions = null }: { role: AdminRole; per
             <div className={styles.fullRow}>
               <span id="admin-description-label" style={{ fontWeight: 600 }}>Description <b aria-hidden="true">*</b></span>
               <div className={styles.richHost}>
-              <RichEditor id="admin-description" initialHtml={descEditor.html} version={descEditor.version} limit={2000} minHeight={150} placeholder="Write a short and attractive deal description..."
+              <RichEditor tables id="admin-description" initialHtml={descEditor.html} version={descEditor.version} limit={2000} minHeight={150} placeholder="Write a short and attractive deal description..."
                 onChange={(html) => {
                   const plain = html ? htmlToPlain(html) : "";
                   setDescEditor((d) => (d.plain === plain ? d : { ...d, plain }));

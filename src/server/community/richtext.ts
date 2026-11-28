@@ -7,7 +7,8 @@ import { cleanText } from "@/features/community/validation";
 export const RICH_TEXT_LIMIT = 5_000;
 
 const REL = "nofollow ugc noopener noreferrer";
-const BLOCK_END = /<\/(p|li|h2|h3|blockquote|pre)>|<br\s*\/?>/gi;
+const BLOCK_END = /<\/(p|li|h2|h3|blockquote|pre|tr)>|<br\s*\/?>/gi;
+const CELL_END = /<\/(td|th)>(?=<(?:td|th))/gi;
 
 /**
  * Allow-list sanitizer for posts and comments written in the editor. Only simple formatting survives: no scripts, styles, classes,
@@ -15,8 +16,9 @@ const BLOCK_END = /<\/(p|li|h2|h3|blockquote|pre)>|<br\s*\/?>/gi;
  */
 export function sanitizeRichHtml(input: string): string {
   return sanitizeHtml(input, {
-    allowedTags: ["p", "br", "strong", "em", "u", "s", "h2", "h3", "ul", "ol", "li", "blockquote", "a", "code", "pre"],
-    allowedAttributes: { a: ["href", "rel", "target"] },
+    allowedTags: ["p", "br", "strong", "em", "u", "s", "h2", "h3", "ul", "ol", "li", "blockquote", "a", "code", "pre", "table", "thead", "tbody", "tfoot", "tr", "th", "td"],
+    // Tables (pasted spec sheets) keep their cell spans only; no styles, classes or widths.
+    allowedAttributes: { a: ["href", "rel", "target"], th: ["colspan", "rowspan"], td: ["colspan", "rowspan"] },
     allowedSchemes: ["https"],
     allowProtocolRelative: false,
     disallowedTagsMode: "discard",
@@ -34,7 +36,7 @@ const decode = (text: string) => text.replace(/&lt;/g, "<").replace(/&gt;/g, ">"
 
 /** Plain text of sanitized HTML (line breaks kept). Used for search, previews, duplicate checks and length limits. */
 export function htmlToText(html: string): string {
-  const withBreaks = html.replace(BLOCK_END, (m) => (m.startsWith("<br") ? "\n" : "\n\n"));
+  const withBreaks = html.replace(CELL_END, " ").replace(BLOCK_END, (m) => (m.startsWith("<br") || m === "</tr>" ? "\n" : "\n\n"));
   return cleanText(decode(sanitizeHtml(withBreaks, { allowedTags: [], allowedAttributes: {} })));
 }
 

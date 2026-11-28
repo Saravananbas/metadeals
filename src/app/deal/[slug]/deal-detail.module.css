@@ -851,3 +851,8 @@
   .infoCard { padding: 14px 12px; border-radius: 16px; }
   .trustStrip, .purchasePanel, .videoSection { padding: 14px 12px; }
 }
+.richDescription table{width:100%;border-collapse:collapse;margin:0 0 10px;font-size:13.5px}
+.richDescription th,.richDescription td{border-bottom:1px solid var(--md-color-border);padding:6px 10px 6px 0;text-align:left;vertical-align:top;overflow-wrap:anywhere}
+.richDescription th{font-weight:700;color:var(--md-color-text);white-space:nowrap}
+.richDescription td p,.richDescription th p{margin:0}
+@media (max-width:760px){.richDescription th{white-space:normal;width:38%}}
